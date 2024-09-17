@@ -6,7 +6,7 @@ npanels2=5
 fig, axes = plt.subplots(nrows=2, ncols=npanels2, figsize=(14, 7))
 
 # Generate fictitious temperature data (for demonstration)
-data = np.genfromtxt(open("/Users/JohnMatthew/Dropbox/KalmanFilterPython/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
+data = np.genfromtxt(open("toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
 years=data[:,0]
 years[0]=1850
 nyrs = len(years)
@@ -17,7 +17,8 @@ all_method_names = ["5yr lagging", "10yr lagging",
                     "Autoregression",
                     "Remove El Nino", "Remove Greens Functions"]
 
-impl_methods = ["30yr centred", "10yr lagging","OLS Fit", "Hinge Fit", "11yr offset (Trewin)", "15yr-linear (SR1.5)","Butterworth Adapt. (Mann)", "AutoReg. 1 (Stephenson)", "Kalman Filter: RW/EM", "Remove ENSO (Foster)"]
+impl_methods = ["30yr centred", "10yr lagging","OLS Fit", "Hinge Fit", "11yr offset (Trewin)", "15yr-linear (SR1.5)","Butterworth Adapt. (Mann)",
+                "GAM AR1 (Stephenson)", "Kalman: Random Walk", "Remove ENSO (Foster)"]
 
 # Loop over each subplot (method) to configure the layout and base plot
 for i, ax in enumerate(axes.flat):
@@ -58,7 +59,7 @@ ax = axes[0, 1]  # First pane
 lag_len=10
 for i in range(lag_len, len(years)):
     lag_mean = np.mean(temperature[i-lag_len:i])
-    color = 'mediumorchid' #if (i - 5) % 5 == 1 else 'thistle'  # Darker every 5th line
+    color = 'violet' #if (i - 5) % 5 == 1 else 'thistle'  # Darker every 5th line
     if (i - lag_len) % lag_len == 3:
         ax.plot([years[i-lag_len], years[i]], [lag_mean, lag_mean], color=color)
         ax.plot(years[i], lag_mean, 's', color=color, markersize=6)
@@ -90,6 +91,15 @@ trendline = model.predict(X[breakyr:])
 
 # Plot the OLS trendline
 ax.plot(years[breakyr:], trendline, color='blue', label='OLS Trendline')
+ax.plot(years[i], trendline[-1], '*', color='blue', markersize=5)
+bk2 = 1984-1850
+for i in range(bk2, len(years)):
+    # Fit the OLS trendline for each 15-year chunk
+    X_chunk = years[breakyr:i].reshape(-1, 1)
+    y_chunk = temperature[breakyr:i]
+    model = LinearRegression().fit(X_chunk, y_chunk)
+    trendline_end = model.predict(X_chunk)
+    ax.plot(years[i], trendline_end[-1], '*', color='blue', markersize=2)
 
 model = LinearRegression().fit(X[0:breakyr:], temperature[0:breakyr])
 trendline = model.predict(X[0:breakyr])
@@ -101,7 +111,7 @@ breakyr = 1970-1850
 offset = 0.11
 for i in range(breakyr, len(years)):
     lag_mean = np.mean(temperature[i-11:i])
-    color = 'orange' #if (i - 5) % 5 == 1 else 'thistle'  # Darker every 5th line
+    color = 'goldenrod' #if (i - 5) % 5 == 1 else 'thistle'  # Darker every 5th line
     if (i) % 11 == 8:
         ax.plot([years[i-11], years[i]], [lag_mean, lag_mean], color=color)
         ax.plot([years[i], years[i]], [lag_mean, lag_mean+offset], color=color)
@@ -273,6 +283,7 @@ smoothed_temp3,mse = lowpass(temperature, 1/40, 2,2)
 weight_file = "butterworth_weights.npy"
 weights_exist = False
 st_date =100
+curcol='darkorange'
 if os.path.exists(weight_file):
         # Load the weights from file
     weights = np.load(weight_file)
@@ -286,10 +297,10 @@ for i in range(st_date, len(years)+1):
     else:
         smoothed_temp4,weights[i-st_date,0],weights[i-st_date,1],weights[i-st_date,2],_ = lowpassadaptive(temperature[0:i], 1/40)
     if i%40==14:
-        ax.plot(years[0:i], smoothed_temp4, color='orange')
-        ax.plot(years[i-1], smoothed_temp4[-1],'o', color='orange',markersize=6)
+        ax.plot(years[0:i], smoothed_temp4, color=curcol)
+        ax.plot(years[i-1], smoothed_temp4[-1],'o', color=curcol,markersize=6)
     else:
-        ax.plot(years[i-1], smoothed_temp4[-1],'o', color='orange',markersize=1)
+        ax.plot(years[i-1], smoothed_temp4[-1],'o', color=curcol,markersize=1)
 
 if not(weights_exist):
     np.save(weight_file, weights)
@@ -304,7 +315,7 @@ f_filtered, Pxx_filtered = welch(smoothed_temp4, fs, nperseg=20)
 
 # Plot original and filtered signal power in frequency domain
 ax_inset.plot(f_original, Pxx_original, label="Orig.", color='gray', alpha=0.6)
-ax_inset.plot(f_filtered, Pxx_filtered, label="Filter", color='orange', lw=2)
+ax_inset.plot(f_filtered, Pxx_filtered, label="Filter", color=curcol, lw=2)
 ax_inset.set_title("Frequency", fontsize=10)
 #ax_inset.set_xlabel("Frequency (Hz)", fontsize=8)
 #ax_inset.set_ylabel("Power", fontsize=8)
@@ -349,6 +360,44 @@ ax_inset.set_xticks(x_pos)
 ax.plot(years,basis_functions/16-.5,alpha=0.3)
 ax.text(1950,-0.4,"Basis Funct. (10)",size=7)
 
+# Method: State Space Kalman Filter
+ax = axes[1, 3]
+import Kalman_EM_linRW as KF
+ax.scatter(years, KF.OceanRec[:-1], color='skyblue', label='Ocean SST',s=2,alpha=0.4)
+ax.text(1950,-0.4,"Ocean Surf.\n(HADSST4)",size=7,color='skyblue',alpha=0.8)
+curcol = "mediumseagreen"
+st_date=0
+for i in range(0, len(years)-st_date+1):
+    if (i+st_date)==len(years):
+        ax.plot(years[0:i+st_date], KF.xhathat[0:(st_date+i),0,0], color=curcol)
+        ax.plot(years[i+st_date-1], KF.xhat[(st_date+i-1),0,0],'P', color=curcol,markersize=6)
+    else:
+        ax.plot(years[i+st_date-1],KF.xhat[(st_date+i-1),0,0],'+', color=curcol,markersize=3)
+        
+ylim=ax.get_ylim() 
+# Data for the pie chart
+#xhat[k] = xhatminus[k]+np.matmul(K[k],eta[k])
+lnd_weight = np.mean(KF.K[5:,0,0])
+sea_weight = np.mean(KF.K[5:,0,1]) #*0.9/0.7
+sizes = [lnd_weight, sea_weight, 1-lnd_weight-sea_weight]
+labels = ['Land', 'SST', 'Persist']
+colors = ['green', 'skyblue', 'mediumseagreen']
+
+# Create a figure with subplots
+ax_inset = ax.inset_axes([0.15, 0.55, 0.5, 0.3])
+# Create a pie chart in the subplot
+ax_inset.pie([lnd_weight+sea_weight,sizes[2]], colors=['lightgrey',colors[2]], startangle=180,radius=1.2)
+wedges, texts = ax_inset.pie(sizes, colors=colors, startangle=180)#,wedgeprops=dict(width=0.4))
+for i, wedge in enumerate(wedges):
+    angle = (wedge.theta2 + wedge.theta1) / 2
+    x = wedge.r * 0.6 * np.cos(np.radians(angle))
+    y = wedge.r * 0.6 * np.sin(np.radians(angle))
+    ax_inset.text(x, y, labels[i], horizontalalignment='center', verticalalignment='center', fontsize=7)
+ax_inset.text(-0.8, -0.8, "GMST", horizontalalignment='center', verticalalignment='center', fontsize=7,color="grey")
+
+# Equal aspect ratio ensures that pie is drawn as a circle
+ax_inset.set_title("Forward Weight", fontsize=10)
+ax_inset.axis('equal')
 
 
 # Method: Remove ENSO
@@ -406,6 +455,9 @@ ax.plot(years[22:],temperature[22:]-enso['AVG'][1:]*coefMEI, color = "red") #
 yenso= enso['AVG'][1:]*coefMEI+0.75
 ax.fill_between(years[22:], yenso, 0.75, where=(enso['AVG'][1:] > 0), facecolor='red', alpha=0.6, interpolate=True)  # Red above y=0
 ax.fill_between(years[22:], yenso, 0.75, where=(enso['AVG'][1:] < 0), facecolor='blue', alpha=0.6, interpolate=True)  # Blue below y=0
+ax.text(1850,1,"Multivariate ENSO Index",verticalalignment='center',size=10)
+ax.set_ylim(ylim)
+
 #ax.plot(years[22:],(X2['TSI']-np.mean(X2['TSI']))*model.params['TSI']+0.9, color='goldenrod', alpha=0.6)
 #ax.plot(years[22:],X2['AOD']*model.params['AOD']+1, color='teal', alpha=0.6) 
 print(model.params)
@@ -413,6 +465,8 @@ print(model.params)
 # Add a legend outside the panes (customize legend entries later)
 handles, labels = ax.get_legend_handles_labels()
 #fig.legend(handles, labels, loc='upper right')
+
+
 
 # Adjust layout to minimize spacing between panes
 plt.tight_layout(rect=[0, 0, 0.9, 1])
