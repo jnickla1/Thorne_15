@@ -257,6 +257,6 @@ handles, labels = ax.get_legend_handles_labels()
 
 # Adjust layout to minimize spacing between panes
 plt.tight_layout(rect=[0, 0, 0.9, 1])
-plt.savefig("sec42.pdf")
+#plt.savefig("sec42.pdf")
 # Display the figure
 plt.show()

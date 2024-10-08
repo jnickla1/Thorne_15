@@ -11,6 +11,8 @@ years=data[:,0]
 years[0]=1850
 nyrs = len(years)
 temperature = data[:, 1]
+offset_t = np.mean(temperature[0:51]) #1850-1900
+temperature = temperature - offset_t
 all_method_names = ["5yr lagging", "10yr lagging",
                     "OLS Fit", "Theil Sen", "Hinge Fit","Quartic","Bayes CP",
                     "11yr offset", "15yr fit end","LOWESS-linear", "Butterworth"
@@ -33,7 +35,7 @@ for i, ax in enumerate(axes.flat):
     
     # Only label the y-axis on the left-most column
     if i % npanels2 == 0:
-        ax.set_ylabel('GMST Anomaly (°C)')
+        ax.set_ylabel('GMST Anomaly (°C)\nRelative to 1850-1900')
     else:
         ax.set_yticklabels([])  # Hide y-axis labels for non-leftmost panes
     
@@ -305,6 +307,7 @@ for i in range(st_date, len(years)+1):
 if not(weights_exist):
     np.save(weight_file, weights)
 
+ylim=ax.get_ylim()
 
 # Inset plot for frequency domain (Power Spectral Density)
 ax_inset = ax.inset_axes([0.15, 0.55, 0.5, 0.3])
@@ -334,10 +337,10 @@ ax = axes[1, 2]
 fits_df = pd.read_csv("gam_fits.csv")
 for i in range(0, len(years)-st_date+1):
     if (i+st_date)%40==14:
-        ax.plot(years[0:i+st_date], fits_df.iloc[i,0:(st_date+i)], color='olive')
-        ax.plot(years[i+st_date-1], fits_df.iloc[i,(st_date+i-1)],'d', color='olive',markersize=6)
+        ax.plot(years[0:i+st_date], fits_df.iloc[i,0:(st_date+i)]-offset_t, color='olive')
+        ax.plot(years[i+st_date-1], fits_df.iloc[i,(st_date+i-1)]-offset_t,'d', color='olive',markersize=6)
     else:
-        ax.plot(years[i+st_date-1],fits_df.iloc[i,(st_date+i-1)],'d', color='olive',markersize=1)
+        ax.plot(years[i+st_date-1],fits_df.iloc[i,(st_date+i-1)]-offset_t,'d', color='olive',markersize=1)
 
 
 from statsmodels.tsa.stattools import acf
@@ -357,24 +360,25 @@ ax_inset.set_title("Residual Autocorr.", fontsize=10)
 ax_inset.tick_params(axis='both',labelsize=7)
 ax_inset.set_xticks(x_pos)
 
-ax.plot(years,basis_functions/16-.5,alpha=0.3)
-ax.text(1950,-0.4,"Basis Funct. (10)",size=7)
+ax.plot(years,basis_functions/16-.15,alpha=0.3)
+ax.text(1950,-0.15,"Basis Funct. (10)",size=7,alpha=0.5)
+ax.set_ylim(ylim)
 
 # Method: State Space Kalman Filter
 ax = axes[1, 3]
 import Kalman_EM_linRW as KF
-ax.scatter(years, KF.OceanRec[:-1], color='skyblue', label='Ocean SST',s=2,alpha=0.4)
-ax.text(1950,-0.4,"Ocean Surf.\n(HADSST4)",size=7,color='skyblue',alpha=0.8)
+ax.scatter(years, KF.OceanRec[:-1]-offset_t, color='skyblue', label='Ocean SST',s=2,alpha=0.4)
+ax.text(1950,0,"Ocean Surf.\n(HADSST4)",size=7,color='skyblue',alpha=0.8)
 curcol = "mediumseagreen"
 st_date=0
 for i in range(0, len(years)-st_date+1):
     if (i+st_date)==len(years):
-        ax.plot(years[0:i+st_date], KF.xhathat[0:(st_date+i),0,0], color=curcol)
-        ax.plot(years[i+st_date-1], KF.xhat[(st_date+i-1),0,0],'P', color=curcol,markersize=6)
+        ax.plot(years[0:i+st_date], KF.xhathat[0:(st_date+i),0,0]-offset_t, color=curcol)
+        ax.plot(years[i+st_date-1], KF.xhat[(st_date+i-1),0,0]-offset_t,'P', color=curcol,markersize=6)
     else:
-        ax.plot(years[i+st_date-1],KF.xhat[(st_date+i-1),0,0],'+', color=curcol,markersize=3)
+        ax.plot(years[i+st_date-1],KF.xhat[(st_date+i-1),0,0]-offset_t,'+', color=curcol,markersize=3)
         
-ylim=ax.get_ylim() 
+
 # Data for the pie chart
 #xhat[k] = xhatminus[k]+np.matmul(K[k],eta[k])
 lnd_weight = np.mean(KF.K[5:,0,0])
@@ -452,10 +456,10 @@ coefMEI=model.params['MEI'] #0.1
 
 ax.plot(years[22:],temperature[22:]-enso['AVG'][1:]*coefMEI, color = "red") #
 
-yenso= enso['AVG'][1:]*coefMEI+0.75
-ax.fill_between(years[22:], yenso, 0.75, where=(enso['AVG'][1:] > 0), facecolor='red', alpha=0.6, interpolate=True)  # Red above y=0
-ax.fill_between(years[22:], yenso, 0.75, where=(enso['AVG'][1:] < 0), facecolor='blue', alpha=0.6, interpolate=True)  # Blue below y=0
-ax.text(1850,1,"Multivariate ENSO Index",verticalalignment='center',size=10)
+yenso= enso['AVG'][1:]*coefMEI+0.75-offset_t
+ax.fill_between(years[22:], yenso, 0.75-offset_t, where=(enso['AVG'][1:] > 0), facecolor='red', alpha=0.6, interpolate=True)  # Red above y=0
+ax.fill_between(years[22:], yenso, 0.75-offset_t, where=(enso['AVG'][1:] < 0), facecolor='blue', alpha=0.6, interpolate=True)  # Blue below y=0
+ax.text(1850,1-offset_t,"Multivariate ENSO Index",verticalalignment='center',size=10)
 ax.set_ylim(ylim)
 
 #ax.plot(years[22:],(X2['TSI']-np.mean(X2['TSI']))*model.params['TSI']+0.9, color='goldenrod', alpha=0.6)
