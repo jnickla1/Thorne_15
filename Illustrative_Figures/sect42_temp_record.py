@@ -6,7 +6,7 @@ npanels2=5
 fig, axes = plt.subplots(nrows=2, ncols=npanels2, figsize=(14, 7))
 
 # Generate fictitious temperature data (for demonstration)
-data = np.genfromtxt(open("toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
+data = np.genfromtxt(open("../Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
 years=data[:,0]
 years[0]=1850
 nyrs = len(years)
@@ -282,7 +282,7 @@ smoothed_temp3,mse = lowpass(temperature, 1/40, 2,2)
 # Plot the smoothed temperature data
 #ax.plot(years, smoothed_temp1, color='darkorange', label='Butterworth Smoother')
 #ax.plot(years, smoothed_temp3, color='coral', label='Butterworth Smoother')
-weight_file = "butterworth_weights.npy"
+weight_file = "../Methods/42_Temp_Alone/2_LT_Fits/butterworth/butterworth_weights.npy"
 weights_exist = False
 st_date =100
 curcol='darkorange'
@@ -334,7 +334,7 @@ ax_inset.legend(loc="upper right", fontsize=7)
 
 # Method: AR1
 ax = axes[1, 2]
-fits_df = pd.read_csv("gam_fits.csv")
+fits_df = pd.read_csv("../Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR_Stephenson/gam_fits.csv")
 for i in range(0, len(years)-st_date+1):
     if (i+st_date)%40==14:
         ax.plot(years[0:i+st_date], fits_df.iloc[i,0:(st_date+i)]-offset_t, color='olive')
@@ -346,8 +346,8 @@ for i in range(0, len(years)-st_date+1):
 from statsmodels.tsa.stattools import acf
 lastfitar1 = fits_df.iloc[-1,:]
 # Load the CSV files with fitted values and basis functions
-lastfitar0= pd.read_csv("gam_AR0_last_fit.csv")
-basis_functions = pd.read_csv("gam_modelmatrix.csv")
+lastfitar0= pd.read_csv("../Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR_Stephenson/gam_AR0_last_fit.csv")
+basis_functions = pd.read_csv("../Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR_Stephenson/gam_modelmatrix.csv")
 ax_inset = ax.inset_axes([0.15, 0.55, 0.5, 0.3])
 acf_resid0 = acf(lastfitar0.values[:,0]-temperature)
 acf_resid1 = acf(lastfitar1.values-temperature)
