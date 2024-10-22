@@ -1,9 +1,6 @@
 import numpy as np
 from scipy import stats
 
-
-
-
 def run_method(years, temperature, uncert, model_run, experiment_type):
     means = np.full(np.shape(years),np.nan)
     ses = np.full(np.shape(years),np.nan)
@@ -14,7 +11,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     
     ses[regLinX-1850] = np.sqrt(np.var(regY)/20)
     
-    for endd in range(1976,years[-1]):
+    for endd in range(1976,years[-1]+1):
         #starting in 1901
         regX = np.arange(1974,endd+1)
         n=len(regX)
@@ -33,7 +30,11 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         means[endd-1850] = y_pred[-1]
         ses[endd-1850] = n*SE_m
 
+    means2= means.copy()
+    ses2 = ses.copy()
+    ns2 = np.arange(1,years[-1]+2-1974)
+    means2[1974-1850:] = y_pred
+    ses2[1974-1850:] = n*SE_m
 
-
-    return means, ses
+    return means, ses, means2, ses2
 

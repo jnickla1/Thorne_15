@@ -18,7 +18,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    load_file = dir_path+"/boot_quartic/quartic_se.npy"
+    load_file = dir_path+"/boot_quartic/quartic_se_"+experiment_type+".npy"
     load_exist = False
     st_idx =100
     st_date = st_idx+1850
@@ -66,4 +66,4 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     if not(load_exist):
         np.save(load_file, ses_full)
 
-    return means, ses
+    return means, ses, y_pred,ses_full[endi-st_idx,:]

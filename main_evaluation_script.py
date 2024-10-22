@@ -2,11 +2,13 @@ import os
 import importlib
 import numpy as np
 import pandas as pd
+from itertools import chain
 
-def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type, methods_folder='Methods'):
+
+def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type, methods_folder=('Methods/42_Temp_Alone/6_Remove_IV','Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based')):
     # Find all *_method.py files in the folder and subfolders
     method_files = []
-    for root, _, files in os.walk(methods_folder):
+    for root, _, files in chain.from_iterable(os.walk(path) for path in methods_folder):
         for file in files:
             if file.endswith('_method.py'):
                 method_files.append(os.path.join(root, file))
@@ -17,7 +19,8 @@ def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type,
     # Send data to each method and retrieve results
     for method_path in method_files:
         # Extract method class (folder structure relative to methods_folder)
-        method_class = os.path.relpath(os.path.dirname(method_path), methods_folder)
+        current_file_path = os.getcwd()+"/Methods"
+        method_class = os.path.relpath(os.path.dirname(method_path), current_file_path) #methods_folder)
 
         # Dynamically import the module
         print(method_path)
@@ -39,6 +42,7 @@ def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type,
 def closest(lst, yrs, K):
     return yrs[np.nanargmin(abs(lst-K))]
 
+retIDlabels = ['c','r']
 
 import scipy.stats as stats
 import statsmodels.stats.multitest as multi
@@ -55,7 +59,7 @@ if __name__ == '__main__':
     years=data.loc[:,"Time"].to_numpy()
     nyrs = len(years)
     model_run = 'hadcrut5'
-    experiment_type = 'historical_obs_20yr_mean'
+    experiment_type = 'historical'
 
     # Run all the methods
     results = run_methods(years, temps_obs, (temps_CIl, temps_CIu),model_run, experiment_type)
@@ -63,9 +67,79 @@ if __name__ == '__main__':
     heights0=np.arange(.2,4.2,0.05) #heights to test at thresholds: 0.05°C increments
     nthresholds = np.size(heights0)
     inum=4 #internal interpolation within years
-    standard = results['cent20y']['LT_trend'][0]
-    var_std = np.nanmean(np.abs(np.diff(np.diff(standard))))
-    ##Process along time marginal for each temp rather than along the temperature marginal for each date
+    standard = results['cent20y']['LT_trend'][2] #retrospective
+    smooth_std = np.nanmean(np.abs(np.diff(np.diff(standard))))
+
+            
+
+    df_results = pd.DataFrame(columns=['method_name', 'method_class','c/r','smooth_ratio','avg_unc.(1se)','#qvals<0.5', '#qvals<0.1', 'qvals_min', 'qvals_small5','log-likelihood'])
+    i=0
+    for method_name, method_data in results.items():
+        #print(f"Results from {method_name} (Method Class: {method_data['method_class']}):")
+        result = method_data['LT_trend']
+
+        for k in range(2):
+            if isinstance(result, dict):
+                # Empirical method: Call the functions at each time point
+                central_est = result['mean'](years,k)
+                se = result['se'](years,k)
+                pvals = result['pvalue'](years, standard,k)
+                llikelihood = result['log_likelihood'](years, standard,k)
+                    
+                    # Perform FDR adjustment and other calculations...
+            else:
+                central_est = result[k*2]
+                se = result[k*2+1]
+                pvals = stats.norm.sf(abs((standard-central_est)/ se))*2
+                llikelihood = stats.norm.logpdf(standard,loc=central_est,scale=se)
+                
+            if (sum(~np.isnan(central_est))>0 ):    #isinstance(result, tuple):
+                # Central estimate and SE, implying gaussian distn
+                labelcurr_or_retro = retIDlabels[k]
+                smooth_est = np.nanmean(np.abs(np.diff(np.diff(central_est))))
+                nnans = ~(np.isnan(pvals))
+                qvals = multi.multipletests(pvals[nnans], alpha=0.5, method='fdr_bh')
+                qvals_count_yrs05 = np.sum(qvals[0])
+                qvals_count_yrs01 = np.sum(qvals[1]<0.1)
+                qvals_smallest = np.min(qvals[1])
+                qvals_smallest5 = np.sort(qvals[1])[4]
+                avg_uncert = np.nanmean(se)
+                #print(qvals_count_yrs ,qvals_smallest, qvals_smallest5 )
+                
+    #PLOT TO SHOW WHAT IT'S DOING
+                if(method_name == "KCC_human"): #removeMEI_volc_refit"):
+                    plt.plot(years, standard, 'ko')
+                    plt.fill_between(years, central_est-se, central_est+se, alpha=0.6)
+              #  elif("lowess" in method_name):
+              #      plt.fill_between(years, central_est-se, central_est+se, alpha=0.6)
+
+                short_method_class = method_data['method_class'][0:2] +"/"+method_data['method_class'].split('/')[-1]
+                df_results.loc[i]= [ method_name,short_method_class,labelcurr_or_retro,smooth_est/smooth_std,avg_uncert,
+                                 qvals_count_yrs05,qvals_count_yrs01,  qvals_smallest,qvals_smallest5, np.nansum(llikelihood)]
+                i=i+1
+   
+       # else:
+            # 100 percentiles
+        #    percentiles = result
+           # print(f"  Percentiles: {percentiles}"
+           
+
+    df_res_show = df_results
+    df_res_show['smooth_ratio'] = df_results['smooth_ratio'].round(3)
+    print(df_res_show)
+    #df_results.to_csv('method_statistics_results.csv', index=False)
+    plt.show()
+
+
+
+
+
+
+
+
+
+
+        ##Process along time marginal for each temp rather than along the temperature marginal for each date
 ##    #make this monotonically increasing so we are not assessing back and forth thresholds
 ##    
 ##    std_increas = standard.copy() 
@@ -104,47 +178,3 @@ if __name__ == '__main__':
 ##                    iloc0=(central_est[t]*(1-interp/inum)+central_est[t]*(interp/inum))
 ##                    iscale0=(se[t]*(1-interp/inum)+se[t+1]*(interp/inum))
 ##                    pdftable0[:,t*inum+interp]= stats.norm.pdf(heights0,loc=iloc0,scale=iscale0)
-            
-
-    df_results = pd.DataFrame(columns=['method_name', 'method_class','smooth_ratio','qvals_#yrs<0.5', 'qvals_#yrs<0.1', 'qvals_smallest', 'qvals_smallest5','log-likelihood'])
-    i=0
-    for method_name, method_data in results.items():
-        #print(f"Results from {method_name} (Method Class: {method_data['method_class']}):")
-        result = method_data['LT_trend']
-
-
-
-        
-      
-        if isinstance(result, tuple):
-            # Central estimate and SE, implying gaussian distn
-            central_est, se = result
-            var_est = np.nanmean(np.abs(np.diff(np.diff(central_est))))
-            pvals = stats.norm.sf(abs((standard-central_est)/ se))*2
-            nnans = ~(np.isnan(pvals))
-            qvals = multi.multipletests(pvals[nnans], alpha=0.5, method='fdr_bh')
-            qvals_count_yrs05 = np.sum(qvals[0])
-            qvals_count_yrs01 = np.sum(qvals[1]<0.1)
-            qvals_smallest = np.min(qvals[1])
-            qvals_smallest5 = np.sort(qvals[1])[4]
-            llikelihood = stats.norm.logpdf(standard,loc=central_est,scale=se)
-            #print(qvals_count_yrs ,qvals_smallest, qvals_smallest5 )
-            
-#PLOT TO SHOW WHAT IT'S DOING
-            if(method_name == "quartic"):
-                plt.plot(years, standard, 'ko')
-                plt.fill_between(years, central_est-se, central_est+se)
-            
-           
-        else:
-            # 100 percentiles
-            percentiles = result
-           # print(f"  Percentiles: {percentiles}"
-           
-        df_results.loc[i]= [ method_name, method_data['method_class'],var_est/var_std, qvals_count_yrs05,qvals_count_yrs01,  qvals_smallest,qvals_smallest5, np.nansum(llikelihood)]
-        i=i+1
-    df_res_show = df_results
-    df_res_show['smooth_ratio'] = df_results['smooth_ratio'].round(3)
-    print(df_res_show)
-    #df_results.to_csv('method_statistics_results.csv', index=False)
-    plt.show()

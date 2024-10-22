@@ -37,8 +37,12 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         means[endd-1850] = y_pred[-1]
         ses[endd-1850] = np.sqrt( (n/2*sstdrr)**2 + constV /n)
 
+    means2= means.copy()
+    ses2 = ses.copy()
+    ns2 = np.arange(1,years[-1]+2-1970)
+    means2[1970-1850:] = y_pred
+    ses2[1970-1850:] = np.sqrt( (ns2/2*sstdrr)**2 + constV /ns2)
 
 
-
-    return means, ses
+    return means, ses, means2,ses2
 

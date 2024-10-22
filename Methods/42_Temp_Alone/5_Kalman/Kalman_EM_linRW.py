@@ -9,12 +9,12 @@ import pandas as pd
 #T = 0.292*LandRec +0.708*OceanRec
 # LandRec = (T - 0.708*OceanRec)/ 0.292
 
-data = np.genfromtxt(open('toyKFmodelData8c.csv', "rb"),dtype=float, delimiter=',')
+data = np.genfromtxt(open('../../../Common_Data/toyKFmodelData8c.csv', "rb"),dtype=float, delimiter=',')
 years=data[:,0]
 years[0]=1850
 temperature = data[:, 1]
 n_iter=len(temperature) #174
-data_ocn = pd.read_csv('HadSST.4.0.1.0_annual_GLOBE.csv', sep=',')
+data_ocn = pd.read_csv('../../../Common_Data/HadSST.4.0.1.0_annual_GLOBE.csv', sep=',')
 OceanRec = data_ocn['anomaly'].values
 OceanRec_sc =  OceanRec *0.9/0.7
 LandRec = (temperature- 0.708*OceanRec_sc[0:n_iter])/ 0.292
@@ -127,33 +127,42 @@ while dellYtheta > 1:
     
     lYthetas.append(thislYtheta[0,0])
 
-    #Used smoothed values to calculate S11, S10, S00 given 6.67-6.69
-    S11 =0
-    S10 =0
-    S00 =0
+    #Used smoothed values to calculate S11, S10, S00 given 6.67-6.69 pg 
+    S11 =np.array([[0,0],[0,0]])
+    S10 =np.array([[0,0],[0,0]])
+    S00 =np.array([[0,0],[0,0]])
     for k in range(1,n_iter):
-        S11 = S11 + xhathat[k]*xhathat[k]*np.array([[1]]) + Phat[k]
-        S10 = S10 + xhathat[k]*xhathat[k-1]*np.array([[1]])  + Phathat[k]
-        S00 = S00 + xhathat[k-1]*xhathat[k-1]*np.array([[1]])  + Phat[k-1]
+        S11 = S11 + np.matmul(xhathat[k],np.transpose(xhathat[k])) + Phat[k]
+        S10 = S10 + np.matmul(xhathat[k],np.transpose(xhathat[k-1]))  + Phathat[k]
+        S00 = S00 + np.matmul(xhathat[k-1],np.transpose(xhathat[k-1]))  + Phat[k-1]
     
 #M-step: update the estimates of u0, sig0, phi, Q, R using 6.70-6.73
     #ignore update of phi?
 
     phi_new = np.matmul(S10,np.linalg.inv(S00))
-    Q_new = 1/n_iter * ( S11 - np.matmul(phi,np.transpose(S10)))
+    Qnew = 1/n_iter * ( S11 - np.matmul(phi_new,np.transpose(S10)))
     Rsum=np.zeros((2,2))
     for k in range(1,n_iter):
-        etaN = np.array([[LandRec[k]],[OceanRec_sc[k]]])-A*(xhathat[k])
+        etaN = np.array([[EBM.temps[k]+EBM.DO_mean_temp],[EBM.IV_meas_fwd[k]]])-np.matmul(A,xhathat[k])
         Rsum = Rsum + np.matmul(etaN ,np.transpose(etaN)) + np.matmul(np.matmul(A,Phat[k]),np.transpose(A))
 
-    R = Rsum[::-1,::-1] / n_iter
+    Rnew = Rsum / n_iter
+    #R = Rsum[::-1,::-1] / n_iter
+    #-173.0596179622334 -2.691956143107717
+#[[ 1.01421857  0.41972761]
+# [-0.00126575  1.10357265]]
+#[[-1.37020693e-01  1.41227742e-01]
+# [-1.39551416e-01  5.66752453e-05]]
+#[[0.36625514 0.08973213]
+# [0.08973213 0.18262669]]
+    
     #phi=phi_new
     if __name__ == "__main__":
         print(thislYtheta[0,0])
         print(thislYtheta[0,0], dellYtheta)
         print(phi_new)
         print(Q_new)
-        print(R)
+        print(R_new)
 
 if __name__ == "__main__":
     plt.figure()

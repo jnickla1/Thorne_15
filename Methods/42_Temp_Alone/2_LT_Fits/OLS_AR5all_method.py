@@ -11,7 +11,7 @@ def confidence_interval(x, y_pred, x_mean, s_e, t_crit,n, factor=1):
 
 
 def run_method(years, temperature, uncert, model_run, experiment_type):
-
+    empser = np.full(np.shape(years),np.nan)
     slope = 0.075/10
     slope_assessed_err = 0.013 / 10
     
@@ -48,5 +48,5 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
 
 
-    return means, ses
+    return empser.copy(), empser.copy(), means, ses
 

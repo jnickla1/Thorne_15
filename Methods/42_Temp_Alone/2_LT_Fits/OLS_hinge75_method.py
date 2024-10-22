@@ -45,6 +45,10 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 ##            plt.plot(regX, (slope) * regX + intercept- (sstdrr) * (regX-np.mean(regX)), 'r')
 ##            plt.figure()
 
+    means2= means.copy()
+    ses2 = ses.copy()
+    means2[1974-1850:] = y_pred
+    ses2[1974-1850:] = cis
 
-    return means, ses
 
+    return means, ses, means2,ses2

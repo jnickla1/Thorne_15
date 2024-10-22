@@ -366,7 +366,7 @@ ax.set_ylim(ylim)
 
 # Method: State Space Kalman Filter
 ax = axes[1, 3]
-import Kalman_EM_linRW as KF
+import ..Methods.42_Temp_Alone.5_Kalman.Kalman_EM_linRW as KF
 ax.scatter(years, KF.OceanRec[:-1]-offset_t, color='skyblue', label='Ocean SST',s=2,alpha=0.4)
 ax.text(1950,0,"Ocean Surf.\n(HADSST4)",size=7,color='skyblue',alpha=0.8)
 curcol = "mediumseagreen"
@@ -407,7 +407,7 @@ ax_inset.axis('equal')
 # Method: Remove ENSO
 ax = axes[1, 4]
 import statsmodels.api as sm
-enso = pd.read_csv("meiv_shift.csv")
+enso = pd.read_csv("../Common_Data/meiv_shift.csv")
 omega = 2 * np.pi / 1 
 cos_2yr = np.cos(0.5 * omega * years)
 X = pd.DataFrame({
