@@ -13,7 +13,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     means = np.full(np.shape(years),np.nan)
     ses = np.full(np.shape(years),np.nan)
 
-    stidx = 99
+    stidx = 29
     for endi in range(stidx, len(years)):
 
         means[endi] = comput_temps.values[endi-stidx, endi] -preind_base 

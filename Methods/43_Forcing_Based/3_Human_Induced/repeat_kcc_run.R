@@ -69,15 +69,21 @@ Xo_gloNew = Xo_glo_full[-c(1,2)]
 colnames(Xo_gloNew)=1:200
 
 #REPEAT from this section down
-styr=101 #100
+styr=51 #101
 for (i in styr: length(year_obsNew)) {
-end_idx = 1850+ i-1
-
-year_obsN = 1850:end_idx
+end_idx = 1850+ i
+print(end_idx)
+year_obsN = 1850:(end_idx-1)
 if (end_idx>1990){
-    ref_obs = 1961:1990 }else{
-    ref_obs = 1921:1950
-  }
+    ref_obs = 1961:1990 }
+else if (end_idx>1960){
+    ref_obs = 1931:1960 }
+else if (end_idx>1930){
+  ref_obs = 1901:1930 }
+else if (end_idx>1900){
+  ref_obs = 1871:1900 }
+else {ref_obs = 1850:1879 }
+
 
 ny_obs = length(year_obsN)
 Xo_glo_fullCW = loadRData("GMST_CW_ann.Rdata")

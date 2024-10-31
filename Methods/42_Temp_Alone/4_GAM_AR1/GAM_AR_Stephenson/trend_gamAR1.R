@@ -43,7 +43,7 @@ setwd("~/Downloads/Thorne_15_codefigurestats/Methods/42_Temp_Alone/4_GAM_AR1/GAM
 dat0=data.frame(read.table("~/Downloads/Thorne_15_codefigurestats/Common_Data/HadCRUT5.csv",header=TRUE,sep=","))
 #colnames(dat0) <- c("Time","Anomaly","eCO2",	"opt_depth",	"R_Tvar",	"OHCA",	"ROC_tvar",	"anthro_clouds"	,"TSI")
 par(mfrow=c(1,2))
-styr=100
+styr=30
 n_partitions = dim(dat0)[1]-styr+1
 fits_matrix <- matrix(NA, nrow=n_partitions, ncol=nrow(dat0))
 se_matrix <- matrix(NA, nrow=n_partitions, ncol=nrow(dat0))

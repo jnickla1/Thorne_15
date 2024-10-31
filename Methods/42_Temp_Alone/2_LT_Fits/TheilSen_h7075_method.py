@@ -28,10 +28,12 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         regX = np.arange(1970,endd+1)
         n=len(regX)
         regY = temperature[regX-1850]
-        regres = stats.theilslopes(regY, regX, 0.3413*2) # +- 1 se
-        slope = regres.slope
-        intercept =regres.intercept
-        sstdrr = (regres.high_slope - regres.low_slope)/2
+        regres= stats.theilslopes(regY, regX, 0.3413*2) # +- 1 se
+        slope, intercept, low_slope, high_slope = regres
+        sstdrr = (high_slope - low_slope)/2
+        #slope = regres.slope
+        #intercept =regres.intercept
+        #sstdrr = (regres.high_slope - regres.low_slope)/2
         y_pred = slope * regX + intercept
 
         means[endd-1850] = y_pred[-1]
