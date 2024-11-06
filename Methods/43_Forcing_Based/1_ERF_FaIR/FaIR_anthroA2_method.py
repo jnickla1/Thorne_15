@@ -20,11 +20,16 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     Nres = np.shape(obt_array0)[1]
 
 #starts in 1750 so crop to 100th index
-    samp_cur = obt_array0[100:,:] +0.1044 #empirical adjustment
-    samp_cur[0:100,:]=np.nan #censoring until 1950
+    samp_cur0 = obt_array0[100:,:] +0.1044 #empirical adjustment
+    samp_cur0[0:100,:]=np.nan #censoring until 1950
+    samp_mean =  np.mean(samp_cur0, axis = 1)
+    dev_orig = samp_cur0 - samp_mean[:, np.newaxis]
+    samp_cur = samp_mean[:, np.newaxis] + np.sqrt( dev_orig**2)*.4 *np.sign(dev_orig)
+
+    
     def empirical_mean(year_idx,k):
         if (k==0):
-            return np.mean(samp_cur[year_idx-1850, :], axis = 1)
+            return samp_mean[year_idx-1850]
         else:
             return empser.copy()
 

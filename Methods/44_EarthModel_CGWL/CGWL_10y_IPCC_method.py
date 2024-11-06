@@ -36,7 +36,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         chunk_uncert=temps_1std[i-avg_len_l:i+avg_len_u]
         g = get_trend(i+1850)
         #print(g)
-        means[i] = np.mean(chunk) + g[0]*10
+        means[i] = np.mean(chunk) + g[0]*5
         tot_uncert = np.var(chunk)/ len(chunk) + np.mean(chunk_uncert**2) + 10*(g[1])**2 
         ses[i] = np.sqrt(tot_uncert) 
     return means, ses, empser.copy(), empser.copy()

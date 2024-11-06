@@ -21,7 +21,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     ses = empser.copy()
     means2 = empser.copy()
     ses2 = empser.copy()
-
+    #ekf.fdbkA = 0.35 #original value
+    #ekf.precompute_coeffs(False)
     wt_opt_depths = 1/(ekf.opt_depth+9.7279)
     N = 30
     nwt_opt_depths=np.empty(len(ekf.opt_depth)); nwt_opt_depths[:]=ekf.involcavg
