@@ -8,6 +8,7 @@ from sklearn.metrics import r2_score
 plt.rcParams["font.family"] = "Times New Roman"
 mpl.rcParams['mathtext.fontset'] = "cm"
 import matplotlib.transforms as mtransforms
+import pdb
 
 colorekf=(26./255, 44./255, 105./255)
 colorstate=(62./255, 207./255, 117./255)
@@ -15,11 +16,31 @@ coloruncert=(52./255, 235./255, 235./255)
 colorgrey=(0.5,0.5,0.5)
 
 
-
-
 n_iters = 174 
 sz = (n_iters,2) # size of array
 sz2d=(n_iters,2,2)
+
+# allocate space for arrays
+
+xhat=np.zeros(sz)      # a posteri estimate of x
+P=np.zeros(sz2d)         # a posteri error estimate
+F=np.zeros(sz2d)         # state transitions
+xhatminus=np.zeros(sz) # a priori estimate of x
+Pminus=np.zeros(sz2d)    # a priori error estimate
+K=np.zeros(sz2d)         # gain or blending factor
+
+xhathat=np.zeros(sz)   # smoothed a priori estimate of x
+Phat=np.zeros(sz2d)      # smoothed posteri error estimate 
+Khat=np.zeros(sz2d)      # smoothed gain or blending factor
+Shat=np.zeros(sz2d)
+S=np.zeros(sz2d)
+xblind=np.zeros(sz)
+
+lml=np.zeros(sz)
+lsml=0
+y=np.zeros(sz)
+qqy=np.zeros(sz)
+
 
 zJ_from_W = 5.1006447*3.154*0.71
 zJtomm=0.121
@@ -74,8 +95,8 @@ pindavg=Teq1850 #286.7 #preindustrial avg
 shaldepth=86
 deepdepth = 1141
 
-fdbkS = 0.42
-fdbkA = 0.35
+fdbkS = 0.35
+fdbkA = 0.42
 fdbkW = 1.3
 
 def precompute_coeffs(printThem):
@@ -177,28 +198,6 @@ def compute_update(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
     return np.array([Tchange, Tchange*Cs + gad*(x-Teq1850 - oc + oc1850) ])
 
 
-# allocate space for arrays
-
-xhat=np.zeros(sz)      # a posteri estimate of x
-P=np.zeros(sz2d)         # a posteri error estimate
-F=np.zeros(sz2d)         # state transitions
-xhatminus=np.zeros(sz) # a priori estimate of x
-Pminus=np.zeros(sz2d)    # a priori error estimate
-K=np.zeros(sz2d)         # gain or blending factor
-
-xhathat=np.zeros(sz)   # smoothed a priori estimate of x
-Phat=np.zeros(sz2d)      # smoothed posteri error estimate 
-Khat=np.zeros(sz2d)      # smoothed gain or blending factor
-Shat=np.zeros(sz2d)
-S=np.zeros(sz2d)
-xblind=np.zeros(sz)
-
-
-lml=np.zeros(sz)
-lsml=0
-y=np.zeros(sz)
-qqy=np.zeros(sz)
-
 qqyh=[]
 qqyk=[]
 
@@ -207,6 +206,7 @@ qqyker=np.zeros((2,200))
 qqykerall=[]
 ynorm  = stats.norm.pdf(xnorm)
 involcavg = np.mean(1/(opt_depth+9.7279))
+
 
 def ekf_future(startyr,Pstart,xhatstart,endyr,case,caseA,noVolcs=True,trail_avg_volcs=False): #pass VolcanoFit module as last parameter
     nfiter=endyr-startyr
@@ -218,7 +218,7 @@ def ekf_future(startyr,Pstart,xhatstart,endyr,case,caseA,noVolcs=True,trail_avg_
     #
     past_opt_depth=data[:,3]*0.001 #reload past data in case we lost it
     if(noVolcs==True):
-        volcs = np.ones(nfiter)*(1/involcavg-9.7279) #np.mean(opt_depth) #barely makes a difference
+        volcs = np.ones(nfiter)*volcavg #np.mean(opt_depth) #barely makes a difference
         
     else:
         volcs = noVolcs.genEruptions(nfiter+30)*0.001
@@ -279,12 +279,12 @@ def ekf_run(z,n_iter,retPs=False):
         P[k] = np.matmul((np.eye(2)- K[k] ),Pminus[k])
         stdevS=np.sqrt(np.abs(np.diag(S[k])))
         qqy[k]=y[k]/stdevS
-        gmstpdf=stats.norm.pdf(xnorm,loc = qqy[k,0], scale = data[k,4]/stdevS[0])
-        ohcapdf=stats.norm.pdf(xnorm,loc = qqy[k,1], scale = data[k,6]/zJ_from_W/stdevS[1])
-        qqykerall.append([gmstpdf,ohcapdf])
-        if k>1:
-            qqyker[0] += gmstpdf/(n_iters-1)
-            qqyker[1] += ohcapdf/(n_iters-1)
+        #gmstpdf=stats.norm.pdf(xnorm,loc = qqy[k,0], scale = data[k,4]/stdevS[0])
+        #ohcapdf=stats.norm.pdf(xnorm,loc = qqy[k,1], scale = data[k,6]/zJ_from_W/stdevS[1])
+        #qqykerall.append([gmstpdf,ohcapdf])
+        #if k>1:
+        #    qqyker[0] += gmstpdf/(n_iters-1)
+        #    qqyker[1] += ohcapdf/(n_iters-1)
         #lml[k]= -0.5* (np.transpose(y[k])/S[k]*y[k] + np.log(S[k]) + np.log(2*np.pi)) #need to sort this out later
         
 
@@ -335,6 +335,8 @@ def ekf_run(z,n_iter,retPs=False):
         return xhat[0:n_iter], P[0:n_iter], S[0:n_iter], xhatminus[0:n_iter,0]
     elif (retPs==3):
         return xhat[0:n_iter,0], P[0:n_iter,0,0],xhathat[0:n_iter,0], Phat[0:n_iter,0,0]
+    elif (retPs==4):
+        return xhat[0:n_iter,0], P[0:n_iter,0,0],xblind[0:n_iter,0], Phat[0:n_iter,0,0]
     else:
         return xhat[0:n_iter]
 

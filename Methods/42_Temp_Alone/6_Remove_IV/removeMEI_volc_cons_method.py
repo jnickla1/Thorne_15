@@ -29,7 +29,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     # Add a constant term for the intercept
     X = sm.add_constant(X)
     y = temperature[129:174]
-    #here we are trying to predict temperature
+    #here we are trying to predict temperature 1971-2023
     model = sm.OLS(y, X).fit()
     st_idx = 1971- 1871
     X2 = pd.DataFrame({
@@ -46,6 +46,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     offset = np.mean(pred2.predicted_mean)
     means[22+st_idx:174]= temperature[22+st_idx:174] - pred2.predicted_mean +offset
     ses[22+st_idx:174] = np.sqrt( temps_1std[22+st_idx:174]**2 + (pred2.se)**2 + constV/4)
+    #only making predictions from 1971 onwards.
     
     return means, ses, empser.copy(), empser.copy()
 

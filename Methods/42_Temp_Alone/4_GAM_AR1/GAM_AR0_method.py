@@ -2,14 +2,38 @@ import numpy as np
 import pandas as pd
 from numpy.polynomial import Polynomial
 import os
+import subprocess
 def run_method(years, temperature, uncert, model_run, experiment_type):
 
-    data_orig = pd.read_csv("./Common_Data/HadCRUT5.csv")
-    temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
-    preind_base = np.mean(temps_obs[0:50])
+    preind_base =  0 #np.mean(temps_obs[0:50])
     cur_path = os.path.dirname(os.path.realpath(__file__))
-    comput_temps = pd.read_csv(cur_path+"/GAM_AR_Stephenson/gamAR0_fits_"+experiment_type+".csv", sep=',') #has header
-    comput_uncert = pd.read_csv(cur_path+"/GAM_AR_Stephenson/gamAR0_se_fits_"+experiment_type+".csv", sep=',')
+    load_file = cur_path+"/GAM_AR_Stephenson/output/gamAR0_fits_"+experiment_type+str(model_run)+".csv"
+
+    if not(os.path.exists(load_file)):
+        (temps_CIl, temps_CIu) = uncert
+        #save to input_data
+        loc_string = experiment_type+str(model_run)
+        inp_save_path =  cur_path+"/GAM_AR_Stephenson/input_data/"+loc_string+".csv"
+
+        # Define the headers in the dataframe
+        df = pd.DataFrame({"Time" : years, "Anomaly" : temperature, "Lower" : temps_CIl, "Upper" : temps_CIu})
+        # Save the array as a CSV file with headers
+        df.to_csv(inp_save_path, index=False)
+                   
+        #call Rfunction, which will save output 
+    
+        R_command = ("Rscript --vanilla "+cur_path+"/GAM_AR_Stephenson/trend_gamAR1_iter.R "+loc_string)
+
+        # Run the command using subprocess
+        try:
+            subprocess.run(R_command, shell=True, check=True)
+            print("R command executed successfully.")
+        except subprocess.CalledProcessError as e:
+            sys.exit(f"Error while executing R command: {e}")
+
+            
+    comput_temps = pd.read_csv(load_file, sep=',') #has header
+    comput_uncert = pd.read_csv(cur_path+"/GAM_AR_Stephenson/output/gamAR0_se_fits_"+experiment_type+str(model_run)+".csv", sep=',')
     means = np.full(np.shape(years),np.nan)
     ses = np.full(np.shape(years),np.nan)
 

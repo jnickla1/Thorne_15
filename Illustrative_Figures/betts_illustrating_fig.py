@@ -11,7 +11,7 @@ def colorgen(c,step,const):
 fig, ax = plt.subplots(1,1, figsize=(7, 5))
 
 # Generate fictitious temperature data (for demonstration)
-data = np.genfromtxt(open("toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
+data = np.genfromtxt(open("../Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
 years=data[:,0]
 years[0]=1850
 nyrs = len(years)
@@ -26,7 +26,7 @@ ax.set_ylabel('GMST Anomaly (°C)\nRelative to 1850-1900')
 ax.set_xlim([1996-0.2,2040+0.2])
 ax.set_ylim([0.6,2.1])
 
-data_simulation = np.genfromtxt(open("all_nl_cesm2_ts_0000-0089.csv", "rb"),dtype=float, delimiter=',')
+data_simulation = np.genfromtxt(open("../Common_Data/all_nl_cesm2_ts_0000-0089.csv", "rb"),dtype=float, delimiter=',')
 
 twTR=np.where(data_simulation == 0, float("nan"), data_simulation)
 

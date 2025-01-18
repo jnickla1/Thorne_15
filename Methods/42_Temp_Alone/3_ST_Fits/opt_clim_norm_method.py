@@ -5,6 +5,7 @@ import numpy as np
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize_scalar
+#import pdb
 
 
 
@@ -41,7 +42,7 @@ def run_method(dates, temps, uncert, model_run, experiment_type):
     std_guess = np.std(temps[0:60])
     plotting = False
     while computing >= 1:
-        #print(sp)
+        print(sp)
         # Generate trend, sigma, beta, g for this guess interval Nguess=30
         p = np.polyfit(dates[sp:ep], temps[sp:ep], 1)
         model = p[0] * dates[sp:ep] + p[1]
@@ -69,8 +70,9 @@ def run_method(dates, temps, uncert, model_run, experiment_type):
             Nguess = round((Noptimal + Nguess1) / 2)
         else:
             Nguess = Noptimal
-            ep = sp + Nguess
-            continue
+            ep = sp + Nguess #extend to much longer interval
+            if Nguess < 50: #max bounds, dont restart loop
+                continue
         
         # Compute stats and plot for sp through sp+Noptimal-1
         ep = sp + round(Noptimal) 
@@ -110,6 +112,7 @@ def run_method(dates, temps, uncert, model_run, experiment_type):
         if sp + 1 >= len(temps):
             computing = 0
             break
+
         
         if sp + Nguess > len(temps):
             ep = len(temps)

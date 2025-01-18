@@ -138,7 +138,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    weight_file =  dir_path+"/butterworth/butterworth_weights_"+experiment_type+".npy"
+    weight_file =  dir_path+"/butterworth/butterworth_weights_"+experiment_type+str(model_run)+".npy"
     weights_exist = False
     empser  = np.full(np.shape(years),np.nan)
     means = empser.copy()

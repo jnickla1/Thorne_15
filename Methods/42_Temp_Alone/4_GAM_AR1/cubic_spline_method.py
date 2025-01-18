@@ -34,7 +34,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    load_file = dir_path+"/AR_cubic_spline/cubic_spline_se_"+experiment_type+".npy"
+    load_file = dir_path+"/AR_cubic_spline/cubic_spline_se_"+experiment_type+str(model_run)+".npy"
     load_exist = False
     st_idx =30
     st_date = st_idx+1850
