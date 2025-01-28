@@ -84,41 +84,42 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             #opt_depth
             ohca_meas=1
             
+        if ekf.n_iters != new_iter:
+            new_tsi = np.full(new_iter, ekf.sw_in)
+            new_tsi[0:ekf.n_iters] = ekf.data[:,8]
 
-        new_tsi = np.full(new_iter, ekf.sw_in)
-        new_tsi[0:ekf.n_iters] = ekf.data[:,8]
+            new_R_tvar =np.full(new_iter, np.mean(ekf.R_tvar[-11:-1]))
+            new_R_tvar[0:ekf.n_iters]=ekf.R_tvar
+            
 
-        new_R_tvar =np.full(new_iter, np.mean(ekf.R_tvar[-11:-1]))
-        new_R_tvar[0:ekf.n_iters]=ekf.R_tvar
-        
-
-        new_Roc_tvar =np.full(new_iter, np.mean(ekf.Roc_tvar[-11:-1]))
-        new_Roc_tvar[0:ekf.n_iters]= ekf.Roc_tvar
-        
-        data3 =  np.genfromtxt(open(os.path.expanduser('~/')+"climate_data/SSP_inputdata/KF6projectionSSP.csv", "rb"),dtype=float, delimiter=',')
-        SSPnames=[126,434,245,370,585]
-        if exp_attr[2]=='RCP45':
-            find_case = 245
-        else:
-            find_case = int(exp_attr[2][3:])
-        rcp = SSPnames.index(find_case)
-        handoffyr = 1850+ekf.n_iters
-        new_Co2_df = pd.read_csv(open(os.path.expanduser('~/')+"climate_data/SSP_inputdata/eCO2_"+exp_attr[1]+"_"+exp_attr[2].lower()+".csv"),dtype=float, delimiter=',')
-        new_lCo2 = np.log10(new_Co2_df['eCO2'].values)
-        #new_lCo2 = np.concatenate((ekf.lCo2, np.log10(data3[handoffyr-2015: 1850+new_iter-2015,1+rcp])))
-        new_anthro_clouds = np.concatenate((ekf.anthro_clouds,data3[handoffyr-2015: 1850+new_iter-2015,6+rcp]+1))
-        #compute_update(xhatf[k-1],0,volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1]+1)
-        #np.log10(data3[:,1+rcp]),data3[:,6+rcp]
-        
-        #breakpoint()
+            new_Roc_tvar =np.full(new_iter, np.mean(ekf.Roc_tvar[-11:-1]))
+            new_Roc_tvar[0:ekf.n_iters]= ekf.Roc_tvar
+            
+            data3 =  np.genfromtxt(open(os.path.expanduser('~/')+"climate_data/SSP_inputdata/KF6projectionSSP.csv", "rb"),dtype=float, delimiter=',')
+            SSPnames=[126,434,245,370,585]
+            if exp_attr[2]=='RCP45':
+                find_case = 245
+            else:
+                find_case = int(exp_attr[2][3:])
+            rcp = SSPnames.index(find_case)
+            handoffyr = 1850+ekf.n_iters
+            new_Co2_df = pd.read_csv(open(os.path.expanduser('~/')+"climate_data/SSP_inputdata/eCO2_"+exp_attr[1]+"_"+exp_attr[2].lower()+".csv"),dtype=float, delimiter=',')
+            new_lCo2 = np.log10(new_Co2_df['eCO2'].values)
+            #new_lCo2 = np.concatenate((ekf.lCo2, np.log10(data3[handoffyr-2015: 1850+new_iter-2015,1+rcp])))
+            new_anthro_clouds = np.concatenate((ekf.anthro_clouds,data3[handoffyr-2015: 1850+new_iter-2015,6+rcp]+1))
+            #compute_update(xhatf[k-1],0,volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1]+1)
+            #np.log10(data3[:,1+rcp]),data3[:,6+rcp]
+            
+            #breakpoint()
+            
+            ekf.opt_depth=new_opt_depth
+            ekf.tsi = new_tsi
+            ekf.R_tvar = new_R_tvar
+            ekf.Roc_tvar=new_Roc_tvar
+            ekf.lCo2=new_lCo2
+            ekf.anthro_clouds = new_anthro_clouds       
+            ekf.n_iters=new_iter
         new_observ = np.transpose(np.array([temperature-given_preind_base+preind_base + ekf.offset,ohca_meas/ekf.zJ_from_W ]))
-        ekf.opt_depth=new_opt_depth
-        ekf.tsi = new_tsi
-        ekf.R_tvar = new_R_tvar
-        ekf.Roc_tvar=new_Roc_tvar
-        ekf.lCo2=new_lCo2
-        ekf.anthro_clouds = new_anthro_clouds       
-        ekf.n_iters=new_iter
         sz = (new_iter,2) # size of array is now different
         sz2d=(new_iter,2,2)
         ekf.xhat=np.zeros(sz)      # a posteri estimate of x

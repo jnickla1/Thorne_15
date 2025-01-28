@@ -13,21 +13,28 @@ import collections
 
 import colorsys
 
+historical_regen=True  #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
+
+# ================================
+# Define Method Full Names, Colors, Location on Violin plots
+# ================================
+
 methods_names = [
-    ['42_Temp_Alone/1_Run_Means', "4.2.1:\nRunning Means", 2, 1998,2022], #98
-    ['42_Temp_Alone/2_LT_Fits', "4.2.2:\nLong Term Fits", 7,  1998,2022], #98
-    ['42_Temp_Alone/3_ST_Fits', "4.2.3:\nShort Term Fits", 16 ,1998,2022], #98
-    ['42_Temp_Alone/4_GAM_AR1', "4.2.4:\nSmoothing Splines", 24,1997,2022], #97
-    ['42_Temp_Alone/5_Kalman', "4.2.5:\nSimple State Space", 27.5,1997,2022], #97
-    ['42_Temp_Alone/6_Remove_IV', "4.2.6:\nFilter Internal\nVariability",33,1999,2022], #99
-    ['43_Forcing_Based/1_ERF_FaIR',"4.3.1:\nConstrained\nEmulators",38,1999,2022],  #99
-    ['43_Forcing_Based/2_Kalman', "4.3.2:\nEnergy Balance\nKalman Filter",42,1999,2022],  #99
-    ['43_Forcing_Based/3_Human_Induced', "4.3.3:\nAttributable\nWarming", 46.5,1999,2022], #99
-    ['43_Forcing_Based/4_Linear', "4.3.4:\nLinear", 49,1999,2022],
-    ['44_EarthModel_CGWL', "4.4:\nCombining\nESM Projections", 54,1998,2022]   #98
-    ]
+    ['42_Temp_Alone/1_Run_Means', "4.3.1:\nRunning Means", 2, 1998,2022], #98
+    ['42_Temp_Alone/2_LT_Fits', "4.3.2:\nLong Term Fits", 7,  1998,2022], #98
+    ['42_Temp_Alone/3_ST_Fits', "4.3.3:\nShort Term Fits", 16 ,1998,2022], #98
+    ['42_Temp_Alone/4_GAM_AR1', "4.3.4:\nSmoothing Splines", 24,1997,2022], #97
+    ['42_Temp_Alone/5_Kalman', "4.3.5:\nSimple State Space", 27.5,1997,2022], #97
+    ['42_Temp_Alone/6_Remove_IV', "4.3.6:\nFilter Internal\nVariability",33,1999,2022], #99
+    ['43_Forcing_Based/1_ERF_FaIR',"4.4.1:\nConstrained\nEmulators",38,1999,2022],  #99
+    ['43_Forcing_Based/2_Kalman', "4.4.2:\nEnergy Balance\nKalman Filter",42,1999,2022],  #99
+    ['43_Forcing_Based/3_Human_Induced', "4.4.3:\nAttributable\nWarming", 46.5,1999,2022], #99
+    ['43_Forcing_Based/4_Linear', "4.4.4:\nLinear", 49,1999,2022],
+    ['44_EarthModel_CGWL', "4.5:\nCombining\nESM Projections", 54,1998,2022]   #98
+    ] #Last three coordinates define location on violin plots
 
 def gen_color(ci, dark=False):
+    # used to have implemented a version that would allow a dark version of each of these, now too many colors and gets confusing
     colors = {
     '42_Temp_Alone/1_Run_Means': "#CC6677",  # pink
     '42_Temp_Alone/2_LT_Fits': "#332288",  # blueberry
@@ -41,41 +48,13 @@ def gen_color(ci, dark=False):
     '43_Forcing_Based/4_Linear': "#949494",  #grey
     '44_EarthModel_CGWL': "#CC3311"   # firetruck
     }
-
-    """
-    Generate a distinct color based on an integer index, ci.
-    
-    Parameters:
-    - ci: int, the index for generating different colors.
-    - dark: bool, if True, returns a darker version of the color; otherwise, returns a lighter version.
-    
-    Returns:
-    - tuple: RGB color as (r, g, b), values between 0 and 1.
-    """
-##    # Set base hue by cycling through color wheel
-##    hue = (ci * 137.5) % 360  # Golden angle in degrees for distinct hues
-##    hue /= 360  # Normalize to [0, 1] range
-##    
-##    # Set saturation and value (brightness)
-##    saturation = 0.9
-##    value = 0.5 if dark else 0.8  # Adjust value for lighter or darker shades
-##    
-##    # Convert HSV to RGB
-##    r, g, b = colorsys.hsv_to_rgb(hue, saturation, value)
     
     return colors[ci]
 
 
 def get_brightness(hex_color):
-    """Calculates the perceived brightness of a CSS color.
-
-    Args:
-        hex_color: A string representing a CSS color in hex format (e.g., "#FF0000").
-
-    Returns:
-        The perceived brightness as a float between 0 and 1.
+    """Calculates the perceived brightness of a CSS color, a float between 0 and 1.
     """
-
     # Convert hex color to RGB values
     r = int(hex_color[1:3], 16)
     g = int(hex_color[3:5], 16)
@@ -85,30 +64,36 @@ def get_brightness(hex_color):
     return 0.2126 * r + 0.7152 * g + 0.0722 * b
 
 
+# ================================
+# the list passed to the methods_folder is essential: tells the script which methods to run. Needs >1 location to work.
+# Find all *_method.py files in the folder and subfolders
+# ================================
 
-
-
-
-def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type, methods_folder=('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/4_Linear','Methods/43_Forcing_Based/2_Kalman'),
-                completed_methods = set()):
+def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type, methods_folder= ('Methods/42_Temp_Alone/1_Run_Means','Methods/44_EarthModel_CGWL'),#'Methods/43_Forcing_Based'
+                completed_methods = set(),give_methods_path =False):
     #'Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL'
 #'Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV','Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/2_Kalman')):#
     #'Methods/44_EarthModel_CGWL','Methods/42_Temp_Alone/3_ST_Fits' 'Methods/42_Temp_Alone/6_Remove_IV', 'Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV'
 #'Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/3_Human_Induced' 'Methods/42_Temp_Alone/1_Run_Means', 'Methods/43_Forcing_Based/3_Human_Induced' 
 #'Methods/42_Temp_Alone/1_Run_Means','Methods/44_EarthModel_CGWL')): 
-#'Methods/42_Temp_Alone','Methods/43_Forcing_Based'     
-    # Find all *_method.py files in the folder and subfolders
-    method_files = []
-    for root, _, files in chain.from_iterable(os.walk(path) for path in methods_folder):
-        for file in files:
-            if file.endswith('_method.py'):
-                method_files.append(os.path.join(root, file))
-    incomplete_method_files = [f for f in method_files if os.path.basename(f).replace('_method.py', '') not in completed_methods]
+#'Methods/42_Temp_Alone','Methods/43_Forcing_Based'
+#('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/4_Linear','Methods/43_Forcing_Based/2_Kalman'),
+
+    if give_methods_path == False:
+        method_files = []
+        for root, _, files in chain.from_iterable(os.walk(path) for path in methods_folder):
+            for file in files:
+                if file.endswith('_method.py'):
+                    method_files.append(os.path.join(root, file))
+        incomplete_method_files = [f for f in method_files if os.path.basename(f).replace('_method.py', '') not in completed_methods]
+    else:
+        incomplete_method_files = methods_folder
     # Initialize result storage
     results = {}
 
     # Send data to each method and retrieve results
     for method_path in incomplete_method_files:
+    
         # Extract method class (folder structure relative to methods_folder)
         current_file_path = os.getcwd()+"/Methods"
         method_class = os.path.relpath(os.path.dirname(method_path), current_file_path) #methods_folder)
@@ -145,13 +130,13 @@ import mplcursors
 spaglines = []
 
 alt_colors = ['black', 'white']
-sel_methods = [ "OLS_refit_CO2forc","EBMKF_ta3"] # "CGWL10y_for_halfU","TheilSen_h7075" ,"FaIR_anthroA","FaIR_anthroA2","EBMKF_ta2"  ] #"EBMKF_ta",
+sel_methods = [ "CGWL10y_for_halfU","FaIR_anthroA2","EBMKF_ta3"] # "OLS_refit_CO2forc", "CGWL10y_for_halfU","TheilSen_h7075" ,"FaIR_anthroA",,"EBMKF_ta2"  ] #"EBMKF_ta",
 
 index_mapping = pd.read_csv('to_index_mapping.csv')['index'].values
 ftl = np.argsort(index_mapping) #from to list - where a certain method should be plotted
 
 if __name__ == '__main__':
-    regen=True #False #whether to execute all of the methods directly (True) or read from a pickle file to rapidly redraw the figures (False).
+    regen=historical_regen #False #whether to execute all of the methods directly (True) or read from a pickle file to rapidly redraw the figures (False).
 
     # First evaluation
     data = pd.read_csv("./Common_Data/HadCRUT5.csv")
@@ -188,8 +173,8 @@ if __name__ == '__main__':
             results = pickle.load(fp)
     
 
-    heights0=np.arange(.2,4.2,0.05) #heights to test at thresholds: 0.05°C increments
-    nthresholds = np.size(heights0)
+    #heights0=np.arange(.2,4.2,0.05) #heights to test at thresholds: 0.05°C increments
+    #nthresholds = np.size(heights0)
     inum=12 #internal interpolation within years
     standard = results['cent20y']['LT_trend'][2] #retrospective
     smooth_std = np.nanmean(np.abs(np.diff(np.diff(standard))))

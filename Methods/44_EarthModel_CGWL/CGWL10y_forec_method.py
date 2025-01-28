@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 
 
 def run_method(years, temperature, uncert, model_run, experiment_type):
+    
+    
     avg_len_l=9
     avg_len_u=1 #actually 4 yrs below, that year, 0 yrs after
     empser  = np.full(np.shape(years),np.nan)
@@ -14,6 +16,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     sesl = empser.copy()
     (temps_CIl, temps_CIu) = uncert
     temps_1std = (temps_CIu - temps_CIl) / 4 #pm2 stdevs
+    if (experiment_type!="historical"):
+        return means, ses, means, sesl #forecasts not valude for future runds, return blanks
     
     cur_path = os.path.dirname(os.path.realpath(__file__))
     WMOoffset = 0.88 # for the WMO data 

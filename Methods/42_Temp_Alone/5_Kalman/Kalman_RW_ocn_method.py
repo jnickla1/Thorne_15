@@ -78,7 +78,7 @@ def run_method(yrs, temps, uncert, model_run, experiment_type):
     temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
     preind_base = np.mean(temps_obs[0:50])
     
-    if (experiment_type=="historical" and model_run=='hadcrut5'):
+    if (experiment_type=="historical"):
         xhat, P, xhathat, Phathat, thisllike = KF_compute(yrs, temps+preind_base,np.zeros(np.shape(temps)), z1)
         return xhat-preind_base, P, xhathat-preind_base, Phathat
 

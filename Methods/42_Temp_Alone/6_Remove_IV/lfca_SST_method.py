@@ -10,6 +10,11 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     ses_c = np.full(np.shape(years),np.nan)
     means_r = np.full(np.shape(years),np.nan)
     ses_r = np.full(np.shape(years),np.nan)
+
+
+    ###TEMPORARY - will re-run lfcs with other data the stored regional patterns
+    if (experiment_type!="historical"):
+        return means_c, ses_c, means_r, ses_r #not valid for future runs, return blanks
     
     (temps_CIl, temps_CIu) = uncert
     temps_1std = (temps_CIu - temps_CIl) / 4 #pm2 stdevs

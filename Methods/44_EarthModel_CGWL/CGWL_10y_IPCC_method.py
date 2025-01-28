@@ -29,7 +29,9 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     ses = empser.copy()
     (temps_CIl, temps_CIu) = uncert
     temps_1std = (temps_CIu - temps_CIl) / 4 #pm2 stdevs
-
+    
+    if (experiment_type!="historical"):
+        return means, ses, means, ses #forecasts not valude for future runds, return blanks
     
     for i in range(avg_len_l, len(years) - avg_len_u+1):
         chunk=temperature[i-avg_len_l:i+avg_len_u]

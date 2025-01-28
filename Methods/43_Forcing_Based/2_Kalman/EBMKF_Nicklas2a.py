@@ -335,7 +335,7 @@ def ekf_run(z,n_iter,retPs=False):
     elif (retPs==2):
         return xhat[0:n_iter], P[0:n_iter], S[0:n_iter], xhatminus[0:n_iter,0]
     elif (retPs==3):
-        breakpoint()
+        #breakpoint()
         return xhat[0:n_iter,0], P[0:n_iter,0,0],xhathat[0:n_iter,0], Phat[0:n_iter,0,0]
     elif (retPs==4):
         return xhat[0:n_iter,0], P[0:n_iter,0,0],xblind[0:n_iter,0], Phat[0:n_iter,0,0]

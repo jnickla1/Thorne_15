@@ -18,6 +18,11 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     ses = empser.copy()
     (temps_CIl, temps_CIu) = uncert
     temps_1std = (temps_CIu - temps_CIl) / 4 #pm2 stdevs
+
+        ###TEMPORARY
+    if (experiment_type!="historical"):
+        return empser,empser,empser,empser
+    
 #here we're just fitting a linear line
     X = pd.DataFrame({
         'MEI': enso['AVG'][108:], #1971 start

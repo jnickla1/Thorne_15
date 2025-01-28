@@ -6,6 +6,7 @@ import xarray as xr
 #import argparse
 import pdb
 
+
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""
     return np.array([np.mean(lst[i:i + n]) for i in range(0, len(lst), n)])
@@ -92,6 +93,13 @@ def read_erf_data(erf_file):
     erf_data["total_anthro_ghg_forcing_mco2"] = erf_data[ghg_columns].sum(axis=1)
     return erf_data["total_anthro_ghg_forcing_mco2"].values
 
+def recompute_volc_erf_data(erf_file):
+    """Reads natural GHG forcing from the ERF file."""
+    erf_data = pd.read_csv(erf_file)
+    volc = erf_data["volcanic"].values[100:(2100-1750+1)]
+    volc[(2014-1850):] = np.mean(volc[:(2014-1850)])
+    return volc, erf_data["solar"].values[100:(2100-1750+1)]
+
 def calculate_equivalent_co2(forcing_values):
     """Converts forcing values into equivalent CO2 concentration in ppm."""
     equivalent_co2 = 10**((forcing_values + 31.149 )/ 12.7433 )
@@ -132,8 +140,15 @@ def recompute_eCO2(ssp, cmip_model):
 
     # Write the DataFrame to a CSV file
     output_path = os.path.join(output_dir, f"eCO2_{cmip_model}_{ssp}.csv")
-    df.to_csv(output_path, index=False)
-    print(f"Saved equivalent CO2 values to {output_path}")
+    #df.to_csv(output_path, index=False)
+    print(f"Saved equivalent CO2 avalues to {output_path}")
+
+    volc,solar = recompute_volc_erf_data(erf_file)
+    # Write the DataFrame to a CSV file
+    output_path2 = os.path.join(output_dir, f"ERF_{cmip_model}_{ssp}.csv")
+    df2 = pd.DataFrame({"year": years,"CO2": co2_ppm, "ERF_CO2": erf_co2, "ERF_anthro": total_forcing[100:(2100-1750+1)] + erf_co2,
+                        "ERF_volc": volc, "ERF_natural":volc+solar})
+    df2.to_csv(output_path2, index=False)
 
 if __name__ == "__main__":
     #parser = argparse.ArgumentParser(description="Generate equivalent CO2 values for a given SSP and CMIP model.")
@@ -141,4 +156,4 @@ if __name__ == "__main__":
     #parser.add_argument("cmip_model", type=str, help="The CMIP model (e.g., ESM1-2-LR).")
     #args = parser.parse_args()
 
-    recompute_eCO2("ssp126","ESM1-2-LR")
+    recompute_eCO2("ssp245","ESM1-2-LR")

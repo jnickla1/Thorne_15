@@ -8,7 +8,7 @@ import netCDF4
 
 def run_method(years, temperature, uncert, model_run, experiment_type):
     avg_len_l=9
-    avg_len_u=1 #actually 4 yrs below, that year, 0 yrs after
+    avg_len_u=1 
     empser  = np.full(np.shape(years),np.nan)
     means = empser.copy()
     ses = empser.copy()
@@ -17,22 +17,36 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     temps_1std = (temps_CIu - temps_CIl) / 4 #pm2 stdevs
     
     cur_path = os.path.dirname(os.path.realpath(__file__))
-    WMOoffset = 0.88 # for the WMO data 
-    filein = netCDF4.Dataset(cur_path+"/tasAnom_rcp45_land-prob_global_glb_sample_b8100_1y_ann_18591201-20991130.nc",'r')
-    comput_temps = np.array(filein.variables['tasAnom'])
+    WMOoffset = 0.88 # for the WMO data
+    exp_attr = experiment_type.split("_")
+    
+    if (experiment_type=="historical" or exp_attr[2].lower()=="ssp245" or exp_attr[2].lower()=="rcp45"):
+        filein = netCDF4.Dataset(cur_path+"/tasAnom_rcp45_land-prob_global_glb_sample_b8100_1y_ann_18591201-20991130.nc",'r')
+        comput_temps = np.array(filein.variables['tasAnom'])
+    elif (exp_attr[2].lower()=="ssp126"):
+        filein = netCDF4.Dataset(cur_path+"/tasAnom_rcp26_land-prob_global_glb_sample_b8100_1y_ann_18591201-20991130.nc",'r')
+        comput_temps = np.array(filein.variables['tasAnom'])
+    elif (exp_attr[2].lower()=="ssp370"):
+        filein60 = netCDF4.Dataset(cur_path+"/tasAnom_rcp60_land-prob_global_glb_sample_b8100_1y_ann_18591201-20991130.nc",'r')
+        comput_temps60 = np.array(filein60.variables['tasAnom'])
+        filein85 = netCDF4.Dataset(cur_path+"/tasAnom_rcp85_land-prob_global_glb_sample_b8100_1y_ann_18591201-20991130.nc",'r')
+        comput_temps85 = np.array(filein85.variables['tasAnom'])
+        comput_temps = np.concatenate((comput_temps60,comput_temps85))
+        
     #(240, 3000), 1860 is first year
     nsamps = np.shape(comput_temps)[1]
-    comput_temps_baselines = np.mean(comput_temps[0:50,:],axis=0)
+    comput_temps_baselines = np.mean(comput_temps[0:40,:],axis=0) #1860-1900 baselines
     comput_temps_align = comput_temps - np.tile(comput_temps_baselines, (np.shape(comput_temps)[0], 1))
     
     samp_cur = np.full((np.shape(years)[0],nsamps) ,np.nan)
         
-    
-    for i in range(avg_len_l, len(years) - avg_len_u):
+    offset_yrs= 1860-years[0]
+    last_i = min(len(years) - avg_len_u, np.shape(comput_temps)[0] - 11 + offset_yrs )
+    for i in range(avg_len_l, last_i):
         chunk=temperature[i-avg_len_l:i+avg_len_u]
         chunk_uncert=temps_1std[i-avg_len_l:i+avg_len_u]
 
-        forec_samps = np.mean(comput_temps_align[(i+1-10):(i+1),:], axis = 0)
+        forec_samps = np.mean(comput_temps_align[(i+1-offset_yrs):(i+11-offset_yrs),:], axis = 0)
         #print(i)
         #print(forec_samps)
         means[i] = np.mean(chunk)/2 + np.nanmean(forec_samps)/2

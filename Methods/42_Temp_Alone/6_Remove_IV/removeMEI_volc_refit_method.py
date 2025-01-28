@@ -20,6 +20,11 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     ses2 = empser.copy()
     (temps_CIl, temps_CIu) = uncert
     temps_1std = (temps_CIu - temps_CIl) / 4 #pm2 stdevs
+
+          ###TEMPORARY
+    if (experiment_type!="historical"):
+        return empser,empser,empser,empser
+    
     avg_len_l=10
     avg_len_u=11 #actually 10 yrs below, that year, 10 yrs after
     means21yr = empser.copy()

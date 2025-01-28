@@ -19,23 +19,36 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     
     cur_path = os.path.dirname(os.path.realpath(__file__))
     WMOoffset = 0.88 # for the WMO data 
-    filein = netCDF4.Dataset(cur_path+"/tasAnom_rcp45_land-prob_global_glb_sample_b8100_1y_ann_18591201-20991130.nc",'r')
-    comput_temps = np.array(filein.variables['tasAnom'])
+    exp_attr = experiment_type.split("_")
+    
+    if (experiment_type=="historical" or exp_attr[2].lower()=="ssp245" or exp_attr[2].lower()=="rcp45"):
+        filein = netCDF4.Dataset(cur_path+"/tasAnom_rcp45_land-prob_global_glb_sample_b8100_1y_ann_18591201-20991130.nc",'r')
+        comput_temps = np.array(filein.variables['tasAnom'])
+    elif (exp_attr[2].lower()=="ssp126"):
+        filein = netCDF4.Dataset(cur_path+"/tasAnom_rcp26_land-prob_global_glb_sample_b8100_1y_ann_18591201-20991130.nc",'r')
+        comput_temps = np.array(filein.variables['tasAnom'])
+    elif (exp_attr[2].lower()=="ssp370"):
+        filein60 = netCDF4.Dataset(cur_path+"/tasAnom_rcp60_land-prob_global_glb_sample_b8100_1y_ann_18591201-20991130.nc",'r')
+        comput_temps60 = np.array(filein60.variables['tasAnom'])
+        filein85 = netCDF4.Dataset(cur_path+"/tasAnom_rcp85_land-prob_global_glb_sample_b8100_1y_ann_18591201-20991130.nc",'r')
+        comput_temps85 = np.array(filein85.variables['tasAnom'])
+        comput_temps = np.concatenate((comput_temps60,comput_temps85))
     #(240, 3000), 1860 is first year
     nsamps = np.shape(comput_temps)[1]
     cutoff_n = int(nsamps/30)
-    comput_temps_baselines = np.mean(comput_temps[0:50,:],axis=0)
+    comput_temps_baselines = np.mean(comput_temps[0:40,:],axis=0) #1860-1900 baselines
     comput_temps_align = comput_temps - np.tile(comput_temps_baselines, (np.shape(comput_temps)[0], 1))
     
     samp_cur = np.full((np.shape(years)[0],cutoff_n) ,np.nan)
         
-    
-    for i in range(avg_len_l+10, len(years) - avg_len_u):
+    offset_yrs= 1860-years[0]
+    last_i = min(len(years) - avg_len_u, np.shape(comput_temps)[0] - 11 + offset_yrs )
+    for i in range(avg_len_l+10, last_i):
         chunk=temperature[i-avg_len_l:i+avg_len_u]
         chunk_uncert=temps_1std[i-avg_len_l:i+avg_len_u]
         chunk_avg = np.mean(chunk)
-        hindc_samps = np.mean(comput_temps_align[i-avg_len_l-10:i+avg_len_u-10,:], axis = 0)
-        forec_samps0 = np.mean(comput_temps_align[(i+1-10):(i+1),:], axis = 0)
+        hindc_samps = np.mean(comput_temps_align[i-avg_len_l-offset_yrs:i+avg_len_u-offset_yrs,:], axis = 0)
+        forec_samps0 = np.mean(comput_temps_align[(i+1-offset_yrs):(i+11-offset_yrs),:], axis = 0)
 
         sort_indices = np.argsort(np.abs(hindc_samps-chunk_avg))
         forec_samps = forec_samps0[sort_indices[:cutoff_n]] #taking the 1/30th of samples with past 10yr mean closest to observed, so 100
