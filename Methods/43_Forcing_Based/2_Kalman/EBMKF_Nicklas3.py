@@ -89,6 +89,8 @@ fdbkA_sigma = 0.316
 
 fdbkW = 1.3
 
+volc_sens=1
+
 def precompute_coeffs(printThem):
     global dfaS, dfaA, powp1, inbndf, rad1850, B1, B0, outbndf, Cs, Cd
     dfaS=fdbkS/(sw_in*a_refl*g_refl)
@@ -96,7 +98,7 @@ def precompute_coeffs(printThem):
     powp1 = fdbkW*4/3.22 #1.3
     B1B0 = 12.74/sig/np.power( T02, 4-powp1 ) #15.45 #19.45
     inbndf= a_refl*g_refl*9.068 #sw_in* 137.49
-    rad1850 = (sw_in*0.9318*a_refl*(1+dfaA*(Teq1850-T02))+anthro_clouds[0])*g_refl*(1+dfaS*(Teq1850-T02))
+    rad1850 = (sw_in*(9.068/ (0.0038 *volc_sens  + 9.7279 ))*a_refl*(1+dfaA*(Teq1850-T02))+anthro_clouds[0])*g_refl*(1+dfaS*(Teq1850-T02))
     B1 = (rad1850 / 5.670e-8 / np.power( Teq1850, 4-powp1 ))+B1B0 *2.444 #594
     B0 = B1B0/B1
     outbndf= sig*B1
@@ -160,7 +162,7 @@ def compute_slope(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
     if (anthro_cloud<-100):
         anthro_cloud = anthro_clouds[k]
     if (optdn<0):
-        optdn = opt_depth[k]
+        optdn = opt_depth[k] *volc_sens
     if (lCo2n<=0):
         lCo2n= lCo2[k]
         tsik=tsi[k]
@@ -178,7 +180,7 @@ def compute_update(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
     if (anthro_cloud<-100):
         anthro_cloud = anthro_clouds[k]
     if (optdn<0):
-        optdn = opt_depth[k]
+        optdn = opt_depth[k]*volc_sens
     if (lCo2n<=0):
         lCo2n= lCo2[k]
         tsik=tsi[k]
@@ -274,7 +276,7 @@ def efk_reeval_blind_likeli(params, z_run_means,n_iter,stdP,stdPd):
     xblind=np.zeros((n_iter,2))
     xblind[0]= [Teq1850,oc_meas[0]]
     #print(len(anthro_clouds))
-    sumLL = stats.norm.logpdf(new_gad, gad_prior_mean, gad_sigma)+ 8*stats.norm.logpdf(new_fdbkA, fdbkA_prior_mean, fdbkA_sigma) #start with the prior
+    sumLL = 0.2 * stats.norm.logpdf(new_gad, gad_prior_mean, gad_sigma)+ 8*stats.norm.logpdf(new_fdbkA, fdbkA_prior_mean, fdbkA_sigma) #start with the prior
     for k in range(1,n_iter):
         xblind[k]= xblind[k-1] + compute_update(xblind[k-1],k)
         if not(np.isnan(z_run_means[k,0])):
@@ -291,17 +293,50 @@ def efk_reeval_run_likeli(params, z_run_means,n_iter,zorig):
     #first update gad and fdbkA
     precompute_coeffs(False)
     xNew,Pnew,xblind=ekf_run(zorig,n_iter,retPs=5)
-    sumLL = stats.norm.logpdf(new_gad, gad_prior_mean, gad_sigma)+ stats.norm.logpdf(new_fdbkA, fdbkA_prior_mean, fdbkA_sigma) #start with the prior
+    sumLL = 0.2* stats.norm.logpdf(new_gad, gad_prior_mean, gad_sigma)+ stats.norm.logpdf(new_fdbkA, fdbkA_prior_mean, fdbkA_sigma) #start with the prior
     for k in range(1,n_iter):
         if not(np.isnan(z_run_means[k,0])):
             sumLL = sumLL + 8*stats.norm.logpdf(z_run_means[k,0],loc = xNew[k,0], scale = np.sqrt(Pnew[k,0,0]/4+ R_tvar[k]/4))/n_iter #unsure if I should leave this /n_iter off
             sumLL = sumLL + .2*stats.norm.logpdf(z_run_means[k,1],loc = xblind[k,1], scale = np.sqrt(Pnew[k,1,1]/4+ Roc_tvar[k]/4))/n_iter
+                            
+    return -sumLL
+
+def efk_reeval_run_likeli2(params, z_run_means,n_iter,zorig):
+    global gad , fdbkA  #, opt_depth
+    new_gad, new_fdbkA = params
+    gad = new_gad
+    fdbkA = new_fdbkA
+    #volc_sens= .5 + gad/0.66/2
+    #first update gad and fdbkA
+    nyear_include = 20
+    precompute_coeffs(False )
+    _,Pnew,xblind,qqyta,xNew,Pnew2=ekf_run(zorig,n_iter,retPs=6)
+    
+    #opt_depth_ta = opt_depth
+    #opt_depth = new_opt_depth_inst
+    #_,_,_,qqyuf=ekf_run(zorig,n_iter,retPs=6)
+    #opt_depth = opt_depth_ta
+    
+    sumLL = 0.1* stats.norm.logpdf(new_gad, gad_prior_mean, gad_sigma)+ 0.5*stats.norm.logpdf(new_fdbkA, fdbkA_prior_mean, fdbkA_sigma) #start with the prior, more certainty on fdbkA
+    for k in range(max(n_iter-nyear_include,1),n_iter):
+        
+        if not(np.isnan(z_run_means[k,0])):
+            #sumLL = sumLL + 4*stats.norm.logpdf(z_run_means[k,0],loc = xNew[k,0], scale = np.sqrt(Pnew2[k,0,0]/2+ R_tvar[k]/2))/(nyear_include-15) #unsure if I should leave this /n_iter off
+            sumLL = sumLL + .5*stats.norm.logpdf(z_run_means[k,1],loc = xblind[k,1], scale = np.sqrt(Pnew[k,1,1]/4+ Roc_tvar[k]/4))/(nyear_include-15)
+            sumLL = sumLL + .5*stats.norm.logpdf(z_run_means[k,0],loc = xblind[k,0], scale = np.sqrt(Pnew[k,0,0]/2+ R_tvar[k]/2))/(nyear_include-15)
+        else:
+            sumLL = sumLL + 2*stats.norm.logpdf(qqyta[k,0])/15  #+ stats.norm.logpdf(qqy[k,1])/nyear_include
+            
+    for k in range(1,n_iter):
+        if not(np.isnan(z_run_means[k,0])):
+            sumLL = sumLL + .5*stats.norm.logpdf(z_run_means[k,0],loc = xNew[k,0], scale = np.sqrt(Pnew2[k,0,0]+ R_tvar[k]))/(n_iter) #entire window corrected should match with predictions
+            
     return -sumLL
     
     
 
 
-def ekf_run(z,n_iter,retPs=False):
+def ekf_run(z,n_iter,retPs=False, volc_sens = 1):
     # intial guesses
     xhat[0] = [Teq1850,oc_meas[0]]
     xblind[0]= xhat[0]
@@ -402,6 +437,9 @@ def ekf_run(z,n_iter,retPs=False):
 
     elif (retPs==5):
         return xhat[0:n_iter], P[0:n_iter],xblind[0:n_iter]
+    elif (retPs==6):
+        return xhat[0:n_iter], P[0:n_iter],xblind[0:n_iter], qqy,xhathat[0:n_iter], Phat[0:n_iter]
+    
     else:
         return xhat[0:n_iter]
 

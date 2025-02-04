@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 import os
+from netCDF4 import Dataset
+import pdb
 #regenerate the land surface and ocean surface estimates:
 #T = 0.292*LandRec +0.708*OceanRec
 # LandRec = (T - 0.708*OceanRec)/ 0.292
@@ -71,16 +73,40 @@ for i in range(avg_len_l, len(years0) - avg_len_u+1):
     means[i] = np.mean(chunk)
 
 
+def average_every_n(lst, n):
+    """Calculates the average of every n elements in a list."""
+    return np.array([np.mean(lst[i:i + n]) for i in range(0, len(lst), n)])
+
 z1 = np.array([ 1.01542501,  0.01613323,  0.5391827 , -0.02781376,  0.33058466])
 
 def run_method(yrs, temps, uncert, model_run, experiment_type):
     data_orig = pd.read_csv("./Common_Data/HadCRUT5.csv")
     temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
     preind_base = np.mean(temps_obs[0:50])
+    global OceanRec_sc
     
-    if (experiment_type=="historical"):
-        xhat, P, xhathat, Phathat, thisllike = KF_compute(yrs, temps+preind_base,np.zeros(np.shape(temps)), z1)
-        return xhat-preind_base, P, xhathat-preind_base, Phathat
+    if experiment_type != "historical":
+        exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #
+        #overwrite OceanRec_sc
+        if (exp_attr[1]=='ESM1-2-LR'):
+            ocean_data =Dataset(os.path.expanduser('~/')+"climate_data/ESM1-2-LR/combined/"+exp_attr[2].lower()+"_ocean_tas.nc", 'r').variables['ocn_ave_tas']
+            ocean_arr = ocean_data[:].__array__()
+            OceanRec_sc0 =  average_every_n(ocean_arr[model_run,:], 12)
+            ocean_offset = np.mean(OceanRec[0:50] -  OceanRec_sc0[0:50])
+            OceanRec_sc = (OceanRec_sc0 + ocean_offset)*0.9/0.7
+
+            
+        elif (exp_attr[1]=='NorESM'):
+            ocean_data=Dataset(os.path.expanduser('~/')+"climate_data/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_ocean_tas.nc", 'r').variables['ocn_ave_tas']
+            ocean_arr = ocean_data[:].__array__()
+            OceanRec_sc0 =  average_every_n(ocean_arr[model_run,:], 12)
+            ocean_offset = np.mean(OceanRec[(1980-1850):(1980-1850+30)] -  OceanRec_sc0[0:30]) #starts in 1980
+            OceanRec_sc = np.zeros(len(temps))
+            OceanRec_sc[0:(1980-1850)]=OceanRec[0:(1980-1850)]*0.9/0.7
+            OceanRec_sc[(1980-1850):(1980-1850+len(OceanRec_sc0))] = (OceanRec_sc0 + ocean_offset)*0.9/0.7
+        
+    xhat, P, xhathat, Phathat, thisllike = KF_compute(yrs, temps+preind_base,np.zeros(np.shape(temps)), z1)
+    return xhat-preind_base, P, xhathat-preind_base, Phathat
 
 
 #while dellYtheta > 1:

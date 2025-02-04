@@ -21,11 +21,30 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         ensoA = enso_mei['AVG'][start_shift:]
         s_yr = 21 # could use this with NaN from file, +1 to account for month shift to start in August/Sept
         start_yr = start_shift+s_yr 
-        end_yr = len(ensoA)+start_yr #otherse are left as NaN
+        end_yr = len(ensoA)+start_yr #others are left as NaN
 
     else:
-        ensoA = np.zeros(np.shape(temperature))
-        return empser,empser,empser,empser
+        exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #
+        new_iter=len(years)
+        given_preind_base = np.mean(temperature[0:50])
+
+        
+
+        if (exp_attr[1]=='ESM1-2-LR'):
+            enso_data =Dataset(os.path.expanduser('~/')+"climate_data/ESM1-2-LR/combined/"+exp_attr[2].lower()+"_nino34_aave_tas.nc", 'r').variables['__xarray_dataarray_variable__']
+            enso_arr = enso_data[:].__array__()
+            ensoA = average_every_n(enso_arr[model_run,6:(-12+6)], 12) #start in August
+            start_yr=1
+            end_yr = len(ensoA)+start_yr #should be whole dataset
+            
+            
+        elif (exp_attr[1]=='NorESM'):
+            enso_data =Dataset(os.path.expanduser('~/')+"climate_data/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_nino34_tas.nc", 'r').variables['__xarray_dataarray_variable__']
+            enso_arr = enso_data[:].__array__()
+            ensoA = average_every_n(enso_arr[model_run,6:], 12) #start in August
+            start_yr=(1980-1850)
+            end_yr = len(ensoA)+start_yr #should be whole dataset
+            
         
 ##        exp_attr = experiment_type.split("_")
 ##        end_yr=len(years)

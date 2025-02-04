@@ -11,7 +11,7 @@ ssp_126 = []
 ssp_245 = []
 ssp_370 = []
 
-sel_methods = ['CGWL10y_sfUKCP', 'EBMKF_ta3',]
+sel_methods = ['CGWL10y_sfUKCP', 'EBMKF_ta2',]
 sel_methods_colors = [ "#CC3311", "#999933" ]
 
 # Define the file pattern and loop through all matching files

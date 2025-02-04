@@ -69,7 +69,9 @@ def get_brightness(hex_color):
 # Find all *_method.py files in the folder and subfolders
 # ================================
 
-def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type, methods_folder= ('Methods/42_Temp_Alone/1_Run_Means','Methods/44_EarthModel_CGWL'),#'Methods/43_Forcing_Based'
+def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type, methods_folder= ('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV'),
+
+                
                 completed_methods = set(),give_methods_path =False):
     #'Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL'
 #'Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV','Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/2_Kalman')):#

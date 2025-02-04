@@ -64,7 +64,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 lasta=i+cN;firsta=i-fN
                 z_run_means[i,:] = np.mean(ekf.observ[firsta:lasta,:],axis=0);
             
-            result = minimize(ekf.efk_reeval_run_likeli, initial_guess, 
+            result = minimize(ekf.efk_reeval_run_likeli2, initial_guess, 
                 args=(z_run_means, n_iter, ekf.observ), #np.sqrt(Pfirst_pass[:,0,0]), np.sqrt(Pfirst_pass[:,1,1])),
                 method='L-BFGS-B' , tol=0.001 )#, options = {'disp' : True} )# Gradient-based optimization method
             # Extract the MAP estimates
@@ -88,6 +88,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         if (exp_attr[1]=='ESM1-2-LR'):
 
             new_opt_depth= np.full(new_iter, (1/ekf.involcavg-9.7279))
+            #new_opt_depth_inst= np.full(new_iter, (1/ekf.involcavg-9.7279))
+            #new_opt_depth_inst[0:ekf.n_iters]=ekf.opt_depth
 
             wt_opt_depths = 1/(ekf.opt_depth+9.7279)
             N = 30
@@ -109,7 +111,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             ohca_earlier = Dataset(os.path.expanduser('~/')+"/climate_data/ESM1-2-LR/opottempmint/historical_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
             ohca_e = ohca_earlier[:].__array__()
             ohca_ey = average_every_n(ohca_e[model_run,:], 12)
-            ohca_meas = np.concatenate((ohca_ey,ohca_ly+ohca_ey[-1]))
+            ohca_meas = np.concatenate((ohca_ey,ohca_ly+ohca_ey[-1] -ohca_ly[0] ))
 
         
         elif (exp_attr[1]=='NorESM'):
@@ -182,7 +184,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         means[0:n_iters_nofit], ses[0: n_iters_nofit],_,_ = ekf.ekf_run(new_observ, n_iters_nofit,retPs=3)
 
         initial_guess = [ekf.gad_prior_mean, ekf.fdbkA_prior_mean]
-        #_,Pfirst_pass = ekf.ekf_run(new_observ,tot_iters,retPs=True)
+        _,Pfirst_pass = ekf.ekf_run(new_observ,tot_iters,retPs=True)
         for n_iter in range(n_iters_nofit,tot_iters+1):
             ekf.n_iters = n_iter
             sz = (n_iter,2)
@@ -193,12 +195,13 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 lasta=i+cN;firsta=i-fN
                 z_run_means[i,:] = np.mean(new_observ[firsta:lasta,:],axis=0);
             
-            result = minimize(ekf.efk_reeval_run_likeli, initial_guess, 
-                args=(z_run_means, n_iter,new_observ),# np.sqrt(Pfirst_pass[:,0,0]), np.sqrt(Pfirst_pass[:,1,1])),
+            result = minimize(ekf.efk_reeval_run_likeli2, initial_guess, 
+                args=(z_run_means, n_iter,new_observ), #,new_opt_depth_inst
+                #args=(z_run_means, n_iter, np.sqrt(Pfirst_pass[:,0,0]), np.sqrt(Pfirst_pass[:,1,1])),  
                 method='L-BFGS-B' , tol=0.001 )#, options = {'disp' : True} )# Gradient-based optimization method
             # Extract the MAP estimates
             initial_guess = result.x
-            print(initial_guess)
+            print(initial_guess,n_iter+1850)
             
             means_trial, ses_trial, means2_trial, ses2_trial = ekf.ekf_run(new_observ, n_iter,retPs=3)
             means[n_iter-1] = means_trial[n_iter-1]
@@ -207,8 +210,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 means2[0:n_iter]= means2_trial
                 ses2[0:n_iter] = ses2_trial
 
-        means , ses ,means2 ,ses2 = ekf.ekf_run(new_observ,new_iter,retPs=3)
-        print()
+      
         return means - ekf.offset-preind_base + given_preind_base , np.sqrt(np.abs(ses) + np.square(temps_1std )  -
             0*np.square(temps_1std[-1] )), means2 -ekf.offset-preind_base + given_preind_base,np.sqrt(np.abs(ses2) + np.square(temps_1std)- 0* np.square(temps_1std[-1] ))
 

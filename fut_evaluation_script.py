@@ -12,7 +12,7 @@ def average_every_n(lst, n):
     return np.array([np.mean(lst[i:i + n]) for i in range(0, len(lst), n)])
 
 
-regen = 1 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
+regen = 2 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
 
 if __name__ == '__main__':
     plotting_figs=False
@@ -54,16 +54,22 @@ if __name__ == '__main__':
         max_runs = 1+start_run
         plotting_figs= True
     
-    methods_folder=('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV',
-                    'Methods/42_Temp_Alone/2_LT_Fits',
-                    'Methods/42_Temp_Alone/3_ST_Fits',  'Methods/42_Temp_Alone/4_GAM_AR1',
-                    'Methods/43_Forcing_Based/2_Kalman', 'Methods/44_EarthModel_CGWL')
+    methods_folder=('Methods/42_Temp_Alone/','Methods/43_Forcing_Based/4_Linear',
+                    'Methods/43_Forcing_Based/2_Kalman','Methods/44_EarthModel_CGWL')
+
+    
+                #    'Methods/43_Forcing_Based/2_Kalman', 'Methods/44_EarthModel_CGWL')
+
+    #'Methods/42_Temp_Alone/6_Remove_IV',
+    #                'Methods/42_Temp_Alone/2_LT_Fits',
+    #                'Methods/42_Temp_Alone/3_ST_Fits',  'Methods/42_Temp_Alone/4_GAM_AR1',
+                    
 
         #'Methods/42_Temp_Alone/1_Run_Means',,'Methods/42_Temp_Alone/3_ST_Fits',  'Methods/42_Temp_Alone/4_GAM_AR1')#
 
         #'Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/2_LT_Fits','Methods/42_Temp_Alone/3_ST_Fits',
-         #           'Methods/42_Temp_Alone/4_GAM_AR1','Methods/43_Forcing_Based/2_Kalman') #,'Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL')
-        #big problems with future ENSO index (can't compute MEI) and need to get Bjorn Samset data
+         #           'Methods/42_Temp_Alone/4_GAM_AR1','Methods/43_Forcing_Based/2_Kalman') #,'Methods/43_Forcing_Based',)
+
 
 
         
@@ -200,20 +206,25 @@ if __name__ == '__main__':
         fineyrs_all = np.arange(years[0],years[-1]+1/inum,1/inum)
         std_intp0 = np.interp(fineyrs_all,years,standard)
         std_intp = std_intp0[~np.isnan(std_intp0)]
-        fineyrs_c = fineyrs_all[~np.isnan(std_intp0)]
+        fineyrs_c0 = fineyrs_all[~np.isnan(std_intp0)]
+        fineyrs_c = fineyrs_c0[1:]
         thrshs= np.arange(1.1,np.nanmax(standard) ,.1) #thresholds
         print(f"evaluating {len(thrshs)} of 0.1°C thresholds, starting at 1.1°C")
-        closest_years = [fineyrs_c[np.argmin(np.abs(std_intp - i))] for i in thrshs] #will have a variable number of steps, at least including 0.5
+        closest_years = [-1/inum/2+fineyrs_c[np.logical_and(std_intp[0:-1]<i, std_intp[1:]>=i)][0] for i in thrshs]
+                   #will have a variable number of steps, at least including 0.5
         closest_yrs_rnd = np.round(closest_years)
 
 
         #repeat with ensemble standards
         std_intp0e = np.interp(fineyrs_all,years,ens_standard)
         std_intpE = std_intp0e[~np.isnan(std_intp0e)]
-        fineyrs_ce = fineyrs_all[~np.isnan(std_intp0e)]
+        fineyrs_ce0 = fineyrs_all[~np.isnan(std_intp0e)]
+        fineyrs_ce = fineyrs_ce0[1:]
         thrshsE= np.arange(1.1,np.nanmax(ens_standard) ,.1) #thresholds
-        closest_yearsE = [fineyrs_ce[np.argmin(np.abs(std_intpE - i))] for i in thrshsE] #will have a variable number of steps, at least including 0.5
+        closest_yearsE = [-1/inum/2+fineyrs_ce[np.logical_and(std_intpE[0:-1]<i, std_intpE[1:]>=i)][0] for i in thrshsE]
+                    #will have a variable number of steps, at least including 0.5
         closest_yrs_rndE = np.round(closest_yearsE)
+
 
         
         #breakpoint()
@@ -226,11 +237,11 @@ if __name__ == '__main__':
                                            'log-likeli','RMS','bias','tlog-l',
                                            '100log-l','100RMS','100bias',
                                            'l15','l20',
-                                           'bias50','Edyrs15','Edyrs20','EdyrsA','ncEdyrs',
+                                           'bias50','Edyrs15','Edyrs20','EdyrsA','RMSyrsA','ncEdyrs',
                             
                                             'e100log-l','e100RMS','e100bias',
                                            'el15','el20',
-                                           'ebias50','eEdyrs15','eEdyrs20','eEdyrsA','nceEdyrs'
+                                           'ebias50','eEdyrs15','eEdyrs20','eEdyrsA','eRMSyrsA','nceEdyrs'
 
                                            ])
         i=0
@@ -349,6 +360,9 @@ if __name__ == '__main__':
                             else:
                                 this_method_p_steps = stats.norm.cdf(((central_est[evalyrs-1850]-thrshs[j])/ se[evalyrs-1850]))
                             # Replace NaNs at the start with 0s
+
+                            #if method_name=="CGWL10y_sfUKCP":
+                            #   breakpoint()
                             first_non_nan = np.argmax(~np.isnan(this_method_p_steps))
                             this_method_p_steps[:first_non_nan] = 0
                             # Replace NaNs at the end with 1s if they exist
@@ -361,7 +375,7 @@ if __name__ == '__main__':
                             if j==4 and np.sum(now_cross)>1 :
                                 ncross = ncross + 0.1*np.sum(now_cross)
                             fineevalyrsh=fineevalyrs[0:-1]/2 + fineevalyrs[1:]/2
-                            evalmean = np.nanmean(np.abs(fineevalyrsh[now_cross] - closest_years[j])) #if crossing multiple times take the mean
+                            evalmean = np.nanmean((fineevalyrsh[now_cross] - closest_years[j])) #if crossing multiple times take the mean
                             if np.isnan(evalmean):
                                 evalmean=15 #just put 15 yrs difference
                             aedyrs[j] = evalmean
@@ -388,7 +402,7 @@ if __name__ == '__main__':
                             if j==4 and np.sum(now_cross)>1 :
                                 ncrossE = ncrossE + 0.1*np.sum(now_cross)
                             fineevalyrsh=fineevalyrs[0:-1]/2 + fineevalyrs[1:]/2
-                            evalmean = np.nanmean(np.abs(fineevalyrsh[now_cross] - closest_yearsE[j])) #if crossing multiple times take the mean
+                            evalmean = np.nanmean((fineevalyrsh[now_cross] - closest_yearsE[j])) #if crossing multiple times take the mean
                             if np.isnan(evalmean):
                                 evalmean=15 #just put 15 yrs difference
                             aedyrsE[j] = evalmean
@@ -414,10 +428,12 @@ if __name__ == '__main__':
                                        np.nanmean(central_est-standard) , np.nansum(llikelihood),
                                          np.nansum(llikelihood[lhund:-1]),np.sqrt(np.nanmean((central_est[lhund:-1]-standard[lhund:-1])**2)),np.nanmean(central_est[lhund:-1]-standard[lhund:-1]),
                                          detailLL[0], detailLL[1],
-                                         np.nanmean(central_est[-50:]-standard[-50:]),np.mean(aedyrs[4]), (aedyrs[9] if (len(aedyrs)>9) else -1),np.mean(aedyrs),ncross,
+                                         np.nanmean(central_est[-50:]-standard[-50:]),np.mean(aedyrs[4]), (aedyrs[9] if (len(aedyrs)>9) else -1),
+                                         np.mean(aedyrs),np.sqrt(np.mean(aedyrs**2)),ncross,
                                          np.nansum(ellikelihood[lhund:-1]),np.sqrt(np.nanmean((central_est[lhund:-1]-ens_standard[lhund:-1])**2)),np.nanmean(central_est[lhund:-1]-ens_standard[lhund:-1]),
                                          detaileLL[0], detaileLL[1],
-                                         np.nanmean(central_est[-50:]-ens_standard[-50:]),np.mean(aedyrsE[4]), (aedyrsE[9] if (len(aedyrsE)>9) else -1),np.mean(aedyrsE),ncrossE] 
+                                         np.nanmean(central_est[-50:]-ens_standard[-50:]),np.mean(aedyrsE[4]), (aedyrsE[9] if (len(aedyrsE)>9) else -1),
+                                         np.mean(aedyrsE),np.sqrt(np.mean(aedyrsE)**2),ncrossE] 
                     i=i+1
        
         if(crossing_figs):
@@ -519,10 +535,6 @@ if __name__ == '__main__':
             ax1.set_ylabel("Temperature (°C) Anomaly\n relative to 1850-1900")
             ax4.set_ylabel("Temperature (°C) Difference\n relative to 20-yr running mean")
 
-            plt.show()
-        
-
-        if(True):
             # Adding interactive tooltips
             cursor = mplcursors.cursor(spaglines, hover=True)
 
@@ -532,6 +544,11 @@ if __name__ == '__main__':
                 # Show the label of the hovered line
                 sel.annotation.set_text(sel.artist.get_label())
         
+
+            plt.show()
+        
+
+
         print(time.process_time() - start)
         
         df_res_show2 = df_results.copy()
