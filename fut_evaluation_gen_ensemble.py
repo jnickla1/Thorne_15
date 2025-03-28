@@ -16,7 +16,7 @@ regen = 1 #0 no regen #1 regen completely #2 overwrite regen to allow for comput
 def eval_standard(experiment_type):
     file_path="Results/ensemble_mean_"+experiment_type+".csv"
     if os.path.exists(file_path):
-        df = pd.read_csv(file_path)
+        df = pd.read_csv(file_path, header=None)
         standards_np = df.to_numpy()
         return np.nanmean(standards_np,axis=0)
         
@@ -51,16 +51,6 @@ def eval_standard(experiment_type):
         print("Error: unknown model to this eval script")
         sys.exit(1)
               
-    
-    
-
-        #'Methods/42_Temp_Alone/1_Run_Means',,'Methods/42_Temp_Alone/3_ST_Fits',  'Methods/42_Temp_Alone/4_GAM_AR1')#
-
-        #'Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/2_LT_Fits','Methods/42_Temp_Alone/3_ST_Fits',
-         #           'Methods/42_Temp_Alone/4_GAM_AR1','Methods/43_Forcing_Based/2_Kalman') #,'Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL')
-        #big problems with future ENSO index (can't compute MEI) and need to get Bjorn Samset data
-
-
         
     dataset = Dataset(fut_data_loc, 'r')
     variable = dataset.variables['tas']

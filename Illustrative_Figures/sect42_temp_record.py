@@ -3,14 +3,14 @@ import numpy as np
 import pandas as pd
 # Create a figure and a set of subplots
 npanels2=5
-fig, axes = plt.subplots(nrows=2, ncols=npanels2, figsize=(14, 7))
-
+fig, axes = plt.subplots(nrows=2, ncols=npanels2, figsize=(12, 7))#expand wi
 # Generate fictitious temperature data (for demonstration)
 data = np.genfromtxt(open("../Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
-years=data[:,0]
-years[0]=1850
+data2 = pd.read_csv("../Common_Data/HadCRUT.5.0.2.0.analysis.summary_series.global.annual.csv")
+years= data2["Time"].to_numpy()
+#years[0]=1850
 nyrs = len(years)
-temperature = data[:, 1]
+temperature = data2["Anomaly (deg C)"].to_numpy()
 offset_t = np.mean(temperature[0:51]) #1850-1900
 temperature = temperature - offset_t
 all_method_names = ["5yr lagging", "10yr lagging",
@@ -19,13 +19,13 @@ all_method_names = ["5yr lagging", "10yr lagging",
                     "Autoregression",
                     "Remove El Nino", "Remove Greens Functions"]
 
-impl_methods = ["30yr centred", "10yr lagging","OLS Fit", "Hinge Fit", "11yr offset (Trewin)", "15yr-linear (SR1.5)","Butterworth Adapt. (Mann)",
+impl_methods = ["30yr (20yr) centred", "10yr (20yr) lagging","OLS Fit", "Hinge Fit", "11yr offset (Trewin)", "15yr-linear (SR1.5)","Butterworth Adapt. (Mann)",
                 "GAM AR1 (Stephenson)", "Kalman: Random Walk", "Remove ENSO (Foster)"]
 
 # Loop over each subplot (method) to configure the layout and base plot
 for i, ax in enumerate(axes.flat):
     # Scatter plot of the base temperature data
-    ax.scatter(years, temperature, color='lightgrey', label='Temperature Data',s=2)
+    ax.scatter(years, temperature, color='lightgrey', label='HadCRUT5, annual',s=2)
 
     # Hide the x-axis labels but keep the axis visible
     if i >= npanels2:
@@ -49,24 +49,64 @@ avg_len_u=15 #actually 15 yrs below, that year, 14 yrs after
 for i in range(avg_len_l, len(years) - avg_len_u):
     lag_mean = np.mean(temperature[i-avg_len_l:i+avg_len_u])
     color = 'black' 
-    if (i ) % (avg_len_l+avg_len_u) == 8:
-        ax.plot([years[i-avg_len_l], years[i+avg_len_u]], [lag_mean, lag_mean], color=color)
-        ax.plot(years[i], lag_mean, '|', color=color, markersize=6)
+    if (i ) % (avg_len_l+avg_len_u) == 9:
+        ax.plot([years[i-avg_len_l], years[i+avg_len_u-1]], [lag_mean, lag_mean], color=color)
+        ax.plot(years[i], lag_mean, '|', color=color, markersize=7)
     else:
-        ax.plot(years[i], lag_mean, '|', color=color, markersize=2)
+        ax.plot(years[i], lag_mean, '|', color=color, markersize=3)
 
-        
 
-ax = axes[0, 1]  # First pane
+
+avg_len_l=10
+avg_len_u=10 #actually 10 yrs below, that year, 9 yrs after
+for i in range(avg_len_l, len(years) - avg_len_u):
+    chunka=temperature[i-avg_len_l:i+avg_len_u]
+    chunkb=temperature[i-avg_len_l+1:i+avg_len_u+1]
+    lag_mean = np.mean([chunka,chunkb])
+    color = 'black'
+    if (i ) % (avg_len_l+avg_len_u) == 4:
+        ax.plot([years[i-avg_len_l], years[i+avg_len_u]], [lag_mean, lag_mean], color=color, alpha=0.5)
+        ax.plot(years[i], lag_mean, '|', color=color, markersize=6, alpha=0.5)
+    else:
+        ax.plot(years[i], lag_mean, '|', color=color, markersize=2, alpha=0.5)
+
+axlim =ax.get_xlim()
+ax.plot(0, lag_mean, '|', color=color, markersize=6, label="30yr mean")
+ax.plot(0, lag_mean, '|', color=color, markersize=4,alpha=0.5, label="20yr mean (*)")
+ax.legend()
+ax.set_xlim(axlim)
+
+ax = axes[0, 1]  
 lag_len=10
 for i in range(lag_len, len(years)):
     lag_mean = np.mean(temperature[i-lag_len:i])
     color = 'violet' #if (i - 5) % 5 == 1 else 'thistle'  # Darker every 5th line
-    if (i - lag_len) % lag_len == 3:
+    if (i - lag_len) % lag_len == 4:
         ax.plot([years[i-lag_len], years[i]], [lag_mean, lag_mean], color=color)
         ax.plot(years[i], lag_mean, 's', color=color, markersize=6)
     else:
         ax.plot(years[i], lag_mean, 's', color=color, markersize=1)
+
+lag_len=20
+for i in range(lag_len, len(years)):
+    lag_mean = np.mean(temperature[i-lag_len:i])
+    color = 'violet' #if (i - 5) % 5 == 1 else 'thistle'  # Darker every 5th line
+    if (i - lag_len) % lag_len == 14:
+        ax.plot([years[i-lag_len], years[i]], [lag_mean, lag_mean], color=color,alpha=0.3)
+        ax.plot(years[i], lag_mean, 's', color=color, markersize=4,alpha=0.3)
+    else:
+        ax.plot(years[i], lag_mean, 's', color=color, markersize=1,alpha=0.3)
+
+axlim =ax.get_xlim()
+ax.plot(0, lag_mean, 's', color=color, markersize=6, label="10yr lagging")
+ax.plot(0, lag_mean, 's', color=color, markersize=4,alpha=0.3, label="20yr lagging")
+ax.legend()
+handles, labels = ax.get_legend().legend_handles, [text.get_text() for text in ax.get_legend().get_texts()]
+del handles[0]
+del labels[0]
+ax.get_legend()._legend_box = None
+ax.legend(handles, labels)
+ax.set_xlim(axlim)
 
 from sklearn.linear_model import LinearRegression
 
@@ -74,12 +114,12 @@ from sklearn.linear_model import LinearRegression
 ax = axes[0, 2]  # Second pane
 
 # Fit the OLS trendline
-X = years.reshape(-1, 1)
-model = LinearRegression().fit(X, temperature)
+X = years[:-1].reshape(-1, 1)
+model = LinearRegression().fit(X, temperature[:-1])
 trendline = model.predict(X)
 
 # Plot the OLS trendline
-ax.plot(years, trendline, color='deepskyblue', label='OLS Trendline')
+ax.plot(years[:-1], trendline, color='deepskyblue', label='OLS Trendline')
 
 
 # Method 3: Ordinary Least Squares (OLS) Trendline
@@ -114,7 +154,7 @@ offset = 0.11
 for i in range(breakyr, len(years)):
     lag_mean = np.mean(temperature[i-11:i])
     color = 'goldenrod' #if (i - 5) % 5 == 1 else 'thistle'  # Darker every 5th line
-    if (i) % 11 == 8:
+    if (i) % 11 == 9:
         ax.plot([years[i-11], years[i]], [lag_mean, lag_mean], color=color)
         ax.plot([years[i], years[i]], [lag_mean, lag_mean+offset], color=color)
         ax.plot(years[i], lag_mean+offset, 's', color=color, markersize=6)
@@ -130,7 +170,7 @@ for i in range(15, len(years)+1):
     model = LinearRegression().fit(X_chunk, y_chunk)
     trendline_chunk = model.predict(X_chunk)
     color='magenta'
-    if (i) % 15 == 9:
+    if (i) % 15 == 10:
     # Plot the trendline
         ax.plot(years[i-15:i], trendline_chunk, color='magenta')
         #ax.plot(years[i-1], trendline_chunk[-1], '^', color='magenta', markersize=6)
@@ -298,7 +338,7 @@ for i in range(st_date, len(years)+1):
         smoothed_temp4,_ = lowpassadaptive_w(temperature[0:i], 1/40,weights[i-st_date,0],weights[i-st_date,1],weights[i-st_date,2])
     else:
         smoothed_temp4,weights[i-st_date,0],weights[i-st_date,1],weights[i-st_date,2],_ = lowpassadaptive(temperature[0:i], 1/40)
-    if i%40==14:
+    if i%40==15:
         ax.plot(years[0:i], smoothed_temp4, color=curcol)
         ax.plot(years[i-1], smoothed_temp4[-1],'o', color=curcol,markersize=6)
     else:
@@ -334,9 +374,10 @@ ax_inset.legend(loc="upper right", fontsize=7)
 
 # Method: AR1
 ax = axes[1, 2]
-fits_df = pd.read_csv("../Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR_Stephenson/gam_fits.csv")
+fits_df = pd.read_csv("../Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR_Stephenson/gamAR1_fits_historical.csv")
+st_date = 30
 for i in range(0, len(years)-st_date+1):
-    if (i+st_date)%40==14:
+    if (i+st_date)%40==15:
         ax.plot(years[0:i+st_date], fits_df.iloc[i,0:(st_date+i)]-offset_t, color='olive')
         ax.plot(years[i+st_date-1], fits_df.iloc[i,(st_date+i-1)]-offset_t,'d', color='olive',markersize=6)
     else:
@@ -366,17 +407,19 @@ ax.set_ylim(ylim)
 
 # Method: State Space Kalman Filter
 ax = axes[1, 3]
-import ..Methods.42_Temp_Alone.5_Kalman.Kalman_EM_linRW as KF
-ax.scatter(years, KF.OceanRec[:-1]-offset_t, color='skyblue', label='Ocean SST',s=2,alpha=0.4)
+import sys
+sys.path.append("/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Methods/42_Temp_Alone/5_Kalman/")
+import Kalman_EM_linRW as KF
+ax.scatter(years[0:KF.n_iter], KF.OceanRec-offset_t, color='skyblue', label='Ocean SST',s=2,alpha=0.4)
 ax.text(1950,0,"Ocean Surf.\n(HADSST4)",size=7,color='skyblue',alpha=0.8)
 curcol = "mediumseagreen"
 st_date=0
-for i in range(0, len(years)-st_date+1):
-    if (i+st_date)==len(years):
+for i in range(0, len(years)-st_date-1):
+    if (i+st_date)==len(years)-2:
         ax.plot(years[0:i+st_date], KF.xhathat[0:(st_date+i),0,0]-offset_t, color=curcol)
-        ax.plot(years[i+st_date-1], KF.xhat[(st_date+i-1),0,0]-offset_t,'P', color=curcol,markersize=6)
+        ax.plot(years[i+st_date], KF.xhat[(st_date+i),0,0]-offset_t,'P', color=curcol,markersize=6)
     else:
-        ax.plot(years[i+st_date-1],KF.xhat[(st_date+i-1),0,0]-offset_t,'+', color=curcol,markersize=3)
+        ax.plot(years[i+st_date],KF.xhat[(st_date+i),0,0]-offset_t,'+', color=curcol,markersize=3)
         
 
 # Data for the pie chart
@@ -407,29 +450,29 @@ ax_inset.axis('equal')
 # Method: Remove ENSO
 ax = axes[1, 4]
 import statsmodels.api as sm
-enso = pd.read_csv("../Common_Data/meiv_shift.csv")
+enso = pd.read_csv("../Common_Data/meiv2.csv")
 omega = 2 * np.pi / 1 
 cos_2yr = np.cos(0.5 * omega * years)
 X = pd.DataFrame({
-    'MEI': enso['AVG'][108:], #1971 start
+    'MEI': enso['Avg'][108:-1], #1971 start
     'AOD': data[129:, 3],
     'TSI': data[129:, 8],
-    'cos2': cos_2yr[129:],
-    'time': years[129:]-1971,
+    'cos2': cos_2yr[129:-2],
+    'time': years[129:-2]-1971,
 })
 # Add a constant term for the intercept
 X = sm.add_constant(X)
-y = temperature[129:]
+y = temperature[129:-2]
 
 model = sm.OLS(y, X).fit()
 print(model.params)
 
 X2 = pd.DataFrame({
-    'MEI': enso['AVG'][1:],
+    'MEI': enso['Avg'][1:-1],
     'AOD': data[22:, 3],
     'TSI': data[22:, 8],
-    'cos2': cos_2yr[22:],
-    'time': np.zeros(len(years)-22)
+    'cos2': cos_2yr[22:-2],
+    'time': np.zeros(len(years)-22-2)
 })
 X2 = sm.add_constant(X2)
 pred2=model.predict(X2)
@@ -454,11 +497,11 @@ coefMEI=model.params['MEI'] #0.1
 ##modelexp =sfs.fit( X_expand,temperature[22:])
 ##print(modelexp.k_feature_names_)
 
-ax.plot(years[22:],temperature[22:]-enso['AVG'][1:]*coefMEI, color = "red") #
+ax.plot(years[22:-1],temperature[22:-1]-enso['Avg'][1:]*coefMEI, color = "red") #
 
-yenso= enso['AVG'][1:]*coefMEI+0.75-offset_t
-ax.fill_between(years[22:], yenso, 0.75-offset_t, where=(enso['AVG'][1:] > 0), facecolor='red', alpha=0.6, interpolate=True)  # Red above y=0
-ax.fill_between(years[22:], yenso, 0.75-offset_t, where=(enso['AVG'][1:] < 0), facecolor='blue', alpha=0.6, interpolate=True)  # Blue below y=0
+yenso= enso['Avg'][1:]*coefMEI+0.75-offset_t
+ax.fill_between(years[22:-1], yenso, 0.75-offset_t, where=(enso['Avg'][1:] > 0), facecolor='red', alpha=0.6, interpolate=True)  # Red above y=0
+ax.fill_between(years[22:-1], yenso, 0.75-offset_t, where=(enso['Avg'][1:] < 0), facecolor='blue', alpha=0.6, interpolate=True)  # Blue below y=0
 ax.text(1850,1-offset_t,"Multivariate ENSO Index",verticalalignment='center',size=10)
 ax.set_ylim(ylim)
 

@@ -69,11 +69,11 @@ def get_brightness(hex_color):
 # Find all *_method.py files in the folder and subfolders
 # ================================
 
-def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type, methods_folder= ('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV'),
+def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type, methods_folder= ('Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL'),
 
                 
                 completed_methods = set(),give_methods_path =False):
-    #'Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL'
+    #'Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV'
 #'Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV','Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/2_Kalman')):#
     #'Methods/44_EarthModel_CGWL','Methods/42_Temp_Alone/3_ST_Fits' 'Methods/42_Temp_Alone/6_Remove_IV', 'Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV'
 #'Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/3_Human_Induced' 'Methods/42_Temp_Alone/1_Run_Means', 'Methods/43_Forcing_Based/3_Human_Induced' 
@@ -179,6 +179,7 @@ if __name__ == '__main__':
     #nthresholds = np.size(heights0)
     inum=12 #internal interpolation within years
     standard = results['cent20y']['LT_trend'][2] #retrospective
+    breakpoint()
     smooth_std = np.nanmean(np.abs(np.diff(np.diff(standard))))
 
     fig, (ax1,ax4)= plt.subplots(2, 1, figsize=(10,10), gridspec_kw={ "hspace": 0.3})
@@ -635,8 +636,8 @@ if __name__ == '__main__':
     df_res_show2['smooth_r'] = df_results['smooth_r'].round(3)
     df_res_cur2 = df_res_show2[df_results['c/r']=='c']
     dfres2 = df_res_cur2.sort_values('log-likeli',ascending=False)
-    dfres2.to_csv('current_methods_statistics_241031.csv', index=False)
-    df_results.to_csv('all_methods_statistics_241031.csv', index=False)
+    dfres2.to_csv('current_methods_statistics_250327.csv', index=False)
+    df_results.to_csv('all_methods_statistics_250327.csv', index=False)
     sorted_df = df_res_cur2.reset_index(drop=True).sort_values(by=['method_class', 'bias50']).reset_index()
     sorted_df[['index']].to_csv('to_index_mapping.csv', index=False)
 

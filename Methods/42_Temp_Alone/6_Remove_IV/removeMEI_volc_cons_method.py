@@ -69,9 +69,14 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             start_yr=0
             start_shift = 0
             end_yr = len(ensoA)+start_yr #should be whole dataset
-            AOD_simD =Dataset(os.path.expanduser('~/')+"climate_data/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_aod.nc", 'r').variables['__xarray_dataarray_variable__']
-            AOD_simA = AOD_simD[:].__array__()
-            AOD_sim = average_every_n(AOD_simA[model_run,:], 12)
+            if exp_attr[3]=="Volc":
+                AOD_simD =Dataset(os.path.expanduser('~/')+"climate_data/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_aod.nc", 'r').variables['__xarray_dataarray_variable__']
+                AOD_simA = AOD_simD[:].__array__()
+                AOD_sim = average_every_n(AOD_simA[model_run,:], 12)
+            elif exp_attr[3]=="VolcConst":
+                aod_later = Dataset(os.path.expanduser('~/')+"/climate_data/NorESM_volc/BethkeEtAl2017/rcp45VolcConst_partial20_aod.nc", 'r').variables['__xarray_dataarray_variable__']
+                aod_l = aod_later[:].__array__()
+                AOD_sim = average_every_n(aod_l[model_run%20,:], 12)               
             AODdata0 = AODdata
             AODdata= np.zeros(len(years))
             AODdata[0:len(AODdata0)] =AODdata0

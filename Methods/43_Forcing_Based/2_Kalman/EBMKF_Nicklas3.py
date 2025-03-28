@@ -317,26 +317,73 @@ def efk_reeval_run_likeli2(params, z_run_means,n_iter,zorig):
     #_,_,_,qqyuf=ekf_run(zorig,n_iter,retPs=6)
     #opt_depth = opt_depth_ta
     
-    sumLL = 0.1* stats.norm.logpdf(new_gad, gad_prior_mean, gad_sigma)+ 0.5*stats.norm.logpdf(new_fdbkA, fdbkA_prior_mean, fdbkA_sigma) #start with the prior, more certainty on fdbkA
+    sumLL = 2*(stats.norm.logpdf(new_gad, gad_prior_mean, gad_sigma)+ stats.norm.logpdf(new_fdbkA, fdbkA_prior_mean, fdbkA_sigma)) #start with the prior, more certainty on fdbkA
     for k in range(max(n_iter-nyear_include,1),n_iter):
         
         if not(np.isnan(z_run_means[k,0])):
-            #sumLL = sumLL + 4*stats.norm.logpdf(z_run_means[k,0],loc = xNew[k,0], scale = np.sqrt(Pnew2[k,0,0]/2+ R_tvar[k]/2))/(nyear_include-15) #unsure if I should leave this /n_iter off
-            sumLL = sumLL + .5*stats.norm.logpdf(z_run_means[k,1],loc = xblind[k,1], scale = np.sqrt(Pnew[k,1,1]/4+ Roc_tvar[k]/4))/(nyear_include-15)
-            sumLL = sumLL + .5*stats.norm.logpdf(z_run_means[k,0],loc = xblind[k,0], scale = np.sqrt(Pnew[k,0,0]/2+ R_tvar[k]/2))/(nyear_include-15)
+            sumLL = sumLL + .5*stats.norm.logpdf(z_run_means[k,1],loc = xblind[k,1], scale = np.sqrt(Pnew[k,1,1]+ Roc_tvar[k]))/(nyear_include-15)
+            sumLL = sumLL + .5*stats.norm.logpdf(z_run_means[k,0],loc = xblind[k,0], scale = np.sqrt(Pnew[k,0,0]+ R_tvar[k]))/(nyear_include-15)
         else:
             sumLL = sumLL + 2*stats.norm.logpdf(qqyta[k,0])/15  #+ stats.norm.logpdf(qqy[k,1])/nyear_include
             
     for k in range(1,n_iter):
         if not(np.isnan(z_run_means[k,0])):
-            sumLL = sumLL + .5*stats.norm.logpdf(z_run_means[k,0],loc = xNew[k,0], scale = np.sqrt(Pnew2[k,0,0]+ R_tvar[k]))/(n_iter) #entire window corrected should match with predictions
+            sumLL = sumLL + stats.norm.logpdf(z_run_means[k,0],loc = xNew[k,0], scale = np.sqrt(Pnew2[k,0,0]+ R_tvar[k]))/(n_iter) #entire window corrected should match with predictions
             
+    return -sumLL
+
+
+def efk_reeval_run_likeli3(params, z_run_means,n_iter,zorig,raw_aod):
+    global gad , fdbkA, opt_depth  #, opt_depth
+    old_aod= np.copy(opt_depth)
+    opt_depth = raw_aod
+    new_gad, new_fdbkA = params
+    gad = new_gad
+    fdbkA = new_fdbkA
+    #volc_sens= .5 + gad/0.66/2
+    #first update gad and fdbkA
+    nyear_include = 20
+    precompute_coeffs(False )
+    xNew1,Pnew,xblind,qqyta,_,_=ekf_run(zorig,n_iter,retPs=6)
+    opt_depth = old_aod
+    _,_,_,_,xNew2,Pnew2=ekf_run(zorig,n_iter,retPs=6)
+    #opt_depth_ta = opt_depth
+    #opt_depth = new_opt_depth_inst
+    #_,_,_,qqyuf=ekf_run(zorig,n_iter,retPs=6)
+    #opt_depth = opt_depth_ta
+    
+    sumLL = (stats.norm.logpdf(new_gad, gad_prior_mean, gad_sigma)+ stats.norm.logpdf(new_fdbkA, fdbkA_prior_mean, fdbkA_sigma)) #start with the prior, more certainty on fdbkA
+    surf_bias = 0
+    for k in range(max(n_iter-nyear_include,1),n_iter):
+        
+        if not(np.isnan(z_run_means[k,0])):
+            #sumLL = sumLL + 0.1*stats.norm.logpdf(z_run_means[k,1],loc = xblind[k,1], scale = np.sqrt(Pnew[k,1,1]/4+ Roc_tvar[k]/4))/(nyear_include-10)
+            sumLL = sumLL + 0.1*stats.norm.logpdf(z_run_means[k,0],loc = xNew2[k,0], scale = np.sqrt(Pnew[k,0,0]+ R_tvar[k]))/(nyear_include-10)
+        surf_bias = surf_bias + (xNew1[k,0] - xblind[k,0])/Pnew[k,0,0]   #+ stats.norm.logpdf(qqy[k,1])/nyear_include
+        #sumLL =   sumLL+ stats.norm.logpdf(qqyta[k,0])/nyear_include
+
+    #Last year counts for extra
+    sumLL = sumLL + 0.3*stats.norm.logpdf(qqyta[n_iter-1,0])
+    sumLL = sumLL + 0.2*stats.norm.logpdf(qqyta[n_iter-2,0])
+    sumLL = sumLL + 0.1*stats.norm.logpdf(qqyta[n_iter-3,0])
+    sumLL = sumLL + stats.norm.logpdf(surf_bias)
+
+    ocn_bias = 0
+    nyear_include2=50
+    for k in range(max(n_iter-nyear_include2,1),n_iter):
+        sumLL =   sumLL+ 0.1*stats.norm.logpdf(qqyta[k,0])/(n_iter-nyear_include2)
+    for k in range(0,n_iter):
+        ocn_bias = ocn_bias+ (zorig[k,1] - xblind[k,1])/Pnew[k,1,1] #entire window of ohca corrected should be unbiased with predictions
+    sumLL = sumLL + 2*stats.norm.logpdf(ocn_bias)
     return -sumLL
     
     
 
 
-def ekf_run(z,n_iter,retPs=False, volc_sens = 1):
+def ekf_run(z,n_iter,retPs=False,plottin=False):
+
+  #  if (plottin):
+  #      breakpoint()
     # intial guesses
     xhat[0] = [Teq1850,oc_meas[0]]
     xblind[0]= xhat[0]
@@ -419,6 +466,13 @@ def ekf_run(z,n_iter,retPs=False, volc_sens = 1):
 ####            qqyh2.append(float(ybark/np.sqrt(np.abs(Phat[k]))))
 ##    print(sum(lml))
 ##    print(lsml)
+
+    if(plottin):
+        plt.figure(); plt.plot(xblind[0:n_iter,0]);plt.plot(xhat[0:n_iter,0]);plt.plot(286.2-stats.norm.logpdf(qqy[0:n_iter,0])/10,'k--');plt.plot(z[0:n_iter,0])
+        plt.figure(); plt.plot(xblind[0:n_iter,1]);plt.plot(xhat[0:n_iter,1]);plt.plot(z[0:n_iter,1])
+        print(gad,fdbkA)
+        #print(xblind[0:n_iter,0])
+            
     if (retPs==True):
         return xhat[0:n_iter], P[0:n_iter]
     elif (retPs==2):

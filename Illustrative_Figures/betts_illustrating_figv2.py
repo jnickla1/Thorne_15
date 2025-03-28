@@ -88,7 +88,7 @@ for i in range(1990-1850, len(years) ):
             forc_ind = (np.abs(forec_samps-smedian[r-1])).argmin()
             if dates[i]<2015:
                 ax.plot(dates[i:i+11],forec_samps_all[:,forc_ind], color=color,
-                    linewidth=2,zorder=1, label = f"Selected UKCIP, {percentiles[r-1]:1d}th %ile")
+                    linewidth=2,zorder=1, label = f"Selected UKCP, {percentiles[r-1]:1d}th %ile")
                 
             else:
                 ax.plot(dates[i:i+11],forec_samps_all[:,forc_ind], color=color,
@@ -97,7 +97,7 @@ for i in range(1990-1850, len(years) ):
         #else:
             #ax.plot(dates[i]-.5, lag_mean, '|', color=color, markersize=2)
 ax.plot(0,15, color=kcolors[1],label = "10-year trailing obs mean")
-ax.plot(0,15, color=kcolors[1],linestyle=(0,(2,5)),label = "10-y mean of UKCIP member")
+ax.plot(0,15, color=kcolors[1],linestyle=(0,(2,5)),label = "10-y mean of UKCP member")
 ax.plot(0,15, color=kcolors[0],linestyle=(0,(2,5)),label = "10-y mean, median selected")
 ax.legend(prop={'size': 11})
 ax.set_title("Betts (2023) CGWL Method")

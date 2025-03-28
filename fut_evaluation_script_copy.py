@@ -54,7 +54,7 @@ if __name__ == '__main__':
         max_runs = 1+start_run
         plotting_figs= True
     
-    methods_folder=('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/5_Kalman','Methods/43_Forcing_Based/4_Linear','Methods/44_EarthModel_CGWL',)
+    methods_folder=('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/4_Linear')
                 #    'Methods/43_Forcing_Based/2_Kalman', 'Methods/44_EarthModel_CGWL')
 
     #'Methods/42_Temp_Alone/6_Remove_IV',
@@ -147,7 +147,7 @@ if __name__ == '__main__':
                         result2=result
                     
                     results2[method_name] = {'method_class': method_class,'LT_trend': result2}
-                pickle.dump(results2, fp)
+           #     pickle.dump(results2, fp)
 
         elif regen==2:
             # Load existing results if file exists
@@ -552,8 +552,8 @@ if __name__ == '__main__':
         df_res_show2['smooth_r'] = df_results['smooth_r'].round(3)
         df_res_cur2 = df_res_show2[df_results['c/r']=='c']
         dfres2 = df_res_cur2.sort_values('100log-l',ascending=False) #do not need to sort saved output results - we will have to read and reference anyway
-        dfres2.to_csv('Results/current_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
-        df_results.to_csv('Results/all_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
+        #dfres2.to_csv('Results/current_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
+        #df_results.to_csv('Results/all_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
         
 
 

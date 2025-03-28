@@ -32,6 +32,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         comput_temps60 = np.array(filein60.variables['tasAnom'])
         filein85 = netCDF4.Dataset(cur_path+"/tasAnom_rcp85_land-prob_global_glb_sample_b8100_1y_ann_18591201-20991130.nc",'r')
         comput_temps85 = np.array(filein85.variables['tasAnom'])
+        #comput_temps = comput_temps85 doesnt really matter
         comput_temps = np.concatenate((comput_temps60.T,comput_temps85.T)).T
     #(240, 3000), 1860 is first year
     nsamps = np.shape(comput_temps)[1]

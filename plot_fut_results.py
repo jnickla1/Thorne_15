@@ -11,8 +11,14 @@ ssp_126 = []
 ssp_245 = []
 ssp_370 = []
 
-sel_methods = ['CGWL10y_sfUKCP', 'EBMKF_ta2',]
-sel_methods_colors = [ "#CC3311", "#999933" ]
+ssp_126e = []
+ssp_245e = []
+ssp_370e = []
+
+
+sel_methods = ['CGWL10y_sfUKCP', 'EBMKF_ta2','Kal_flexLin' ,'removeGreensfx',]
+#already sorted
+sel_methods_colors = [ "#CC3311", "#999933","#88CCEE" ,"#882255"]
 
 # Define the file pattern and loop through all matching files
 file_pattern = "/Results/current_fut_statistics_fut_ESM1-2-LR_SSP{ssp_id}_constVolc{run}.csv"
@@ -25,42 +31,100 @@ for ssp_id in [126, 245, 370]:
             
             # Filter rows with the desired method_name
             filtered = df[df['method_name'].isin(sel_methods)]
+            df_sorted = filtered.sort_values(by='method_name')
+
+            #print(run)
+
+            # Extract Edyrs15 values and add to the corresponding list
+            #breakpoint()
+            if ssp_id == 126:
+                ssp_126.append(df_sorted['Fdyrs15'].values)
+                ssp_126e.append(df_sorted['eFdyrs15'].values)
+                #if (abs(df_sorted.loc[df_sorted['method_name'] == 'EBMKF_ta2', 'Fdyrs15'].values[0]) > 10):
+                #    print(file_name)
+            elif ssp_id == 245:
+                ssp_245.append(df_sorted['Fdyrs15'].values)
+                ssp_245e.append(df_sorted['eFdyrs15'].values)
+            elif ssp_id == 370:
+                ssp_370.append(df_sorted['Fdyrs15'].values)
+                ssp_370e.append(df_sorted['eFdyrs15'].values)
+
+file_pattern2 = "/Results/current_fut_statistics_fut_NorESM_RCP45_{volc_id}{run}.csv"
+
+v_45 = []
+v_45e = []
+cv_45 = []
+cv_45e = []
+
+for volc_id in ["Volc","VolcConst"]:
+    for run in range(50):
+        file_name = os.getcwd() + file_pattern2.format(volc_id=volc_id, run=run)
+        if os.path.exists(file_name):  # Check if the file exists
+            # Read the CSV file
+            df = pd.read_csv(file_name)
+            
+            # Filter rows with the desired method_name
+            filtered = df[df['method_name'].isin(sel_methods)]
             df_sorted = filtered.sort_values(by='method_name') 
 
             # Extract Edyrs15 values and add to the corresponding list
-            if ssp_id == 126:
-                ssp_126.append(df_sorted['Edyrs15'].values)
-                if (df_sorted['Edyrs15'].values == 15).any():
+            if volc_id == "Volc":
+                v_45.append(df_sorted['Fdyrs15'].values)
+                v_45e.append(df_sorted['eFdyrs15'].values)
+                
+            elif volc_id == "VolcConst":
+                cv_45.append(df_sorted['Fdyrs15'].values)
+                cv_45e.append(df_sorted['eFdyrs15'].values)
+                if (abs(df_sorted.loc[df_sorted['method_name'] == 'EBMKF_ta2', 'Fdyrs15'].values[0]) > 10):
                     print(file_name)
-            elif ssp_id == 245:
-                ssp_245.append(df_sorted['Edyrs15'].values)
-            elif ssp_id == 370:
-                ssp_370.append(df_sorted['Edyrs15'].values)
 
 # Create a figure with 3 subplots for the smoothed histograms
-fig, axs = plt.subplots(3, 1, figsize=(6, 10), sharex=True)
+fig, axs = plt.subplots(5, 2, figsize=(10, 10), sharex=True)
 
-# Define a helper function to plot smoothed histograms
+# Define a helper function to plot soothed histograms
 def plot_smoothed_histogram(ax, data0, title , leg=False):
     for i in range(np.shape(data0)[1]):
-        data = data0[:,i]
+        data = data0[:,i] #don't need to flip it
         kde = gaussian_kde(data)
-        x_range = np.linspace(min(data), max(data), 1000)
+        x_range = np.linspace(min(data)-1.5, max(data)+1.5, 1000)
         ax.plot(x_range, kde(x_range), color=sel_methods_colors[i], label = sel_methods[i], lw=2)
+        #ax.hist(data,density=True,color=sel_methods_colors[i],alpha=0.3)
         #ax.fill_between(x_range, kde(x_range), color=sel_methods_colors[i], alpha=0.2)
     ax.set_title(title, fontsize=14)
     ax.grid(True)
+    ax.tick_params(axis='x', labelbottom=True)
     if leg:
         ax.legend(loc='best')
 
 # Plot smoothed histograms for each SSP
-plot_smoothed_histogram(axs[0], np.array(ssp_126), "SSP126", )
-plot_smoothed_histogram(axs[1], np.array(ssp_245), "SSP245", )
-plot_smoothed_histogram(axs[2], np.array(ssp_370), "SSP370", leg=True)
+plot_smoothed_histogram(axs[2,0], np.array(ssp_126), "MPI ESM1-2-LR SSP126 in-member", )
+plot_smoothed_histogram(axs[1,0], np.array(ssp_245), "MPI ESM1-2-LR SSP245 in-member", )
+plot_smoothed_histogram(axs[0,0], np.array(ssp_370), "MPI ESM1-2-LR SSP370 in-member",leg=True)
+plot_smoothed_histogram(axs[3,0], np.array(cv_45), "NorESM RCP45 ConstVolc in-member",)
+plot_smoothed_histogram(axs[4,0], np.array(v_45), "NorESM RCP45 Volc in-member")
 
+plot_smoothed_histogram(axs[2,1], np.array(ssp_126e), "MPI ESM1-2-LR SSP126 ensemble", )
+plot_smoothed_histogram(axs[1,1], np.array(ssp_245e), "MPI ESM1-2-LR SSP245 ensemble", )
+plot_smoothed_histogram(axs[0,1], np.array(ssp_370e), "MPI ESM1-2-LR SSP370 ensemble",leg=True)
+plot_smoothed_histogram(axs[3,1], np.array(cv_45e), "NorESM RCP45 ConstVolc ensemble",)
+plot_smoothed_histogram(axs[4,1], np.array(v_45e), "NorESM RCP45 Volc ensemble")
+
+axs[4,0].set_xlim(-10,10)
 # Set x-axis label
-axs[2].set_xlabel("Error in Crossing Instant", fontsize=14)
+axs[4,0].set_xlabel("Error in Crossing Instant (years)", fontsize=12)
+axs[4,1].set_xlabel("Error in Crossing Instant (years)", fontsize=12)
 
+
+cai = [0,0]
+caiht = np.array([.2,.49])
+wid_txt = 2.5
+
+for i,ax in enumerate([axs[1,0],axs[1,1]]):
+    ax.arrow(cai[i]-2*wid_txt, caiht[i], -wid_txt, 0,head_width=caiht[i]*3/12,head_length=wid_txt/2,facecolor='white',lw=2)
+    ax.text(cai[i]-2*wid_txt, caiht[i]*.75,"Too Early", fontsize=12,horizontalalignment='center',color='black')
+    ax.arrow(cai[i]+2*wid_txt, caiht[i], wid_txt, 0,head_width=caiht[i]*3/12,head_length=wid_txt/2,facecolor='white',lw=2)
+    ax.text(cai[i]+2*wid_txt, caiht[i]*.75,"Too Late", fontsize=12,horizontalalignment='center',color='black')
+fig.suptitle('Time of First Reported 1.5°C Threshold Crossing v. 20-yr Mean', fontsize=16)
 # Adjust layout and show the plot
 plt.tight_layout()
 plt.show()

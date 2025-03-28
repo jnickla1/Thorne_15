@@ -257,6 +257,16 @@ def ekf_run(z,n_iter,retPs=False):
     Pminus[0,:,:] = P[0,:,:]
 
 
+    if False:
+        plt.figure();plt.plot(z[:,0]);plt.title("GMST")
+        plt.figure();plt.plot(z[:,1]);plt.title("OHCA")
+        plt.figure();plt.plot(opt_depth);plt.title("opt_depth")
+        plt.figure();plt.plot(lCo2);plt.title("lCo2")
+        plt.figure();plt.plot(anthro_clouds);plt.title("anthro_clouds")
+        plt.figure();plt.plot(tsi);plt.title("TSI")
+        plt.show()
+
+
     F[0]=compute_slope(xhat[0,:],0) #necessary for last step of RTS smoother
 
     for k in range(1,n_iter):
@@ -329,6 +339,10 @@ def ekf_run(z,n_iter,retPs=False):
 ####            qqyh2.append(float(ybark/np.sqrt(np.abs(Phat[k]))))
 ##    print(sum(lml))
 ##    print(lsml)
+
+
+    #plt.figure(); plt.plot(xblind[0:n_iter,0]);plt.plot(xhat[0:n_iter,0]);plt.plot(z[0:n_iter,0])
+    #plt.figure(); plt.plot(xblind[0:n_iter,1]);plt.plot(xhat[0:n_iter,1]);plt.plot(z[0:n_iter,1]); plt.plot()
     if (retPs==True):
         return xhat[0:n_iter], P[0:n_iter]
     elif (retPs==2):

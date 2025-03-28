@@ -9,12 +9,15 @@ import pandas as pd
 #T = 0.292*LandRec +0.708*OceanRec
 # LandRec = (T - 0.708*OceanRec)/ 0.292
 
-data = np.genfromtxt(open('../../../Common_Data/toyKFmodelData8c.csv', "rb"),dtype=float, delimiter=',')
-years=data[:,0]
-years[0]=1850
-temperature = data[:, 1]
-n_iter=len(temperature) #174
-data_ocn = pd.read_csv('../../../Common_Data/HadSST.4.0.1.0_annual_GLOBE.csv', sep=',')
+#data = np.genfromtxt(open('/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Common_Data/toyKFmodelData8c.csv', "rb"),dtype=float, delimiter=',')
+data2 = pd.read_csv("../Common_Data/HadCRUT.5.0.2.0.analysis.summary_series.global.annual.csv")
+years= data2["Time"].to_numpy()
+#years[0]=1850
+nyrs = len(years)
+temperature = data2["Anomaly (deg C)"].to_numpy()
+n_iter=len(temperature) -1 #175
+temperature=temperature[0:n_iter]
+data_ocn = pd.read_csv('/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Common_Data/HadSST.4.0.1.0_annual_GLOBE.csv', sep=',')
 OceanRec = data_ocn['anomaly'].values
 OceanRec_sc =  OceanRec *0.9/0.7
 LandRec = (temperature- 0.708*OceanRec_sc[0:n_iter])/ 0.292
@@ -143,7 +146,8 @@ while dellYtheta > 1:
     Qnew = 1/n_iter * ( S11 - np.matmul(phi_new,np.transpose(S10)))
     Rsum=np.zeros((2,2))
     for k in range(1,n_iter):
-        etaN = np.array([[EBM.temps[k]+EBM.DO_mean_temp],[EBM.IV_meas_fwd[k]]])-np.matmul(A,xhathat[k])
+        etaN = np.array([[LandRec[k]],[OceanRec_sc[k]]])-np.matmul(A,(xhathat[k]))
+        #np.array([[EBM.temps[k]+EBM.DO_mean_temp],[EBM.IV_meas_fwd[k]]])-np.matmul(A,xhathat[k])
         Rsum = Rsum + np.matmul(etaN ,np.transpose(etaN)) + np.matmul(np.matmul(A,Phat[k]),np.transpose(A))
 
     Rnew = Rsum / n_iter

@@ -55,7 +55,7 @@ offset= -np.mean(temps[(1960-sdate):(1990-sdate)]) +JonesOffset + 273.15 #Jones2
 temps=temps+offset
 #pindavg= np.mean(temps[(1850-sdate):(1930-sdate)])
 
-heatCp=17
+heatCp=17 *0.5
 
 sig=5.6704e-8
 
@@ -72,11 +72,11 @@ Teq1850=np.mean(temps[0:25])
 pindavg=Teq1850 #286.7 #preindustrial avg
 #print("Teq1850",Teq1850)
 
-shaldepth=86
-deepdepth = 1141
+shaldepth=86 *0.5
+deepdepth = 1141 +700 #+1800 # 700
 
 fdbkS = 0.35
-fdbkA = 0.42-0.12 #23 # from 35
+fdbkA = 0.42 -0.24 #-0.06 #+ .3 from 42
 fdbkW = 1.3
 
 def precompute_coeffs(printThem):
@@ -105,7 +105,7 @@ def precompute_coeffs(printThem):
 precompute_coeffs(False)
 
 
-gad= 0.67 +0.2
+gad= 1.1 #0.67
 #epd = 1   #1.3
 oc1850= 3.5 + 273.15 #absolute temperature of deep ocean
 oc_meas = ocean_heat_measured/zJ_from_W #/deepdepth/1.55 + oc1850 #convert into a deep ocean temp

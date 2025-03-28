@@ -2,7 +2,7 @@ from hist_evaluation_script import *
 regen=True
 annotate_fig=False
 crossing_figs=False
-sel_methods = ["CGWL10y_for_halfU","CGWL10y_sfUKCP","FaIR_anthroA2","EBMKF_ta3"  ]
+sel_methods = ["CGWL10y_for_halfU","CGWL10y_sfUKCP","FaIR_anthroA2","EBMKF_ta2","removeGreensfx" ]
 from netCDF4 import Dataset
 import sys
 from fut_evaluation_gen_ensemble import eval_standard
@@ -14,22 +14,19 @@ def average_every_n(lst, n):
 
 regen = 2 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
 
-if __name__ == '__main__':
-    plotting_figs=False
-    # First evaluation
-    data = pd.read_csv("./Common_Data/HadCRUT5.csv")
-    temps_obs = data.loc[:,"Anomaly"].to_numpy()
-    preind_base = np.mean(temps_obs[0:50]) #preindustrial baseline 1850-1899
-    temps_obs_past = temps_obs - preind_base #remove this baseline
-    temps_CIu_past =data.loc[:,"Upper"].to_numpy() #Lower confidence limit (2.5%)	Upper confidence limit (97.5%)
-    temps_CIl_past =data.loc[:,"Lower"].to_numpy()
-    years_past=data.loc[:,"Time"].to_numpy()
-    
-    
-    experiment_type = sys.argv[1] #'fut_ESM1-2-LR_SSP126_constVolc' #fut_NorESM_RCP45_Volc
-    start_run = int(sys.argv[2])
-        
-    exp_attr = experiment_type.split("_")
+
+data = pd.read_csv("./Common_Data/HadCRUT5.csv")
+temps_obs = data.loc[:,"Anomaly"].to_numpy()
+preind_base = np.mean(temps_obs[0:50]) #preindustrial baseline 1850-1899
+temps_obs_past = temps_obs - preind_base #remove this baseline
+temps_CIu_past =data.loc[:,"Upper"].to_numpy() #Lower confidence limit (2.5%)	Upper confidence limit (97.5%)
+temps_CIl_past =data.loc[:,"Lower"].to_numpy()
+years_past=data.loc[:,"Time"].to_numpy()
+
+def add_dash_dot(sspstr):
+    return sspstr[0:4] + "-" + sspstr[4] + "." + sspstr[5:]
+
+def collect_data(exp_attr ):
     if (exp_attr[1]=='ESM1-2-LR'):
         max_runs = 10+start_run #50  #5
         fut_data_loc = '/Users/JohnMatthew/climate_data/'+exp_attr[1]+'/combined/'+exp_attr[2].lower()+'_aave_tas.nc'
@@ -45,8 +42,67 @@ if __name__ == '__main__':
             hist_data_loc = '/Users/JohnMatthew/climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/historicalVolc_aave_tas.nc'
         
     else:
-        print("Error: unknown model to this eval script")
+        print("Error: unknown model to this eval script "+ exp_attr)
         sys.exit(1)
+
+
+        
+    dataset = Dataset(fut_data_loc, 'r')
+    variable = dataset.variables['tas']
+    sims_tas = variable[:].__array__()
+    stimes = dataset.variables['time']
+    stime_mon = stimes[:].__array__()/365+1850
+
+    dataset_hist = Dataset(hist_data_loc, 'r')
+    variable_hist= dataset_hist.variables['tas']
+    sims_tas_hist = variable_hist[:].__array__()
+    stimes_hist = dataset_hist.variables['time']
+    stime_mon_hist = stimes_hist[:].__array__()/365+1850
+
+    return (sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist)
+
+def select_data(styr, model_run,sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist):
+    this_sim_yr = average_every_n(sims_tas[model_run,:], 12) #converting monthly to yearly
+    this_hsim_yr = average_every_n(sims_tas_hist[model_run,:], 12)
+    stime_yrs = np.floor(average_every_n(stime_mon, 12)).astype(int)
+    shtime_yrs = np.floor(average_every_n(stime_mon_hist, 12)).astype(int)
+    
+    start_sim = styr - stime_yrs[0] +1 #year that we should switch from observations uncertainty to const simulation uncertainty
+    #futCIl = np.full((len(stime_yrs) - start_sim),temps_CIl_past[-1])
+
+    #offset_sim = np.mean( this_sim_yr[0:start_sim] - temps_obs_past[-start_sim:])
+    #must decide how to offset the simulation - can do it so the first 50 yrs are 0 as we did for obs
+
+    if (exp_attr[1]=='ESM1-2-LR'):
+        offset_sim = np.mean(this_hsim_yr[0:50]) #preindustrial baseline 1850-1899
+        sim_corrected = this_sim_yr -offset_sim
+        simh_corrected = this_hsim_yr -offset_sim
+        simall = np.concatenate((simh_corrected,sim_corrected))
+        years= np.concatenate((shtime_yrs,stime_yrs))
+        
+    elif (exp_attr[1]=='NorESM'):
+        offset_sim = np.mean( this_hsim_yr[0:20] - temps_obs_past[(-1850+1980):(-1850+1980+20)]) # baseline 1980-2000 match
+        sim_corrected = this_sim_yr -offset_sim
+        simh_corrected = this_hsim_yr -offset_sim
+        simall = np.concatenate((temps_obs_past[0:(-1850+1980)],simh_corrected,sim_corrected))
+        fixyrs= 1980-3829
+        years= np.concatenate((years_past[0:(-1850+1980)],shtime_yrs+fixyrs,stime_yrs+fixyrs))
+        #print(years)
+        start_sim= start_sim-fixyrs
+
+    return (simall,start_sim,years, sim_corrected, simh_corrected)
+    
+
+
+
+
+    
+def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax4, colorraw=None):
+    from hist_evaluation_script import index_mapping,ftl
+    # First evaluation
+
+    exp_attr = experiment_type.split("_")
+    
               
     
     if start_run < 0:
@@ -72,57 +128,20 @@ if __name__ == '__main__':
 
 
 
-        
-    dataset = Dataset(fut_data_loc, 'r')
-    variable = dataset.variables['tas']
-    sims_tas = variable[:].__array__()
-    stimes = dataset.variables['time']
-    stime_mon = stimes[:].__array__()/365+1850
-
-    dataset_hist = Dataset(hist_data_loc, 'r')
-    variable_hist= dataset_hist.variables['tas']
-    sims_tas_hist = variable_hist[:].__array__()
-    stimes_hist = dataset_hist.variables['time']
-    stime_mon_hist = stimes_hist[:].__array__()/365+1850
 
     print("starting computation for "+experiment_type)
 
     ens_standard = eval_standard(experiment_type)
+
+    (sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist) = collect_data(exp_attr)
         
     for model_run in range(start_run,max_runs):
         print("Model number:")
         print(model_run)
         print("\n\n\n")
         
-        this_sim_yr = average_every_n(sims_tas[model_run,:], 12) #converting monthly to yearly
-        this_hsim_yr = average_every_n(sims_tas_hist[model_run,:], 12)
-        stime_yrs = np.floor(average_every_n(stime_mon, 12)).astype(int)
-        shtime_yrs = np.floor(average_every_n(stime_mon_hist, 12)).astype(int)
-        
-        start_sim = years_past[-1] - stime_yrs[0] +1 #year that we should switch from observations uncertainty to const simulation uncertainty
-        #futCIl = np.full((len(stime_yrs) - start_sim),temps_CIl_past[-1])
 
-        #offset_sim = np.mean( this_sim_yr[0:start_sim] - temps_obs_past[-start_sim:])
-        #must decide how to offset the simulation - can do it so the first 50 yrs are 0 as we did for obs
-
-        if (exp_attr[1]=='ESM1-2-LR'):
-            offset_sim = np.mean(this_hsim_yr[0:50]) #preindustrial baseline 1850-1899
-            sim_corrected = this_sim_yr -offset_sim
-            simh_corrected = this_hsim_yr -offset_sim
-            simall = np.concatenate((simh_corrected,sim_corrected))
-            years= np.concatenate((shtime_yrs,stime_yrs))
-            
-        elif (exp_attr[1]=='NorESM'):
-            offset_sim = np.mean( this_hsim_yr[0:20] - temps_obs_past[(-1850+1980):(-1850+1980+20)]) # baseline 1980-2000 match
-            sim_corrected = this_sim_yr -offset_sim
-            simh_corrected = this_hsim_yr -offset_sim
-            simall = np.concatenate((temps_obs_past[0:(-1850+1980)],simh_corrected,sim_corrected))
-            fixyrs= 1980-3829
-            years= np.concatenate((years_past[0:(-1850+1980)],shtime_yrs+fixyrs,stime_yrs+fixyrs))
-            #print(years)
-            start_sim= start_sim-fixyrs
-            
-            
+        (simall,start_sim,years, sim_corrected, simh_corrected)= select_data(years_past[-1],model_run,sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist)
             
         
         temps_CIl_hist = simall[0:len(years_past)]+  temps_CIl_past - temps_obs_past
@@ -157,6 +176,8 @@ if __name__ == '__main__':
             if os.path.exists(results_path):
                 with open(results_path, 'rb') as fp:
                     existing_results = pickle.load(fp)
+                    existing_results.pop("EBMKF_ta2",None) #redo EMBKF_ta3
+                    existing_results.pop("EBMKF_ta",None) 
                 completed_methods = set(existing_results.keys())
             else:
                 existing_results = {}
@@ -200,8 +221,12 @@ if __name__ == '__main__':
         smooth_std = np.nanmean(np.abs(np.diff(np.diff(standard))))
 
         if plotting_figs:
-            fig, (ax1,ax4)= plt.subplots(2, 1, figsize=(10,10), gridspec_kw={ "hspace": 0.3})
+            if ax1==None:
+                fig, (ax1,ax4)= plt.subplots(2, 1, figsize=(10,10), gridspec_kw={ "hspace": 0.3})
             ax1.plot(years, standard, 'k-',zorder=3,lw=1.5)
+            if colorraw!=None:
+                ax1.plot(years,simall,'-', color = colorraw, linewidth=2.5,zorder=3)
+                ax1.plot(years,simall,'-', color = 'k', linewidth=.5,zorder=3)
 
         fineyrs_all = np.arange(years[0],years[-1]+1/inum,1/inum)
         std_intp0 = np.interp(fineyrs_all,years,standard)
@@ -237,11 +262,12 @@ if __name__ == '__main__':
                                            'log-likeli','RMS','bias','tlog-l',
                                            '100log-l','100RMS','100bias',
                                            'l15','l20',
-                                           'bias50','Edyrs15','Edyrs20','EdyrsA','RMSyrsA','ncEdyrs',
-                            
+                                           'bias50','Edyrs15','Edyrs20','Mdyrs15','Mdyrs20','Fdyrs15','Fdyrs20',
+                                           'EdyrsA','RMSyrsA','ncEdyrs',
                                             'e100log-l','e100RMS','e100bias',
                                            'el15','el20',
-                                           'ebias50','eEdyrs15','eEdyrs20','eEdyrsA','eRMSyrsA','nceEdyrs'
+                                           'ebias50','eEdyrs15','eEdyrs20', 'eMdyrs15','eMdyrs20','eFdyrs15','eFdyrs20',
+                                           'eEdyrsA','eRMSyrsA','nceEdyrs'
 
                                            ])
         i=0
@@ -320,10 +346,14 @@ if __name__ == '__main__':
                     
         #Line PLOT TO SHOW WHAT IT'S DOING
                     aedyrs=np.zeros(len(thrshs))
+                    maedyrs=np.zeros(len(thrshs))
+                    faedyrs=np.zeros(len(thrshs))
                     ncross = 0
                     
                     aedyrsE=np.zeros(len(thrshsE))
                     ncrossE = 0
+                    maedyrsE=np.zeros(len(thrshsE))
+                    faedyrsE=np.zeros(len(thrshsE))
 
                     if(labelcurr_or_retro=="c"):
                         if (method_name!="raw01y" and plotting_figs):
@@ -348,10 +378,10 @@ if __name__ == '__main__':
 
                    
                         #calculate at intermediary 0.?°C
-
+                        win_sz=25
                         for j in range(len(closest_years)):
-                            evalmin=int(closest_years[j])-15
-                            evalmax=min(int(closest_years[j])+15,2000-lhund)
+                            evalmin=int(closest_years[j])-win_sz
+                            evalmax=min(int(closest_years[j])+win_sz,2000-lhund)
                             evalyrs = np.arange(evalmin,evalmax)
                             fineevalyrs = np.arange(evalyrs[0],evalyrs[-1]+1/inum,1/inum) 
                             this_method_p_steps = np.full(np.shape(evalyrs),np.nan)
@@ -375,14 +405,24 @@ if __name__ == '__main__':
                             if j==4 and np.sum(now_cross)>1 :
                                 ncross = ncross + 0.1*np.sum(now_cross)
                             fineevalyrsh=fineevalyrs[0:-1]/2 + fineevalyrs[1:]/2
-                            evalmean = np.nanmean((fineevalyrsh[now_cross] - closest_years[j])) #if crossing multiple times take the mean
+                            diffcross = (fineevalyrsh[now_cross] - closest_years[j])
+                            evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
                             if np.isnan(evalmean):
-                                evalmean=15 #just put 15 yrs difference
+                                evalmean=win_sz #just put 15 yrs difference
                             aedyrs[j] = evalmean
+                            if len(diffcross)>0:
+                                mevalmean = diffcross[np.nanargmax(abs(diffcross))] #if crossing multiple times take the worst one
+                                feval = diffcross[0]
+                            else:
+                                mevalmean=15 #just put 15 yrs difference
+                                feval = 15
+                            maedyrs[j] = mevalmean
+                            faedyrs[j]=feval
+                            
 
                         for j in range(len(closest_yearsE)):
-                            evalmin=int(closest_yearsE[j])-15
-                            evalmax=min(int(closest_yearsE[j])+15,2000-lhund)
+                            evalmin=int(closest_yearsE[j])-win_sz
+                            evalmax=min(int(closest_yearsE[j])+win_sz,2000-lhund)
                             evalyrs = np.arange(evalmin,evalmax)
                             fineevalyrs = np.arange(evalyrs[0],evalyrs[-1]+1/inum,1/inum) 
                             this_method_p_steps = np.full(np.shape(evalyrs),np.nan)
@@ -402,10 +442,19 @@ if __name__ == '__main__':
                             if j==4 and np.sum(now_cross)>1 :
                                 ncrossE = ncrossE + 0.1*np.sum(now_cross)
                             fineevalyrsh=fineevalyrs[0:-1]/2 + fineevalyrs[1:]/2
-                            evalmean = np.nanmean((fineevalyrsh[now_cross] - closest_yearsE[j])) #if crossing multiple times take the mean
+                            diffcrossE = (fineevalyrsh[now_cross] - closest_yearsE[j])
+                            evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
                             if np.isnan(evalmean):
-                                evalmean=15 #just put 15 yrs difference
+                                evalmean=win_sz #just put 15 yrs difference
                             aedyrsE[j] = evalmean
+                            if len(diffcrossE)>0:
+                                mevalmean = diffcrossE[np.nanargmax(abs(diffcrossE))] #if crossing multiple times take the worst one
+                                feval = diffcrossE[0]
+                            else:
+                                mevalmean=15 #just put 15 yrs difference
+                                feval = 15
+                            maedyrsE[j] = mevalmean
+                            faedyrsE[j]=feval
                             
                       #  elif("lowess" in method_name):
                       #      plt.fill_between(years, central_est-se, central_est+se, alpha=0.6)
@@ -422,18 +471,22 @@ if __name__ == '__main__':
                             detailLL[dll] =  np.exp(llikelihood[int(closest_yrs_rnd[idll])-1850])
                         if idll<len(closest_yrs_rndE):
                             detaileLL[dll] =  np.exp(ellikelihood[int(closest_yrs_rndE[idll])-1850])
-                    #breakpoint()  
-                    df_results.loc[i]= [ method_name,short_method_class,labelcurr_or_retro,smooth_est/smooth_std,avg_uncert,
+                    
+                    candidate_row= [ method_name,short_method_class,labelcurr_or_retro,smooth_est/smooth_std,avg_uncert,
                                      qvals_count_yrs05,qvals_count_yrs01,  qvals_smallest,qvals_smallest5, np.nanmean(llikelihood), np.sqrt(np.nanmean((central_est-standard)**2)),
                                        np.nanmean(central_est-standard) , np.nansum(llikelihood),
                                          np.nansum(llikelihood[lhund:-1]),np.sqrt(np.nanmean((central_est[lhund:-1]-standard[lhund:-1])**2)),np.nanmean(central_est[lhund:-1]-standard[lhund:-1]),
                                          detailLL[0], detailLL[1],
-                                         np.nanmean(central_est[-50:]-standard[-50:]),np.mean(aedyrs[4]), (aedyrs[9] if (len(aedyrs)>9) else -1),
+                                         np.nanmean(central_est[-50:]-standard[-50:]),aedyrs[4], (aedyrs[9] if (len(aedyrs)>9) else -1),
+                                         maedyrs[4], (maedyrs[9] if (len(maedyrs)>9) else -1),faedyrs[4], (faedyrs[9] if (len(faedyrs)>9) else -1),
                                          np.mean(aedyrs),np.sqrt(np.mean(aedyrs**2)),ncross,
                                          np.nansum(ellikelihood[lhund:-1]),np.sqrt(np.nanmean((central_est[lhund:-1]-ens_standard[lhund:-1])**2)),np.nanmean(central_est[lhund:-1]-ens_standard[lhund:-1]),
                                          detaileLL[0], detaileLL[1],
-                                         np.nanmean(central_est[-50:]-ens_standard[-50:]),np.mean(aedyrsE[4]), (aedyrsE[9] if (len(aedyrsE)>9) else -1),
-                                         np.mean(aedyrsE),np.sqrt(np.mean(aedyrsE)**2),ncrossE] 
+                                         np.nanmean(central_est[-50:]-ens_standard[-50:]),aedyrsE[4], (aedyrsE[9] if (len(aedyrsE)>9) else -1),
+                                         maedyrsE[4], (maedyrsE[9] if (len(maedyrsE)>9) else -1), faedyrsE[4], (faedyrsE[9] if (len(faedyrsE)>9) else -1),
+                                         np.mean(aedyrsE),np.sqrt(np.mean(aedyrsE)**2),ncrossE]
+                    #breakpoint()
+                    df_results.loc[i]=candidate_row
                     i=i+1
        
         if(crossing_figs):
@@ -529,7 +582,7 @@ if __name__ == '__main__':
             ax4.hlines(y=0,xmin=years[np.argmax(~np.isnan(standard))],xmax=years[-np.argmax(~np.isnan(np.flip(standard)))],  color='k', linestyle='-', lw=3)
             ax4.legend(ax4_handles,ax4_labels)
             ax1.set_xlabel("Year")
-            ax1.set_title("Evaluated Methods to find Current "+exp_attr[1]+" "+exp_attr[2], pad=10)
+            ax1.set_title("Evaluated Methods to find Current "+exp_attr[1]+" "+add_dash_dot(exp_attr[2]), pad=10)
             ax4.set_title("`Error` of Top-Performing Methods\n versus 20-yr running mean", pad=10)
             ax4.set_xlabel("Year")
             ax1.set_ylabel("Temperature (°C) Anomaly\n relative to 1850-1900")
@@ -545,7 +598,7 @@ if __name__ == '__main__':
                 sel.annotation.set_text(sel.artist.get_label())
         
 
-            plt.show()
+                
         
 
 
@@ -558,6 +611,159 @@ if __name__ == '__main__':
         dfres2.to_csv('Results/current_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
         df_results.to_csv('Results/all_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
         
+        return closest_years, closest_yearsE #pass stuff back so we can draw more, thresholds at 1.1 1.2 ....
+        
+def colorgen(c,step,const):
+    y=(((c+1)%3-1)*step[0], ((c//3+1)%3-1)*step[1], ((c//9+1)%3-1)*step[2])
+    color=tuple( max(min(sum(t), 255),0) / 255 for t in zip(y,const))
+    return color #
+
+def colorcomb(col1,const):
+    color=tuple( max(min(sum(t)/2*256, 255),0) / 255 for t in zip(col1,const))
+    return color #
 
 
+if __name__ == '__main__':
+    plotting_figs=False
+    experiment_type = sys.argv[1] #'fut_ESM1-2-LR_SSP126_constVolc' #fut_NorESM_RCP45_Volc
+    start_run = int(sys.argv[2])
+    exp_attr = experiment_type.split("_")
+    
+    if exp_attr[0]=="fut":
+        run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+        plt.show()
+        
+    elif exp_attr[0]=="futplotcomb" and exp_attr[1]=="ESM1-2-LR":
+        fig1, (axens, ax1a,ax1b)= plt.subplots(3, 1, figsize=(10,10), gridspec_kw={ "height_ratios" :[.6,1,1],"hspace": 0.35})
+        fig4, (ax4a,ax4b)= plt.subplots(2, 1, figsize=(10,10), gridspec_kw={  "hspace": 0.3})
+        exp1 = "fut_ESM1-2-LR_SSP126_constVolc"
+        exp2 = "fut_ESM1-2-LR_SSP370_constVolc"
+        col370 = (194./255, 52./255, 109./255)
+        col126 = (52./255,120./255, 130./255)
+        (sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist) = collect_data(exp2.split("_"))
+        for model_run in range(0,50):
+            (simall,start_sim,years, sim_corrected, simh_corrected)= select_data(2024,model_run,sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist)
+            if model_run == -(start_run):
+                axens.plot(years,simall,'-', color = col370, linewidth=2.5,zorder=3)
+                axens.plot(years,simall,'-', color = 'k', linewidth=.5,zorder=3)
+            else:
+                axens.plot(years,simall,'-', color=colorgen(model_run,(30,70,30),(194, 52, 109)), linewidth=0.5,zorder=1) #(52./255, 235./255, 235./255)
+            
+        (sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist) = collect_data(exp1.split("_"))
+        for model_run in range(0,50):
+            (simall,start_sim,years, sim_corrected, simh_corrected)= select_data(2024,model_run,sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist)
+            if model_run == -(start_run):
+                axens.plot(years,simall,'-', color = col126, linewidth=2.5,zorder=3)
+                axens.plot(years,simall,'-', color = 'k', linewidth=.5,zorder=3)
+            else:
+                axens.plot(years,simall,'-', color=colorgen(model_run,(70,30,30),(52,120,130)), linewidth=0.5,zorder=1) #(52./255, 235./255, 235./255)
+            
+        axens.set_yticks(np.arange(0, 4, step=.5), minor=True)
+        axens.set_xticks(np.arange(2000,2105,25))
+        axens.grid(color='silver',zorder=-1,which='both')
+       
+        nud = 0.5
+        closest_years126, closest_yearsE126 = run_one_single_ens_member(plotting_figs, exp1, start_run, ax1a, ax4a, col126)
+        closest_years370, closest_yearsE370 =run_one_single_ens_member(plotting_figs, exp2, start_run, ax1b, ax4b, col370)
+        axens.plot([closest_yearsE126[4],closest_yearsE126[4]],[0.9,1.5],color = col126)
+        axens.plot([closest_yearsE126[4]+nud,closest_yearsE126[4]+nud],[0.9,1.5],color = col126, lw=0.5)
+        axens.plot([closest_yearsE126[4]-nud,closest_yearsE126[4]-nud],[0.9,1.5],color = col126, lw=0.5)
+        axens.text(closest_yearsE126[4], 0.6, str(round(closest_yearsE126[4], ndigits=1)), color = col126,horizontalalignment='center')
+        axens.plot([closest_yearsE370[4],closest_yearsE370[4]],[0.9,1.5],color = col370)
+        axens.plot([closest_yearsE370[4]+nud,closest_yearsE370[4]+nud],[0.9,1.5],color = col370, lw=0.5)
+        axens.plot([closest_yearsE370[4]-nud,closest_yearsE370[4]-nud],[0.9,1.5],color = col370, lw=0.5)
+        axens.text(closest_yearsE370[4], 0.6, str(round(closest_yearsE370[4], ndigits=1)), color = col370,horizontalalignment='center')
+
+        axens.plot([closest_years126[4],closest_years126[4]],[1.5,3],color = col126,lw=2.5)
+        axens.plot([closest_years126[4],closest_years126[4]],[2.5,3],color = "black", lw=0.5)
+        axens.text(closest_years126[4], 3.1, str(round(closest_years126[4], ndigits=1)), color = col126,horizontalalignment='center')
+        axens.plot([closest_years370[4],closest_years370[4]],[1.5,3],color = col370,lw=2.5)
+        axens.plot([closest_years370[4],closest_years370[4]],[2.5,3],color = "black", lw=0.5)
+        axens.text(closest_years370[4], 3.1, str(round(closest_years370[4], ndigits=1)), color = col370,horizontalalignment='center')
+        
+        axens.set_ylabel(ax1a.get_ylabel()) #matching ylabels
+        ax1a.set_ylim([0.5,3.5])
+        ax1a.set_xlabel("")
+        ax1b.set_ylim([0.5,3.5])
+        axens.set_ylim([0.5,3.5])
+        axens.set_xlim(ax1a.get_xlim())
+        ax1b.get_legend().remove()
+        plt.show()
+
+    elif exp_attr[0]=="futplotcomb" and exp_attr[1]=="NorESM":
+        fig1, (axens, ax1a,ax1b)= plt.subplots(3, 1, figsize=(10,10), gridspec_kw={ "height_ratios" :[.6,1,1],"hspace": 0.35})
+        fig4, (ax4a,ax4b)= plt.subplots(2, 1, figsize=(10,10), gridspec_kw={  "hspace": 0.3})
+        exp1 = "fut_NorESM_RCP45_VolcConst"
+        exp2 = "fut_NorESM_RCP45_Volc"
+        
+        file_path="Results/ensemble_mean_"+exp2+".csv"
+                #if os.path.exists(file_path): #will raise error if this file isn't here
+        df = pd.read_csv(file_path, header=None)
+        standards_np = df.to_numpy()
+        mask = standards_np > 1.5
+        result = np.argmax(mask, axis=1)
+        min_run = np.argmin(result)#11
+        max_run = np.argmax(result)
+        
+        colnovolc = (245./255, 212./255, 66./255)
+        colvolc = (16./255, 133./255, 28./255)
+        (sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist) = collect_data(exp2.split("_"))
+        for model_run in range(0,50):
+            (simall,start_sim,years, sim_corrected, simh_corrected)= select_data(2024,model_run,sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist)
+            if model_run == min_run:
+                min_line,=axens.plot(years,simall,'-', color = colorcomb(colvolc,colnovolc),zorder=3, linewidth=2.5) #,label = "Volc. Sample Min")
+                black_line, = axens.plot(years,simall,'-', color = 'k', linewidth=.5,zorder=3)
+            elif model_run == max_run :# -(start_run):
+                max_line,=axens.plot(years,simall,'-', color = colvolc,zorder=3,linewidth=2.5) #, label = "Volc. Sample Max")
+                axens.plot(years,simall,'-', color = 'k', linewidth=.5,zorder=3)
+            else:
+                axens.plot(years,simall,'-', color=colorgen(model_run,(30,70,30),(16,133,28)), linewidth=0.5,zorder=1, alpha=0.75) #(52./255, 235./255, 235./255)
+
+
+
+        (sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist) = collect_data(exp1.split("_"))
+        for model_run in range(0,50):
+            (simall,start_sim,years, sim_corrected, simh_corrected)= select_data(2024,model_run,sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist)
+            if model_run == 0:
+                const_novolc_line,= axens.plot(years,simall,'-', color = colnovolc, linewidth=0.5,zorder=3,alpha=0.5) #,label = "Volc. Const.")
+                #black_line = axens.plot(years,simall,'-', color = 'k', linewidth=.5,zorder=3)
+            else:
+                axens.plot(years,simall,'-', color=colorgen(model_run,(70,30,30),(245, 212, 66)), linewidth=0.5,zorder=1,alpha=0.5) #(52./255, 235./255, 235./255)
+            
+        axens.set_yticks(np.arange(0, 4, step=.5), minor=True)
+        axens.set_xticks(np.arange(2000,2105,25))
+        axens.set_xlim([2000,2100])
+        axens.grid(color='silver',zorder=-1,which='both')
+       
+        nud = 0.5
+        closest_years126, closest_yearsE126 = run_one_single_ens_member(plotting_figs, exp2, -min_run, ax1a, ax4a, colorcomb(colvolc,colnovolc))
+        closest_years370, closest_yearsE370 = run_one_single_ens_member(plotting_figs, exp2, -max_run, ax1b, ax4b, colvolc)
+##        axens.plot([closest_yearsE126[4],closest_yearsE126[4]],[0.9,1.5],color = colorcomb(colvolc,colnovolc))
+##        axens.plot([closest_yearsE126[4]+nud,closest_yearsE126[4]+nud],[0.9,1.5],color = colorcomb(colvolc,colnovolc), lw=0.5)
+##        axens.plot([closest_yearsE126[4]-nud,closest_yearsE126[4]-nud],[0.9,1.5],color = colorcomb(colvolc,colnovolc), lw=0.5)
+##        axens.text(closest_yearsE126[4], 0.6, str(round(closest_yearsE126[4], ndigits=1)), color = colorcomb(colvolc,colnovolc),horizontalalignment='center')
+        axens.plot([closest_yearsE370[4],closest_yearsE370[4]],[0.3,1.5],color =colvolc)
+        axens.plot([closest_yearsE370[4]+nud,closest_yearsE370[4]+nud],[0.3,1.5],color = colvolc, lw=0.5)
+        axens.plot([closest_yearsE370[4]-nud,closest_yearsE370[4]-nud],[0.3,1.5],color = colvolc, lw=0.5)
+        axens.text(closest_yearsE370[4], 0.05, str(round(closest_yearsE370[4], ndigits=1)), color = colvolc,horizontalalignment='center')
+
+        axens.plot([closest_years126[4],closest_years126[4]],[1.5,2.4],color = colorcomb(colvolc,colnovolc),lw=2.5)
+        axens.plot([closest_years126[4],closest_years126[4]],[2.,2.4],color = "black", lw=0.5)
+        axens.text(closest_years126[4], 2.45, str(round(closest_years126[4], ndigits=1)), color = colorcomb(colvolc,colnovolc),horizontalalignment='center')
+        axens.plot([closest_years370[4],closest_years370[4]],[1.5,2.4],color = colvolc,lw=2.5)
+        axens.plot([closest_years370[4],closest_years370[4]],[2.,2.4],color = "black", lw=0.5)
+        axens.text(closest_years370[4], 2.45, str(round(closest_years370[4], ndigits=1)), color = colvolc,horizontalalignment='center')
+        
+        axens.set_ylabel(ax1a.get_ylabel()) #matching ylabels
+        ax1a.set_ylim([0,2.75])
+        ax1a.set_title("Evaluated Methods to find Current NorESM RCP 4.5 - Min. Volcanic Activity")
+        ax1b.set_title("Evaluated Methods to find Current NorESM RCP 4.5 - Max. Volcanic Activity")
+        axens.set_title("Data from Bethke et. al. 2017: \nPotential volcanic impacts on future climate variability")
+        ax1a.set_xlabel("")
+        ax1b.set_ylim([0,2.75])
+        axens.set_ylim([0,2.75])
+        axens.legend([(min_line,black_line),(max_line,black_line), (const_novolc_line,)], ["Volc. Sample Min","Volc. Sample Max", "Volc. Const."])
+        
+        ax1b.get_legend().remove()
+        plt.show()    
 
