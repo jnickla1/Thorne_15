@@ -5,8 +5,8 @@ import matplotlib        as mpl
 import scipy.stats as stats
 from sklearn.metrics import r2_score
 #plt.rcParams['text.usetex'] = True
-plt.rcParams["font.family"] = "Times New Roman"
-mpl.rcParams['mathtext.fontset'] = "cm"
+#plt.rcParams["font.family"] = "Times New Roman"
+#mpl.rcParams['mathtext.fontset'] = "cm"
 import matplotlib.transforms as mtransforms
 import pdb
 

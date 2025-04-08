@@ -13,6 +13,10 @@ import collections
 
 import colorsys
 
+from datetime import datetime
+current_date = datetime.now()
+formatted_date = current_date.strftime("%y%m%d")
+
 historical_regen=True  #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
 
 # ================================
@@ -26,10 +30,10 @@ methods_names = [
     ['42_Temp_Alone/4_GAM_AR1', "4.3.4:\nSmoothing Splines", 24,1997,2022], #97
     ['42_Temp_Alone/5_Kalman', "4.3.5:\nSimple State Space", 27.5,1997,2022], #97
     ['42_Temp_Alone/6_Remove_IV', "4.3.6:\nFilter Internal\nVariability",33,1999,2022], #99
-    ['43_Forcing_Based/1_ERF_FaIR',"4.4.1:\nConstrained\nEmulators",38,1999,2022],  #99
-    ['43_Forcing_Based/2_Kalman', "4.4.2:\nEnergy Balance\nKalman Filter",42,1999,2022],  #99
-    ['43_Forcing_Based/3_Human_Induced', "4.4.3:\nAttributable\nWarming", 46.5,1999,2022], #99
-    ['43_Forcing_Based/4_Linear', "4.4.4:\nLinear", 49,1999,2022],
+    ['43_Forcing_Based/0_Linear', "4.4.1:\nLinear CO2", 37,1999,2022],
+    ['43_Forcing_Based/1_ERF_FaIR',"4.4.2:\nConstrained\nEmulators",38+3,1999,2022],  #99
+    ['43_Forcing_Based/2_Kalman', "4.4.3:\nEnergy Balance\nKalman Filter",42+2.5,1999,2022],  #99
+    ['43_Forcing_Based/3_Human_Induced', "4.4.4:\nAttributable\nWarming", 46.5+2,1999,2022], #99
     ['44_EarthModel_CGWL', "4.5:\nCombining\nESM Projections", 54,1998,2022]   #98
     ] #Last three coordinates define location on violin plots
 
@@ -45,12 +49,16 @@ def gen_color(ci, dark=False):
     '43_Forcing_Based/1_ERF_FaIR':"#44AA99",  # teal
     '43_Forcing_Based/2_Kalman': "#999933",  # mustard
     '43_Forcing_Based/3_Human_Induced': "#AA4499",  #pink
-    '43_Forcing_Based/4_Linear': "#949494",  #grey
+    '43_Forcing_Based/0_Linear': "#9494CE",  #greyblue
     '44_EarthModel_CGWL': "#CC3311"   # firetruck
     }
     
     return colors[ci]
 
+
+running_subset = ('Methods/42_Temp_Alone/1_Run_Means',
+                    'Methods/43_Forcing_Based/2_Kalman','Methods/44_EarthModel_CGWL')
+#running_subset = ('Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL') #methods we now want to run, smaller subset for debugging
 
 def get_brightness(hex_color):
     """Calculates the perceived brightness of a CSS color, a float between 0 and 1.
@@ -69,18 +77,8 @@ def get_brightness(hex_color):
 # Find all *_method.py files in the folder and subfolders
 # ================================
 
-def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type, methods_folder= ('Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL'),
-
-                
+def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type, methods_folder=running_subset,              
                 completed_methods = set(),give_methods_path =False):
-    #'Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV'
-#'Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV','Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/2_Kalman')):#
-    #'Methods/44_EarthModel_CGWL','Methods/42_Temp_Alone/3_ST_Fits' 'Methods/42_Temp_Alone/6_Remove_IV', 'Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV'
-#'Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/3_Human_Induced' 'Methods/42_Temp_Alone/1_Run_Means', 'Methods/43_Forcing_Based/3_Human_Induced' 
-#'Methods/42_Temp_Alone/1_Run_Means','Methods/44_EarthModel_CGWL')): 
-#'Methods/42_Temp_Alone','Methods/43_Forcing_Based'
-#('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/4_Linear','Methods/43_Forcing_Based/2_Kalman'),
-
     if give_methods_path == False:
         method_files = []
         for root, _, files in chain.from_iterable(os.walk(path) for path in methods_folder):
@@ -132,10 +130,23 @@ import mplcursors
 spaglines = []
 
 alt_colors = ['black', 'white']
-sel_methods = [ "CGWL10y_for_halfU","FaIR_anthroA2","EBMKF_ta3"] # "OLS_refit_CO2forc", "CGWL10y_for_halfU","TheilSen_h7075" ,"FaIR_anthroA",,"EBMKF_ta2"  ] #"EBMKF_ta",
+sel_methods = [ "CGWL10y_for_halfU","FaIR_anthroA2","EBMKF_ta4","EBMKF_ta","min_month_proj"] # "OLS_refit_CO2forc", "CGWL10y_for_halfU","TheilSen_h7075" ,"FaIR_anthroA",,"EBMKF_ta2"  ] #"EBMKF_ta",
 
-index_mapping = pd.read_csv('to_index_mapping.csv')['index'].values
-ftl = np.argsort(index_mapping) #from to list - where a certain method should be plotted
+try:
+    index_mapping_new = pd.read_csv('all_methods_statistics_250327.csv')
+    def rank2(method_name_in):
+        try:
+            ret = index_mapping_new[index_mapping_new["method_name"]==method_name_in]["bias50"].values[0] #first is always current
+        except:
+            print("not found METHOD")
+            print(method_name_in)
+            ret = 0
+        return ret
+except:
+    print("not found newest DATAFRAME SAVED")
+    def rank2(method_name_in):
+        return method_name_in
+#ftl = np.argsort(index_mapping) #from to list - where a certain method should be plotted
 
 if __name__ == '__main__':
     regen=historical_regen #False #whether to execute all of the methods directly (True) or read from a pickle file to rapidly redraw the figures (False).
@@ -179,7 +190,7 @@ if __name__ == '__main__':
     #nthresholds = np.size(heights0)
     inum=12 #internal interpolation within years
     standard = results['cent20y']['LT_trend'][2] #retrospective
-    breakpoint()
+    #breakpoint()
     smooth_std = np.nanmean(np.abs(np.diff(np.diff(standard))))
 
     fig, (ax1,ax4)= plt.subplots(2, 1, figsize=(10,10), gridspec_kw={ "hspace": 0.3})
@@ -221,11 +232,12 @@ if __name__ == '__main__':
     central_yr_estimates =[]
     ax4_handles=[]
     ax4_labels=[]
-    df_results = pd.DataFrame(columns=['method_name', 'method_class','c/r','smooth_r','avg_unc.(1se)','#q<0.5', '#q<0.1', 'q_min', 'q_small5','log-likeli','RMS','bias','tlog-l','100log-l','l05','l10','bias50','Edyrs2','Edyrs6'])
+    df_results = pd.DataFrame(columns=['method_name', 'method_class','c/r','smooth_r','avg_unc.(1se)','#q<0.5', '#q<0.1', 'q_min',
+                                       'q_small5','log-likeli','RMS','bias','tlog-l','100log-l','l05','l10','bias50','Edyrs2','Edyrs6'])
     i=0
     ci=0
     labelcolors=[]
-    sorted_results = sorted(results.items(), key=lambda item: item[1]['method_class'])
+    sorted_results = sorted(results.items(), key=lambda item: (item[1]['method_class'], rank2(item[0])))
 
 
     ncm = 0 #number of current methods
@@ -245,9 +257,10 @@ if __name__ == '__main__':
             if(labelcurr_or_retro=="c"):
                 ncm=ncm+1
     print(ncm)
-    if (len(index_mapping) != ncm): #not computing all methods, for debugging only
-        index_mapping = np.arange(ncm)
-        ftl = np.argsort(index_mapping)
+
+    #if (len(index_mapping) != ncm): #not computing all methods, for debugging only
+    #    index_mapping = np.arange(ncm)
+    #    ftl = np.argsort(index_mapping)
         
     
     for method_name, method_data in sorted_results:
@@ -320,6 +333,8 @@ if __name__ == '__main__':
      #Histogram plots at 0.5°C
                 edyrs=0
                 aedyrs=0
+                #breakpoint()
+                non_decreasing = np.sum([x>y for x, y in zip(central_est[125:-1], central_est[126:])])<= 10
                 if(labelcurr_or_retro=="c"):
                     #first compute the p-vals but one-sided
                     this_method_p_steps = np.full(np.shape(eval05yrs),np.nan)
@@ -352,16 +367,16 @@ if __name__ == '__main__':
                     cmethods.append(method_name)
                     crossing_p_pos = this_method_crossing_p * (this_method_crossing_p>0)
                     crossing_p_pos = crossing_p_pos  / np.sum(crossing_p_pos) #normalize to a total area
-                    ax05.fill_between(halfyrs, ftl[ci] - crossing_p_pos, ftl[ci] + crossing_p_pos,color=gen_color(method_data['method_class'], dark=False), alpha=0.6, edgecolor='none')
+                    ax05.fill_between(halfyrs, ci - crossing_p_pos, ci + crossing_p_pos,color=gen_color(method_data['method_class'], dark=False), alpha=0.6, edgecolor='none')
                     labelcolors.append(gen_color(method_data['method_class'], dark=False))
                     xerr_arr = np.array([[max(crossing_exp_value  - crossing_start,0), max(crossing_end -crossing_exp_value,0) ]])
-                    ax05.errorbar(crossing_exp_value, ftl[ci], xerr=xerr_arr.T, fmt='o', color='black', capsize=3) #alt_colors[ci % 2]
+                    ax05.errorbar(crossing_exp_value, ci, xerr=xerr_arr.T, fmt='o', color='black', capsize=3) #alt_colors[ci % 2]
                     eval05[method_name] = [this_method_p_steps, this_method_p_steps,crossing_start,crossing_exp_value , crossing_end] #save for later
                     
                     now_cross = np.logical_and(psteps_intp[0:-1]<0.5, psteps_intp[1:]>=0.5)
                     fineeval05yrsh=fineeval05yrs[0:-1]/2 + fineeval05yrs[1:]/2
-                    if(method_name in sel_methods):
-                        ax05.plot(fineeval05yrsh[now_cross],ftl[ci],"d",markersize=5,markerfacecolor="white", markeredgecolor="black", zorder=5)
+                    if(non_decreasing): #method_name in sel_methods):
+                        ax05.plot(fineeval05yrsh[now_cross],[ci]*sum(now_cross),"d",markersize=5,markerfacecolor="white", markeredgecolor="black", zorder=5)
                     edyrs = edyrs + .5*np.mean(np.abs(fineeval05yrsh[now_cross] - closest_year05))
                     
 
@@ -398,15 +413,15 @@ if __name__ == '__main__':
                     #cmethods.append(method_name) already done
                     crossing_p_pos = this_method_crossing_p * (this_method_crossing_p>0)
                     crossing_p_pos = crossing_p_pos  / np.sum(crossing_p_pos) #normalize to a total area
-                    ax10.fill_between(halfyrs, ftl[ci] - crossing_p_pos, ftl[ci] + crossing_p_pos,color=gen_color(method_data['method_class'], dark=False), alpha=0.6, edgecolor='none')
+                    ax10.fill_between(halfyrs, ci - crossing_p_pos, ci + crossing_p_pos,color=gen_color(method_data['method_class'], dark=False), alpha=0.6, edgecolor='none')
                     xerr_arr = np.array([[max(crossing_exp_value  - crossing_start,0), max(crossing_end -crossing_exp_value,0) ]])
-                    ax10.errorbar(crossing_exp_value, ftl[ci], xerr=xerr_arr.T, fmt='o', color='black', capsize=3) #
+                    ax10.errorbar(crossing_exp_value, ci, xerr=xerr_arr.T, fmt='o', color='black', capsize=3) #
                     eval10[method_name] = [this_method_p_steps, this_method_p_steps,crossing_start,crossing_exp_value , crossing_end] #save for later
 
                     now_cross = np.logical_and(psteps_intp[0:-1]<0.5, psteps_intp[1:]>=0.5)
                     fineeval10yrsh=fineeval10yrs[0:-1]/2 + fineeval10yrs[1:]/2
-                    if(method_name in sel_methods):
-                        ax10.plot(fineeval10yrsh[now_cross],ftl[ci],"d",markersize=5,markerfacecolor="white", markeredgecolor="black", zorder=5)
+                    if(non_decreasing):
+                        ax10.plot(fineeval10yrsh[now_cross],[ci]*sum(now_cross),"d",markersize=5,markerfacecolor="white", markeredgecolor="black", zorder=5)
                         #plt.figure()
                         #plt.plot(eval10yrs,this_method_p_steps)
                         #plt.errorbar(crossing_exp_value, 0.5, xerr=xerr_arr.T, fmt='o', color=alt_colors[ci % 2], capsize=3)
@@ -459,7 +474,7 @@ if __name__ == '__main__':
            # print(f"  Percentiles: {percentiles}"
     ax05.set_yticks(range(len(cmethods)))
     cmethods2=np.array(cmethods)
-    cmethodsrs=cmethods2[index_mapping]
+    cmethodsrs=cmethods2 #[index_mapping]
     ax05.set_yticklabels(cmethodsrs , fontsize=8)
     for label, color,lc in zip(ax05.get_yticklabels(), alt_colors * (len(cmethods) // 2 + 1),labelcolors):
         #print(get_brightness(lc))
@@ -542,7 +557,7 @@ if __name__ == '__main__':
         ax.spines['right'].set_visible(False)
         for m in methods_names:
             classcolor = gen_color(m[0])
-            ax.text(hai[i],m[2],m[1],fontsize=12,horizontalalignment='center',color=classcolor,fontweight='bold')
+            ax.text(hai[i],m[2],m[1],fontsize=12,horizontalalignment='center',color=classcolor,fontweight='bold',linespacing = 0.8)
 
 
 
@@ -636,10 +651,10 @@ if __name__ == '__main__':
     df_res_show2['smooth_r'] = df_results['smooth_r'].round(3)
     df_res_cur2 = df_res_show2[df_results['c/r']=='c']
     dfres2 = df_res_cur2.sort_values('log-likeli',ascending=False)
-    dfres2.to_csv('current_methods_statistics_250327.csv', index=False)
-    df_results.to_csv('all_methods_statistics_250327.csv', index=False)
-    sorted_df = df_res_cur2.reset_index(drop=True).sort_values(by=['method_class', 'bias50']).reset_index()
-    sorted_df[['index']].to_csv('to_index_mapping.csv', index=False)
+    dfres2.to_csv('current_methods_statistics_'+formatted_date+'.csv', index=False)
+    df_results.to_csv('all_methods_statistics_'+formatted_date+'.csv', index=False)
+    #sorted_df = df_res_cur2.reset_index(drop=True).sort_values(by=['method_class', 'bias50']).reset_index()
+    #sorted_df[['index']].to_csv('to_index_mapping.csv', index=False)
 
 
 

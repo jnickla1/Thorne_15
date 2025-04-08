@@ -1,3 +1,5 @@
+##NO LONGER CURRENT - may not work
+
 from hist_evaluation_script import *
 regen=True
 annotate_fig=False
@@ -5,12 +7,23 @@ crossing_figs=False
 sel_methods = ["CGWL10y_for_halfU","CGWL10y_sfUKCP","FaIR_anthroA2","EBMKF_ta3"  ]
 from netCDF4 import Dataset
 import sys
+
+
 from fut_evaluation_gen_ensemble import eval_standard
 
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""
     return np.array([np.mean(lst[i:i + n]) for i in range(0, len(lst), n)])
 
+def gen_orig_number(new_member_number,sz_ens):
+    #fix lexicographic reshuffling
+    nums = np.arange(1, sz_ens+1)
+    reshuffled = sorted([f"{n}|" for n in nums])
+    recovered_order = [int(s.rstrip("|")) for s in reshuffled]
+    if new_member_number==-1:
+        return recovered_order
+    else:
+        return recovered_order[new_member_number]
 
 regen = 1 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
 
@@ -110,10 +123,19 @@ if __name__ == '__main__':
             years= np.concatenate((shtime_yrs,stime_yrs))
             
         elif (exp_attr[1]=='NorESM'):
+            #replacing temps_obs_past
+            long_past_index = (gen_orig_number(model_run,np.shape(sims_tas)[0]) // 20) #either 1, 2, or 3, still in right order
+            long_past_data_loc = '/Users/JohnMatthew/climate_data/NorESM_volc/NorESM1-M-historical/hist_aave_tas.nc'
+            variable = Dataset(long_past_data_loc, 'r').variables['tas']
+            long_past_tas_array = variable[:].__array__()
+            long_past_tas = average_every_n(long_past_tas_array[long_past_index,:],12)
+        
             offset_sim = np.mean( this_hsim_yr[0:20] - temps_obs_past[(-1850+1980):(-1850+1980+20)]) # baseline 1980-2000 match
             sim_corrected = this_sim_yr -offset_sim
             simh_corrected = this_hsim_yr -offset_sim
-            simall = np.concatenate((temps_obs_past[0:(-1850+1980)],simh_corrected,sim_corrected))
+            long_past_tas_corrected = long_past_tas -offset_sim
+        
+            simall = np.concatenate((long_past_tas_corrected[0:(-1850+1980)],simh_corrected,sim_corrected))
             fixyrs= 1980-3829
             years= np.concatenate((years_past[0:(-1850+1980)],shtime_yrs+fixyrs,stime_yrs+fixyrs))
             #print(years)
@@ -244,7 +266,7 @@ if __name__ == '__main__':
         i=0
         ci=0
         labelcolors=[]
-        sorted_results = sorted(results.items(), key=lambda item: item[1]['method_class'])
+        sorted_results = sorted(results.items(), key=lambda item: (item[1]['method_class'], rank2(item[0])))
 
         lhund=-100
         if (exp_attr[1]=='NorESM'):
@@ -267,9 +289,6 @@ if __name__ == '__main__':
                 if(labelcurr_or_retro=="c"):
                     ncm=ncm+1
         print(ncm)
-        if (len(index_mapping) != ncm): #not computing all methods, for debugging only
-            index_mapping = np.arange(ncm)
-            ftl = np.argsort(index_mapping)
             
         
         for method_name, method_data in sorted_results:
@@ -437,7 +456,7 @@ if __name__ == '__main__':
             #extra stuff to nmke the figures look  nice
             ax05.set_yticks(range(len(cmethods)))
             cmethods2=np.array(cmethods)
-            cmethodsrs=cmethods2[index_mapping]
+            cmethodsrs=cmethods2#[index_mapping]
             ax05.set_yticklabels(cmethodsrs , fontsize=8)
             for label, color,lc in zip(ax05.get_yticklabels(), alt_colors * (len(cmethods) // 2 + 1),labelcolors):
                 #print(get_brightness(lc))

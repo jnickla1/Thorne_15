@@ -146,9 +146,9 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             elif (exp_attr[1]=='NorESM'):
                 from . import gen_eCO2
                 if exp_attr[3]=='Volc':
-                    erf_data = pd.read_csv(os.path.expanduser(f"~/climate_data/SSP_inputdata/ERF_NorESM_rcp45VolcConst.csv"))
-                elif exp_attr[3]=='VolcConst':
                     erf_data = pd.read_csv(os.path.expanduser(f"~/climate_data/SSP_inputdata/ERFanthro_NorESM_rcp45Volc.csv"))
+                elif exp_attr[3]=='VolcConst':
+                    erf_data = pd.read_csv(os.path.expanduser(f"~/climate_data/SSP_inputdata/ERF_NorESM_rcp45VolcConst.csv"))
                 model_outputlCo2 = gen_eCO2.calculate_equivalent_co2(erf_data['ERF_anthro'].values)
                 new_lCo2 = np.concatenate((np.log10(ekf.data[:(1980-1850),2]), np.log10(ekf.data[(1981-1850),2] - model_outputlCo2[0]  + model_outputlCo2)))            #compute_update(xhatf[k-1],0,volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1]+1)
             #np.log10(data3[:,1+rcp]),data3[:,6+rcp]
