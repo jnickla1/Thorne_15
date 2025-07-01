@@ -2,13 +2,13 @@ from hist_evaluation_script import *
 regen=True
 annotate_fig=False
 crossing_figs=False
-sel_methods = ["CGWL10y_for_halfU","CGWL10y_sfUKCP","FaIR_anthroA2","EBMKF_ta4","removeGreensfx" ]
+sel_methods = ["CGWL10y_sfUKCP","FaIR_comb_unB","EBMKF_ta4"]
 from netCDF4 import Dataset
 import sys
 from fut_evaluation_gen_ensemble import eval_standard
 #making all paths relative to ~/
 from os.path import expanduser
-cdataprefix = expanduser("~/") + 'climate_data/'
+cdataprefix = expanduser("~/") + 'data/jnickla1/climate_data/'
 
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""
@@ -40,12 +40,12 @@ def add_dash_dot(sspstr):
 
 def collect_data(exp_attr ):
     if (exp_attr[1]=='ESM1-2-LR'):
-        max_runs = 10+start_run #50  #5
+       # max_runs = 10+start_run #50  #5
         fut_data_loc = cdataprefix +exp_attr[1]+'/combined/'+exp_attr[2].lower()+'_aave_tas.nc'
         hist_data_loc =cdataprefix +exp_attr[1]+'/combined/historical_aave_tas.nc'
         
     elif (exp_attr[1]=='NorESM'):
-        max_runs =  10+start_run #60
+       # max_runs =  10+start_run #60
         fut_data_loc = cdataprefix+exp_attr[1]+'_volc/BethkeEtAl2017/'+exp_attr[2].lower()+exp_attr[3]+'_aave_tas.nc'
         
         if (exp_attr[3]=='NoVolc'):  #options NoVolc VolcConst Volc
@@ -130,13 +130,15 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         start_run = -start_run
         max_runs = 1+start_run
         plotting_figs= True
-    
+    else:
+        max_runs = 2+start_run
+        plotting_figs= False
     methods_folder= running_subset
 
 
 
     print("starting computation for "+experiment_type)
-
+    print("max_runs" + str(max_runs))
     ens_standard = eval_standard(experiment_type)
 
     (sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist) = collect_data(exp_attr)
@@ -181,7 +183,9 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                 with open(results_path, 'rb') as fp:
                     existing_results = pickle.load(fp)
                     existing_results.pop("EBMKF_ta4",None) #redo EMBKF_ta3
-                    existing_results.pop("EBMKF_ta",None) 
+                    existing_results.pop("EBMKF_ta",None)
+                    existing_results.pop("FaIR_all",None) #redo EMBKF_ta3
+                    existing_results.pop("FaIR_anthro",None) 
                 completed_methods = set(existing_results.keys())
             else:
                 existing_results = {}
@@ -611,8 +615,8 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         dfres2 = df_res_cur2.sort_values('100log-l',ascending=False) #do not need to sort saved output results - we will have to read and reference anyway
         dfres2.to_csv('Results/current_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
         df_results.to_csv('Results/all_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
-        
-        return closest_years, closest_yearsE #pass stuff back so we can draw more, thresholds at 1.1 1.2 ....
+        print("finished this run") 
+    return closest_years, closest_yearsE #pass stuff back so we can draw more, thresholds at 1.1 1.2 ....
         
 def colorgen(c,step,const):
     y=(((c+1)%3-1)*step[0], ((c//3+1)%3-1)*step[1], ((c//9+1)%3-1)*step[2])
@@ -632,7 +636,7 @@ if __name__ == '__main__':
     
     if exp_attr[0]=="fut":
         run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
-        plt.show()
+        #plt.show()
         
     elif exp_attr[0]=="futplotcomb" and exp_attr[1]=="ESM1-2-LR":
         fig1, (axens, ax1a,ax1b)= plt.subplots(3, 1, figsize=(10,10), gridspec_kw={ "height_ratios" :[.6,1,1],"hspace": 0.35})

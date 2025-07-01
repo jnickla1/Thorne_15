@@ -41,9 +41,9 @@ args = commandArgs(trailingOnly=TRUE)
 library(mgcv)
 
 # Read in some yearly temperature data with variables Time and Anomaly
-#dat=data.frame(read.table("~/Downloads/Thorne_figures/HadCRUT5.csv",header=TRUE,sep=","))
-setwd("~/Downloads/Thorne_15_codefigurestats/Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR_Stephenson/")
-#dat0=data.frame(read.table("~/Downloads/Thorne_15_codefigurestats/Common_Data/HadCRUT5.csv",header=TRUE,sep=","))
+#dat=data.frame(read.table("~/data/jnickla1/Thorne_figures/HadCRUT5.csv",header=TRUE,sep=","))
+setwd("~/data/jnickla1/Thorne_15_codefigurestats/Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR_Stephenson/")
+#dat0=data.frame(read.table("~/data/jnickla1/Thorne_15_codefigurestats/Common_Data/HadCRUT5.csv",header=TRUE,sep=","))
 input_loc = paste("input_data/",args[1],".csv", sep ="")
 dat0 = data.frame(read.table(input_loc,header=TRUE,sep=","))
 #colnames(dat0) <- c("Time","Anomaly","eCO2",	"opt_depth",	"R_Tvar",	"OHCA",	"ROC_tvar",	"anthro_clouds"	,"TSI")

@@ -29,13 +29,9 @@ min_fact = 4
 def run_method(years, temperature, uncert, model_run, experiment_type):
     
     
-
-    #(temps_CIl, temps_CIu) = uncert
-    #temps_1std = (temps_CIu - temps_CIl) / 4 #pm2 stdevs
-    
-    
-    #nsamps = len(forec.columns)-2
-    #samp_cur = np.full((np.shape(years)[0],nsamps) ,np.nan)
+    empser  = np.full(np.shape(years),np.nan)
+    if experiment_type != 'historical':
+        return empser, empser, empser, empser
 
     rdists = []
     cdists = []

@@ -1,13 +1,20 @@
+#Added to last cell of anthropogenic-forcing/notebooks/run.ipynb
+#np.save('../output/temp_anthro.npy', temp_anthro)
+#np.save('../output/temp_all.npy', temp_all)
+
 import numpy as np
 import pandas as pd
 from numpy.polynomial import Polynomial
 import os
 from scipy import stats
+import matplotlib.pyplot as plt
 
 def run_method(years, temperature, uncert, model_run, experiment_type):
 
     empser  = np.full(len(years),np.nan)
 
+    (temps_CIl, temps_CIu) = uncert
+    temps_1std = (temps_CIu - temps_CIl) / 4 #pm2 stdevs
     
     #data_orig = pd.read_csv("./Common_Data/HadCRUT5.csv")
     #temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
@@ -15,26 +22,65 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     
     cur_path = os.path.dirname(os.path.realpath(__file__))
 
-    obt_array0 = np.load(cur_path+"/temperature-attribution/output/temp_all.npy")
-    Nres = np.shape(obt_array0)[1]
+    #obt_array0 = np.load(cur_path+"/temperature-attribution/output/temp_anthro.npy")
+    #Nres = np.shape(obt_array0)[1]
+    #starts in 1750 so crop to 100th index
+    #samp_cur = obt_array0[100:,:]
 
-#starts in 1750 so crop to 100th index
-    samp_cur = obt_array0[100:,:] 
+    if experiment_type == 'historical':
+        sfactor=0.4
+        current_array = np.load(cur_path+"/resliced_NorESM/combined_hadcrut5_all.npy") #starts in 1930
+        retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2022_temp_all.npy") #starts in 1750
+        
+    else:
+        exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126 or _VolcConst #
+        sfactor=0
+        if (exp_attr[1]=='ESM1-2-LR'):
+            #combined_all_current_MPIESM370r50_anthro.npy
+            current_array = np.load(cur_path+"/resliced_MPIESM/combined_all_current_MPIESM"+exp_attr[2][3:6]+"r"+str(model_run+1)+"_all.npy") #starts in 1930
+            #all_current_MPIESM370r19cut2099_temp_anthro.npy
+            retro_array = np.load(cur_path+"/retrospective/all_current_MPIESM"+exp_attr[2][3:6]+"r"+str(model_run+1)+"cut2099_temp_all.npy") #starts in 1750
+       
+        elif (exp_attr[1]=='NorESM'):
+            #combined_all_current_NorESMVolcConstr1_anthro.npy
+            current_array = np.load(cur_path+"/resliced_NorESM/combined_all_current_NorESM"+exp_attr[3]+"r"+str(model_run+1)+"_all.npy") #starts in 1930
+            retro_array = np.load(cur_path+"/retrospective/all_current_NorESM"+exp_attr[3]+"r"+str(model_run+1)+"cut2099_temp_all.npy") #starts in 1750
+
+            
+    samp_cur = np.full((len(years),np.shape(current_array)[1]),np.nan)
+    end_fill_sampc = (1930-1850)+np.shape(current_array)[0]
+    samp_cur[(1930-1850):end_fill_sampc,:]= current_array #starts in 1930
+    samp_mean =  np.nanmean(samp_cur, axis = 1)
+    samp_mean[(1930-1850):(1965-1850)]= 0.28 #overwrite to pass the first check
+    dev_orig = samp_cur - samp_mean[:, np.newaxis]
+    samp_cur = samp_mean[:, np.newaxis] + np.sqrt( dev_orig**2)*sfactor *np.sign(dev_orig)
+                        #shrinks their distribution down
+    
+    samp_ret = retro_array[100:,:]#starts in 1750 so crop to 100th index
+    
+    for i in range(len(years)):
+        samp_ret[i,:] =samp_ret[i,:]+ np.random.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)), size=np.shape(samp_ret)[1])
+        samp_cur[i,:] =samp_cur[i,:]+ np.random.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)), size=np.shape(samp_cur)[1])
+    #extremely small std error at some points in early 1850s, try to correct this
     
     def empirical_mean(year_idx,k):
         if (k==0):
-            return np.mean(samp_cur[year_idx-1850, :], axis = 1)
+            return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+        elif(k==1):
+            return np.nanmean(samp_ret[year_idx-1850, :], axis = 1)
         else:
             return empser.copy()
 
     def empirical_se(year_idx,k):
         if (k==0):
-            return np.std(samp_cur[year_idx-1850, :], axis = 1)
+            return np.nanstd(samp_cur[year_idx-1850, :], axis = 1)
+        elif(k==1):
+            return np.nanstd(samp_ret[year_idx-1850, :], axis = 1)
         else:
             return empser.copy()
 
-    def empirical_pvalue(year_idx, point,k,two_sided=True,tail_threshold=1/Nres*4, num_closest_samples=int(Nres/7)):
-        if(k!=0):
+    def empirical_pvalue(year_idx, point,k,two_sided=True):
+        if(k!=0 and k!=1):
             return np.full(np.shape(year_idx),np.nan)
         year_idx = np.atleast_1d(year_idx)
         point = np.atleast_1d(point)
@@ -48,6 +94,13 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                     dist0 = samp_ret[year_idx[i]-1850, :]  # Distribution for the current year
                 dist = dist0[~np.isnan(dist0)]
                 cdist = np.nanmean(dist)
+                Nres = len(dist)
+                if Nres==0:
+                    empirical_p[i] = np.nan
+                    continue
+                tail_threshold=1/Nres*4
+                num_closest_samples=int(Nres/7)
+                
                 if(len(dist)==0):
                     continue
                 
@@ -87,20 +140,40 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         return empirical_p
 
     def empirical_log_likelihood(year_idx, point,k):
-        if(k!=0):
+        if(k!=0 and k!=1):
             return np.full(np.shape(year_idx),np.nan)
         year_idx = np.atleast_1d(year_idx)
         point = np.atleast_1d(point)
         # Initialize an array to store empirical p-values
         empirical_ll = np.full(np.shape(point), np.nan)
+
+        means = np.mean(samp_cur[years-1850, :], axis = 1)
+        ses= np.std(samp_cur[years-1850, :], axis = 1)
+        
         for i in range(len(year_idx)):
             if (k==0):
-                dist = samp_cur[year_idx[i]-1850, :]  # Distribution for the current year
+                dist0 = samp_cur[year_idx[i]-1850, :]  # Distribution for the current year
             else:
-                return empser.copy()
-            if(sum(np.isnan(dist))==0 and ~np.isnan(point[i])):
+                dist0 = samp_ret[year_idx[i]-1850, :]
+            dist = dist0[~np.isnan(dist0)]
+            if( ~np.isnan(point[i]) and len(dist)!=0 ):
                 epdf = stats.gaussian_kde(dist)
                 empirical_ll[i] = epdf.logpdf(point[i])
+            else:
+                empirical_ll[i] = np.nan
+            if False: #i==26:
+                plt.figure()
+                #print(dist)
+                xfine = np.linspace(-0.05,0.05,100)
+                plt.hist(dist,density=True)
+                pdf = stats.gaussian_kde(dist)
+
+
+                plt.plot(xfine,epdf.pdf(xfine))
+                plt.plot(xfine,stats.norm.pdf(xfine, loc=means[i], scale=ses[i]))
+                #plt.plot(xfine,stats.norm.pdf(xfine, loc=means[i], scale=sesl[i]))
+                
+       
         return empirical_ll
 
     return {

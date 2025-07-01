@@ -2,12 +2,12 @@ from hist_evaluation_script import *
 regen=True
 annotate_fig=False
 crossing_figs=False
-sel_methods = ["CGWL10y_for_halfU","CGWL10y_sfUKCP","FaIR_anthroA2","EBMKF_ta2","removeGreensfx" ]
+sel_methods = ["CGWL10y_sfUKCP","FaIR_comb_unB","EBMKF_ta4"] #"FaIR_nonat""CGWL10y_for_halfU","CGWL10y_sfUKCP","FaIR_anthroA2","EBMKF_ta2","removeGreensfx" ]
 from netCDF4 import Dataset
 import sys
 from fut_evaluation_gen_ensemble import eval_standard
 from os.path import expanduser
-cdataprefix = expanduser("~/") + 'climate_data/'
+cdataprefix = expanduser("~/") + 'data/jnickla1/climate_data/'
 
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""
@@ -130,24 +130,12 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         start_run = -start_run
         max_runs = 1+start_run
         plotting_figs= True
+    else:
+        max_runs = 10+start_run
+        plotting_figs= False
     
-    methods_folder=('Methods/42_Temp_Alone/','Methods/43_Forcing_Based/4_Linear',
-                    'Methods/43_Forcing_Based/2_Kalman','Methods/44_EarthModel_CGWL')
-
-    
-                #    'Methods/43_Forcing_Based/2_Kalman', 'Methods/44_EarthModel_CGWL')
-
-    #'Methods/42_Temp_Alone/6_Remove_IV',
-    #                'Methods/42_Temp_Alone/2_LT_Fits',
-    #                'Methods/42_Temp_Alone/3_ST_Fits',  'Methods/42_Temp_Alone/4_GAM_AR1',
-                    
-
-        #'Methods/42_Temp_Alone/1_Run_Means',,'Methods/42_Temp_Alone/3_ST_Fits',  'Methods/42_Temp_Alone/4_GAM_AR1')#
-
-        #'Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/2_LT_Fits','Methods/42_Temp_Alone/3_ST_Fits',
-         #           'Methods/42_Temp_Alone/4_GAM_AR1','Methods/43_Forcing_Based/2_Kalman') #,'Methods/43_Forcing_Based',)
-
-
+    methods_folder=('Methods/42_Temp_Alone/','Methods/43_Forcing_Based/','Methods/44_EarthModel_CGWL')
+        #'Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/2_Kalman','Methods/44_EarthModel_CGWL')
 
 
     print("starting computation for "+experiment_type)
@@ -156,7 +144,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
 
     (sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist) = collect_data(exp_attr)
         
-    for model_run in range(start_run,max_runs):
+    for model_run in range(start_run,max_runs): #new indices start at 0
         print("Model number:")
         print(model_run)
         print("\n\n\n")
@@ -171,7 +159,6 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         futCIu = sim_corrected[start_sim:] - np.mean(temps_obs_past[-10:]- temps_CIu_past[-10:])
         # Run all the methods
         #print(len(np.concatenate((temps_CIl_hist,futCIl))))
-        #breakpoint()
         results_path = f'Results/results{experiment_type}{model_run}.pickle'
     
         if regen==1:
@@ -273,8 +260,6 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
 
 
         
-        #breakpoint()
-        
         
         central_yr_estimates =[]
         ax4_handles=[]
@@ -311,7 +296,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     central_est = result['mean'](years,k)
                 else:
                     central_est = result[k*2]
-                if (sum(~np.isnan(central_est))>0 ):    #isinstance(result, tuple):
+                if ((~np.isnan(central_est)).any() ):    #isinstance(result, tuple):
                     # Central estimate and SE, implying gaussian distn
                     labelcurr_or_retro = retIDlabels[k]
                 if(labelcurr_or_retro=="c"):
@@ -337,8 +322,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     
                     if(sum(~np.isnan(central_est))>0):
                         print(f"{method_name} sampled, d llike: {np.nanmean(llikelihood)-np.nanmean(llikelihood2)}")
-                    #breakpoint() 
-                        
+
                 else:
                     central_est = result[k*2]
                     se = result[k*2+1]
@@ -648,16 +632,16 @@ if __name__ == '__main__':
     start_run = int(sys.argv[2])
     exp_attr = experiment_type.split("_")
 
-    e0list = ["11y_offset","KCC_all","FaIR_anthro","quartic","FaIR_all","OLS_refit","lag10y","remove_MEI_volc_refit","lfca_SST"]
+    e0list = ["11y_offset","KCC_all","quartic","OLS_refit","lag10y","remove_MEI_volc_refit","lfca_SST"] #can be eliminated by inspection alone
     e06list = ['lfca_hadcrut','GAM_AR0','lowess1dt20wnc','GWI_tot','lowess1dt20wAR',
-                   'lowess1dt20wARMA','cubic_spline','GWI_anthro','FaIR_all','eROF_anthro','KCC_human',
+                   'lowess1dt20wARMA','cubic_spline','eROF_anthro','KCC_human',
                    'lowess1dt10wnc','lowess2dt20wnc','eROF_tot','lfca_SST','raw1y','KCC_all','removeMEI_volc_refit',
-                   'etrend30y_3CS','quartic','lag10y','removeMEI_cons','FaIR_anthro','Bayes_seq_CP','offset11y','opt_clim_norm',
-                   'OLS_refit','OLS_refit_CO2forc','cons_hArrh_CO2forc']
+                   'etrend30y_3CS','quartic','lag10y','removeMEI_cons','Bayes_seq_CP','offset11y','opt_clim_norm',
+                   'OLS_refit','OLS_refit_CO2forc','cons_hArrh_CO2forc',
+                  'GWI_tot_CGWL','GWI_tot_SR15','GWI_tot','GWI_tot_orig','GWI_tot_AR6','GWI_anthro_AR6','GWI_anthro_orig'] #do not meet RMSE cutoff of 0.06
     e1list = e0list + list(set(e06list) - set(e0list))
-    efutlist = ['EBMKF_ta','CGWL10y_pUKCP','OLS_hinge75','TheilSen_h7075','hinge75meet','removeMEI_volc_cons']
+    efutlist = ['EBMKF_ta','CGWL10y_pUKCP','OLS_hinge75','TheilSen_h7075','hinge75meet','removeMEI_volc_cons','FaIR_anthro','FaIR_all','FaIR_nonat']
     e2list = e1list + list(set(efutlist) - set(e1list))
-    
         
     if exp_attr[0]=="fut":
         run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
@@ -719,12 +703,12 @@ if __name__ == '__main__':
         ax1b.set_ylim([0.5,3.5])
         axens.set_ylim([0.5,3.5])
         axens.set_xlim(ax1a.get_xlim())
-        ax1b.get_legend().remove()
+        #ax1b.get_legend().remove()
         #WORKS BEST WITH #11
         curcolor =  gen_color('43_Forcing_Based/2_Kalman')
         ax1a.annotate('EBMKF_ta',
-            xy=(2035,1.7),
-            xytext=(2030,2), textcoords='data',
+            xy=(2020,1.35),
+            xytext=(2015,1.75), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='left', verticalalignment='bottom') #somthing very funky is happening - should be horizontalalignmnet = center
         ax1b.annotate('EBMKF_ta',
@@ -755,6 +739,13 @@ if __name__ == '__main__':
             xytext=(2090,1.8), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='right', verticalalignment='top')
+        
+        curcolor = gen_color('43_Forcing_Based/1_ERF_FaIR')
+        ax1b.annotate(' FaIR_all\n FaIR_nonat\n FaIR_anthro',
+            xy=(2092,3), xycoords='data',
+            xytext=(2095,2.5), textcoords='data',
+            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
+            horizontalalignment='right', verticalalignment='top')
 
         curcolor =  gen_color('42_Temp_Alone/6_Remove_IV')
         ax1a.annotate('removeMEI\nvolc_cons',
@@ -769,8 +760,9 @@ if __name__ == '__main__':
             horizontalalignment='center', verticalalignment='top')
 
         ax1a.set_title(f"Evaluated Methods to find Current MPI-ESM-1-2-LR SSP1-2.6 (memb. #{gen_orig_number(-start_run,50)})")
-        ax1b.set_title(f"Evaluated Methods to find Current MPI-ESM-1-2-LR SSP1-2.6 (memb. #{gen_orig_number(-start_run,50)})")      
-        plt.show()
+        ax1b.set_title(f"Evaluated Methods to find Current MPI-ESM-1-2-LR SSP3-7.0 (memb. #{gen_orig_number(-start_run,50)})")      
+        fig1.savefig("spaghettiSSPs.png", dpi=500, bbox_inches='tight')
+        #plt.show()
 
     elif exp_attr[0]=="futplotcomb" and exp_attr[1]=="NorESM":
         fig1, (axens, ax1a,ax1b)= plt.subplots(3, 1, figsize=(10,10), gridspec_kw={ "height_ratios" :[.6,1,1],"hspace": 0.35})
@@ -845,7 +837,7 @@ if __name__ == '__main__':
         ax1b.set_ylim([0,2.75])
         axens.set_ylim([0,2.75])
         axens.legend([(min_line,black_line),(max_line,black_line), (const_novolc_line,)], ["Volc. Sample Min","Volc. Sample Max", "Volc. Const."])
-        
-        ax1b.get_legend().remove()
-        plt.show()    
+        #ax1b.get_legend().remove()
+        fig1.savefig("spaghettiVolc.png", dpi=500, bbox_inches='tight')
+        #plt.show()    
 

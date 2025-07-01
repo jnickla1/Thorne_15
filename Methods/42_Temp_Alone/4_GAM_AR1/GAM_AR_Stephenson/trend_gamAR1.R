@@ -38,9 +38,9 @@ gamAR1 <- function(G,rho,method="ML") {
 library(mgcv)
 
 # Read in some yearly temperature data with variables Time and Anomaly
-#dat=data.frame(read.table("~/Downloads/Thorne_figures/HadCRUT5.csv",header=TRUE,sep=","))
-setwd("~/Downloads/Thorne_15_codefigurestats/Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR_Stephenson/")
-dat0=data.frame(read.table("~/Downloads/Thorne_15_codefigurestats/Common_Data/HadCRUT.5.0.2.0.analysis.summary_series.global.annual.csv",header=TRUE,sep=","))
+#dat=data.frame(read.table("~/data/jnickla1/Thorne_figures/HadCRUT5.csv",header=TRUE,sep=","))
+setwd("~/data/jnickla1/Thorne_15_codefigurestats/Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR_Stephenson/")
+dat0=data.frame(read.table("~/data/jnickla1/Thorne_15_codefigurestats/Common_Data/HadCRUT.5.0.2.0.analysis.summary_series.global.annual.csv",header=TRUE,sep=","))
 #colnames(dat0) <- c("Time","Anomaly","eCO2",	"opt_depth",	"R_Tvar",	"OHCA",	"ROC_tvar",	"anthro_clouds"	,"TSI")
 colnames(dat0) <- c("Time","Anomaly","Alow","Ahigh")
 par(mfrow=c(1,2))

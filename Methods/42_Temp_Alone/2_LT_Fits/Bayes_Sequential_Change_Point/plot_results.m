@@ -135,90 +135,90 @@ for i=1:N
 end
 
 
-figure(1); 
-clf; 
-hold
+%figure(1); 
+%clf; 
+%hold
 
-[ax, h1, h2] = plotyy(x,model,x,chgpt_loc, 'plot');
+%[ax, h1, h2] = plotyy(x,model,x,chgpt_loc, 'plot');
 
-inBetweenstd = [model'-confpreds(:,2);  ...
-    flipud(model'+confpreds(:,2))];
-fill([x; flipud(x)], inBetweenstd, cerrorbar , 'LineStyle','none');
-inBetweenstm = [model'-confpreds(:,1)*2;  ...
-    flipud(model'+confpreds(:,1)*2)];
-fill([x; flipud(x)], inBetweenstm, cstdevmean , 'LineStyle','none');
+%inBetweenstd = [model'-confpreds(:,2);  ...
+%    flipud(model'+confpreds(:,2))];
+%fill([x; flipud(x)], inBetweenstd, cerrorbar , 'LineStyle','none');
+%inBetweenstm = [model'-confpreds(:,1)*2;  ...
+%    flipud(model'+confpreds(:,1)*2)];
+%fill([x; flipud(x)], inBetweenstm, cstdevmean , 'LineStyle','none');
 
-plot(x,Y+offset,'.','MarkerSize',8, 'MarkerEdgeColor',[0.5,0.5,0.5]);
+%plot(x,Y+offset,'.','MarkerSize',8, 'MarkerEdgeColor',[0.5,0.5,0.5]);
 
 
 
-title('Change Point Lines, sampled ' +string(num_samp)+' times', 'fontsize', 12)
+%title('Change Point Lines, sampled ' +string(num_samp)+' times', 'fontsize', 12)
 
 %M=cat(1,x',model,confpreds(:,1)',confpreds(:,2)',chgpt_loc);
 %csvwrite('BSCtemperatures.csv',M);
 temps = model;
 uncer = confpreds(:,1)';
 
-gca=ax(1);
-set(gca, 'Xlim', [1850 2025])
-set(gca, 'Xtick', 1850:25:2025)
-set(gca, 'Xticklabel', 1850:25:2025)
-xlabel('Year')
-set(gca, 'Ylim', [-1.0 2.5])
-set(gca, 'Ytick', -1.0:0.2:2.5)
+%gca=ax(1);
+%set(gca, 'Xlim', [1850 2025])
+%set(gca, 'Xtick', 1850:25:2025)
+%set(gca, 'Xticklabel', 1850:25:2025)
+%xlabel('Year')
+%set(gca, 'Ylim', [-1.0 2.5])
+%set(gca, 'Ytick', -1.0:0.2:2.5)
 
-set(gca, 'Yticklabel', -1.0:0.2:2.5)
-set(gca.YAxis, 'TickLabelFormat','%.1f')
-ytickformat('%.1f')
+%set(gca, 'Yticklabel', -1.0:0.2:2.5)
+%set(gca.YAxis, 'TickLabelFormat','%.1f')
+%ytickformat('%.1f')
 
-set(gca,'Ycolor', 'k')      % Left Y-axis colored black
-set(gca, 'fontsize', 12)    % Default is 10
-set(get(ax(1), 'Ylabel'), 'String', 'Temperature (K)', 'fontsize', 12)
-set(h1, 'Color', cvalue)       % Model plotted in green, default blue
-set(h1, 'LineStyle', '-'); % Default is a solid line
-set(h1, 'LineWidth', 2)     % Default is 0.5
+%set(gca,'Ycolor', 'k')      % Left Y-axis colored black
+%set(gca, 'fontsize', 12)    % Default is 10
+%set(get(ax(1), 'Ylabel'), 'String', 'Temperature (K)', 'fontsize', 12)
+%set(h1, 'Color', cvalue)       % Model plotted in green, default blue
+%set(h1, 'LineStyle', '-'); % Default is a solid line
+%set(h1, 'LineWidth', 2)     % Default is 0.5
 
-gca=ax(2);
-set(gca, 'Xlim', [1850 2025])
-set(gca, 'Xtick', 1850:25:2025)
-set(gca, 'Xticklabel', 1850:25:2025)
-set(gca, 'Ylim', [0 2.5*post_lim/10*11])
-ax(2).TickLength = [0.005,0.005];
-set(gca, 'Ycolor', pcolor)     % Right Y-Axis colored red
-set(gca, 'YDir' , 'reverse')
-set(gca, 'Yticklabel', 0:0.1:post_lim)
-set(gca, 'Ytick', 0:0.1:post_lim)
-set(gca, 'fontsize', 12)
-set(get(ax(2), 'Ylabel'), 'String', 'Posterior Probability', 'fontsize', 12)
-ylh = get(ax(2), 'Ylabel')
-ylh.Position(2) = ylh.Position(2) - abs(ylh.Position(2) * 0.65);
-set(h2, 'Color', pcolor)       % Posterior probabilities plotted in red
-set(h2, 'LineWidth', 2)
-line(ax(2), [1850 2025],[post_lim post_lim], 'Color',pcolor, 'LineWidth', 0.2);    
+%gca=ax(2);
+%set(gca, 'Xlim', [1850 2025])
+%set(gca, 'Xtick', 1850:25:2025)
+%set(gca, 'Xticklabel', 1850:25:2025)
+%set(gca, 'Ylim', [0 2.5*post_lim/10*11])
+%ax(2).TickLength = [0.005,0.005];
+%set(gca, 'Ycolor', pcolor)     % Right Y-Axis colored red
+%set(gca, 'YDir' , 'reverse')
+%set(gca, 'Yticklabel', 0:0.1:post_lim)
+%set(gca, 'Ytick', 0:0.1:post_lim)
+%set(gca, 'fontsize', 12)
+%set(get(ax(2), 'Ylabel'), 'String', 'Posterior Probability', 'fontsize', 12)
+%ylh = get(ax(2), 'Ylabel')
+%ylh.Position(2) = ylh.Position(2) - abs(ylh.Position(2) * 0.65);
+%set(h2, 'Color', pcolor)       % Posterior probabilities plotted in red
+%set(h2, 'LineWidth', 2)
+%line(ax(2), [1850 2025],[post_lim post_lim], 'Color',pcolor, 'LineWidth', 0.2);    
         %Draw a line representing the end of the data set
 
 %line( [x(N); x(N)], [-0.8; 0.8], 'Color','k', 'LineWidth', 2);    
         %Draw a line representing the end of the data set
 
-hold;
+%hold;
 
-inset=axes('Position',[0.14,0.628,0.16,0.298]);
-box on
-bar(k,'LineStyle','none','FaceColor',pcolor)
-set(inset, 'Ycolor', pcolor)     % Right Y-Axis colored red
-set(inset, 'YDir' , 'reverse')
-set(inset, 'Ylim', [0 post_lim])
-set(inset, 'Yticklabel', 0:0.1:post_lim)
-set(inset, 'Ytick', 0:0.1:post_lim)
-set(inset, 'fontsize', 12)
-set(inset,'YAxisLocation','right')
-set(inset, 'YDir' , 'reverse')
-set(inset,'YAxisLocation','right')
-set(inset, 'Xlim', [0 8])
-xlabel('# of Lines')
+%inset=axes('Position',[0.14,0.628,0.16,0.298]);
+%box on
+%bar(k,'LineStyle','none','FaceColor',pcolor)
+%set(inset, 'Ycolor', pcolor)     % Right Y-Axis colored red
+%set(inset, 'YDir' , 'reverse')
+%set(inset, 'Ylim', [0 post_lim])
+%set(inset, 'Yticklabel', 0:0.1:post_lim)
+%set(inset, 'Ytick', 0:0.1:post_lim)
+%set(inset, 'fontsize', 12)
+%set(inset,'YAxisLocation','right')
+%set(inset, 'YDir' , 'reverse')
+%set(inset,'YAxisLocation','right')
+%set(inset, 'Xlim', [0 8])
+%xlabel('# of Lines')
 
 %bring the post dist to front
-uistack(h1,'top')
+%uistack(h1,'top')
 
 
 end

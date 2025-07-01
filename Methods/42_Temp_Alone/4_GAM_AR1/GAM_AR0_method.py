@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from numpy.polynomial import Polynomial
 import os
+import sys
 import subprocess
 def run_method(years, temperature, uncert, model_run, experiment_type):
 

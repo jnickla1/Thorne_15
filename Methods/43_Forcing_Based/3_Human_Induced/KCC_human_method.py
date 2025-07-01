@@ -7,10 +7,13 @@ from scipy import stats
 
 def run_method(years, temperature, uncert, model_run, experiment_type):
     Nres = 1000
-    empser  = np.full((len(years),Nres),np.nan)
-    samp_cur=empser.copy()
+    
+    empser = np.full((len(years)),np.nan)
 
-
+    if experiment_type != 'historical':
+        return empser, empser, empser, empser
+    
+    samp_cur= np.full((len(years),Nres),np.nan)
     
     cur_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -113,5 +116,4 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         'se': empirical_se,
         'pvalue': empirical_pvalue,
         'log_likelihood': empirical_log_likelihood,
-
     }

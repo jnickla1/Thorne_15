@@ -6,9 +6,13 @@ from scipy import stats
 
 def run_method(years, temperature, uncert, model_run, experiment_type):
     Nres = 1000
-    empser  = np.full((len(years),Nres),np.nan)
-    samp_cur=empser.copy()
     
+    empser = np.full((len(years)),np.nan)
+    
+    if experiment_type != 'historical':
+        return empser, empser, empser, empser
+    
+    samp_cur = np.full((len(years),Nres),np.nan)
     data_orig = pd.read_csv("./Common_Data/HadCRUT5.csv")
     temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
     preind_base = np.mean(temps_obs[0:50])

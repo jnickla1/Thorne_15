@@ -11,6 +11,15 @@ from scipy.integrate import quad
 from scipy.interpolate import CubicSpline, PPoly
 from scipy.stats import rv_continuous
 
+def gen_orig_number(new_member_number,sz_ens):
+    #fix lexicographic reshuffling
+    nums = np.arange(1, sz_ens+1)
+    reshuffled = sorted([f"{n}|" for n in nums])
+    recovered_order = [int(s.rstrip("|")) for s in reshuffled]
+    if new_member_number==-1:
+        return recovered_order
+    else:
+        return recovered_order[new_member_number]
 
 #from time import time
 #start = time()
@@ -174,15 +183,17 @@ class CustomSplineDistribution(rv_continuous):
         return se
     
 cur_path = os.path.dirname(os.path.realpath(__file__))
-gwi_levels_retro0 = pd.read_csv(cur_path+"/global-warming-index/GWI_full_info.csv", header=[0, 1])
-gwi_levels_retro =gwi_levels_retro0.iloc[1:,] #blank row
-gwi_r =gwi_levels_retro['Ant'].to_numpy()
-gwi_levels_curr0 = pd.read_csv(cur_path+"/global-warming-index/GWI_hist_only.csv", header=[0, 1])
-gwi_levels_curr =gwi_levels_curr0.iloc[1:,]
-gwi_c =gwi_levels_curr['Ant'].to_numpy()
-lyearr = np.shape(gwi_r)[0]
-lyearc = np.shape(gwi_c)[0]
-lyear = lyearr + 1850 
+
+#NOW IN GWI_anthro_orig
+##gwi_levels_retro0 = pd.read_csv(cur_path+"/global-warming-index/GWI_full_info.csv", header=[0, 1])
+##gwi_levels_retro =gwi_levels_retro0.iloc[1:,] #blank row
+##gwi_r =gwi_levels_retro['Ant'].to_numpy()
+##gwi_levels_curr0 = pd.read_csv(cur_path+"/global-warming-index/GWI_hist_only.csv", header=[0, 1])
+##gwi_levels_curr =gwi_levels_curr0.iloc[1:,]
+##gwi_c =gwi_levels_curr['Ant'].to_numpy()
+##lyearr = np.shape(gwi_r)[0]
+##lyearc = np.shape(gwi_c)[0]
+##lyear = lyearr + 1850 
 ord_ind = [0,1,4,2,3]
 min_fact = 4 #the std error of some of these gets way too small in places, so when it goes below this times smaller than the temps_1std we correct it.
 
@@ -196,20 +207,40 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     
     #nsamps = len(forec.columns)-2
     #samp_cur = np.full((np.shape(years)[0],nsamps) ,np.nan)
+#ONLY DEFINED NOW FOR CURRENT WARMING LEVEL, so k must be 0 or will return just NANs
+    syear = 1950
+    if experiment_type == 'historical':
+        gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/ANNUAL_ESM1-2-LR/"+
+                "GWI_results_ANNUAL_HISTORICAL-ONLY_SCENARIO--observed-SSP245_ENSEMBLE-MEMBER-"+
+                                       "-all_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2024.csv", header=[0, 1])
+        
+    else:
+        #future case, grabbing the ANNUAL resutls
+        exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #
 
+        if (exp_attr[1]=='ESM1-2-LR'):
+            gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/ANNUAL_ESM1-2-LR/"+
+                "GWI_results_ANNUAL_HISTORICAL-ONLY_SCENARIO--SMILE_ESM-"+exp_attr[2]+"_ENSEMBLE-MEMBER--"+
+                                           str(model_run)+"_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2100.csv", header=[0, 1])
+            
+        elif (exp_attr[1]=='NorESM'):
+            model_run_noresm = gen_orig_number(model_run,60)
+            gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/ANNUAL_NorESM/"+
+                "GWI_results_ANNUAL_HISTORICAL-ONLY_SCENARIO--NorESM_rcp45-"+exp_attr[3]+"_ENSEMBLE-MEMBER--"+
+                                           str(model_run_noresm)+"_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2099.csv", header=[0, 1])
+
+    gwi_levels_curr =gwi_levels_curr0.iloc[1:,]
+    gwi_c =gwi_levels_curr['Ant'].to_numpy()
+    lyearc = np.shape(gwi_c)[0]
+    lyear = lyearc + syear
+    
     rdists = []
     cdists = []
     (temps_CIl, temps_CIu) = uncert
     temps_1std = (temps_CIu - temps_CIl) / 4
     
-    for i in range(0, lyearr):
-        rdists.append(CustomSplineDistribution(ordvalues=gwi_r[i,ord_ind], a=-4, b=7))
     for i in range(0, lyearc):
         cdists.append(CustomSplineDistribution(ordvalues=gwi_c[i,ord_ind], a=-4, b=7))#these start in 1950
-        #means_r[i] = float(gwi_r.iloc[i,4]) #50th percentile is 4th column but this is median
-        #means_c[i] = float(gwi_c.iloc[1,4])
-
-    #print(f"Distribution creation took {time() - start:.2f}s")
 
     def empirical_mean(year_idx,k):
         #print(f"emp_mean start {time() - start:.2f}s")
@@ -219,12 +250,10 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             if (yr >=lyear or yr <1850):
                 means[yr - 1850] =  np.nan
             elif (k==0):
-                if (yr >=1950):
-                    means[yr - 1850] = cdists[yr-1850-100].mean
+                if (yr >=syear):
+                    means[yr - 1850] = cdists[yr-syear].mean
                 else:
                     means[yr - 1850] = np.nan
-            else:
-                means[yr - 1850] = rdists[yr-1850].mean
 
         #print(f"emp_mean finished {time() - start:.2f}s")
 
@@ -237,12 +266,10 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             if (yr >=lyear or yr <1850):
                 ses[yr - 1850] =  np.nan
             elif (k==0):
-                if (yr >=1950):
-                    ses[yr - 1850] = cdists[yr-1850-100].std
+                if (yr >=syear):
+                    ses[yr - 1850] = cdists[yr-syear].std
                 else:
                     ses[yr - 1850] = np.nan
-            else:
-                ses[yr - 1850] = rdists[yr-1850].std
 
             if (ses[yr - 1850] < temps_1std[yr - 1850]/min_fact):
                 ses[yr - 1850] = temps_1std[yr - 1850]/min_fact
@@ -259,34 +286,19 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             if (yr >=lyear or yr <1850):
                 empirical_p[i] =  np.nan
             elif (k==0):
-                if (yr >=1950):
+                if (yr >=syear):
                     try:
-                        cdfpt = cdists[yr-1850-100].cdfn0(point[i])
+                        cdfpt = cdists[yr-syear].cdfn0(point[i])
                     except:
                         breakpoint()
                     if two_sided:
                         empirical_p[i] = 2*min(1 - cdfpt,cdfpt)
                     else:
                         empirical_p[i] =1-cdfpt
-                    #if (cdists[i-100].std < temps_1std[i]/8): #error too small, this does not happen with the current only in the retrospective
-                    #    empirical_p[i] = stats.norm.sf(abs((point[i]-cdists[i-100].mean)/ temps_1std[i] * 8))*2
 
                 else:
                     empirical_p[i] =  np.nan
 
-            else:
-                cdfpt = rdists[yr-1850].cdfn0(point[i])
-                if two_sided:
-                    empirical_p[i] = 2*min(1 - cdfpt,cdfpt)
-                else:
-                    empirical_p[i] =1-cdfpt
-                if (rdists[i].std < temps_1std[i]/min_fact): #error too small, something funny is happening, switch back to norm
-                    if two_sided:
-                        empirical_p[i] = stats.norm.sf(abs((point[i]-rdists[yr-1850].mean)/ temps_1std[yr-1850] * min_fact))*2
-                    else:
-                        empirical_p[i] = stats.norm.sf(((point[i]-rdists[yr-1850].mean)/ temps_1std[yr-1850] * min_fact))
-            #print(yr)
-            #print(empirical_p[i])
         return empirical_p
 
     def empirical_log_likelihood(year_idx, point,k):
@@ -300,16 +312,10 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 empirical_l[i] =  np.nan
             elif (k==0):
                 if (yr >=1950):
-                    empirical_l[i] = (cdists[yr-1850-100].pdfn0(point[i]))
-                    #if (cdists[i-100].std < temps_1std[i]/8): #error too small, something funny is happening
-                    #    stats.norm.logpdf(point[i],loc=cdists[i-100].mean,scale=temps_1std[i]/8)
-
+                    empirical_l[i] = (cdists[yr-syear].pdfn0(point[i]))
                 else:
                     empirical_l[i] =  np.nan
-            else:
-                empirical_l[i] = (rdists[yr-1850].pdfn0(point[i]))
-                if (rdists[yr-1850].std < temps_1std[yr-1850]/min_fact): #error too small, something funny is happening
-                    empirical_l[i] = stats.norm.pdf(point[i],loc=rdists[yr-1850].mean,scale=temps_1std[yr-1850]/min_fact)
+
             #print(yr)
             #print(empirical_l[i])     
         return np.log(empirical_l )   

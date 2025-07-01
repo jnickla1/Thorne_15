@@ -47,10 +47,10 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             new_opt_depth[0:ekf.n_iters]=ekf.opt_depth
             
             import xarray as xr
-            ohca_later =Dataset(os.path.expanduser('~/')+"/climate_data/ESM1-2-LR/opottempmint/"+exp_attr[2].lower()+"_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
+            ohca_later =Dataset(os.path.expanduser('~/')+"/data/jnickla1/climate_data/ESM1-2-LR/opottempmint/"+exp_attr[2].lower()+"_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
             ohca_l = ohca_later[:].__array__()
             ohca_ly = average_every_n(ohca_l[model_run,:], 12)
-            ohca_earlier = Dataset(os.path.expanduser('~/')+"/climate_data/ESM1-2-LR/opottempmint/historical_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
+            ohca_earlier = Dataset(os.path.expanduser('~/')+"/data/jnickla1/climate_data/ESM1-2-LR/opottempmint/historical_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
             ohca_e = ohca_earlier[:].__array__()
             ohca_ey = average_every_n(ohca_e[model_run,:], 12)
             ohca_meas = np.concatenate((ohca_ey,ohca_ly+ohca_ey[-1]))
@@ -72,7 +72,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         new_Roc_tvar =np.full(new_iter, np.mean(ekf.Roc_tvar[-11:-1]))
         new_Roc_tvar[0:ekf.n_iters]= ekf.Roc_tvar
         
-        data3 =  np.genfromtxt(open(os.path.expanduser('~/')+"climate_data/SSP_inputdata/KF6projectionSSP.csv", "rb"),dtype=float, delimiter=',')
+        data3 =  np.genfromtxt(open(os.path.expanduser('~/')+"data/jnickla1/climate_data/SSP_inputdata/KF6projectionSSP.csv", "rb"),dtype=float, delimiter=',')
         SSPnames=[126,434,245,370,585]
         if exp_attr[2]=='RCP45':
             find_case = 245

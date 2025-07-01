@@ -396,7 +396,7 @@ if (__name__ == "__main__") and True:
     ax1.plot(dates,temps,'o',label='noisy HadCRUT5 GMST measurements $Y_{t}$',markersize=2,color=colorgrey)
     ax1.fill_between(dates, temps-2*data[:,4], temps+2*data[:,4],label="associated 95% uncertainty of $Y_{t}$", color="lightgrey")
    # ax1.plot(dates,this_xhat[:,0],'-',label='posterior GMST EBM-KF-uf state estimate $\^{T }_{t}}$', color=colorekf)
-    ax1.plot(dates,xblind[:,0],'--',label='blind model $\~{T}_{t+1} = \mathbf{F}( \~{T}_{t}, \~{H}_{t} ; [eCO_2]_t ,AOD_t,AC_{t},(\\frac{1}{4}G_{SC})_t )$',color='darkgoldenrod')
+   # ax1.plot(dates,xblind[:,0],'--',label='blind model $\~{T}_{t+1} = \mathbf{F}( \~{T}_{t}, \~{H}_{t} ; [eCO_2]_t ,AOD_t,AC_{t},(\\frac{1}{4}G_{SC})_t )$',color='darkgoldenrod')
     #ax1.legend(loc="upper left", fontsize="10.5")
     handles, labels = ax1.get_legend_handles_labels()
     order = [1,0,2]#[1,2,0,3]
@@ -422,7 +422,7 @@ if (__name__ == "__main__") and True:
     ax4.plot(dates,ocean_heat_measured,'o',label='noisy Zanna (2019) measurements $\Psi_{t}$',markersize=2,color=colorgrey)
     ax4.fill_between(dates, ocean_heat_measured-2*data[:,6], ocean_heat_measured+2*data[:,6],label="associated 95% uncertainty of $ \Psi_{t}$", color="lightgrey")
     #ax4.plot(dates,this_xhat[:,1]*zJ_from_W,'-',label='posterior OHCA EBM-KF-uf state estimate $\^{H }_{t}}$', color=colorekf)
-    ax4.plot(dates,xblind[:,1]*zJ_from_W,'--',label='blind model $ \~{H}_{t+1} = \mathbf{F}( \~{T}_{t}, \~{H}_{t} ; [eCO_2]_t ,AOD_t,AC_{t},(\\frac{1}{4}G_{SC})_t )$',color='darkgoldenrod')
+   # ax4.plot(dates,xblind[:,1]*zJ_from_W,'--',label='blind model $ \~{H}_{t+1} = \mathbf{F}( \~{T}_{t}, \~{H}_{t} ; [eCO_2]_t ,AOD_t,AC_{t},(\\frac{1}{4}G_{SC})_t )$',color='darkgoldenrod')
     #ax4.legend(loc="upper left", fontsize="10.5")
     handles, labels = ax4.get_legend_handles_labels()
    # order = [1,2,0,3]
@@ -454,9 +454,9 @@ if (__name__ == "__main__") and True:
     fig = plt.figure(figsize=(8.25,6))
     #(H - Cs*(x-Teq1850))/Cd+oc1850
     plt.plot(dates,(oc_meas - heatCp*(temps-Teq1850))/Cd+oc1850,'o',markersize=2,label='inferred from both Zanna and HADCRUT5 measurements',color=colorgrey)
-    plt.plot(dates,(this_xhat[:,1]- heatCp*(this_xhat[:,0]-Teq1850))/Cd+oc1850,'-', label="posterior ocean cons. temp. EBM-KF state estimate $ \^{\\theta }_{t} $",color=colorekf)
+    #plt.plot(dates,(this_xhat[:,1]- heatCp*(this_xhat[:,0]-Teq1850))/Cd+oc1850,'-', label="posterior ocean cons. temp. EBM-KF state estimate $ \^{\\theta }_{t} $",color=colorekf)
                                                                                                                 
-    plt.plot(dates,(xblind[:,1]- heatCp*(xblind[:,0]-Teq1850))/Cd+oc1850,'--',label='blind model prediction $\~{\\theta }_{t}$',color='darkgoldenrod')
+    #plt.plot(dates,(xblind[:,1]- heatCp*(xblind[:,0]-Teq1850))/Cd+oc1850,'--',label='blind model prediction $\~{\\theta }_{t}$',color='darkgoldenrod')
     plt.legend()
     ax=plt.gca()
     ax.set_ylabel('Temperature (K)')
@@ -465,8 +465,8 @@ if (__name__ == "__main__") and True:
     ax1b.set_ylim(mn-273.15, mx-273.15)
     ax1b.set_ylabel('Temperature (°C)')
     ax.set_title("Deep Ocean Conservative Temperature $\\theta$")
-    fig.savefig("DOPT.pdf",format="pdf")
-    fig.savefig("DOPT.png", dpi=400,format="png")   
+    #fig.savefig("DOPT.pdf",format="pdf")
+    #fig.savefig("DOPT.png", dpi=400,format="png")   
 
     fig = plt.figure(figsize=(8.25,6))
     ax_dict = fig.subplot_mosaic(

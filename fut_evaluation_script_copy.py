@@ -45,17 +45,17 @@ if __name__ == '__main__':
     exp_attr = experiment_type.split("_")
     if (exp_attr[1]=='ESM1-2-LR'):
         max_runs = 10+start_run #50  #5
-        fut_data_loc = '/Users/JohnMatthew/climate_data/'+exp_attr[1]+'/combined/'+exp_attr[2].lower()+'_aave_tas.nc'
-        hist_data_loc = '/Users/JohnMatthew/climate_data/'+exp_attr[1]+'/combined/historical_aave_tas.nc'
+        fut_data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/'+exp_attr[1]+'/combined/'+exp_attr[2].lower()+'_aave_tas.nc'
+        hist_data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/'+exp_attr[1]+'/combined/historical_aave_tas.nc'
         
     elif (exp_attr[1]=='NorESM'):
         max_runs =  10+start_run #60
-        fut_data_loc = '/Users/JohnMatthew/climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/'+exp_attr[2].lower()+exp_attr[3]+'_aave_tas.nc'
+        fut_data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/'+exp_attr[2].lower()+exp_attr[3]+'_aave_tas.nc'
         
         if (exp_attr[3]=='NoVolc'):  #options NoVolc VolcConst Volc
-            hist_data_loc = '/Users/JohnMatthew/climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/historicalNoVolc_aave_tas.nc'
+            hist_data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/historicalNoVolc_aave_tas.nc'
         else:
-            hist_data_loc = '/Users/JohnMatthew/climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/historicalVolc_aave_tas.nc'
+            hist_data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/historicalVolc_aave_tas.nc'
         
     else:
         print("Error: unknown model to this eval script")
@@ -125,7 +125,7 @@ if __name__ == '__main__':
         elif (exp_attr[1]=='NorESM'):
             #replacing temps_obs_past
             long_past_index = (gen_orig_number(model_run,np.shape(sims_tas)[0]) // 20) #either 1, 2, or 3, still in right order
-            long_past_data_loc = '/Users/JohnMatthew/climate_data/NorESM_volc/NorESM1-M-historical/hist_aave_tas.nc'
+            long_past_data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/NorESM_volc/NorESM1-M-historical/hist_aave_tas.nc'
             variable = Dataset(long_past_data_loc, 'r').variables['tas']
             long_past_tas_array = variable[:].__array__()
             long_past_tas = average_every_n(long_past_tas_array[long_past_index,:],12)

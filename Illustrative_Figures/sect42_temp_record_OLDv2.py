@@ -5,7 +5,7 @@ npanels2=5
 fig, axes = plt.subplots(nrows=2, ncols=npanels2, figsize=(14, 7))
 
 # Generate fictitious temperature data (for demonstration)
-data = np.genfromtxt(open("/Users/JohnMatthew/Dropbox/KalmanFilterPython/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
+data = np.genfromtxt(open(os.path.expanduser("~/")+"Dropbox/KalmanFilterPython/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
 years=data[:,0]
 years[0]=1850
 nyrs = len(years)

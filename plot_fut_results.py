@@ -16,13 +16,14 @@ ssp_245e = []
 ssp_370e = []
 
 
-sel_methods = ['CGWL10y_sfUKCP', 'EBMKF_ta2','Kal_flexLin' ,'removeGreensfx',]
+sel_methods = ['CGWL10y_sfUKCP', 'EBMKF_ta4','FaIR_comb_unB' ,'GWI_anthro_SR15',]
 #already sorted
-sel_methods_colors = [ "#CC3311", "#999933","#88CCEE" ,"#882255"]
+sel_methods_colors = [ "#CC3311", "#999933","#44AA99" ,"#AA4499"]
 
 # Define the file pattern and loop through all matching files
 file_pattern = "/Results/current_fut_statistics_fut_ESM1-2-LR_SSP{ssp_id}_constVolc{run}.csv"
 for ssp_id in [126, 245, 370]:
+    df_list = []
     for run in range(50):
         file_name = os.getcwd() + file_pattern.format(ssp_id=ssp_id, run=run)
         if os.path.exists(file_name):  # Check if the file exists
@@ -32,7 +33,7 @@ for ssp_id in [126, 245, 370]:
             # Filter rows with the desired method_name
             filtered = df[df['method_name'].isin(sel_methods)]
             df_sorted = filtered.sort_values(by='method_name')
-
+            df_list.append(df)
             #print(run)
 
             # Extract Edyrs15 values and add to the corresponding list
@@ -48,6 +49,20 @@ for ssp_id in [126, 245, 370]:
             elif ssp_id == 370:
                 ssp_370.append(df_sorted['Fdyrs15'].values)
                 ssp_370e.append(df_sorted['eFdyrs15'].values)
+    if df_list:
+        # Concatenate all filtered/sorted dataframes
+        all_data = pd.concat(df_list)
+        # Average all rows grouped by method_name (or another identifier like a column named 'ssp_id' if present)
+        averaged = all_data.groupby('method_name', as_index=False).mean(numeric_only=True)
+        text_columns = all_data[['method_name', 'method_class', 'c/r']].drop_duplicates('method_name')
+        # Merge back text columns with numeric means
+        final_result = pd.merge(text_columns, averaged, on='method_name', how='inner')
+        # Save to CSV
+        final_result.to_csv(f"averaged_runs{ssp_id}.csv", index=False)
+try:
+    np.array(ssp_126)
+except:
+    breakpoint()
 
 file_pattern2 = "/Results/current_fut_statistics_fut_NorESM_RCP45_{volc_id}{run}.csv"
 
@@ -57,16 +72,17 @@ cv_45 = []
 cv_45e = []
 
 for volc_id in ["Volc","VolcConst"]:
+    df_list=[]
     for run in range(50):
         file_name = os.getcwd() + file_pattern2.format(volc_id=volc_id, run=run)
         if os.path.exists(file_name):  # Check if the file exists
             # Read the CSV file
             df = pd.read_csv(file_name)
-            
+              
             # Filter rows with the desired method_name
             filtered = df[df['method_name'].isin(sel_methods)]
             df_sorted = filtered.sort_values(by='method_name') 
-
+            df_list.append(df)
             # Extract Edyrs15 values and add to the corresponding list
             if volc_id == "Volc":
                 v_45.append(df_sorted['Fdyrs15'].values)
@@ -75,8 +91,18 @@ for volc_id in ["Volc","VolcConst"]:
             elif volc_id == "VolcConst":
                 cv_45.append(df_sorted['Fdyrs15'].values)
                 cv_45e.append(df_sorted['eFdyrs15'].values)
-                if (abs(df_sorted.loc[df_sorted['method_name'] == 'EBMKF_ta2', 'Fdyrs15'].values[0]) > 10):
-                    print(file_name)
+                #if (abs(df_sorted.loc[df_sorted['method_name'] == 'EBMKF_ta2', 'Fdyrs15'].values[0]) > 10):
+                #    print(file_name)
+    if df_list:
+        # Concatenate all filtered/sorted dataframes
+        all_data = pd.concat(df_list)
+        # Average all rows grouped by method_name (or another identifier like a column named 'ssp_id' if present)
+        averaged = all_data.groupby('method_name', as_index=False).mean(numeric_only=True)
+        text_columns = all_data[['method_name', 'method_class', 'c/r']].drop_duplicates('method_name')
+        # Merge back text columns with numeric means
+        final_result = pd.merge(text_columns, averaged, on='method_name', how='inner')
+        # Save to CSV
+        final_result.to_csv(f"averaged_runs{volc_id}.csv", index=False)
 
 # Create a figure with 3 subplots for the smoothed histograms
 fig, axs = plt.subplots(5, 2, figsize=(10, 10), sharex=True)
@@ -97,17 +123,17 @@ def plot_smoothed_histogram(ax, data0, title , leg=False):
         ax.legend(loc='best')
 
 # Plot smoothed histograms for each SSP
-plot_smoothed_histogram(axs[2,0], np.array(ssp_126), "MPI ESM1-2-LR SSP126 in-member", )
-plot_smoothed_histogram(axs[1,0], np.array(ssp_245), "MPI ESM1-2-LR SSP245 in-member", )
-plot_smoothed_histogram(axs[0,0], np.array(ssp_370), "MPI ESM1-2-LR SSP370 in-member",leg=True)
-plot_smoothed_histogram(axs[3,0], np.array(cv_45), "NorESM RCP45 ConstVolc in-member",)
-plot_smoothed_histogram(axs[4,0], np.array(v_45), "NorESM RCP45 Volc in-member")
+plot_smoothed_histogram(axs[2,0], np.array(ssp_126), "Realized warming:\n comparison within one member\nMPI ESM1-2-LR SSP126", )
+plot_smoothed_histogram(axs[1,0], np.array(ssp_245), "MPI ESM1-2-LR SSP245", )
+plot_smoothed_histogram(axs[0,0], np.array(ssp_370), "MPI ESM1-2-LR SSP370",leg=True)
+plot_smoothed_histogram(axs[3,0], np.array(cv_45), "NorESM RCP45 VolcConst",)
+plot_smoothed_histogram(axs[4,0], np.array(v_45), "NorESM RCP45 Volc")
 
-plot_smoothed_histogram(axs[2,1], np.array(ssp_126e), "MPI ESM1-2-LR SSP126 ensemble", )
-plot_smoothed_histogram(axs[1,1], np.array(ssp_245e), "MPI ESM1-2-LR SSP245 ensemble", )
-plot_smoothed_histogram(axs[0,1], np.array(ssp_370e), "MPI ESM1-2-LR SSP370 ensemble",leg=True)
-plot_smoothed_histogram(axs[3,1], np.array(cv_45e), "NorESM RCP45 ConstVolc ensemble",)
-plot_smoothed_histogram(axs[4,1], np.array(v_45e), "NorESM RCP45 Volc ensemble")
+plot_smoothed_histogram(axs[2,1], np.array(ssp_126e), "Attributable warming:\n comparison to ensemble average\nMPI ESM1-2-LR SSP126", )
+plot_smoothed_histogram(axs[1,1], np.array(ssp_245e), "MPI ESM1-2-LR SSP245", )
+plot_smoothed_histogram(axs[0,1], np.array(ssp_370e), "MPI ESM1-2-LR SSP370",leg=True)
+plot_smoothed_histogram(axs[3,1], np.array(cv_45e), "NorESM RCP45 VolcConst",)
+plot_smoothed_histogram(axs[4,1], np.array(v_45e), "NorESM RCP45")
 
 axs[4,0].set_xlim(-10,10)
 # Set x-axis label
@@ -124,7 +150,7 @@ for i,ax in enumerate([axs[1,0],axs[1,1]]):
     ax.text(cai[i]-2*wid_txt, caiht[i]*.75,"Too Early", fontsize=12,horizontalalignment='center',color='black')
     ax.arrow(cai[i]+2*wid_txt, caiht[i], wid_txt, 0,head_width=caiht[i]*3/12,head_length=wid_txt/2,facecolor='white',lw=2)
     ax.text(cai[i]+2*wid_txt, caiht[i]*.75,"Too Late", fontsize=12,horizontalalignment='center',color='black')
-fig.suptitle('Time of First Reported 1.5°C Threshold Crossing v. 20-yr Mean', fontsize=16)
+fig.suptitle("Time of 1.5°C Threshold Crossing: \n(Method's) First Reported — 20-yr Mean of ...", fontsize=16)
 # Adjust layout and show the plot
 plt.tight_layout()
-plt.show()
+plt.savefig("combined5histogram.png",dpi=500,bbox_inches='tight')

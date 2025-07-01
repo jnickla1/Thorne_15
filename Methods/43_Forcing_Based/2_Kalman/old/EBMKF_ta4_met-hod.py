@@ -78,19 +78,19 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             unf_new_opt_depth= np.full(new_iter, (1/ekf.involcavg-9.7279))
             unf_new_opt_depth[0:ekf.n_iters]=ekf.data[:,3]*0.001 #infill old optical depths based on existing historical AOD record, later ta-smoothed
             
-            ohca_later =Dataset(os.path.expanduser('~/')+"climate_data/ESM1-2-LR/opottempmint/"+exp_attr[2].lower()+"_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
+            ohca_later =Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/ESM1-2-LR/opottempmint/"+exp_attr[2].lower()+"_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
             ohca_l = ohca_later[:].__array__()
             ohca_ly = average_every_n(ohca_l[model_run,:], 12)
-            ohca_earlier = Dataset(os.path.expanduser('~/')+"climate_data/ESM1-2-LR/opottempmint/historical_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
+            ohca_earlier = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/ESM1-2-LR/opottempmint/historical_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
             ohca_e = ohca_earlier[:].__array__()
             ohca_ey = average_every_n(ohca_e[model_run,:], 12)
             ohca_meas = np.concatenate((ohca_ey,ohca_ly))
             ohca_meas = ohca_meas - ohca_meas[0] #start at 0 #supplies full record
 
-            rt_later =Dataset(os.path.expanduser('~/')+"climate_data/ESM1-2-LR/rt/global_rt_"+exp_attr[2].lower()+".nc", 'r').variables['rt']
+            rt_later =Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/ESM1-2-LR/rt/global_rt_"+exp_attr[2].lower()+".nc", 'r').variables['rt']
             rt_l = rt_later[:].__array__()
             rt_ly = average_every_n(rt_l[model_run,:], 12)
-            rt_earlier = Dataset(os.path.expanduser('~/')+"climate_data/ESM1-2-LR/rt/global_rt_historical.nc", 'r').variables['rt']
+            rt_earlier = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/ESM1-2-LR/rt/global_rt_historical.nc", 'r').variables['rt']
             rt_e = rt_earlier[:].__array__()
             rt_ey = average_every_n(rt_e[model_run,:], 12)
             new_rtTOA = np.concatenate((rt_ey,rt_ly))
@@ -101,61 +101,61 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             ekf.n_iters = 174 
             unf_new_opt_depth= np.full(new_iter, (1/ekf.involcavg-9.7279))
             #unf_new_opt_depth[0:ekf.n_iters]=ekf.data[:,3]*0.001 #infill old optical depths based on existing historical AOD record, later ta-smoothed DONE - replace with NorESM simulation
-            aod_spinup = Dataset(os.path.expanduser('~/')+"/climate_data/NorESM_volc/NorESM1-M-historical/hist_aod.nc", 'r').variables['__xarray_dataarray_variable__']
+            aod_spinup = Dataset(os.path.expanduser('~/')+"/data/jnickla1/climate_data/NorESM_volc/NorESM1-M-historical/hist_aod.nc", 'r').variables['__xarray_dataarray_variable__']
             aod_s = aod_spinup[:].__array__()
             long_past_index = (gen_orig_number(model_run,60) // 20)
             unf_new_opt_depth[(1850-1850):(2006-1850)]= average_every_n(aod_s[long_past_index,:], 12)/1000
             
             ohca_meas=np.zeros(new_iter)
             #ohca_meas[0:ekf.n_iters] = ekf.ocean_heat_measured/ekf.zJ_from_W   #DONE - replace with NorESM simulation
-            ohca_spinup = Dataset(os.path.expanduser('~/')+"/climate_data/NorESM_volc/NorESM1-M-historical/hist_ohca_mon.nc", 'r').variables['__xarray_dataarray_variable__']
+            ohca_spinup = Dataset(os.path.expanduser('~/')+"/data/jnickla1/climate_data/NorESM_volc/NorESM1-M-historical/hist_ohca_mon.nc", 'r').variables['__xarray_dataarray_variable__']
             ohca_s = ohca_spinup[:].__array__()
             ohca_s_yr = average_every_n(ohca_s[long_past_index,:], 12)
             ohca_meas[(1850-1850):(2006-1850)]= ohca_s_yr - ohca_s_yr[0]
             
-            #ohca_earlier = Dataset(os.path.expanduser('~/')+"climate_data/NorESM_volc/OHCA/historicalVolc_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
-            ohca_earlier = Dataset(os.path.expanduser('~/')+"climate_data/NorESM_volc/OHCA/historicalVolc_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
+            #ohca_earlier = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/NorESM_volc/OHCA/historicalVolc_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
+            ohca_earlier = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/NorESM_volc/OHCA/historicalVolc_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
             ohca_e = ohca_earlier[:].__array__()
             #ohca_meas[(1980-1850):(2006-1850)] = average_every_n(ohca_e[model_run,:], 12) + ohca_meas[(1979-1850)]
             ohca_meas[(1980-1850):(2006-1850)] = ohca_e[(model_run if model_run< 37 else model_run-1) ,:] + 2*ohca_meas[(1979-1850)] - ohca_meas[(1978-1850)] #missing one model_run ohca, so shift them
 
-            aod_earlier = Dataset(os.path.expanduser('~/')+"climate_data/NorESM_volc/BethkeEtAl2017/historicalVolc_aod.nc", 'r').variables['__xarray_dataarray_variable__']
+            aod_earlier = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/NorESM_volc/BethkeEtAl2017/historicalVolc_aod.nc", 'r').variables['__xarray_dataarray_variable__']
             aod_e = aod_earlier[:].__array__()
             unf_new_opt_depth[(1980-1850):(2006-1850)]= average_every_n(aod_e[model_run,:], 12)/1000
             
             new_rtTOA = np.zeros(new_iter)
-            rt_spinup = Dataset(os.path.expanduser('~/')+"/climate_data/NorESM_volc/NorESM1-M-historical/rtmt/rtmt_NorESM1-M_historical.nc", 'r').variables['rtmt']
+            rt_spinup = Dataset(os.path.expanduser('~/')+"/data/jnickla1/climate_data/NorESM_volc/NorESM1-M-historical/rtmt/rtmt_NorESM1-M_historical.nc", 'r').variables['rtmt']
             rt_s = rt_spinup[:].__array__()
             new_rtTOA[(1850-1850):(2006-1850)]=average_every_n(rt_s[long_past_index,:], 12)
-            rt_earlier = Dataset(os.path.expanduser('~/')+"climate_data/NorESM_volc/BethkeEtAl2017/historicalVolc_rtmt/rtmt_NorESM1-M_historicalVolc.nc", 'r').variables['rtmt']
+            rt_earlier = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/NorESM_volc/BethkeEtAl2017/historicalVolc_rtmt/rtmt_NorESM1-M_historicalVolc.nc", 'r').variables['rtmt']
             rt_e = rt_earlier[:].__array__()
             new_rtTOA[(1980-1850):(2006-1850)]=average_every_n(rt_e[model_run,:], 12)
             if exp_attr[3]=='Volc':
                 #opt_depth        
-                aod_later = Dataset(os.path.expanduser('~/')+"/climate_data/NorESM_volc/BethkeEtAl2017/rcp45Volc_aod.nc", 'r').variables['__xarray_dataarray_variable__']
+                aod_later = Dataset(os.path.expanduser('~/')+"/data/jnickla1/climate_data/NorESM_volc/BethkeEtAl2017/rcp45Volc_aod.nc", 'r').variables['__xarray_dataarray_variable__']
                 aod_l = aod_later[:].__array__()
                 unf_new_opt_depth[(2006-1850):(2100-1850)]= average_every_n(aod_l[model_run,:], 12)/1000
                 #ohca
-                ohca_later = Dataset(os.path.expanduser('~/')+"/climate_data/NorESM_volc/OHCA/rcp45Volc_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
+                ohca_later = Dataset(os.path.expanduser('~/')+"/data/jnickla1/climate_data/NorESM_volc/OHCA/rcp45Volc_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
                 ohca_l = ohca_later[:].__array__()
                 ohca_meas[(2006-1850):(2100-1850)]= ohca_l[model_run,:] + 2*ohca_meas[(2005-1850)]-ohca_meas[(2004-1850)]
-                rt_later =Dataset(os.path.expanduser('~/')+"climate_data/NorESM_volc/BethkeEtAl2017/rcp45"+exp_attr[3]+"_rtmt/rtmt_NorESM1-M_rcp45"+exp_attr[3]+".nc", 'r').variables['rtmt']
+                rt_later =Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/NorESM_volc/BethkeEtAl2017/rcp45"+exp_attr[3]+"_rtmt/rtmt_NorESM1-M_rcp45"+exp_attr[3]+".nc", 'r').variables['rtmt']
                 rt_l = rt_later[:].__array__()
                 new_rtTOA[(2006-1850):(2100-1850)]= average_every_n(rt_l[model_run,:], 12)
             
 
             elif exp_attr[3]=='VolcConst':
-                aod_later = Dataset(os.path.expanduser('~/')+"/climate_data/NorESM_volc/BethkeEtAl2017/rcp45VolcConst_partial20_aod.nc", 'r').variables['__xarray_dataarray_variable__']
+                aod_later = Dataset(os.path.expanduser('~/')+"/data/jnickla1/climate_data/NorESM_volc/BethkeEtAl2017/rcp45VolcConst_partial20_aod.nc", 'r').variables['__xarray_dataarray_variable__']
                 aod_l = aod_later[:].__array__()
                 unf_new_opt_depth[(2006-1850):(2100-1850)]= average_every_n(aod_l[model_run%20,:], 12)/1000
-                ohca_later = Dataset(os.path.expanduser('~/')+"/climate_data/NorESM_volc/OHCA/rcp45VolcConst_partial20_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
+                ohca_later = Dataset(os.path.expanduser('~/')+"/data/jnickla1/climate_data/NorESM_volc/OHCA/rcp45VolcConst_partial20_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
                 ohca_l = ohca_later[:].__array__()
                 ohca_meas[(2006-1850):(2100-1850)]=ohca_l[model_run if (model_run>2 and model_run<14) else model_run%14,:]  + 2*ohca_meas[(2005-1850)]-ohca_meas[(2004-1850)]
-                rt_later =Dataset(os.path.expanduser('~/')+"climate_data/NorESM_volc/BethkeEtAl2017/rcp45"+exp_attr[3]+"_rtmt/rtmt_NorESM1-M_rcp45"+exp_attr[3]+"_20.nc", 'r').variables['rtmt']
+                rt_later =Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/NorESM_volc/BethkeEtAl2017/rcp45"+exp_attr[3]+"_rtmt/rtmt_NorESM1-M_rcp45"+exp_attr[3]+"_20.nc", 'r').variables['rtmt']
                 rt_l = rt_later[:].__array__()
                 new_rtTOA[(2006-1850):(2100-1850)]= average_every_n(rt_l[model_run%20,:], 12)
                 
-            erf_data = pd.read_csv(os.path.expanduser(f"~/climate_data/SSP_inputdata/ERFs-Smith-ar6/ERF_SSP245_1750-2500.csv"))
+            erf_data = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/climate_data/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv"))
             contrails = erf_data['contrails'][(1980-1750):(2100-1750)].values
             unf_new_opt_depth[(1980-1850):] = unf_new_opt_depth[(1980-1850):] + (contrails-0.015)/.18*.04  # get rid of gradual decline in the baseline over 21st century
 
@@ -166,7 +166,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             
         if ekf.n_iters != new_iter:
             new_tsi = np.full(new_iter, ekf.sw_in)
-            new_tsi = pd.read_csv(os.path.expanduser('~/')+"climate_data/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp119_1750-2500.csv")['solar'][100:(100+new_iter+1)].values
+            new_tsi = pd.read_csv(os.path.expanduser('~/')+"data/jnickla1/climate_data/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp119_1750-2500.csv")['solar'][100:(100+new_iter+1)].values
             new_tsi = new_tsi + ekf.sw_in-np.mean(new_tsi)
 
             new_R_tvar =np.full(new_iter, np.mean(ekf.R_tvar[150:174]))
@@ -176,7 +176,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             new_Roc_tvar =np.full(new_iter, np.mean(ekf.Roc_tvar[50:174]))
             new_Roc_tvar[0:ekf.n_iters]= ekf.Roc_tvar[0:ekf.n_iters]
             
-            data3 =  np.genfromtxt(open(os.path.expanduser('~/')+"climate_data/SSP_inputdata/KF6projectionSSP.csv", "rb"),dtype=float, delimiter=',')
+            data3 =  np.genfromtxt(open(os.path.expanduser('~/')+"data/jnickla1/climate_data/SSP_inputdata/KF6projectionSSP.csv", "rb"),dtype=float, delimiter=',')
             SSPnames=[126,434,245,370,585]
             if exp_attr[2]=='RCP45':
                 find_case = 245
@@ -185,18 +185,18 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             rcp = SSPnames.index(find_case)
             handoffyr = 1850+ekf.n_iters
             if (exp_attr[1]=='ESM1-2-LR'):
-                new_Co2_df = pd.read_csv(open(os.path.expanduser('~/')+"climate_data/SSP_inputdata/eCO2_"+exp_attr[1]+"_"+exp_attr[2].lower()+".csv"),dtype=float, delimiter=',')
+                new_Co2_df = pd.read_csv(open(os.path.expanduser('~/')+"data/jnickla1/climate_data/SSP_inputdata/eCO2_"+exp_attr[1]+"_"+exp_attr[2].lower()+".csv"),dtype=float, delimiter=',')
                 new_lCo2 = np.log10(new_Co2_df['eCO2'].values)
-                erf_data = pd.read_csv(os.path.expanduser(f"~/climate_data/SSP_inputdata/ERF_"+exp_attr[1]+"_"+exp_attr[2].lower()+".csv"))
+                erf_data = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/climate_data/SSP_inputdata/ERF_"+exp_attr[1]+"_"+exp_attr[2].lower()+".csv"))
                 erf_natvolc = erf_data['ERF_natural']
             elif (exp_attr[1]=='NorESM'):
                 from . import gen_eCO2
                 if exp_attr[3]=='Volc':
-                    erf_data = pd.read_csv(os.path.expanduser(f"~/Downloads/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/global-warming-index/data/ERFanthro_NorESM_rcp45Volc_full.csv"))
-                    #erf_data = pd.read_csv(os.path.expanduser(f"~/climate_data/SSP_inputdata/ERF_NorESM_rcp45Volc.csv"))
-                    erf_natvolc = pd.read_csv(os.path.expanduser(f"~/Downloads/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/global-warming-index/data/ERFnatural_NorESM_rcp45Volc_full.csv")).to_numpy()[:,model_run+1]
+                    erf_data = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/global-warming-index/data/ERFanthro_NorESM_rcp45Volc_full.csv"))
+                    #erf_data = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/climate_data/SSP_inputdata/ERF_NorESM_rcp45Volc.csv"))
+                    erf_natvolc = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/global-warming-index/data/ERFnatural_NorESM_rcp45Volc_full.csv")).to_numpy()[:,model_run+1]
                 elif exp_attr[3]=='VolcConst':
-                    erf_data = pd.read_csv(os.path.expanduser(f"~/Downloads/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/global-warming-index/data/ERF_NorESM_rcp45VolcConst_full.csv"))
+                    erf_data = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/global-warming-index/data/ERF_NorESM_rcp45VolcConst_full.csv"))
                     erf_natvolc = erf_data['ERF_natural']
                 model_outputlCo2 = gen_eCO2.calculate_equivalent_co2(erf_data['ERF_anthro'].values)
                 new_lCo2 = np.log10(model_outputlCo2)

@@ -12,7 +12,7 @@ set.seed(1)
 # Sample size to derive normal distributions
 Nres = 1000
 sample_str = c("be", paste0("nres",1:Nres))
-setwd("/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/KCC/kcc_notebook/")
+setwd("/Users/JohnMatthew/data/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/KCC/kcc_notebook/")
 year = 1850:2100
 ny = length(year)
 

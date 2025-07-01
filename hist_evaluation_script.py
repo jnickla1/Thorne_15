@@ -17,24 +17,24 @@ from datetime import datetime
 current_date = datetime.now()
 formatted_date = current_date.strftime("%y%m%d")
 
-historical_regen=True  #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
+historical_regen=True #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
 
 # ================================
 # Define Method Full Names, Colors, Location on Violin plots
 # ================================
 
 methods_names = [
-    ['42_Temp_Alone/1_Run_Means', "4.3.1:\nRunning Means", 2, 1998,2022], #98
-    ['42_Temp_Alone/2_LT_Fits', "4.3.2:\nLong Term Fits", 7,  1998,2022], #98
-    ['42_Temp_Alone/3_ST_Fits', "4.3.3:\nShort Term Fits", 16 ,1998,2022], #98
-    ['42_Temp_Alone/4_GAM_AR1', "4.3.4:\nSmoothing Splines", 24,1997,2022], #97
-    ['42_Temp_Alone/5_Kalman', "4.3.5:\nSimple State Space", 27.5,1997,2022], #97
-    ['42_Temp_Alone/6_Remove_IV', "4.3.6:\nFilter Internal\nVariability",33,1999,2022], #99
-    ['43_Forcing_Based/0_Linear', "4.4.1:\nLinear CO2", 37,1999,2022],
-    ['43_Forcing_Based/1_ERF_FaIR',"4.4.2:\nConstrained\nEmulators",38+3,1999,2022],  #99
-    ['43_Forcing_Based/2_Kalman', "4.4.3:\nEnergy Balance\nKalman Filter",42+2.5,1999,2022],  #99
-    ['43_Forcing_Based/3_Human_Induced', "4.4.4:\nAttributable\nWarming", 46.5+2,1999,2022], #99
-    ['44_EarthModel_CGWL', "4.5:\nCombining\nESM Projections", 54,1998,2022]   #98
+    ['42_Temp_Alone/1_Run_Means', "4.3.1:\nRunning Means", 2, 1998,2022,.5], #98
+    ['42_Temp_Alone/2_LT_Fits', "4.3.2:\nLong Term Fits", 7,  1998,2022,.4], #98
+    ['42_Temp_Alone/3_ST_Fits', "4.3.3:\nShort Term Fits", 16 ,1998,2022,.9], #98
+    ['42_Temp_Alone/4_GAM_AR1', "4.3.4:\nSmoothing Splines", 24,1997,2022,1.2], #97
+    ['42_Temp_Alone/5_Kalman', "4.3.5:\nSimple State Space", 27.5,1997,2022,1], #97
+    ['42_Temp_Alone/6_Remove_IV', "4.3.6:\nFilter Internal\nVariability",33,1999,2022,0.4], #99
+    ['43_Forcing_Based/0_Linear', "4.4.1:\nLinear CO2",               37,1999,2022,1.3],
+    ['43_Forcing_Based/1_ERF_FaIR',"4.4.2:\nConstrained\nEmulators",38+2.5,1999,2022,1.7],  #99
+    ['43_Forcing_Based/2_Kalman', "4.4.3:\nEnergy Balance\nKalman Filter",42+2,1999,2022,1.6],  #99
+    ['43_Forcing_Based/3_Human_Induced', "4.4.4:\nAttributable\nWarming", 46.5+7,1999,2022,0.3], #99
+    ['44_EarthModel_CGWL', "4.5:\nCombining\nESM Projections", 54+7,1998,2022,1.5]   #98
     ] #Last three coordinates define location on violin plots
 
 def gen_color(ci, dark=False):
@@ -56,9 +56,10 @@ def gen_color(ci, dark=False):
     return colors[ci]
 
 
-running_subset = ('Methods/42_Temp_Alone/1_Run_Means',
-                    'Methods/43_Forcing_Based/2_Kalman','Methods/44_EarthModel_CGWL')
-#running_subset = ('Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL') #methods we now want to run, smaller subset for debugging
+running_subset = ('Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
+                #'Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/3_Human_Induced',
+                 # ,'Methods/43_Forcing_Based/0_Linear','Methods/44_EarthModel_CGWL')
+#running_subset = ('Methods/42_Temp_Alone/1_Run_Means', 'Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL') #methods we now want to run, smaller subset for debugging
 
 def get_brightness(hex_color):
     """Calculates the perceived brightness of a CSS color, a float between 0 and 1.
@@ -103,7 +104,6 @@ def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type,
         module_name = method_path.replace('/', '.').replace('.py', '')
         #print(module_name)
         method_module = importlib.import_module(module_name, package = "Thorne_15_codefigurestats")
-
         # Call the method function (assumed to be named "run_method" in each *_method.py)
         result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
 
@@ -130,10 +130,10 @@ import mplcursors
 spaglines = []
 
 alt_colors = ['black', 'white']
-sel_methods = [ "CGWL10y_for_halfU","FaIR_anthroA2","EBMKF_ta4","EBMKF_ta","min_month_proj"] # "OLS_refit_CO2forc", "CGWL10y_for_halfU","TheilSen_h7075" ,"FaIR_anthroA",,"EBMKF_ta2"  ] #"EBMKF_ta",
+sel_methods = [ "CGWL10y_for_halfU","FaIR_nonat","EBMKF_ta2"] #"EBMKF_ta4" "min_month_proj" "OLS_refit_CO2forc", "CGWL10y_for_halfU","TheilSen_h7075" ,"FaIR_anthroA",,"EBMKF_ta2"  ] #"EBMKF_ta",
 
 try:
-    index_mapping_new = pd.read_csv('all_methods_statistics_250327.csv')
+    index_mapping_new = pd.read_csv('all_methods_statistics_250616.csv')
     def rank2(method_name_in):
         try:
             ret = index_mapping_new[index_mapping_new["method_name"]==method_name_in]["bias50"].values[0] #first is always current
@@ -307,8 +307,9 @@ if __name__ == '__main__':
 
                 if(labelcurr_or_retro=="c"):
                     if (method_name!="raw1y"):
-                        
-                        sline, =ax1.plot(years, central_est, label=method_name, color = gen_color(method_data['method_class'], dark=False),lw=0.5)
+                        this_zorder= [row[5] for row in methods_names if row[0] == method_data['method_class']]
+
+                        sline, =ax1.plot(years, central_est, label=method_name, color = gen_color(method_data['method_class'], dark=False),lw=0.5,zorder = float(this_zorder[0]))
                         spaglines.append(sline)
                     #ax4.plot(years, central_est-standard,alpha=0.1, color = gen_color(ci, dark=False))
                     if(method_name in sel_methods): #removeMEI_volc_refit"): "CGWL10y_sUKCP", "KCC_human", "CGWL10y_for_hU","30y_etrend3CS","CGWL_10y_IPCC","lfca_hadcrut"
@@ -318,8 +319,8 @@ if __name__ == '__main__':
                         if (method_name=="FaIR_anthroA"):
                             patch = ax4.fill_between(years, central_est-se-standard, central_est+se-standard, alpha=0.05, color = gen_color(method_data['method_class'], dark=False))
                             #line, = ax4.plot(years, central_est-standard, color = gen_color(ci, dark=True))
-                        elif (method_name=="FaIR_anthroA2"):
-                            patch = ax4.fill_between(years, central_est-se-standard, central_est+se-standard, alpha=0.3, color = gen_color(method_data['method_class'], dark=False),zorder=4)
+                        elif (method_name=="FaIR_nonat"):
+                            patch = ax4.fill_between(years, central_est-se-standard, central_est+se-standard, alpha=0.5, color = gen_color(method_data['method_class'], dark=False),zorder=4)
                             line, = ax4.plot(years, central_est-standard, color = gen_color(method_data['method_class'], dark=True))
                         else:
                             patch = ax4.fill_between(years, central_est-se-standard, central_est+se-standard, alpha=0.3, color = gen_color(method_data['method_class'], dark=False))
@@ -526,24 +527,40 @@ if __name__ == '__main__':
     df_res_show['smooth_r'] = df_results['smooth_r'].round(3)
     df_res_cur = df_res_show[df_results['c/r']=='c']
     
-    print(df_res_cur.sort_values('log-likeli',ascending=False))
+    print(df_res_cur.sort_values('log-likeli',ascending=False).head(20))
 
     ax1.grid(color='silver',zorder=-1)
     ax4.grid(color='silver',zorder=-1)
 
     #df_results.to_csv('method_statistics_results.csv', index=False)
-    ax1.legend(fontsize=6.5,ncol=4)
-    ax4.set_ylim(bottom=-0.11,top=0.11)
-    xmin, xmax = [1850,2030] #ax1.get_xlim()
+    #ax1.legend(fontsize=6.5,ncol=4)
+    handles, labels = ax1.get_legend_handles_labels()
+    numcurmethods = len(labels)
+
+    for ci in range(len(methods_names)):
+        ax1.plot([1800,1801], [0,0], label= methods_names[ci][1].split(":")[1].replace('\n',' ').strip(), color = gen_color(methods_names[ci][0], dark=False),lw=0.5)
+    
+    handles, labels = ax1.get_legend_handles_labels()
+    new_handles = handles[numcurmethods:]
+    new_labels = labels[numcurmethods:]
+    ax1.legend(new_handles, new_labels,ncol=2)
+    
+    ax4.set_ylim(bottom=-0.12,top=0.12)
+    xmin, xmax = [1850,2025] #ax1.get_xlim()
     ax4.set_xlim([xmin, xmax])
     ax4.set_xticks(np.arange(1850,2026,25))
+    ax4.set_yticks(np.arange(-0.1,0.11,0.025))
     ax1.set_xticks(np.arange(1850,2026,25))
     ax1.set_xlim([xmin, xmax])
-    ax4.hlines(y=0,xmin=years[np.argmax(~np.isnan(standard))],xmax=years[-np.argmax(~np.isnan(np.flip(standard)))],  color='k', linestyle='-', lw=3)
-    ax4.legend(ax4_handles,ax4_labels)
+    line_20yr = ax4.hlines(y=0,xmin=years[np.argmax(~np.isnan(standard))],
+            xmax=years[-np.argmax(~np.isnan(np.flip(standard)))],  color='k', linestyle='-', lw=3)
+    patch_20yr=ax4.fill_between(years,-results['cent20y']['LT_trend'][3],results['cent20y']['LT_trend'][3],facecolor='lightgray',edgecolor='black',alpha=0.35)
+    ax4_handles.insert(0,(patch_20yr,line_20yr))
+    ax4_labels.insert(0,"20-yr centred running \n    mean (HadCRUT5)")
+    ax4.legend(ax4_handles,ax4_labels,loc='lower left')
     ax1.set_xlabel("Year")
     ax1.set_title("Evaluated Methods to find Current Long-Term Temperature", pad=10)
-    ax4.set_title("`Error` of Top-Performing Methods\n versus 20-yr running mean", pad=10)
+    ax4.set_title("`Error` of Top-Performing Methods\n (Method) — 20-yr running mean", pad=10)
     ax4.set_xlabel("Year")
     ax1.set_ylabel("Temperature (°C) Anomaly\n relative to 1850-1900")
     ax4.set_ylabel("Temperature (°C) Difference\n relative to 20-yr running mean")
@@ -589,7 +606,7 @@ if __name__ == '__main__':
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color="white",
             horizontalalignment='center', verticalalignment='bottom')
     ax1.annotate('lag10y',
-            xy=(2005,0.76), xycoords='data',
+            xy=(2002,0.72), xycoords='data',
             xytext=(2018, .7), textcoords='data',color=curcolor,
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
@@ -606,16 +623,16 @@ if __name__ == '__main__':
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('43_Forcing_Based/1_ERF_FaIR')
-    ax1.annotate('FaIR_anthro',
-            xy=(1946,.1), xycoords='data',
-            xytext=(1960, -.175), textcoords='data',color=curcolor,
-            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
-            horizontalalignment='center', verticalalignment='bottom')
-    ax1.annotate('FaIR_all',
-            xy=(1994,.338), xycoords='data',
-            xytext=(2004, .128), textcoords='data',color=curcolor,
-            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
-            horizontalalignment='center', verticalalignment='bottom')
+##    ax1.annotate('FaIR_anthro',
+##            xy=(1946,.1), xycoords='data',
+##            xytext=(1960, -.175), textcoords='data',color=curcolor,
+##            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
+##            horizontalalignment='center', verticalalignment='bottom')
+##    ax1.annotate('FaIR_all',
+##            xy=(1994,.338), xycoords='data',
+##            xytext=(2004, .128), textcoords='data',color=curcolor,
+##            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
+##            horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('42_Temp_Alone/6_Remove_IV')
     ax1.annotate('remove_MEI\nvolc_refit',
             xy=(2022.4,1.585), xycoords='data',
@@ -651,14 +668,16 @@ if __name__ == '__main__':
     df_res_show2['smooth_r'] = df_results['smooth_r'].round(3)
     df_res_cur2 = df_res_show2[df_results['c/r']=='c']
     dfres2 = df_res_cur2.sort_values('log-likeli',ascending=False)
-    dfres2.to_csv('current_methods_statistics_'+formatted_date+'.csv', index=False)
-    df_results.to_csv('all_methods_statistics_'+formatted_date+'.csv', index=False)
+    dfres2.to_csv('current_methods_statistics_'+formatted_date+str(historical_regen)+'.csv', index=False)
+    df_results.to_csv('all_methods_statistics_'+formatted_date+str(historical_regen)+'.csv', index=False)
     #sorted_df = df_res_cur2.reset_index(drop=True).sort_values(by=['method_class', 'bias50']).reset_index()
     #sorted_df[['index']].to_csv('to_index_mapping.csv', index=False)
 
 
-
-
+    fig.savefig('spaggheti_plot_v6.png', dpi=500, bbox_inches='tight')
+    fig2.savefig('05_threshold_v6.png', dpi=500, bbox_inches='tight')
+    fig2b.savefig('crossing_pile_v6.png', dpi=500, bbox_inches='tight')
+    fig3.savefig('10_threshold_v6.png', dpi=500, bbox_inches='tight')
 
 
 
