@@ -105,7 +105,7 @@ for volc_id in ["Volc","VolcConst"]:
         final_result.to_csv(f"averaged_runs{volc_id}.csv", index=False)
 
 # Create a figure with 3 subplots for the smoothed histograms
-fig, axs = plt.subplots(5, 2, figsize=(10, 10), sharex=True)
+fig, axs = plt.subplots(5, 2, figsize=(10, 10), sharex=True,gridspec_kw={'height_ratios': [1,1,1,1,1]})
 
 # Define a helper function to plot soothed histograms
 def plot_smoothed_histogram(ax, data0, title , leg=False):
@@ -118,22 +118,23 @@ def plot_smoothed_histogram(ax, data0, title , leg=False):
         #ax.fill_between(x_range, kde(x_range), color=sel_methods_colors[i], alpha=0.2)
     ax.set_title(title, fontsize=14)
     ax.grid(True)
+    ax.set_ylim([0,0.35])
     ax.tick_params(axis='x', labelbottom=True)
     if leg:
         ax.legend(loc='best')
 
 # Plot smoothed histograms for each SSP
-plot_smoothed_histogram(axs[2,0], np.array(ssp_126), "Realized warming:\n comparison within one member\nMPI ESM1-2-LR SSP126", )
+plot_smoothed_histogram(axs[2,0], np.array(ssp_126), "MPI ESM1-2-LR SSP126", )
 plot_smoothed_histogram(axs[1,0], np.array(ssp_245), "MPI ESM1-2-LR SSP245", )
-plot_smoothed_histogram(axs[0,0], np.array(ssp_370), "MPI ESM1-2-LR SSP370",leg=True)
+plot_smoothed_histogram(axs[0,0], np.array(ssp_370), "Realized warming:\n comparison within one member\nMPI ESM1-2-LR SSP370",leg=True)
 plot_smoothed_histogram(axs[3,0], np.array(cv_45), "NorESM RCP45 VolcConst",)
 plot_smoothed_histogram(axs[4,0], np.array(v_45), "NorESM RCP45 Volc")
 
-plot_smoothed_histogram(axs[2,1], np.array(ssp_126e), "Attributable warming:\n comparison to ensemble average\nMPI ESM1-2-LR SSP126", )
+plot_smoothed_histogram(axs[2,1], np.array(ssp_126e), "MPI ESM1-2-LR SSP126", )
 plot_smoothed_histogram(axs[1,1], np.array(ssp_245e), "MPI ESM1-2-LR SSP245", )
-plot_smoothed_histogram(axs[0,1], np.array(ssp_370e), "MPI ESM1-2-LR SSP370",leg=True)
+plot_smoothed_histogram(axs[0,1], np.array(ssp_370e), "Attributable warming:\n comparison to ensemble average\nMPI ESM1-2-LR SSP370",leg=True)
 plot_smoothed_histogram(axs[3,1], np.array(cv_45e), "NorESM RCP45 VolcConst",)
-plot_smoothed_histogram(axs[4,1], np.array(v_45e), "NorESM RCP45")
+plot_smoothed_histogram(axs[4,1], np.array(v_45e), "NorESM RCP45 Volc")
 
 axs[4,0].set_xlim(-10,10)
 # Set x-axis label
@@ -142,7 +143,7 @@ axs[4,1].set_xlabel("Error in Crossing Instant (years)", fontsize=12)
 
 
 cai = [0,0]
-caiht = np.array([.2,.49])
+caiht = np.array([.2,.2])
 wid_txt = 2.5
 
 for i,ax in enumerate([axs[1,0],axs[1,1]]):
