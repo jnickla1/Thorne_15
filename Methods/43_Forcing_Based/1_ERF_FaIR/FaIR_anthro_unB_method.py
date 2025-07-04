@@ -59,7 +59,9 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     samp_mean =  np.nanmean(samp_cur, axis = 1) 
     samp_mean[(1930-1850):(1965-1850)]= 0.28 #overwrite to pass the first check
     dev_orig = samp_cur - samp_mean[:, np.newaxis]
-    samp_cur = samp_mean[:, np.newaxis] + np.sqrt( dev_orig**2)*sfactor *np.sign(dev_orig) - curbias
+    dev_20 = np.mean(samp_mean[(2000-1850):(2020-1850)]) - np.mean(temperature[(2000-1850):(2020-1850)])
+    newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_20, (dev_20+ np.linspace(0, (curbias-dev_20)*9/4, (np.shape(temperature)[0]-160)))))
+    samp_cur = samp_mean[:, np.newaxis] + np.sqrt( dev_orig**2)*sfactor *np.sign(dev_orig)- newcorrecton[:, np.newaxis]                    
                         #shrinks their distribution down
     
     samp_ret = retro_array[100:,:]#starts in 1750 so crop to 100th index

@@ -60,8 +60,9 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     samp_mean =  np.nanmean(samp_cur, axis = 1) 
     samp_mean[(1930-1850):(1965-1850)]= 0.28 #overwrite to pass the first check
     dev_orig = samp_cur - samp_mean[:, np.newaxis]
-    samp_cur = samp_mean[:, np.newaxis] + np.sqrt( dev_orig**2)*sfactor*np.sign(dev_orig) - curbias
-                        #shrinks their distribution down
+    dev_20 = np.mean(samp_mean[(2000-1850):(2020-1850)]) - np.mean(temperature[(2000-1850):(2020-1850)])
+    newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_20, (dev_20+ np.linspace(0, (curbias-dev_20)*9/4, (np.shape(temperature)[0]-160)))))
+    samp_cur = samp_mean[:, np.newaxis] + np.sqrt( dev_orig**2)*sfactor *np.sign(dev_orig)- newcorrecton[:, np.newaxis]                        #shrinks their distribution down
     
     samp_ret = retro_array[100:,:]#starts in 1750 so crop to 100th index
     
@@ -99,7 +100,9 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     samp_meanAll =  np.nanmean(samp_curAll, axis = 1) 
     samp_meanAll[(1930-1850):(1965-1850)]= 0.28 #overwrite to pass the first check
     dev_origAll = samp_curAll - samp_meanAll[:, np.newaxis]
-    samp_cur = 2/3*samp_cur + 1/3*(samp_meanAll[:, np.newaxis] + np.sqrt( dev_origAll**2)*sfactor *np.sign(dev_origAll)- curbias)
+    dev_20All = np.mean(samp_meanAll[(2000-1850):(2020-1850)]) - np.mean(temperature[(2000-1850):(2020-1850)])
+    newcorrectonAll = np.concatenate((np.zeros(150), np.ones(10)*dev_20All, (dev_20All+ np.linspace(0, (curbias-dev_20All)*9/4, (np.shape(temperature)[0]-160)))))
+    samp_cur = 2/3*samp_cur + 1/3*(samp_meanAll[:, np.newaxis] + np.sqrt( dev_origAll**2)*sfactor *np.sign(dev_origAll)- newcorrectonAll[:, np.newaxis])
                         #shrinks their distribution down
     
     samp_ret = 2/3*samp_ret + 1/3 * retro_array[100:,:]#starts in 1750 so crop to 100th index
