@@ -46,8 +46,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             biasdict = {"Volc": -0.2057, "VolcConst": -0.2477}
             curbias = biasdict[exp_attr[3]]
                                
-    gwi_levels_curr =gwi_levels_curr0.iloc[1:,] - curbias
-    gwi_c =gwi_levels_curr['Ant'].to_numpy()
+    gwi_levels_curr =gwi_levels_curr0.iloc[1:,]
+    gwi_c =gwi_levels_curr['Ant'].to_numpy() - curbias
     lyearc = np.shape(gwi_c)[0]
     lyear = lyearc + syear
 

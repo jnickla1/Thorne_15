@@ -25,7 +25,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/SR15_ESM1-2-LR/"+
                 "GWI_results_SR15_HISTORICAL-ONLY_SCENARIO--observed-SSP245_ENSEMBLE-MEMBER-"+
                                        "-all_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2024.csv", header=[0, 1])
-        
+        curbias = 0 
     else:
         #future case, grabbing the ANNUAL resutls
         exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #
@@ -34,15 +34,18 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/SR15_ESM1-2-LR/"+
                 "GWI_results_SR15_HISTORICAL-ONLY_SCENARIO--SMILE_ESM-"+exp_attr[2]+"_ENSEMBLE-MEMBER--"+
                                            str(model_run)+"_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2100.csv", header=[0, 1])
-            
+            biasdict = {"SSP126": -0.016884271, "SSP245": -0.025863309,"SSP370": -0.045664823}
+            curbias = biasdict[exp_attr[2]]
         elif (exp_attr[1]=='NorESM'):
             model_run_noresm = gen_orig_number(model_run,60)
             gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/SR15_NorESM/"+
                 "GWI_results_SR15_HISTORICAL-ONLY_SCENARIO--NorESM_rcp45-"+exp_attr[3]+"_ENSEMBLE-MEMBER--"+
                                            str(model_run_noresm)+"_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2099.csv", header=[0, 1])
-
+                                           str(model_run_noresm)+"_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2099.csv", header=[0, 1])
+            biasdict = {"Volc": -0.249811690999517, "VolcConst": -0.254162516921968}
+            curbias = biasdict[exp_attr[3]]
     gwi_levels_curr =gwi_levels_curr0.iloc[1:,]
-    gwi_c =gwi_levels_curr['Tot'].to_numpy()
+    gwi_c =gwi_levels_curr['Tot'].to_numpy() - curbias
     lyearc = np.shape(gwi_c)[0]
     lyear = lyearc + syear
 
