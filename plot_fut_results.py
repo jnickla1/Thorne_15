@@ -121,18 +121,18 @@ def plot_smoothed_histogram(ax, data0, title , leg=False):
     ax.set_ylim([0,0.35])
     ax.tick_params(axis='x', labelbottom=True)
     if leg:
-        ax.legend(loc='best')
+        ax.legend(loc='best',fontsize=8.5)
 
 # Plot smoothed histograms for each SSP
-plot_smoothed_histogram(axs[2,0], np.array(ssp_126), "MPI ESM1-2-LR SSP126", )
+plot_smoothed_histogram(axs[2,0], np.array(ssp_126), "MPI ESM1-2-LR SSP126",leg=True )
 plot_smoothed_histogram(axs[1,0], np.array(ssp_245), "MPI ESM1-2-LR SSP245", )
-plot_smoothed_histogram(axs[0,0], np.array(ssp_370), "Realized warming:\n comparison within one member\nMPI ESM1-2-LR SSP370",leg=True)
+plot_smoothed_histogram(axs[0,0], np.array(ssp_370), "Realized warming:\n comparison within one member\nMPI ESM1-2-LR SSP370")
 plot_smoothed_histogram(axs[3,0], np.array(cv_45), "NorESM RCP45 VolcConst",)
 plot_smoothed_histogram(axs[4,0], np.array(v_45), "NorESM RCP45 Volc")
 
-plot_smoothed_histogram(axs[2,1], np.array(ssp_126e), "MPI ESM1-2-LR SSP126", )
+plot_smoothed_histogram(axs[2,1], np.array(ssp_126e), "MPI ESM1-2-LR SSP126",leg=True ) 
 plot_smoothed_histogram(axs[1,1], np.array(ssp_245e), "MPI ESM1-2-LR SSP245", )
-plot_smoothed_histogram(axs[0,1], np.array(ssp_370e), "Attributable warming:\n comparison to ensemble average\nMPI ESM1-2-LR SSP370",leg=True)
+plot_smoothed_histogram(axs[0,1], np.array(ssp_370e), "Attributable warming:\n comparison to ensemble average\nMPI ESM1-2-LR SSP370")
 plot_smoothed_histogram(axs[3,1], np.array(cv_45e), "NorESM RCP45 VolcConst",)
 plot_smoothed_histogram(axs[4,1], np.array(v_45e), "NorESM RCP45 Volc")
 
@@ -151,6 +151,13 @@ for i,ax in enumerate([axs[1,0],axs[1,1]]):
     ax.text(cai[i]-2*wid_txt, caiht[i]*.75,"Too Early", fontsize=12,horizontalalignment='center',color='black')
     ax.arrow(cai[i]+2*wid_txt, caiht[i], wid_txt, 0,head_width=caiht[i]*3/12,head_length=wid_txt/2,facecolor='white',lw=2)
     ax.text(cai[i]+2*wid_txt, caiht[i]*.75,"Too Late", fontsize=12,horizontalalignment='center',color='black')
+
+
+enscross_time = [2033.125, 2035.458333,  2042.125, 2033.791666, 2034.208333 ]
+for i in range(5):
+    ax = axs[i,1]
+    ax.text(0, 0.3,'{0:.1f}'.format(enscross_time[i]), fontsize=12,horizontalalignment='center',color='black',fontweight='bold')
+
 fig.suptitle("Time of 1.5°C Threshold Crossing: \n(Method's) First Reported — 20-yr Mean of ...", fontsize=16)
 # Adjust layout and show the plot
 plt.tight_layout()
