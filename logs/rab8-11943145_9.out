@@ -1,0 +1,300 @@
+## SLURM PROLOG ###############################################################
+##    Job ID : 11943155
+##  Job Name : all_crossing_eval
+##  Nodelist : node2341
+##      CPUs : 1
+##   Mem/CPU : 5120 MB
+## Directory : /oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats
+##   Job Started : Fri Jul  4 05:31:19 PM EDT 2025
+###############################################################################
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+starting computation for fut_NorESM_RCP45_Volc
+max_runs20
+Model number:
+18
+
+
+
+
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+starting computation for fut_NorESM_RCP45_VolcConst
+max_runs20
+Model number:
+18
+
+
+
+
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+starting computation for fut_ESM1-2-LR_SSP126_constVolc
+max_runs20
+Model number:
+18
+
+
+
+
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+starting computation for fut_ESM1-2-LR_SSP370_constVolc
+max_runs20
+Model number:
+18
+
+
+
+
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+starting computation for fut_ESM1-2-LR_SSP245_constVolc
+max_runs20
+Model number:
+18
+
+
+
+
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+Traceback (most recent call last):
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 218, in _na_arithmetic_op
+    result = func(left, right)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 242, in evaluate
+    return _evaluate(op, op_str, a, b)  # type: ignore[misc]
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 131, in _evaluate_numexpr
+    result = _evaluate_standard(op, op_str, a, b)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 73, in _evaluate_standard
+    return op(a, b)
+TypeError: unsupported operand type(s) for -: 'str' and 'float'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 641, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 198, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                              (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                              model_run, experiment_type, methods_folder, completed_methods)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 108, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py", line 49, in run_method
+    gwi_levels_curr =gwi_levels_curr0.iloc[1:,] - curbias
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/common.py", line 76, in new_method
+    return method(self, other)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/arraylike.py", line 194, in __sub__
+    return self._arith_method(other, operator.sub)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/frame.py", line 7913, in _arith_method
+    new_data = self._dispatch_frame_op(other, op, axis=axis)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/frame.py", line 7945, in _dispatch_frame_op
+    bm = self._mgr.apply(array_op, right=right)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/internals/managers.py", line 361, in apply
+    applied = b.apply(f, **kwargs)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/internals/blocks.py", line 393, in apply
+    result = func(self.values, **kwargs)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 283, in arithmetic_op
+    res_values = _na_arithmetic_op(left, right, op)  # type: ignore[arg-type]
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 227, in _na_arithmetic_op
+    result = _masked_arith_op(left, right, op)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 182, in _masked_arith_op
+    result[mask] = op(xrav[mask], y)
+                   ~~^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for -: 'str' and 'float'
+Traceback (most recent call last):
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 218, in _na_arithmetic_op
+    result = func(left, right)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 242, in evaluate
+    return _evaluate(op, op_str, a, b)  # type: ignore[misc]
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 131, in _evaluate_numexpr
+    result = _evaluate_standard(op, op_str, a, b)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 73, in _evaluate_standard
+    return op(a, b)
+TypeError: unsupported operand type(s) for -: 'str' and 'float'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 641, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 198, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                              (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                              model_run, experiment_type, methods_folder, completed_methods)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 108, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py", line 49, in run_method
+    gwi_levels_curr =gwi_levels_curr0.iloc[1:,] - curbias
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/common.py", line 76, in new_method
+    return method(self, other)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/arraylike.py", line 194, in __sub__
+    return self._arith_method(other, operator.sub)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/frame.py", line 7913, in _arith_method
+    new_data = self._dispatch_frame_op(other, op, axis=axis)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/frame.py", line 7945, in _dispatch_frame_op
+    bm = self._mgr.apply(array_op, right=right)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/internals/managers.py", line 361, in apply
+    applied = b.apply(f, **kwargs)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/internals/blocks.py", line 393, in apply
+    result = func(self.values, **kwargs)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 283, in arithmetic_op
+    res_values = _na_arithmetic_op(left, right, op)  # type: ignore[arg-type]
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 227, in _na_arithmetic_op
+    result = _masked_arith_op(left, right, op)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 182, in _masked_arith_op
+    result[mask] = op(xrav[mask], y)
+                   ~~^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for -: 'str' and 'float'
+Traceback (most recent call last):
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 218, in _na_arithmetic_op
+    result = func(left, right)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 242, in evaluate
+    return _evaluate(op, op_str, a, b)  # type: ignore[misc]
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 131, in _evaluate_numexpr
+    result = _evaluate_standard(op, op_str, a, b)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 73, in _evaluate_standard
+    return op(a, b)
+TypeError: unsupported operand type(s) for -: 'str' and 'float'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 641, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 198, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                              (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                              model_run, experiment_type, methods_folder, completed_methods)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 108, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py", line 49, in run_method
+    gwi_levels_curr =gwi_levels_curr0.iloc[1:,] - curbias
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/common.py", line 76, in new_method
+    return method(self, other)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/arraylike.py", line 194, in __sub__
+    return self._arith_method(other, operator.sub)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/frame.py", line 7913, in _arith_method
+    new_data = self._dispatch_frame_op(other, op, axis=axis)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/frame.py", line 7945, in _dispatch_frame_op
+    bm = self._mgr.apply(array_op, right=right)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/internals/managers.py", line 361, in apply
+    applied = b.apply(f, **kwargs)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/internals/blocks.py", line 393, in apply
+    result = func(self.values, **kwargs)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 283, in arithmetic_op
+    res_values = _na_arithmetic_op(left, right, op)  # type: ignore[arg-type]
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 227, in _na_arithmetic_op
+    result = _masked_arith_op(left, right, op)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 182, in _masked_arith_op
+    result[mask] = op(xrav[mask], y)
+                   ~~^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for -: 'str' and 'float'
+Traceback (most recent call last):
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 218, in _na_arithmetic_op
+    result = func(left, right)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 242, in evaluate
+    return _evaluate(op, op_str, a, b)  # type: ignore[misc]
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 131, in _evaluate_numexpr
+    result = _evaluate_standard(op, op_str, a, b)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 73, in _evaluate_standard
+    return op(a, b)
+TypeError: unsupported operand type(s) for -: 'str' and 'float'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 641, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 198, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                              (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                              model_run, experiment_type, methods_folder, completed_methods)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 108, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py", line 49, in run_method
+    gwi_levels_curr =gwi_levels_curr0.iloc[1:,] - curbias
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/common.py", line 76, in new_method
+    return method(self, other)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/arraylike.py", line 194, in __sub__
+    return self._arith_method(other, operator.sub)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/frame.py", line 7913, in _arith_method
+    new_data = self._dispatch_frame_op(other, op, axis=axis)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/frame.py", line 7945, in _dispatch_frame_op
+    bm = self._mgr.apply(array_op, right=right)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/internals/managers.py", line 361, in apply
+    applied = b.apply(f, **kwargs)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/internals/blocks.py", line 393, in apply
+    result = func(self.values, **kwargs)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 283, in arithmetic_op
+    res_values = _na_arithmetic_op(left, right, op)  # type: ignore[arg-type]
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 227, in _na_arithmetic_op
+    result = _masked_arith_op(left, right, op)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 182, in _masked_arith_op
+    result[mask] = op(xrav[mask], y)
+                   ~~^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for -: 'str' and 'float'
+Traceback (most recent call last):
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 218, in _na_arithmetic_op
+    result = func(left, right)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 242, in evaluate
+    return _evaluate(op, op_str, a, b)  # type: ignore[misc]
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 131, in _evaluate_numexpr
+    result = _evaluate_standard(op, op_str, a, b)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/computation/expressions.py", line 73, in _evaluate_standard
+    return op(a, b)
+TypeError: unsupported operand type(s) for -: 'str' and 'float'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 641, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 198, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                              (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                              model_run, experiment_type, methods_folder, completed_methods)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 108, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py", line 49, in run_method
+    gwi_levels_curr =gwi_levels_curr0.iloc[1:,] - curbias
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/common.py", line 76, in new_method
+    return method(self, other)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/arraylike.py", line 194, in __sub__
+    return self._arith_method(other, operator.sub)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/frame.py", line 7913, in _arith_method
+    new_data = self._dispatch_frame_op(other, op, axis=axis)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/frame.py", line 7945, in _dispatch_frame_op
+    bm = self._mgr.apply(array_op, right=right)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/internals/managers.py", line 361, in apply
+    applied = b.apply(f, **kwargs)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/internals/blocks.py", line 393, in apply
+    result = func(self.values, **kwargs)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 283, in arithmetic_op
+    res_values = _na_arithmetic_op(left, right, op)  # type: ignore[arg-type]
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 227, in _na_arithmetic_op
+    result = _masked_arith_op(left, right, op)
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/pandas/core/ops/array_ops.py", line 182, in _masked_arith_op
+    result[mask] = op(xrav[mask], y)
+                   ~~^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for -: 'str' and 'float'
+All processes completed.

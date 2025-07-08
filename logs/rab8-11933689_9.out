@@ -1,0 +1,145 @@
+## SLURM PROLOG ###############################################################
+##    Job ID : 11933699
+##  Job Name : all_crossing_eval
+##  Nodelist : node2319
+##      CPUs : 1
+##   Mem/CPU : 5120 MB
+## Directory : /oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats
+##   Job Started : Thu Jul  3 02:17:09 PM EDT 2025
+###############################################################################
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+starting computation for fut_NorESM_RCP45_Volc
+max_runs20
+Model number:
+18
+
+
+
+
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+starting computation for fut_NorESM_RCP45_VolcConst
+max_runs20
+Model number:
+18
+
+
+
+
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+starting computation for fut_ESM1-2-LR_SSP245_constVolc
+max_runs20
+Model number:
+18
+
+
+
+
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+starting computation for fut_ESM1-2-LR_SSP126_constVolc
+max_runs20
+Model number:
+18
+
+
+
+
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+starting computation for fut_ESM1-2-LR_SSP370_constVolc
+max_runs20
+Model number:
+18
+
+
+
+
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 638, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 195, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                              (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                              model_run, experiment_type, methods_folder, completed_methods)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 108, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py", line 63, in run_method
+    newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_orig, (dev_orig+ np.linspace(0, (curbias-dev_20)*9/8, 90))))
+                                                  ~~~~~~~~~~~^~~~~~~~~
+ValueError: operands could not be broadcast together with shapes (10,) (250,841) 
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 638, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 195, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                              (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                              model_run, experiment_type, methods_folder, completed_methods)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 108, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py", line 63, in run_method
+    newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_orig, (dev_orig+ np.linspace(0, (curbias-dev_20)*9/8, 90))))
+                                                  ~~~~~~~~~~~^~~~~~~~~
+ValueError: operands could not be broadcast together with shapes (10,) (250,841) 
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 638, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 195, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                              (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                              model_run, experiment_type, methods_folder, completed_methods)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 108, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py", line 63, in run_method
+    newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_orig, (dev_orig+ np.linspace(0, (curbias-dev_20)*9/8, 90))))
+                                                  ~~~~~~~~~~~^~~~~~~~~
+ValueError: operands could not be broadcast together with shapes (10,) (251,841) 
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 638, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 195, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                              (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                              model_run, experiment_type, methods_folder, completed_methods)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 108, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py", line 63, in run_method
+    newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_orig, (dev_orig+ np.linspace(0, (curbias-dev_20)*9/8, 90))))
+                                                  ~~~~~~~~~~~^~~~~~~~~
+ValueError: operands could not be broadcast together with shapes (10,) (251,841) 
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 638, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 195, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                              (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                              model_run, experiment_type, methods_folder, completed_methods)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 108, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py", line 63, in run_method
+    newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_orig, (dev_orig+ np.linspace(0, (curbias-dev_20)*9/8, 90))))
+                                                  ~~~~~~~~~~~^~~~~~~~~
+ValueError: operands could not be broadcast together with shapes (10,) (251,841) 
+All processes completed.

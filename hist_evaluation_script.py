@@ -30,7 +30,7 @@ methods_names = [
     ['42_Temp_Alone/4_GAM_AR1', "4.3.4:\nSmoothing Splines", 24,1997,2022,1.2], #97
     ['42_Temp_Alone/5_Kalman', "4.3.5:\nSimple State Space", 27.5,1997,2022,1], #97
     ['42_Temp_Alone/6_Remove_IV', "4.3.6:\nFilter Internal\nVariability",33,1999,2022,0.4], #99
-    ['43_Forcing_Based/0_Linear', "4.4.1:\nLinear CO2",               37,1999,2022,1.3],
+    ['43_Forcing_Based/4_Linear', "4.4.1:\nLinear CO2",               37,1999,2022,1.3],
     ['43_Forcing_Based/1_ERF_FaIR',"4.4.2:\nConstrained\nEmulators",38+2.5,1999,2022,1.7],  #99
     ['43_Forcing_Based/2_Kalman', "4.4.3:\nEnergy Balance\nKalman Filter",42+2,1999,2022,1.6],  #99
     ['43_Forcing_Based/3_Human_Induced', "4.4.4:\nAttributable\nWarming", 46.5+7,1999,2022,0.3], #99
@@ -49,7 +49,7 @@ def gen_color(ci, dark=False):
     '43_Forcing_Based/1_ERF_FaIR':"#44AA99",  # teal
     '43_Forcing_Based/2_Kalman': "#999933",  # mustard
     '43_Forcing_Based/3_Human_Induced': "#AA4499",  #pink
-    '43_Forcing_Based/0_Linear': "#9494CE",  #greyblue
+    '43_Forcing_Based/4_Linear': "#9494CE",  #greyblue
     '44_EarthModel_CGWL': "#CC3311"   # firetruck
     }
     

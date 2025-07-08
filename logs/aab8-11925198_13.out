@@ -1,0 +1,1453 @@
+## SLURM PROLOG ###############################################################
+##    Job ID : 11925212
+##  Job Name : all_crossing_eval
+##  Nodelist : node2313
+##      CPUs : 1
+##   Mem/CPU : 5120 MB
+## Directory : /oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats
+##   Job Started : Wed Jul  2 12:14:55 PM EDT 2025
+###############################################################################
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py:49: RuntimeWarning: divide by zero encountered in scalar divide
+  sigma = np.sqrt(np.sum((model - temps[sp:ep]) ** 2) / (len(model) - 2))  # regression std error
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:60: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:99: RuntimeWarning: Mean of empty slice
+  samp_meanAll =  np.nanmean(samp_curAll, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:60: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:99: RuntimeWarning: Mean of empty slice
+  samp_meanAll =  np.nanmean(samp_curAll, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:74: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:74: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:333: RuntimeWarning: divide by zero encountered in divide
+  pvals = stats.norm.sf(abs((standard-central_est)/ se))*2
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/scipy/stats/_distn_infrastructure.py:2087: RuntimeWarning: divide by zero encountered in divide
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:333: RuntimeWarning: divide by zero encountered in divide
+  pvals = stats.norm.sf(abs((standard-central_est)/ se))*2
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/scipy/stats/_distn_infrastructure.py:2087: RuntimeWarning: divide by zero encountered in divide
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:101: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:101: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:141: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:74: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:102: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py:92: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py:98: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:74: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:74: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:333: RuntimeWarning: divide by zero encountered in divide
+  pvals = stats.norm.sf(abs((standard-central_est)/ se))*2
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/scipy/stats/_distn_infrastructure.py:2087: RuntimeWarning: divide by zero encountered in divide
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:333: RuntimeWarning: divide by zero encountered in divide
+  pvals = stats.norm.sf(abs((standard-central_est)/ se))*2
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/scipy/stats/_distn_infrastructure.py:2087: RuntimeWarning: divide by zero encountered in divide
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:101: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:101: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:141: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:74: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:102: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py:92: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py:98: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py:49: RuntimeWarning: divide by zero encountered in scalar divide
+  sigma = np.sqrt(np.sum((model - temps[sp:ep]) ** 2) / (len(model) - 2))  # regression std error
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:60: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:99: RuntimeWarning: Mean of empty slice
+  samp_meanAll =  np.nanmean(samp_curAll, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:60: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:99: RuntimeWarning: Mean of empty slice
+  samp_meanAll =  np.nanmean(samp_curAll, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:59: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:74: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:74: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:333: RuntimeWarning: divide by zero encountered in divide
+  pvals = stats.norm.sf(abs((standard-central_est)/ se))*2
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/scipy/stats/_distn_infrastructure.py:2087: RuntimeWarning: divide by zero encountered in divide
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:333: RuntimeWarning: divide by zero encountered in divide
+  pvals = stats.norm.sf(abs((standard-central_est)/ se))*2
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/scipy/stats/_distn_infrastructure.py:2087: RuntimeWarning: divide by zero encountered in divide
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:101: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:101: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:141: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:74: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:102: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py:92: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py:98: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+starting computation for fut_NorESM_RCP45_VolcConst
+max_runs28
+Model number:
+26
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/offset11y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+50
+58
+62
+66
+77
+85
+114
+120
+126
+136
+140
+144
+149
+156
+160
+164
+168
+172
+176
+179
+182
+185
+188
+192
+196
+200
+205
+209
+214
+217
+221
+225
+231
+236
+242
+248
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_hadcrut_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+26
+Minimum MSE: 2.5361963163865e-09
+Minimum MSE Index: 33
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.010733821892356487 -3.0279258771515334
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta2_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_method.py
+CONSISTENCY CHECK
+OHCA + surf = 216.7803090357946
+sum TOA = 188.01987826724826
+Error:
+-0.152964840917867
+OHCA_scale:
+0.8670654563825739
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_all_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_human_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_tot_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_for_halfU_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_forec_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL_10y_IPCC_method.py
+evaluating 13 of 0.1°C thresholds, starting at 1.1°C
+not found METHOD
+FaIR_all_unB
+not found METHOD
+FaIR_anthro_unB
+not found METHOD
+FaIR_comb_unB
+not found METHOD
+FaIR_nonat_unB
+55
+FaIR_anthro sampled, d llike: 0.07655237253984715
+FaIR_anthro sampled, d llike: -35.690890221482604
+FaIR_nonat sampled, d llike: 0.04777741749778755
+FaIR_nonat sampled, d llike: 0.07825500750097858
+FaIR_all_unB sampled, d llike: -0.02643585621774136
+FaIR_all_unB sampled, d llike: 0.10534462908350634
+FaIR_anthro_unB sampled, d llike: -0.019119944541770018
+FaIR_anthro_unB sampled, d llike: -37.136592042071605
+FaIR_comb_unB sampled, d llike: -0.04206565520152217
+FaIR_comb_unB sampled, d llike: 0.09010685240576252
+FaIR_nonat_unB sampled, d llike: -0.031547275000953556
+FaIR_nonat_unB sampled, d llike: 0.07962128376114135
+FaIR_all sampled, d llike: -13747.098760392437
+FaIR_all sampled, d llike: 0.10613018481179937
+GWI_anthro_AR6 sampled, d llike: -0.4200625222166856
+GWI_tot_AR6 sampled, d llike: -0.41506504119884724
+GWI_anthro_SR15 sampled, d llike: -0.3397717470949715
+GWI_tot_SR15 sampled, d llike: -1.2735196159388398
+GWI_anthro sampled, d llike: -0.38638013462139575
+GWI_tot sampled, d llike: -1.3008995535862784
+GWI_anthro_CGWL sampled, d llike: -0.38730175817020207
+GWI_tot_CGWL sampled, d llike: -1.2252447343505306
+CGWL10y_pUKCP sampled, d llike: -0.0018479120848080566
+CGWL10y_sUKCP sampled, d llike: -0.027723542875065288
+CGWL10y_sfUKCP sampled, d llike: 0.01065751575975038
+            method_name           method_class c/r  smooth_r  avg_unc.(1se)  #q<0.5  #q<0.1    log-likeli       RMS      bias        tlog-l      100log-l    100RMS   100bias           l15           l20    bias50       Edyrs15    Edyrs20       Mdyrs15    Mdyrs20       Fdyrs15    Fdyrs20     EdyrsA    RMSyrsA  ncEdyrs     e100log-l   e100RMS  e100bias          el15          el20   ebias50      eEdyrs15   eEdyrs20      eMdyrs15   eMdyrs20      eFdyrs15   eFdyrs20    eEdyrsA   eRMSyrsA  nceEdyrs
+28            etrend30y           42/3_ST_Fits   c     3.296       0.034205      44      16      1.511261  0.046269 -0.005849  3.188760e+02  1.903958e+02  0.027043  0.008551  8.897117e+00  1.409741e+01  0.019416  9.166667e-01  -0.083333  9.166667e-01  -0.083333  9.166667e-01  -0.083333  -0.538462   1.470508     13.0  1.779858e+02  0.036179  0.022946  8.589163e+00  1.407254e+01  0.007837 -1.083333e+00   0.166667 -1.083333e+00   0.166667 -1.083333e+00   0.166667  -1.153846   1.153846      13.0
+46              GAM_AR0           42/4_GAM_AR1   c     7.178       0.047259     108      76     -0.770495  0.128509 -0.072964 -1.625744e+02  1.795193e+02  0.029031  0.002833  8.974397e+00  8.580929e+00 -0.005090  2.500000e-01   1.750000  2.500000e-01   1.750000  2.500000e-01   1.750000  -0.012821   1.526476     13.0  1.492534e+02  0.046144  0.017228  7.540996e+00  8.403807e+00 -0.016669 -1.750000e+00   2.000000 -1.750000e+00   2.000000 -1.750000e+00   2.000000  -0.628205   0.628205      13.0
+56          Kal_flexLin            42/5_Kalman   c     4.944       0.051937      11       0      1.549223  0.051960  0.003429  3.563214e+02  1.687381e+02  0.031030  0.009971  8.101797e+00  7.668405e+00  0.015201  1.421085e-10   1.333333  1.421085e-10   1.333333  1.421085e-10   1.333333  -0.266026   1.438046     14.0  1.531427e+02  0.042495  0.024365  7.345843e+00  7.577670e+00  0.003623 -2.000000e+00   1.583333 -2.000000e+00   1.583333 -2.000000e+00   1.583333  -0.881410   0.881410      14.0
+44              GAM_AR1           42/4_GAM_AR1   c     8.074       0.050142      88      71     -5.050587  0.133905 -0.073938 -1.065674e+03  1.637193e+02  0.029401  0.008859  6.636588e+00  6.888336e+00  0.009310  9.166667e-01   1.083333  9.166667e-01   1.083333  9.166667e-01   1.083333  -0.066239   1.080481     16.0  1.500605e+02  0.043486  0.023253  6.605959e+00  6.801696e+00 -0.002268 -1.083333e+00   1.333333 -1.083333e+00   1.333333 -1.083333e+00   1.333333  -0.681624   0.681624      16.0
+54      Kal_flexLin_ocn            42/5_Kalman   c     5.552       0.047851     125      36      0.597716  0.082568  0.042946  1.374746e+02  1.507495e+02  0.044475  0.033021  8.407804e+00  7.630459e+00  0.049184 -1.500000e+00  -2.833333 -1.500000e+00  -2.833333 -1.500000e+00  -2.833333  -2.173077   2.826632     13.0  1.287458e+02  0.054520  0.047415  5.610909e+00  7.779784e+00  0.037605 -3.500000e+00  -2.583333 -3.500000e+00  -2.583333 -3.500000e+00  -2.583333  -2.788462   2.788462      13.0
+31            etrend15y           42/3_ST_Fits   c     6.011       0.043802      74      17      1.167256  0.061617 -0.000410  2.637999e+02  1.500561e+02  0.050092  0.012134  6.061312e+00  7.634902e+00  0.010099 -1.250000e+00   1.750000 -1.250000e+00   1.750000 -1.250000e+00   1.750000  -0.695513   2.051845     14.0  1.305654e+02  0.062870  0.026529  4.873975e+00  7.408225e+00 -0.001480 -3.250000e+00   2.000000 -3.250000e+00   2.000000 -3.250000e+00   2.000000  -1.310897   1.310897      14.0
+78            EBMKF_ta4            43/2_Kalman   c     4.193       0.078745       0       0      1.502435  0.048250 -0.019276  3.455600e+02  1.495300e+02  0.030773  0.004877  5.410930e+00  5.598092e+00  0.008376  1.500000e+00   1.416667  1.500000e+00   1.416667  1.500000e+00   1.416667   0.073718   1.415582     14.0  1.425072e+02  0.040517  0.019271  5.911759e+00  5.549337e+00 -0.003203 -5.000000e-01   1.666667 -5.000000e-01   1.666667 -5.000000e-01   1.666667  -0.541667   0.541667      14.0
+50            Kalman_RW            42/5_Kalman   c     6.524       0.053939       7       3      1.472826  0.055364 -0.023217  3.387500e+02  1.349088e+02  0.053142 -0.036199  3.823041e+00  3.277720e+00 -0.025454  3.666667e+00   2.250000  3.666667e+00   2.250000  3.666667e+00   2.250000   2.060897   2.493822     14.0  1.479461e+02  0.044750 -0.021804  5.842838e+00  3.149261e+00 -0.037033  1.666667e+00   2.500000  1.666667e+00   2.500000  1.666667e+00   2.500000   1.445513   1.445513      14.0
+48         cubic_spline           42/4_GAM_AR1   c     9.366       0.075333       8       2      1.142652  0.077379 -0.000684  2.399570e+02  1.347929e+02  0.045884  0.012729  4.819457e+00  5.717205e+00  0.025872  1.500000e+00   1.166667  1.500000e+00   1.166667  1.500000e+00   1.166667  -0.461538   2.154738     15.0  1.297646e+02  0.052251  0.027123  5.135516e+00  5.694342e+00  0.014293 -5.000000e-01   1.416667 -5.000000e-01   1.416667 -5.000000e-01   1.416667  -1.076923   1.076923      15.0
+94       CGWL10y_sfUKCP  44/44_EarthModel_CGWL   c     6.498       0.052945       1       0      1.420879  0.052744  0.004395  3.125933e+02  1.343682e+02  0.052494  0.042421  7.933942e+00  6.024024e+00  0.063053 -1.416667e+00  -3.083333 -1.416667e+00  -3.083333 -1.416667e+00  -3.083333  -2.381410   3.084394     18.0  1.174151e+02  0.063088  0.057025  3.764342e+00  6.064357e+00  0.051282 -3.416667e+00  -2.833333 -3.416667e+00  -2.833333 -3.416667e+00  -2.833333  -2.996795   2.996795      18.0
+93        CGWL10y_sUKCP  44/44_EarthModel_CGWL   c     3.602       0.054933       4       1      1.290039  0.056832  0.005378  2.838086e+02  1.295179e+02  0.056346  0.046749  5.411660e+00  4.145507e+00  0.071805 -1.250000e+00  -3.500000 -1.250000e+00  -3.500000 -1.250000e+00  -3.500000  -2.416667   3.140326     14.0  1.132757e+02  0.066407  0.061353  4.334935e+00  4.211139e+00  0.060034 -3.250000e+00  -3.250000 -3.250000e+00  -3.250000 -3.250000e+00  -3.250000  -3.032051   3.032051      14.0
+60       removeGreensfx         42/6_Remove_IV   c    19.717       0.060000       9       1      1.263499  0.067402 -0.024967  1.389849e+02  1.222361e+02  0.061249 -0.025305  5.907370e+00  1.163007e+00 -0.019701  2.750000e+00   2.166667  3.416667e+00   2.166667  2.083333e+00   2.166667   2.113248   2.258426     25.2  1.271904e+02  0.057885 -0.010910  6.641503e+00  1.105358e+00 -0.031280  7.500000e-01   2.416667  1.416667e+00   2.416667  8.333333e-02   2.416667   1.497863   1.497863      25.2
+74       FaIR_nonat_unB          43/1_ERF_FaIR   c     3.445       0.092007       0       0      1.174136  0.067767 -0.027721  1.878618e+02  1.097826e+02  0.047449 -0.003055  3.639893e+00  2.686481e+00 -0.032088 -4.000000e+00   4.750000 -4.000000e+00   4.750000 -4.000000e+00   4.750000   0.230769   3.111016     13.0  1.011443e+02  0.064661  0.011339  3.265664e+00  2.659444e+00 -0.043667 -6.000000e+00   5.000000 -6.000000e+00   5.000000 -6.000000e+00   5.000000  -0.384615   0.384615      13.0
+72        FaIR_comb_unB          43/1_ERF_FaIR   c     3.763       0.091766       0       0      1.227488  0.058463 -0.012507  1.963981e+02  1.097402e+02  0.046509  0.002649  3.651383e+00  2.714095e+00 -0.027130 -4.166667e+00   4.166667 -4.166667e+00   4.166667 -4.166667e+00   4.166667  -0.057692   2.981334     13.0  9.994832e+01  0.065296  0.017044  3.116274e+00  2.691955e+00 -0.038709 -6.166667e+00   4.416667 -6.166667e+00   4.416667 -6.166667e+00   4.416667  -0.673077   0.673077      13.0
+23        etrend30y_3CS           42/3_ST_Fits   c     3.385       0.034205      87      31      1.110699  0.063444 -0.020132  2.343576e+02  1.078578e+02  0.071582 -0.025009  8.897117e+00  1.409741e+01  0.019416  9.166667e-01  -0.083333  9.166667e-01  -0.083333  9.166667e-01  -0.083333   0.166667   1.822521     13.0  1.486545e+02  0.053724 -0.010614  8.589163e+00  1.407254e+01  0.007837 -1.083333e+00   0.166667 -1.083333e+00   0.166667 -1.083333e+00   0.166667  -0.448718   0.448718      13.0
+68         FaIR_all_unB          43/1_ERF_FaIR   c     4.522       0.093017       0       0      1.081233  0.073621  0.017923  1.729972e+02  1.077215e+02  0.048138  0.014029  3.520825e+00  2.932821e+00 -0.017313 -4.583333e+00   2.083333 -4.583333e+00   2.083333 -4.583333e+00   2.083333  -0.589744   2.832579     13.0  9.650466e+01  0.069023  0.028423  2.935138e+00  2.907971e+00 -0.028892 -6.583333e+00   2.333333 -6.583333e+00   2.333333 -6.583333e+00   2.333333  -1.205128   1.205128      13.0
+52        Kalman_RW_ocn            42/5_Kalman   c     7.897       0.051089     128      13      0.846805  0.078492  0.039329  1.947652e+02  1.075554e+02  0.065928  0.040574  7.967838e+00  6.450996e+00  0.080582 -1.250000e+00  -3.000000 -1.250000e+00  -3.000000 -1.250000e+00  -3.000000  -2.330128   3.598303     14.0  1.073273e+02  0.066026  0.054968  6.967236e+00  6.584785e+00  0.069003 -3.250000e+00  -2.750000 -3.250000e+00  -2.750000 -3.250000e+00  -2.750000  -2.945513   2.945513      14.0
+43            offset11y           42/3_ST_Fits   c     2.860       0.030805     186     117     -1.500234  0.083810  0.064408 -3.450539e+02  1.057405e+02  0.038759  0.027788  1.121275e+01  9.639730e+00  0.046860 -5.000000e-01  -1.833333 -5.000000e-01  -1.833333 -5.000000e-01  -1.833333  -1.451923   2.164848     14.0  7.894208e+01  0.049908  0.042182  4.771552e-01  1.039830e+01  0.035281 -2.500000e+00  -1.583333 -2.500000e+00  -1.583333 -2.500000e+00  -1.583333  -2.067308   2.067308      14.0
+70      FaIR_anthro_unB          43/1_ERF_FaIR   c     2.444       0.097346      41       0      0.823694  0.093023 -0.056522  1.317910e+02  1.004922e+02  0.048548 -0.009766  3.427303e+00  2.349570e+00 -0.039163 -3.500000e+00   4.833333 -3.500000e+00   4.833333 -3.500000e+00   4.833333   0.641026   3.126944     13.0  9.457915e+01  0.063720  0.004629  3.116073e+00  2.323466e+00 -0.050742 -5.500000e+00   5.083333 -5.500000e+00   5.083333 -5.500000e+00   5.083333   0.025641   0.025641      13.0
+15          butterworth           42/2_LT_Fits   c    16.225       0.128613       0       0      0.988939  0.063852 -0.026555  1.394404e+02  8.806196e+01  0.050070 -0.018471  2.754767e+00  3.247542e+00 -0.012763  2.416667e+00   2.000000  2.416667e+00   2.000000  2.416667e+00   2.000000   0.955128   1.472051     18.0  8.806870e+01  0.048864 -0.004076  2.999211e+00  3.206285e+00 -0.024341  4.166667e-01   2.250000  4.166667e-01   2.250000  4.166667e-01   2.250000   0.339744   0.339744      18.0
+2                 raw1y         42/1_Run_Means   c    32.497       0.104849       4       0      0.919173  0.094179  0.000336  2.114098e+02  8.738969e+01  0.090227  0.007092  3.099575e+00  1.716396e+00  0.006779 -2.666667e+00  -0.791667 -7.916667e+00  -2.750000 -7.916667e+00  -2.750000  -0.178953   1.758290     40.3  8.414902e+01  0.093891  0.021486  4.140128e+00  1.678244e+00 -0.004800 -4.666667e+00  -0.541667 -9.916667e+00  -2.500000 -9.916667e+00  -2.500000  -0.794338   0.794338      40.3
+26       lowess1dg20wnc           42/3_ST_Fits   c     3.463       0.113551       6       5      1.044839  0.045267 -0.001811  2.403131e+02  7.780590e+01  0.024424  0.008831  2.970365e+00  2.002421e+00  0.020256  5.000000e-01   0.750000  5.000000e-01   0.750000  5.000000e-01   0.750000  -0.448718   1.382893     13.0  7.571712e+01  0.033947  0.023225  2.859702e+00  2.002050e+00  0.008678 -1.500000e+00   1.000000 -1.500000e+00   1.000000 -1.500000e+00   1.000000  -1.064103   1.064103      13.0
+19          hinge75meet           42/2_LT_Fits   c     2.952       0.058903      36      15      1.080460  0.057973  0.014247  1.674713e+02  7.167407e+01  0.059893  0.020789  5.676032e+00  9.000371e+00  0.069601  1.916667e+00  -1.000000  1.916667e+00  -1.000000  1.916667e+00  -1.000000  -0.730769   2.831636     13.0  9.304576e+01  0.053995  0.035183  7.295617e+00  9.104718e+00  0.058022 -8.333333e-02  -0.750000 -8.333333e-02  -0.750000 -8.333333e-02  -0.750000  -1.346154   1.346154      13.0
+35       lowess1dt20wAR           42/3_ST_Fits   c     6.927       0.124645       5       0      0.975604  0.066713  0.000630  2.243889e+02  5.897547e+01  0.058404  0.011299  2.610211e+00  1.701540e+00  0.008380 -1.916667e+00   1.833333 -1.916667e+00   1.833333 -1.916667e+00   1.833333  -0.557692   2.171162     18.0  5.469812e+01  0.067755  0.025694  2.538807e+00  1.699434e+00 -0.003199 -3.916667e+00   2.083333 -3.916667e+00   2.083333 -3.916667e+00   2.083333  -1.173077   1.173077      18.0
+64          FaIR_anthro          43/1_ERF_FaIR   c     2.496       0.097322     138       0     -0.723143  0.178525 -0.162524 -1.157029e+02  5.282857e+01  0.125154 -0.115772  2.874059e+00  1.038819e+00 -0.145143  5.166667e+00  11.750000  5.166667e+00  11.750000  5.166667e+00  11.750000   8.326923  10.449333     12.0  6.350319e+01  0.119636 -0.101378  2.883324e+00  1.031853e+00 -0.156722  3.166667e+00  12.000000  3.166667e+00  12.000000  3.166667e+00  12.000000   7.673077   7.673077      12.0
+66           FaIR_nonat          43/1_ERF_FaIR   c     3.437       0.114914     140       0      0.171273  0.168343 -0.156447  2.740371e+01  5.066345e+01  0.135594 -0.127054  2.476941e+00  1.204249e+00 -0.156163  6.583333e+00  11.416667  6.583333e+00  11.416667  6.583333e+00  11.416667   8.823718  10.681536     13.0  5.748846e+01  0.129416 -0.112660  2.695015e+00  1.188332e+00 -0.167742  4.583333e+00  11.666667  4.583333e+00  11.666667  4.583333e+00  11.666667   8.169872   8.169872      13.0
+33     lowess1dt20wARMA           42/3_ST_Fits   c     6.958       0.148660       0       0      0.952637  0.067259 -0.000719  2.048169e+02  5.034560e+01  0.058404  0.011299  2.308467e+00  1.507663e+00  0.008380 -1.916667e+00   1.833333 -1.916667e+00   1.833333 -1.916667e+00   1.833333  -0.557692   2.171162     18.0  4.683807e+01  0.067755  0.025694  2.247737e+00  1.506208e+00 -0.003199 -3.916667e+00   2.083333 -3.916667e+00   2.083333 -3.916667e+00   2.083333  -1.173077   1.173077      18.0
+29       lowess1dt30wnc           42/3_ST_Fits   c     4.814       0.154759       6       5      0.830824  0.052773  0.000558  1.910896e+02  4.736911e+01  0.036888  0.011200  2.101316e+00  1.401424e+00  0.011809 -1.083333e+00   1.750000 -1.083333e+00   1.750000 -1.083333e+00   1.750000  -0.131410   1.573561     14.0  4.480773e+01  0.050730  0.025594  2.014802e+00  1.400652e+00  0.000231 -3.083333e+00   2.000000 -3.083333e+00   2.000000 -3.083333e+00   2.000000  -0.746795   0.746795      14.0
+1                 lag5y         42/1_Run_Means   c     6.031       0.037679     105      35      0.686149  0.061196 -0.017998  1.578143e+02  4.537577e+01  0.055072 -0.026353  3.430242e+00  2.599326e+00 -0.021548  3.916667e+00   2.416667  3.916667e+00   2.416667  3.916667e+00   2.416667   1.756410   2.182083     16.0  5.754562e+01  0.051855 -0.011959  1.652561e+01  2.444841e+00 -0.033126  1.916667e+00   2.666667  1.916667e+00   2.666667  1.916667e+00   2.666667   1.141026   1.141026      16.0
+92        CGWL10y_pUKCP  44/44_EarthModel_CGWL   c     1.521       0.137237      10       0      0.765128  0.097635 -0.003673  1.752144e+02  4.312149e+01  0.134404  0.080131  2.007892e+00  1.369290e+00  0.184438  2.500000e-01  -4.250000  2.500000e-01  -4.250000  2.500000e-01  -4.250000  -2.852564   5.702798     13.0  4.435314e+01  0.129380  0.094735  2.002840e+00  1.372932e+00  0.172667 -1.750000e+00  -4.000000 -1.750000e+00  -4.000000 -1.750000e+00  -4.000000  -3.467949   3.467949      13.0
+24        opt_clim_norm           42/3_ST_Fits   c    18.390       0.044148     100      60     -0.750002  0.071901 -0.007776 -1.725005e+02  4.081972e+01  0.073336 -0.025309  3.296407e+00  1.270621e+00 -0.024969  4.583333e-01   3.583333  3.083333e+00   3.583333 -2.166667e+00   3.583333   1.477564   2.330486     28.2  3.016787e+01  0.071118 -0.010915  6.058182e-01  1.225377e+00 -0.036547 -1.541667e+00   3.833333 -4.166667e+00   3.833333 -4.166667e+00   3.833333   0.862179   0.862179      28.2
+12         Bayes_seq_CP           42/2_LT_Fits   c     3.540       0.030071     129      94    -11.394418  0.145470 -0.069477 -2.176334e+03  2.539296e+01  0.046551  0.022288  1.002326e+01  7.572961e+00  0.060311  1.166667e+00  -1.916667  1.166667e+00  -1.916667  1.166667e+00  -1.916667  -1.371795   2.963633     13.0  8.436048e+01  0.042682  0.036683  1.244652e+01  8.330815e+00  0.048733 -8.333333e-01  -1.666667 -8.333333e-01  -1.666667 -8.333333e-01  -1.666667  -1.987179   1.987179      13.0
+37       lowess1dt20wnc           42/3_ST_Fits   c     6.927       0.202424       3       0      0.701933  0.066713  0.000630  1.614445e+02  2.098328e+01  0.058404  0.011299  1.567926e+00  1.052655e+00  0.008380 -1.916667e+00   1.833333 -1.916667e+00   1.833333 -1.916667e+00   1.833333  -0.557692   2.171162     18.0  1.944412e+01  0.067755  0.025694  1.524581e+00  1.052166e+00 -0.003199 -3.916667e+00   2.083333 -3.916667e+00   2.083333 -3.916667e+00   2.083333  -1.173077   1.173077      18.0
+41       lowess2dt20wnc           42/3_ST_Fits   c    12.754       0.267779       3       0      0.440933  0.090091  0.000311  1.014146e+02 -4.456884e+00  0.087220  0.008600  1.181977e+00  7.995671e-01  0.005403  6.666667e-01   1.666667  3.250000e+00   1.666667 -1.916667e+00   1.666667  -0.567308   2.302719     24.2 -4.909246e+00  0.090368  0.022995  1.152479e+00  7.993018e-01 -0.006175 -1.333333e+00   1.916667 -3.916667e+00   1.916667 -3.916667e+00   1.916667  -1.182692   1.182692      24.2
+63   cons_hArrh_CO2forc            43/0_Linear   c     1.828       0.205007     139      68    -10.584240  0.166918  0.103012 -2.370870e+03 -5.171822e+00  0.121436  0.011271  1.100051e+00  8.387779e-01 -0.093009 -2.583333e+00   3.000000 -2.583333e+00   3.000000 -2.583333e+00   3.000000   1.820513  11.514901     11.0 -8.028005e+00  0.143512  0.025666  1.060626e+00  8.385598e-01 -0.104588 -4.583333e+00   3.250000 -4.583333e+00   3.250000 -4.583333e+00   3.250000   1.038462   1.038462      11.0
+39       lowess1dt10wnc           42/3_ST_Fits   c    12.696       0.292184       0       0      0.420683  0.084899  0.000397  9.675711e+01 -1.165862e+01  0.079448  0.008327  1.062703e+00  7.278999e-01  0.006669  9.166667e-01   0.083333  2.833333e+00   1.666667 -1.000000e+00  -1.500000  -0.371795   1.694952     25.2 -1.208341e+01  0.083330  0.022721  1.030115e+00  7.277852e-01 -0.004909 -1.083333e+00   0.333333 -3.000000e+00   1.916667 -3.000000e+00  -1.250000  -0.987179   0.987179      25.2
+58  removeMEI_volc_cons         42/6_Remove_IV   c    38.178       0.055847      83      46     -0.781038  0.134731  0.001772 -9.294347e+01 -1.602096e+01  0.115272 -0.031811  4.948167e-01  2.613865e-03 -0.053099  2.291667e-01   8.250000 -6.916667e+00  13.833333 -6.916667e+00   2.416667   2.235089   4.862094     44.4 -2.993159e+01  0.119736 -0.017417  5.488920e+00  2.326755e-03 -0.064678 -1.770833e+00   8.500000 -8.916667e+00  14.083333 -8.916667e+00   2.666667   1.619704   1.619704      44.4
+10              quartic           42/2_LT_Fits   c     3.410       0.044559     118      63     -0.132016  0.089611  0.018180 -1.848222e+01 -1.860357e+01  0.082425  0.076724  1.096569e+00  8.620897e-01  0.078001 -3.666667e+00  -7.583333 -3.666667e+00  -7.583333 -3.666667e+00  -7.583333  -4.903846   5.103261     13.0 -7.185503e+01  0.097865  0.091118  1.740487e-01  9.472554e-01  0.066422 -5.666667e+00  -7.333333 -5.666667e+00  -7.333333 -5.666667e+00  -7.333333  -5.519231   5.519231      13.0
+21          OLS_hinge75           42/2_LT_Fits   c     3.326       0.031408      80      34      0.169575  0.061652 -0.006504  2.628418e+01 -4.124415e+01  0.057470  0.006209  3.821447e+00  1.542612e+01  0.059461  2.583333e+00  -0.750000  2.583333e+00  -0.750000  2.583333e+00  -0.750000  -0.141026   2.788100     13.0  3.661939e+01  0.044287  0.020603  1.181202e+01  1.574918e+01  0.047883  5.833333e-01  -0.500000  5.833333e-01  -0.500000  5.833333e-01  -0.500000  -0.756410   0.756410      13.0
+0                lag10y         42/1_Run_Means   c     2.995       0.031554     159      77      0.106889  0.065824 -0.040934  2.458450e+01 -1.271231e+02  0.077788 -0.072665  4.149937e-01  7.500150e-02 -0.055659  5.583333e+00   4.833333  5.583333e+00   4.833333  5.583333e+00   4.833333   4.070513   4.247234     13.0 -8.606650e+01  0.065281 -0.058270  8.901549e-01  6.003807e-02 -0.067238  3.583333e+00   5.083333  3.583333e+00   5.083333  3.583333e+00   5.083333   3.455128   3.455128      13.0
+59       removeMEI_cons         42/6_Remove_IV   c    49.986       0.053504      66      40     -2.392015  0.099337  0.001335 -2.631217e+02 -1.746723e+02  0.095513  0.007496  2.874841e-03  2.382885e-01 -0.017772  1.833333e-01   1.638889 -7.333333e+00   5.916667 -7.333333e+00  -2.666667  -0.471047   2.683115     52.5 -2.102227e+02  0.105739  0.021890  3.204391e+00  2.092767e-01 -0.029350 -1.816667e+00   1.888889 -9.333333e+00   6.166667 -9.333333e+00  -2.416667  -1.086432   1.086432      52.5
+82             EBMKF_ta            43/2_Kalman   c     0.473       0.036950     184     134     -0.860863  0.082804  0.058618 -1.979986e+02 -2.154793e+02  0.099716  0.091349  1.459576e+00  2.222418e-02  0.122472 -4.416667e+00  -6.000000 -4.416667e+00  -6.000000 -4.416667e+00  -6.000000  -5.416667   6.067507     13.0 -2.992984e+02  0.108471  0.105743  6.549512e-02  2.661628e-02  0.110894 -6.416667e+00  -5.750000 -6.416667e+00  -5.750000 -6.416667e+00  -5.750000  -6.032051   6.032051      13.0
+17       TheilSen_h7075           42/2_LT_Fits   c     2.976       0.028695     119      64     -1.483667  0.075815 -0.022567 -2.299684e+02 -3.223231e+02  0.085971 -0.023646  1.445964e+00  9.531181e+00  0.041646  2.000000e+00   1.333333  2.000000e+00   1.333333  2.000000e+00   1.333333   1.596154   3.178033     13.0 -1.891160e+02  0.068228 -0.009252  1.469244e+01  8.753699e+00  0.030068  1.439275e-10   1.583333  1.439275e-10   1.583333  1.439275e-10   1.583333   0.980769   0.980769      13.0
+90      GWI_anthro_CGWL     43/3_Human_Induced   c     2.935       0.080145     123     108     -4.962978  0.211822 -0.191540 -6.948169e+02 -5.173783e+02  0.211761 -0.209867  3.640506e-03  3.532511e-05 -0.195521  1.066667e+01  15.916667  1.066667e+01  15.916667  1.066667e+01  15.916667  11.467949  11.849145     13.0 -4.797734e+02  0.197016 -0.195473  2.078048e-02  2.780472e-05 -0.207100  8.666667e+00  16.166667  8.666667e+00  16.166667  8.666667e+00  16.166667  10.852564  10.852564      13.0
+86      GWI_anthro_SR15     43/3_Human_Induced   c     2.582       0.075653     124     109     -5.107038  0.212604 -0.193989 -7.149853e+02 -5.256910e+02  0.214702 -0.212291  1.757543e-03  1.377722e-04 -0.191842  1.108333e+01  15.250000  1.108333e+01  15.250000  1.108333e+01  15.250000  13.448718  14.359137     12.0 -4.796362e+02  0.199265 -0.197897  6.124741e-03  1.111007e-04 -0.203420  9.083333e+00  15.500000  9.083333e+00  15.500000  9.083333e+00  15.500000  12.833333  12.833333      11.0
+88           GWI_anthro     43/3_Human_Induced   c     2.684       0.076244     124     109     -5.301697  0.214895 -0.195499 -7.422376e+02 -5.537834e+02  0.217182 -0.214910  8.801270e-04  4.685747e-05 -0.196820  1.108333e+01  15.750000  1.108333e+01  15.750000  1.108333e+01  15.750000  13.692308  14.575877     12.0 -5.095176e+02  0.201960 -0.200516  7.708222e-03  3.727016e-05 -0.208398  9.083333e+00  16.000000  9.083333e+00  16.000000  9.083333e+00  16.000000  13.070513  13.070513      11.0
+80            EBMKF_ta2            43/2_Kalman   c     1.901       0.037111     130     105     -1.968722  0.095625  0.061296 -4.528061e+02 -6.761748e+02  0.143427  0.130951  2.937937e-01  5.243668e-05  0.186344 -5.000000e+00  -8.916667 -5.000000e+00  -8.916667 -5.000000e+00  -8.916667  -7.019231   8.002704     13.0 -7.618558e+02  0.149801  0.145345  8.974805e-03  6.742536e-05  0.174766 -7.000000e+00  -8.666667 -7.000000e+00  -8.666667 -7.000000e+00  -8.666667  -7.634615   7.634615      13.0
+91         GWI_tot_CGWL     43/3_Human_Induced   c     2.702       0.059352     140     127     -6.893294  0.209178 -0.201536 -9.650612e+02 -7.784273e+02  0.214724 -0.213337  1.082556e-05  1.323369e-05 -0.202681  1.091667e+01  16.333333  1.091667e+01  16.333333  1.091667e+01  16.333333  11.698718  12.098929     13.0 -6.719087e+02  0.200378 -0.198943  3.217845e-05  1.040750e-05 -0.214260  8.916667e+00  16.583333  8.916667e+00  16.583333  8.916667e+00  16.583333  11.083333  11.083333      13.0
+87         GWI_tot_SR15     43/3_Human_Induced   c     2.119       0.053064     140     140     -7.508177  0.211070 -0.205965 -1.051145e+03 -8.093762e+02  0.217744 -0.215861  2.119775e-05  2.596551e-05 -0.198893  1.133333e+01  15.750000  1.133333e+01  15.750000  1.133333e+01  15.750000  13.685897  14.572047     12.0 -7.104720e+02  0.202654 -0.201467  3.161446e-06  2.057933e-05 -0.210472  9.333333e+00  16.000000  9.333333e+00  16.000000  9.333333e+00  16.000000  13.070513  13.070513      11.0
+89              GWI_tot     43/3_Human_Induced   c     2.719       0.054803     140     138     -7.544232  0.213609 -0.207506 -1.056192e+03 -8.553088e+02  0.220534 -0.218698  5.361702e-06  1.018681e-05 -0.203876  1.125000e+01  16.250000  1.125000e+01  16.250000  1.125000e+01  16.250000  13.903846  14.769833     12.0 -7.337508e+02  0.205681 -0.204304  5.222262e-06  7.996858e-06 -0.215455  9.250000e+00  16.500000  9.250000e+00  16.500000  9.250000e+00  16.500000  13.282051  13.282051      11.0
+84       GWI_anthro_AR6     43/3_Human_Induced   c     2.234       0.070076     125     112    -11.072460  0.263786 -0.246154 -1.550144e+03 -1.234354e+03  0.283818 -0.281943  1.759079e-07  9.626140e-07 -0.251632  1.466667e+01  19.416667  1.466667e+01  19.416667  1.466667e+01  19.416667  17.134615  17.620662     11.0 -1.150493e+03  0.267891 -0.267548  2.283962e-06  7.909482e-07 -0.263211  1.266667e+01  19.666667  1.266667e+01  19.666667  1.266667e+01  19.666667  16.352564  16.352564      11.0
+85          GWI_tot_AR6     43/3_Human_Induced   c     1.608       0.045508     140     140    -15.714287  0.266588 -0.260906 -2.200000e+03 -1.664700e+03  0.286291 -0.284906  1.174559e-09  5.514222e-09 -0.258608  1.483333e+01  19.916667  1.483333e+01  19.916667  1.483333e+01  19.916667  17.365385  17.846284     11.0 -1.532756e+03  0.270697 -0.270512  2.087974e-08  4.269416e-09 -0.270187  1.283333e+01  20.166667  1.283333e+01  20.166667  1.283333e+01  20.166667  16.647436  16.647436      10.0
+61    OLS_refit_CO2forc            43/0_Linear   c     2.292       0.021891     214     181    -18.149852  0.126871 -0.065967 -4.065567e+03 -1.898590e+03  0.168602 -0.166436  1.113593e-12  1.194801e-06 -0.154976  9.250000e+00   9.750000  9.250000e+00   9.750000  9.250000e+00   9.750000  11.820513  13.199003     11.0 -1.629389e+03  0.154244 -0.152042  4.813330e-08  8.167611e-07 -0.166555  7.250000e+00  10.000000  7.250000e+00  10.000000  7.250000e+00  10.000000  11.038462  11.038462      11.0
+7             OLS_refit           42/2_LT_Fits   c     0.873       0.028809     133     129    -24.211404  0.223790 -0.177033 -3.389597e+03 -3.046615e+03  0.270556 -0.264598  3.897239e-23  6.314787e-16 -0.232489  1.683333e+01  16.166667  1.683333e+01  16.166667  1.683333e+01  16.166667  15.179487  15.290911     13.0 -2.619040e+03  0.255319 -0.250204  4.238880e-18  4.181487e-16 -0.244067  1.483333e+01  16.416667  1.483333e+01  16.416667  1.483333e+01  16.416667  14.564103  14.564103      13.0
+76             FaIR_all          43/1_ERF_FaIR   c     4.527       0.005590     160     160 -15045.038453  0.200347 -0.181363 -2.407206e+06 -1.285266e+06  0.201323 -0.195980  0.000000e+00  0.000000e+00 -0.227348  1.166667e+01  17.000000  1.166667e+01  17.000000  1.166667e+01  17.000000  13.551282  15.019716     11.0 -1.103955e+06  0.192178 -0.181586  0.000000e+00  0.000000e+00 -0.238927  9.666667e+00  17.250000  9.666667e+00  17.250000  9.666667e+00  17.250000  12.769231  12.769231      11.0
+292.871954702
+finished this run
+Model number:
+27
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/offset11y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+50
+58
+62
+66
+77
+85
+114
+121
+133
+137
+141
+144
+147
+154
+159
+163
+167
+171
+174
+176
+179
+184
+189
+192
+195
+198
+201
+204
+207
+210
+213
+217
+222
+239
+248
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_hadcrut_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+27
+Minimum MSE: 5.85175272590129e-10
+Minimum MSE Index: 34
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.010715576284986475 -3.0119674678579647
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta2_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_method.py
+CONSISTENCY CHECK
+OHCA + surf = 221.91157594139904
+sum TOA = 169.66822549906817
+Error:
+-0.3079147571011626
+OHCA_scale:
+0.7641209284980307
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_all_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_human_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_tot_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_for_halfU_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_forec_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL_10y_IPCC_method.py
+evaluating 13 of 0.1°C thresholds, starting at 1.1°C
+not found METHOD
+FaIR_all_unB
+not found METHOD
+FaIR_anthro_unB
+not found METHOD
+FaIR_comb_unB
+not found METHOD
+FaIR_nonat_unB
+55
+FaIR_anthro sampled, d llike: 0.06449288105777229
+FaIR_anthro sampled, d llike: -47.560185829367995
+FaIR_nonat sampled, d llike: 0.07936102493731201
+FaIR_nonat sampled, d llike: 0.12730460030704727
+FaIR_all_unB sampled, d llike: -0.027039133864189546
+FaIR_all_unB sampled, d llike: 0.10517492951318436
+FaIR_anthro_unB sampled, d llike: -0.005519337911988442
+FaIR_anthro_unB sampled, d llike: -50.40619083680102
+FaIR_comb_unB sampled, d llike: -0.039905415610347106
+FaIR_comb_unB sampled, d llike: 0.12651397881180138
+FaIR_nonat_unB sampled, d llike: -0.02355697638061849
+FaIR_nonat_unB sampled, d llike: 0.11454804868869209
+FaIR_all sampled, d llike: -17729.37601184633
+FaIR_all sampled, d llike: 0.11731285341782499
+GWI_anthro_AR6 sampled, d llike: 0.22669135935152518
+GWI_tot_AR6 sampled, d llike: 0.40633810064029063
+GWI_anthro_SR15 sampled, d llike: -0.45891920367504735
+GWI_tot_SR15 sampled, d llike: -1.6016957446476763
+GWI_anthro sampled, d llike: -0.5717118731180246
+GWI_tot sampled, d llike: -1.666052413247952
+GWI_anthro_CGWL sampled, d llike: -0.5527485171231348
+GWI_tot_CGWL sampled, d llike: -1.752649679662781
+CGWL10y_pUKCP sampled, d llike: 0.0008367990365437672
+CGWL10y_sUKCP sampled, d llike: -0.1548423588805643
+CGWL10y_sfUKCP sampled, d llike: -0.0560978699010477
+            method_name           method_class c/r  smooth_r  avg_unc.(1se)  #q<0.5  #q<0.1    log-likeli       RMS      bias        tlog-l      100log-l    100RMS   100bias           l15           l20    bias50       Edyrs15    Edyrs20       Mdyrs15    Mdyrs20       Fdyrs15    Fdyrs20        EdyrsA    RMSyrsA  ncEdyrs     e100log-l   e100RMS  e100bias          el15          el20   ebias50   eEdyrs15      eEdyrs20   eMdyrs15      eMdyrs20   eFdyrs15      eFdyrs20    eEdyrsA   eRMSyrsA  nceEdyrs
+46              GAM_AR0           42/4_GAM_AR1   c     7.391       0.046406     123      75     -1.173847  0.137296 -0.079991 -2.476818e+02  1.668462e+02  0.036435  0.003419  9.493148e+00  9.975243e+00 -0.003414 -1.666667e-01   0.500000 -1.666667e-01   0.500000 -1.666667e-01   0.500000  2.884615e-01   1.881222     13.0  1.325426e+02  0.049485  0.018382  5.545822e+00  6.877867e+00  0.017058  -0.833333  1.416667e+00  -0.833333  1.416667e+00  -0.833333  1.416667e+00  -0.391026   0.391026      13.0
+43            offset11y           42/3_ST_Fits   c     2.960       0.031337     169     111     -1.224410  0.084135  0.064144 -2.816142e+02  1.648984e+02  0.042205  0.024218  1.088603e+01  1.041507e+01  0.036345  2.500000e-01  -0.583333  2.500000e-01  -0.583333  2.500000e-01  -0.583333 -4.807692e-01   1.238408     13.0  7.983747e+01  0.063603  0.039181  8.846125e+00  1.166508e+01  0.056817  -0.416667  3.333333e-01  -0.416667  3.333333e-01  -0.416667  3.333333e-01  -1.160256   1.160256      13.0
+28            etrend30y           42/3_ST_Fits   c     3.390       0.033877      75      16      1.451804  0.047340 -0.005408  3.063307e+02  1.642202e+02  0.039291  0.007506  1.049487e+01  1.355071e+01  0.018289  3.333333e-01   0.333333  3.333333e-01   0.333333  3.333333e-01   0.333333 -2.339744e-01   1.627135     14.0  9.107872e+01  0.054878  0.022469  9.697937e+00  8.659702e+00  0.038761  -0.333333  1.250000e+00  -0.333333  1.250000e+00  -0.333333  1.250000e+00  -0.913462   0.913462      14.0
+44              GAM_AR1           42/4_GAM_AR1   c     8.106       0.048605      87      74     -6.002656  0.142911 -0.082168 -1.266560e+03  1.612519e+02  0.034939  0.007494  7.232388e+00  7.894582e+00  0.006261 -3.333333e-01  -0.333333 -3.333333e-01  -0.333333 -3.333333e-01  -0.333333  8.653846e-02   1.251335     15.0  1.388868e+02  0.049988  0.022456  5.164482e+00  7.655453e+00  0.026733  -1.000000  5.833333e-01  -1.000000  5.833333e-01  -1.000000  5.833333e-01  -0.592949   0.592949      15.0
+56          Kal_flexLin            42/5_Kalman   c     5.193       0.051937       8       0      1.554282  0.051820  0.004382  3.574848e+02  1.605636e+02  0.037480  0.008817  7.990183e+00  7.284365e+00  0.015304 -2.500000e-01  -0.750000 -2.500000e-01  -0.750000 -2.500000e-01  -0.750000 -9.615385e-02   1.241424     13.0  1.327572e+02  0.053924  0.023779  5.037101e+00  8.069362e+00  0.035776  -0.916667  1.666667e-01  -0.916667  1.666667e-01  -0.916667  1.666667e-01  -0.775641   0.775641      13.0
+19          hinge75meet           42/2_LT_Fits   c     2.950       0.055136      11       6      1.578037  0.046163 -0.004575  2.445957e+02  1.411757e+02  0.042030 -0.011867  4.864526e+00  1.001756e+01  0.012612  2.250000e+00   0.500000  2.250000e+00   0.500000  2.250000e+00   0.500000  1.262821e+00   1.524199     13.0  8.100713e+01  0.055810  0.003096  6.574533e+00  7.659348e+00  0.033084   1.583333  1.416667e+00   1.583333  1.416667e+00   1.583333  1.416667e+00   0.583333   0.583333      13.0
+54      Kal_flexLin_ocn            42/5_Kalman   c     5.820       0.047851     122      40      0.475201  0.085810  0.046733  1.092963e+02  1.364425e+02  0.051231  0.031526  5.650129e+00  4.639307e+00  0.049340 -8.333333e-01  -1.750000 -8.333333e-01  -1.750000 -8.333333e-01  -1.750000 -1.512821e+00   2.376433     13.0  8.520163e+01  0.070288  0.046489  1.769813e+00  7.527547e+00  0.069812  -1.500000 -8.333333e-01  -1.500000 -8.333333e-01  -1.500000 -8.333333e-01  -2.192308   2.192308      13.0
+31            etrend15y           42/3_ST_Fits   c     6.269       0.044113      85      17      1.108374  0.060001  0.000298  2.504924e+02  1.347821e+02  0.052643  0.010831  8.710245e+00  8.240616e+00  0.013464 -5.000000e-01  -0.916667 -5.000000e-01  -0.916667 -5.000000e-01  -0.916667  1.185897e-01   1.517042     14.0  1.028037e+02  0.066511  0.025794  1.735863e+00  1.095149e+01  0.033936  -1.166667  1.673470e-10  -1.166667  1.673470e-10  -1.166667  1.673470e-10  -0.560897   0.560897      14.0
+93        CGWL10y_sUKCP  44/44_EarthModel_CGWL   c     3.777       0.054936       8       4      1.079810  0.059147  0.002794  2.375582e+02  1.315587e+02  0.055660  0.042527  6.484745e+00  4.975761e+00  0.062163  1.439275e-10  -1.500000  1.439275e-10  -1.500000  1.439275e-10  -1.500000 -1.698718e+00   2.264908     14.0  9.845260e+01  0.075379  0.057199  5.210570e+00  6.120246e+00  0.082120  -0.666667 -5.833333e-01  -0.666667 -5.833333e-01  -0.666667 -5.833333e-01  -2.378205   2.378205      14.0
+94       CGWL10y_sfUKCP  44/44_EarthModel_CGWL   c     6.777       0.053117       5       1      1.258276  0.056022  0.002621  2.768208e+02  1.311008e+02  0.054400  0.040539  6.228823e+00  4.376305e+00  0.056340 -4.166667e-01  -1.500000 -4.166667e-01  -1.500000 -4.166667e-01  -1.500000 -1.381410e+00   1.951570     16.0  9.807043e+01  0.073679  0.055211  5.628237e+00  5.315331e+00  0.076296  -1.083333 -5.833333e-01  -1.083333 -5.833333e-01  -1.083333 -5.833333e-01  -2.060897   2.060897      16.0
+50            Kalman_RW            42/5_Kalman   c     6.905       0.053939       0       0      1.499469  0.053998 -0.023277  3.448780e+02  1.288048e+02  0.056646 -0.039378  6.480514e+00  7.309747e+00 -0.031055  5.000000e-01   0.916667  5.000000e-01   0.916667  5.000000e-01   0.916667  2.451923e+00   2.708235     15.0  1.280246e+02  0.057078 -0.024416  7.373598e+00  5.483942e+00 -0.010583  -0.166667  1.833333e+00  -0.166667  1.833333e+00  -0.166667  1.833333e+00   1.772436   1.772436      15.0
+48         cubic_spline           42/4_GAM_AR1   c     9.647       0.073808       6       2      1.156928  0.076196  0.001322  2.429548e+02  1.281033e+02  0.053459  0.014725  5.321302e+00  5.639316e+00  0.030939  1.439275e-10  -0.750000  1.439275e-10  -0.750000  1.439275e-10  -0.750000 -5.256410e-01   1.651857     15.0  1.040957e+02  0.070786  0.029688  4.345414e+00  5.924384e+00  0.051411  -0.666667  1.666667e-01  -0.666667  1.666667e-01  -0.666667  1.666667e-01  -1.205128   1.205128      15.0
+60       removeGreensfx         42/6_Remove_IV   c    20.780       0.060000      17       0      1.228876  0.069226 -0.025615  1.351764e+02  1.137184e+02  0.066637 -0.026401  6.643812e+00  6.646822e+00 -0.021723 -8.333333e-02   0.333333 -8.333333e-02   2.083333 -8.333333e-02  -1.166667  1.519231e+00   2.517254     23.0  1.102661e+02  0.068701 -0.011439  2.921197e+00  6.510356e+00 -0.001251  -0.750000  1.250000e+00  -0.750000  3.000000e+00  -0.750000 -2.500000e-01   0.839744   0.839744      23.0
+68         FaIR_all_unB          43/1_ERF_FaIR   c     4.474       0.093342       0       0      1.086363  0.074591 -0.016085  1.738181e+02  1.015704e+02  0.060758 -0.036597  3.283816e+00  3.467434e+00 -0.074700  2.000000e+00   1.833333  2.000000e+00   1.833333  2.000000e+00   1.833333  2.791667e+00   4.777543     15.0  1.084883e+02  0.042706 -0.021634  3.459132e+00  3.238072e+00 -0.054228   1.333333  2.750000e+00   1.333333  2.750000e+00   1.333333  2.750000e+00   2.112179   2.112179      15.0
+72        FaIR_comb_unB          43/1_ERF_FaIR   c     3.769       0.092068       0       0      1.158548  0.069110 -0.046363  1.853677e+02  1.007414e+02  0.064687 -0.047720  3.204537e+00  3.464470e+00 -0.084444  2.166667e+00   2.916667  2.166667e+00   2.916667  2.166667e+00   2.916667  3.487179e+00   4.949316     13.0  1.085478e+02  0.047777 -0.032757  3.595469e+00  3.136546e+00 -0.063972   1.500000  3.833333e+00   1.500000  3.833333e+00   1.500000  3.833333e+00   2.807692   2.807692      13.0
+52        Kalman_RW_ocn            42/5_Kalman   c     8.266       0.051089     131      21      0.787583  0.080362  0.042887  1.811441e+02  9.958108e+01  0.069252  0.036829  5.026696e+00  2.239100e+00  0.076845 -7.500000e-01  -3.500000 -7.500000e-01  -3.500000 -7.500000e-01  -3.500000 -1.435897e+00   2.278664     15.0  4.994143e+01  0.087133  0.051792  1.650833e+00  4.394505e+00  0.097317  -1.416667 -2.583333e+00  -1.416667 -2.583333e+00  -1.416667 -2.583333e+00  -2.115385   2.115385      15.0
+74       FaIR_nonat_unB          43/1_ERF_FaIR   c     3.492       0.092294       0       0      1.072632  0.080946 -0.061549  1.716212e+02  9.938996e+01  0.067759 -0.053309  3.150804e+00  3.411116e+00 -0.089317  2.250000e+00   3.416667  2.250000e+00   3.416667  2.250000e+00   3.416667  3.814103e+00   5.172712     13.0  1.073830e+02  0.051684 -0.038346  3.506718e+00  2.969390e+00 -0.068845   1.583333  4.333333e+00   1.583333  4.333333e+00   1.583333  4.333333e+00   3.134615   3.134615      13.0
+78            EBMKF_ta4            43/2_Kalman   c     4.088       0.076865       0       0      1.299739  0.064609 -0.049784  2.989400e+02  9.809211e+01  0.077872 -0.067814  4.128988e+00  3.183312e+00 -0.090934  2.666667e+00   3.916667  2.666667e+00   3.916667  2.666667e+00   3.916667  4.480769e+00   4.996206     16.0  1.122201e+02  0.068637 -0.052852  5.703742e+00  1.696547e+00 -0.070462   2.000000  4.833333e+00   2.000000  4.833333e+00   2.000000  4.833333e+00   3.801282   3.801282      16.0
+70      FaIR_anthro_unB          43/1_ERF_FaIR   c     2.308       0.097451      44       0      0.640145  0.107721 -0.086738  1.024232e+02  9.217174e+01  0.071502 -0.053407  2.899471e+00  2.443304e+00 -0.096890  2.083333e+00   4.333333  2.083333e+00   4.333333  2.083333e+00   4.333333  3.846154e+00   5.435323     13.0  9.731342e+01  0.054669 -0.038444  2.994162e+00  2.622524e+00 -0.076418   1.416667  5.250000e+00   1.416667  5.250000e+00   1.416667  5.250000e+00   3.166667   3.166667      13.0
+2                 raw1y         42/1_Run_Means   c    34.294       0.104089       2       0      0.930831  0.093103 -0.000024  2.140912e+02  8.512763e+01  0.092866  0.005816  1.281227e+00  3.255227e+00  0.002115 -7.500000e-01  -2.958333 -7.500000e-01  -4.416667 -7.500000e-01  -4.416667  9.134615e-02   2.456366     33.0  8.019485e+01  0.098155  0.020778  1.409220e+00  3.328322e+00  0.022587  -1.416667 -2.041667e+00  -1.416667 -3.500000e+00  -1.416667 -3.500000e+00  -0.588141   0.588141      33.0
+15          butterworth           42/2_LT_Fits   c    17.344       0.131318       0       0      0.979569  0.061486 -0.025583  1.381193e+02  8.151079e+01  0.051807 -0.017368  1.549552e+00  2.189043e+00 -0.012891  8.750000e-01  -0.583333  1.916667e+00  -0.583333 -1.666667e-01  -0.583333  1.080128e+00   1.674700     21.2  8.058487e+01  0.058400 -0.002405  1.599829e+00  2.076446e+00  0.007581   0.208333  3.333333e-01   1.250000  3.333333e-01  -0.833333  3.333333e-01   0.400641   0.400641      21.2
+23        etrend30y_3CS           42/3_ST_Fits   c     3.557       0.033877     101      31      1.052909  0.058554 -0.015956  2.221639e+02  8.059272e+01  0.065912 -0.017442  1.049487e+01  1.355071e+01  0.018289  3.333333e-01   0.333333  3.333333e-01   0.333333  3.333333e-01   0.333333  1.762821e-01   1.736709     14.0  3.084804e+01  0.070903 -0.002479  9.697937e+00  8.659702e+00  0.038761  -0.333333  1.250000e+00  -0.333333  1.250000e+00  -0.333333  1.250000e+00  -0.503205   0.503205      14.0
+26       lowess1dg20wnc           42/3_ST_Fits   c     3.607       0.115731       6       5      1.048578  0.045198 -0.001444  2.411730e+02  7.643904e+01  0.034556  0.007362  2.899329e+00  1.973024e+00  0.018495  8.333333e-02  -0.500000  8.333333e-02  -0.500000  8.333333e-02  -0.500000  1.587943e-10   1.142609     13.0  7.572003e+01  0.051851  0.022325  2.800156e+00  2.002140e+00  0.038967  -0.583333  4.166667e-01  -0.583333  4.166667e-01  -0.583333  4.166667e-01  -0.679487   0.679487      13.0
+35       lowess1dt20wAR           42/3_ST_Fits   c     7.233       0.129385       3       0      1.002155  0.063668  0.001197  2.304957e+02  6.061741e+01  0.056335  0.009471  2.472164e+00  1.650343e+00  0.011598 -5.000000e-01  -1.166667 -5.000000e-01  -1.166667 -5.000000e-01  -1.166667 -2.948718e-01   1.582490     14.0  5.967177e+01  0.067731  0.024433  2.188715e+00  1.700316e+00  0.032070  -1.166667 -2.500000e-01  -1.166667 -2.500000e-01  -1.166667 -2.500000e-01  -0.974359   0.974359      14.0
+21          OLS_hinge75           42/2_LT_Fits   c     3.321       0.029219      71      23      0.858131  0.055349 -0.018810  1.330103e+02  5.905841e+01  0.049107 -0.015802  2.350486e+00  1.776491e+01  0.018758  2.250000e+00   0.166667  2.250000e+00   0.166667  2.250000e+00   0.166667  1.243590e+00   1.666987     13.0 -1.279046e+02  0.060310 -0.000840  7.207376e+00  1.012415e+01  0.039230   1.583333  1.083333e+00   1.583333  1.083333e+00   1.583333  1.083333e+00   0.564103   0.564103      13.0
+33     lowess1dt20wARMA           42/3_ST_Fits   c     7.284       0.151657       0       0      0.969630  0.064024 -0.000113  2.084705e+02  5.324786e+01  0.056335  0.009471  2.259711e+00  1.503430e+00  0.011598 -5.000000e-01  -1.166667 -5.000000e-01  -1.166667 -5.000000e-01  -1.166667 -2.948718e-01   1.582490     14.0  5.245978e+01  0.067731  0.024433  2.034907e+00  1.544684e+00  0.032070  -1.166667 -2.500000e-01  -1.166667 -2.500000e-01  -1.166667 -2.500000e-01  -0.974359   0.974359      14.0
+29       lowess1dt30wnc           42/3_ST_Fits   c     5.023       0.157547       6       5      0.828813  0.051473  0.001435  1.906270e+02  4.743918e+01  0.042144  0.010734  2.068077e+00  1.386367e+00  0.013943 -2.500000e-01  -0.833333 -2.500000e-01  -0.833333 -2.500000e-01  -0.833333 -3.205128e-03   1.410668     14.0  4.660773e+01  0.058849  0.025696  1.976843e+00  1.412190e+00  0.034415  -0.916667  8.333333e-02  -0.916667  8.333333e-02  -0.916667  8.333333e-02  -0.682692   0.682692      14.0
+92        CGWL10y_pUKCP  44/44_EarthModel_CGWL   c     1.546       0.137237       7       0      0.683067  0.093689 -0.007844  1.564222e+02  4.474105e+01  0.121954  0.078474  1.996222e+00  1.311128e+00  0.164194  1.666667e-01  -4.416667  1.666667e-01  -4.416667  1.666667e-01  -4.416667 -2.397436e+00   3.841546     13.0  4.329482e+01  0.142098  0.093146  2.000380e+00  1.403947e+00  0.184151  -0.500000 -3.500000e+00  -0.500000 -3.500000e+00  -0.500000 -3.500000e+00  -3.076923   3.076923      13.0
+12         Bayes_seq_CP           42/2_LT_Fits   c     3.618       0.028753     106      82    -12.741448  0.151260 -0.080514 -2.433617e+03  3.880216e+01  0.041420  0.010516  9.583040e+00  1.350002e+01  0.038086  8.333333e-01  -0.833333  8.333333e-01  -0.833333  8.333333e-01  -0.833333 -1.282051e-02   1.006920     13.0 -2.540347e+02  0.060400  0.025479  1.636060e+01  2.080934e+01  0.058558   0.166667  8.333333e-02   0.166667  8.333333e-02   0.166667  8.333333e-02  -0.692308   0.692308      13.0
+1                 lag5y         42/1_Run_Means   c     6.462       0.038233     105      43      0.678566  0.058505 -0.017805  1.560703e+02  3.844518e+01  0.055611 -0.029609  9.120865e+00  1.385726e+01 -0.023234  4.166667e-01  -0.416667  4.166667e-01  -0.416667  4.166667e-01  -0.416667  1.730769e+00   2.428244     16.0  4.354496e+01  0.057993 -0.014647  8.051101e+00  1.211676e+01 -0.002762  -0.250000  5.000000e-01  -0.250000  5.000000e-01  -0.250000  5.000000e-01   1.051282   1.051282      16.0
+37       lowess1dt20wnc           42/3_ST_Fits   c     7.233       0.206094       0       0      0.698217  0.063668  0.001197  1.605898e+02  2.234242e+01  0.056335  0.009471  1.537379e+00  1.047097e+00  0.011598 -5.000000e-01  -1.166667 -5.000000e-01  -1.166667 -5.000000e-01  -1.166667 -2.884615e-01   1.590403     14.0  2.196748e+01  0.067731  0.024433  1.452773e+00  1.067712e+00  0.032070  -1.166667 -2.500000e-01  -1.166667 -2.500000e-01  -1.166667 -2.500000e-01  -0.967949   0.967949      14.0
+64          FaIR_anthro          43/1_ERF_FaIR   c     2.349       0.097485     160       5     -1.260244  0.203042 -0.192743 -2.016391e+02  1.433447e+01  0.166377 -0.159437  1.508699e+00  1.159179e+00 -0.202942  5.666667e+00  13.166667  5.666667e+00  13.166667  5.666667e+00  13.166667  1.094872e+01  12.376225     12.0  3.087008e+01  0.149616 -0.144475  1.520032e+00  9.175288e-01 -0.182470   5.000000  1.408333e+01   5.000000  1.408333e+01   5.000000  1.408333e+01  10.717949  10.717949      12.0
+66           FaIR_nonat          43/1_ERF_FaIR   c     3.472       0.115201     160       0     -0.172091  0.197100 -0.190244 -2.753450e+01  1.194370e+01  0.182156 -0.177277  1.388776e+00  1.189586e+00 -0.213362  6.583333e+00  13.166667  6.583333e+00  13.166667  6.583333e+00  13.166667  1.169872e+01  12.828150     13.0  2.523638e+01  0.165986 -0.162314  1.450571e+00  1.088418e+00 -0.192890   5.916667  1.408333e+01   5.916667  1.408333e+01   5.916667  1.408333e+01  11.467949  11.467949      13.0
+58  removeMEI_volc_cons         42/6_Remove_IV   c    37.261       0.056570      84      32     -0.196751  0.121486  0.002102 -2.341342e+01  1.026038e+01  0.109429 -0.025791  3.025778e+00  6.444521e+00 -0.048195  3.638889e+00   5.944444  9.083333e+00   8.333333 -5.833333e-01   3.166667  2.063248e+00   3.939031     36.3 -7.557762e+00  0.115520 -0.010829  4.373042e-01  5.562721e+00 -0.027723   2.972222  6.861111e+00   8.416667  9.250000e+00  -1.250000  4.083333e+00   1.383761   1.383761      36.3
+41       lowess2dt20wnc           42/3_ST_Fits   c    13.528       0.272712       0       0      0.435814  0.084466  0.000364  1.002372e+02 -2.312481e+00  0.077138  0.005781  1.149961e+00  7.923051e-01  0.004798 -8.333333e-01  -1.666667 -8.333333e-01  -1.666667 -8.333333e-01  -1.666667  9.401709e-02   2.002351     21.0 -2.375419e+00  0.082585  0.020743  1.074644e+00  8.092615e-01  0.025270  -1.500000 -7.500000e-01  -1.500000 -7.500000e-01  -1.500000 -7.500000e-01  -0.585470   0.585470      21.0
+63   cons_hArrh_CO2forc            43/0_Linear   c     1.857       0.205007     142      68    -10.623146  0.181653  0.112191 -2.379585e+03 -8.662897e+00  0.153852  0.028244  1.066574e+00  8.350469e-01 -0.107518 -5.000000e+00   0.750000 -5.000000e+00   0.750000 -5.000000e+00   0.750000 -2.115385e-01  12.176256     11.0 -9.201906e+00  0.147662  0.043207  1.049852e+00  8.403997e-01 -0.087046  -5.666667  1.666667e+00  -5.666667  1.666667e+00  -5.666667  1.666667e+00  -0.243590   0.243590      11.0
+39       lowess1dt10wnc           42/3_ST_Fits   c    13.440       0.297556       0       0      0.402729  0.080739  0.000509  9.262769e+01 -1.030134e+01  0.074074  0.006152  1.032751e+00  7.267118e-01  0.005198 -8.333333e-01  -1.750000 -8.333333e-01  -1.750000 -8.333333e-01  -1.750000 -1.276709e-01   1.838281     22.0 -1.039484e+01  0.080490  0.021114  9.787331e-01  7.383357e-01  0.025670  -1.500000 -8.333333e-01  -1.500000 -8.333333e-01  -1.500000 -8.333333e-01  -0.807158   0.807158      22.0
+10              quartic           42/2_LT_Fits   c     3.542       0.044202     117      61     -0.095617  0.087657  0.018059 -1.338642e+01 -2.166887e+01  0.082564  0.074791  4.108462e-01  1.444780e-01  0.078672 -2.916667e+00  -4.583333 -2.916667e+00  -4.583333 -2.916667e+00  -4.583333 -4.205128e+00   4.475479     13.0 -1.153230e+02  0.096508  0.089753  9.131644e-03  9.732214e-01  0.099144  -3.583333 -3.666667e+00  -3.583333 -3.666667e+00  -3.583333 -3.666667e+00  -4.884615   4.884615      13.0
+59       removeMEI_cons         42/6_Remove_IV   c    45.316       0.054008      70      32     -1.269700  0.099915  0.000795 -1.396670e+02 -2.453662e+01  0.099270  0.007447  1.806753e+00  3.313490e+00 -0.021018 -5.833333e-01  -1.055556 -5.833333e-01  -4.333333 -5.833333e-01  -4.333333 -2.743056e-01   3.594146     44.0 -4.409446e+01  0.103246  0.022410  2.931493e-01  7.196402e+00 -0.000546  -1.250000 -1.388889e-01  -1.250000 -3.416667e+00  -1.250000 -3.416667e+00  -0.953793   0.953793      44.0
+17       TheilSen_h7075           42/2_LT_Fits   c     2.454       0.027976     122      76     -0.514912  0.076044 -0.042137 -7.981130e+01 -1.583866e+02  0.087832 -0.058294  2.684938e+00  2.269832e+00 -0.008705  2.416667e+00   1.583333  2.416667e+00   1.583333  2.416667e+00   1.583333  3.269231e+00   3.811812     13.0 -2.890313e+02  0.090966 -0.043331  5.337576e+00  2.968384e-01  0.011767   1.750000  2.500000e+00   1.750000  2.500000e+00   1.750000  2.500000e+00   2.589744   2.589744      13.0
+0                lag10y         42/1_Run_Means   c     3.221       0.032062     148      94     -0.234737  0.066358 -0.041037 -5.398960e+01 -1.940697e+02  0.083620 -0.075788  1.595121e-01  8.144396e-01 -0.064009  3.583333e+00   3.250000  3.583333e+00   3.250000  3.583333e+00   3.250000  4.429487e+00   4.566051     13.0 -1.330359e+02  0.079197 -0.060825  1.863030e+00  7.625023e-02 -0.043537   2.916667  4.166667e+00   2.916667  4.166667e+00   2.916667  4.166667e+00   3.750000   3.750000      13.0
+82             EBMKF_ta            43/2_Kalman   c     0.480       0.036950     196     149     -1.629899  0.091400  0.067854 -3.748768e+02 -3.402538e+02  0.112631  0.108571  3.296384e-02  4.236942e-04  0.108909 -6.750000e+00  -7.583333 -6.750000e+00  -7.583333 -6.750000e+00  -7.583333 -6.256410e+00   6.323711     13.0 -4.817825e+02  0.125925  0.123534  9.891196e-03  3.519770e-03  0.129381  -7.416667 -6.666667e+00  -7.416667 -6.666667e+00  -7.416667 -6.666667e+00  -6.935897   6.935897      13.0
+80            EBMKF_ta2            43/2_Kalman   c     1.974       0.037111     147     108     -2.550147  0.101462  0.069347 -5.865339e+02 -7.988091e+02  0.152651  0.146637  6.624884e-03  5.922749e-08  0.182062 -5.833333e+00  -9.083333 -5.833333e+00  -9.083333 -5.833333e+00  -9.083333 -7.339744e+00   7.559345     13.0 -1.032374e+03  0.169151  0.161600  3.631554e-04  3.656061e-06  0.202534  -6.500000 -8.166667e+00  -6.500000 -8.166667e+00  -6.500000 -8.166667e+00  -8.019231   8.019231      13.0
+90      GWI_anthro_CGWL     43/3_Human_Induced   c     2.893       0.079373     124     109     -8.177903  0.245585 -0.226865 -1.144906e+03 -9.532009e+02  0.260166 -0.258278  1.292924e-04  3.021044e-07 -0.262822  1.200000e+01  16.750000  1.200000e+01  16.750000  1.200000e+01  16.750000  1.367308e+01  14.006085     13.0 -8.675681e+02  0.244406 -0.243315  2.720123e-04  1.119889e-10 -0.242350  11.333333  1.766667e+01  11.333333  1.766667e+01  11.333333  1.766667e+01  12.993590  12.993590      13.0
+86      GWI_anthro_SR15     43/3_Human_Induced   c     2.564       0.074957     125     110     -8.292234  0.245988 -0.228957 -1.160913e+03 -9.623589e+02  0.262213 -0.260378  1.072163e-04  9.232268e-07 -0.259254  1.241667e+01  16.000000  1.241667e+01  16.000000  1.241667e+01  16.000000  1.502564e+01  15.799052     11.0 -8.688571e+02  0.246612 -0.245415  6.769904e-05  8.939176e-10 -0.238782  11.750000  1.691667e+01  11.750000  1.691667e+01  11.750000  1.691667e+01  14.993590  14.993590      11.0
+88           GWI_anthro     43/3_Human_Induced   c     2.656       0.075551     125     109     -8.601089  0.248507 -0.230611 -1.204153e+03 -1.002162e+03  0.264920 -0.263050  4.854863e-05  4.509774e-07 -0.264141  1.241667e+01  16.583333  1.241667e+01  16.583333  1.241667e+01  16.583333  1.524359e+01  15.995392     11.0 -8.966371e+02  0.249228 -0.248087  7.370203e-05  1.117799e-10 -0.243669  11.750000  1.750000e+01  11.750000  1.750000e+01  11.750000  1.750000e+01  15.211538  15.211538      11.0
+91         GWI_tot_CGWL     43/3_Human_Induced   c     2.644       0.059333     140     130    -10.303693  0.242789 -0.235468 -1.442517e+03 -1.216771e+03  0.258765 -0.257057  5.895477e-06  1.598959e-06 -0.266409  1.191667e+01  17.083333  1.191667e+01  17.083333  1.191667e+01  17.083333  1.367308e+01  14.029102     13.0 -1.067221e+03  0.242911 -0.242094  2.313956e-08  1.071636e-09 -0.245937  11.250000  1.800000e+01  11.250000  1.800000e+01  11.250000  1.800000e+01  12.993590  12.993590      13.0
+87         GWI_tot_SR15     43/3_Human_Induced   c     2.084       0.053090     140     140    -10.883906  0.244262 -0.239536 -1.523747e+03 -1.226063e+03  0.260967 -0.259360  2.421959e-06  2.677638e-06 -0.262692  1.233333e+01  16.333333  1.233333e+01  16.333333  1.233333e+01  16.333333  1.503205e+01  15.820457     11.0 -1.099922e+03  0.245267 -0.244397  3.465319e-10  2.871641e-09 -0.242220  11.666667  1.725000e+01  11.666667  1.725000e+01  11.666667  1.725000e+01  15.000000  15.000000      11.0
+89              GWI_tot     43/3_Human_Induced   c     2.387       0.054815     140     140    -10.924600  0.247281 -0.241647 -1.529444e+03 -1.283768e+03  0.264007 -0.262246  8.477563e-07  2.704822e-06 -0.267680  1.233333e+01  17.000000  1.233333e+01  17.000000  1.233333e+01  17.000000  1.525000e+01  16.020403     11.0 -1.130874e+03  0.248227 -0.247284  2.322320e-10  1.917149e-09 -0.247208  11.666667  1.791667e+01  11.666667  1.791667e+01  11.666667  1.791667e+01  15.217949  15.217949      11.0
+84       GWI_anthro_AR6     43/3_Human_Induced   c     2.225       0.069249     126     115    -14.858465  0.295990 -0.278863 -2.080185e+03 -1.746155e+03  0.327652 -0.326899  4.352467e-09  5.321045e-09 -0.318496  1.616667e+01  19.583333  1.616667e+01  19.583333  1.616667e+01  19.583333  1.844231e+01  18.837970     10.0 -1.572323e+03  0.312938 -0.311937  6.306362e-09  3.015606e-10 -0.298025  15.500000  2.050000e+01  15.500000  2.050000e+01  15.500000  2.050000e+01  18.455128  18.455128      10.0
+85          GWI_tot_AR6     43/3_Human_Induced   c     1.572       0.045607     140     140    -19.299332  0.296907 -0.291204 -2.701906e+03 -2.141216e+03  0.325556 -0.325021  3.645107e-11  4.909921e-11 -0.321623  1.608333e+01  19.666667  1.608333e+01  19.666667  1.608333e+01  19.666667  1.844872e+01  18.851166     10.0 -1.994512e+03  0.310779 -0.310059  2.570463e-11  1.073600e-12 -0.301151  15.416667  2.058333e+01  15.416667  2.058333e+01  15.416667  2.058333e+01  18.461538  18.461538      10.0
+61    OLS_refit_CO2forc            43/0_Linear   c     2.310       0.021846     208     180    -21.650017  0.140017 -0.074468 -4.849604e+03 -2.709009e+03  0.194692 -0.191308  7.089955e-14  3.156339e-09 -0.209091  9.333333e+00  11.666667  9.333333e+00  11.666667  9.333333e+00  11.666667  1.238462e+01  13.700513     11.0 -2.167890e+03  0.177682 -0.176346  2.415882e-11  2.966493e-11 -0.188619   8.666667  1.258333e+01   8.666667  1.258333e+01   8.666667  1.258333e+01  12.352564  12.352564      11.0
+7             OLS_refit           42/2_LT_Fits   c     0.896       0.028327     130     127    -28.322922  0.236315 -0.187052 -3.965209e+03 -3.692944e+03  0.288504 -0.284697  4.707953e-25  3.615231e-18 -0.283510  1.708333e+01  15.916667  1.708333e+01  15.916667  1.708333e+01  15.916667  1.617949e+01  16.204423     13.0 -3.359619e+03  0.276645 -0.269735  4.191404e-22  1.264940e-20 -0.263038  16.416667  1.683333e+01  16.416667  1.683333e+01  16.416667  1.683333e+01  15.500000  15.500000      13.0
+24        opt_clim_norm           42/3_ST_Fits   c    20.232       0.043804      88      48    -22.406083  0.068120 -0.005742 -5.153399e+03 -4.936221e+03  0.071893 -0.015302  3.087378e-03  3.542711e+00 -0.023940  4.166667e-01  -0.416667  4.166667e-01  -0.416667  4.166667e-01  -0.416667  3.794872e-01   2.473099     30.0 -7.737635e+03  0.073447 -0.000340  9.392653e-01  1.590129e-03 -0.003469  -0.250000  5.000000e-01  -0.250000  5.000000e-01  -0.250000  5.000000e-01  -0.300000   0.300000      30.0
+76             FaIR_all          43/1_ERF_FaIR   c     4.477       0.005606     160     160 -19472.938212  0.232775 -0.215351 -3.115670e+06 -1.922366e+06  0.251288 -0.246569  0.000000e+00  0.000000e+00 -0.284612  1.233333e+01  19.500000  1.233333e+01  19.500000  1.233333e+01  19.500000  1.557051e+01  16.560221     10.0 -1.677879e+06  0.234509 -0.231607  0.000000e+00  0.000000e+00 -0.264140  11.666667  2.041667e+01  11.666667  2.041667e+01  11.666667  2.041667e+01  15.583333  15.583333      10.0
+586.1576025329999
+finished this run
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:74: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:74: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:333: RuntimeWarning: divide by zero encountered in divide
+  pvals = stats.norm.sf(abs((standard-central_est)/ se))*2
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/scipy/stats/_distn_infrastructure.py:2087: RuntimeWarning: divide by zero encountered in divide
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:333: RuntimeWarning: divide by zero encountered in divide
+  pvals = stats.norm.sf(abs((standard-central_est)/ se))*2
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/scipy/stats/_distn_infrastructure.py:2087: RuntimeWarning: divide by zero encountered in divide
+  x = np.asarray((x - loc)/scale, dtype=dtyp)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:101: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:73: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:101: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:141: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:74: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:102: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:414: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcross) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py:451: RuntimeWarning: Mean of empty slice
+  evalmean = np.nanmean(diffcrossE) #if crossing multiple times take the mean
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py:92: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py:98: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+starting computation for fut_NorESM_RCP45_Volc
+max_runs28
+Model number:
+26
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/offset11y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+50
+58
+62
+66
+77
+85
+114
+120
+126
+136
+140
+143
+147
+153
+158
+162
+170
+183
+208
+215
+225
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_hadcrut_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+26
+Minimum MSE: 2.467560885714241e-09
+Minimum MSE Index: 33
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.01011621741551949 -2.835046947188791
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta2_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_method.py
+CONSISTENCY CHECK
+OHCA + surf = 208.918859775674
+sum TOA = 197.11088264055888
+Error:
+-0.05990525219577821
+OHCA_scale:
+0.9433689319745979
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_all_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_human_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_tot_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_for_halfU_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_forec_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL_10y_IPCC_method.py
+evaluating 12 of 0.1°C thresholds, starting at 1.1°C
+not found METHOD
+FaIR_all_unB
+not found METHOD
+FaIR_anthro_unB
+not found METHOD
+FaIR_comb_unB
+not found METHOD
+FaIR_nonat_unB
+55
+FaIR_anthro sampled, d llike: -0.031244620641578624
+FaIR_anthro sampled, d llike: -28.88938484622079
+FaIR_nonat sampled, d llike: 0.042359300558989454
+FaIR_nonat sampled, d llike: 0.14368425997724313
+FaIR_all_unB sampled, d llike: -0.5523990440666272
+FaIR_all_unB sampled, d llike: 0.07061194609133403
+FaIR_anthro_unB sampled, d llike: 0.018932710210569414
+FaIR_anthro_unB sampled, d llike: -29.971510985044382
+FaIR_comb_unB sampled, d llike: -0.011660091216578738
+FaIR_comb_unB sampled, d llike: 0.15753842237536003
+FaIR_nonat_unB sampled, d llike: -0.004510484713684981
+FaIR_nonat_unB sampled, d llike: 0.13963207695288396
+FaIR_all sampled, d llike: -19156.22885079629
+FaIR_all sampled, d llike: 0.06276343825810671
+GWI_anthro_AR6 sampled, d llike: -0.09425552707761398
+GWI_tot_AR6 sampled, d llike: -0.0741334928526225
+GWI_anthro_SR15 sampled, d llike: -0.24519160680356
+GWI_tot_SR15 sampled, d llike: -0.5060318796448691
+GWI_anthro sampled, d llike: -0.23450999359062008
+GWI_tot sampled, d llike: -0.37431956531994715
+GWI_anthro_CGWL sampled, d llike: -0.2487938430877541
+GWI_tot_CGWL sampled, d llike: -0.6439580983071895
+CGWL10y_pUKCP sampled, d llike: 0.003220308494953028
+CGWL10y_sUKCP sampled, d llike: -0.08608376672385043
+CGWL10y_sfUKCP sampled, d llike: -0.015649810329218194
+            method_name           method_class c/r  smooth_r  avg_unc.(1se)  #q<0.5  #q<0.1    log-likeli       RMS      bias        tlog-l      100log-l    100RMS   100bias           l15           l20    bias50    Edyrs15       Edyrs20    Mdyrs15       Mdyrs20    Fdyrs15       Fdyrs20     EdyrsA    RMSyrsA  ncEdyrs     e100log-l   e100RMS  e100bias          el15          el20   ebias50   eEdyrs15   eEdyrs20   eMdyrs15   eMdyrs20   eFdyrs15   eFdyrs20    eEdyrsA   eRMSyrsA  nceEdyrs
+78            EBMKF_ta4            43/2_Kalman   c     4.060       0.078448       8       0      1.270132  0.066395 -0.001058  2.921304e+02  9.404744e+01  0.080845  0.049701  5.626617e+00  5.687941e+00  0.067673  -0.333333  4.166667e-01  -0.333333  4.166667e-01  -0.333333  4.166667e-01  -3.342593   5.000720     16.0  9.971391e+01  0.077009 -0.007716  5.226724e+00  1.346213e+00 -0.052238   2.166667   5.833333   2.166667   5.833333   2.166667   5.833333   0.997863   0.997863      17.0
+44              GAM_AR1           42/4_GAM_AR1   c     7.931       0.055786     119      87     -5.410087  0.143790 -0.074445 -1.141528e+03  8.795948e+01  0.085825  0.007585  5.447197e+00  9.089027e-01 -0.020521  10.500000  3.250000e+00  19.583333  3.250000e+00   1.416667  3.250000e+00   0.645833   3.799633     16.2 -5.025911e+01  0.153599 -0.049832  5.569953e+00  1.114799e-02 -0.140432  13.000000   8.666667  22.083333   8.666667   3.916667   8.666667   4.702991   4.702991      19.2
+72        FaIR_comb_unB          43/1_ERF_FaIR   c     4.640       0.084820       0       0      1.090055  0.083166  0.013647  1.744088e+02  8.550891e+01  0.093436  0.048124  3.005182e+00  3.940744e+00  0.017285   4.541667 -1.083333e+00  16.583333 -1.083333e+00  -7.500000 -1.083333e+00  -1.150463   4.960800     21.2  3.307517e+01  0.112652 -0.009293  2.721598e+00  2.590571e+00 -0.102625   7.041667   4.333333  19.083333   4.333333  -5.000000   4.333333   3.574786   3.574786      24.2
+19          hinge75meet           42/2_LT_Fits   c     2.588       0.069600      21      10      1.164988  0.068883  0.020909  1.805731e+02  8.474859e+01  0.077461  0.032318  5.754247e+00  4.195006e+00  0.034784  -2.583333  2.500000e+00  -2.583333  2.500000e+00  -2.583333  2.500000e+00  -1.854167   4.890408     12.0  1.047815e+02  0.078765 -0.025098  6.275527e+00  6.667797e-01 -0.085127  -0.083333   7.916667  -0.083333   7.916667  -0.083333   7.916667   2.288462   2.288462      13.0
+28            etrend30y           42/3_ST_Fits   c     3.125       0.048256     100      19      0.977096  0.075050 -0.004515  2.061672e+02  7.744226e+01  0.094987  0.011642  6.285092e+00  8.734008e-01  0.000327   2.000000  3.750000e+00   2.000000  3.750000e+00   2.000000  3.750000e+00   0.093750   2.708894     15.0 -8.060076e+00  0.157994 -0.045775  6.759552e+00  8.347079e-03 -0.119583   4.500000   9.166667   4.500000   9.166667   4.500000   9.166667   3.464744   3.464744      16.0
+66           FaIR_nonat          43/1_ERF_FaIR   c     2.620       0.107211     106       0      0.337484  0.153043 -0.114345  5.399746e+01  7.623277e+01  0.100626 -0.052836  3.105679e+00  2.535889e+00 -0.056024   0.500000  6.500000e+00   0.500000  6.500000e+00   0.500000  6.500000e+00   2.586806   6.220963     14.0  5.356362e+01  0.129841 -0.110253  2.993120e+00  1.021951e+00 -0.175934   3.000000  11.916667   3.000000  11.916667   3.000000  11.916667   8.208333   8.208333      14.0
+70      FaIR_anthro_unB          43/1_ERF_FaIR   c     1.997       0.090218      57       0      0.664375  0.115755 -0.019955  1.063001e+02  7.269933e+01  0.105835  0.054639  2.304995e+00  4.071779e+00  0.054565  -7.416667 -3.333333e-01  -7.416667 -3.333333e-01  -7.416667 -3.333333e-01  -4.034722   7.018618     12.0  1.006559e+02  0.065263 -0.002778  2.740213e+00  3.343025e+00 -0.065345  -4.916667   5.083333  -4.916667   5.083333  -4.916667   5.083333   0.647436   0.647436      13.0
+64          FaIR_anthro          43/1_ERF_FaIR   c     2.014       0.090191     123       0     -0.681599  0.169911 -0.125977 -1.090559e+02  7.110786e+01  0.104154 -0.051374  3.587595e+00  2.569714e+00 -0.051422  -0.416667  6.166667e+00  -0.416667  6.166667e+00  -0.416667  6.166667e+00   2.638889   6.358958     12.0  5.133624e+01  0.126822 -0.108791  3.417062e+00  1.022687e+00 -0.171332   2.083333  11.583333   2.083333  11.583333   2.083333  11.583333   8.262821   8.262821      12.0
+26       lowess1dg20wnc           42/3_ST_Fits   c     3.358       0.112766       6       5      1.005271  0.069953 -0.001442  2.312123e+02  6.868740e+01  0.089176  0.009712  2.601462e+00  1.538960e+00 -0.006651  11.208333  2.416667e+00  20.666667  2.416667e+00   1.750000  2.416667e+00   0.475694   4.015360     16.2  4.589445e+01  0.155066 -0.047705  2.781024e+00  4.451379e-01 -0.126561  13.708333   7.833333  23.166667   7.833333   4.250000   7.833333   4.616453   4.616453      19.2
+94       CGWL10y_sfUKCP  44/44_EarthModel_CGWL   c     6.586       0.053937       9       1      1.105052  0.069072  0.003929  2.431113e+02  6.503429e+01  0.087869  0.041182  5.699520e+00  6.096619e+00  0.028791  -0.166667  8.333333e-02  -0.166667  8.333333e-02  -0.166667  8.333333e-02  -2.413194   3.410076     17.0 -9.733855e+01  0.133204 -0.015841  3.609201e+00  8.071711e-08 -0.091834   2.333333   5.500000   2.333333   5.500000   2.333333   5.500000   1.500000   1.500000      19.0
+74       FaIR_nonat_unB          43/1_ERF_FaIR   c     2.591       0.085844       0       0      0.881982  0.100570  0.014447  1.411172e+02  6.094041e+01  0.111382  0.071204  2.185327e+00  3.959584e+00  0.068039  -8.333333 -1.500000e+00  -8.333333 -1.500000e+00  -8.333333 -1.500000e+00  -5.055556   7.647092     12.0  1.020903e+02  0.069938  0.013787  2.741271e+00  3.652987e+00 -0.051871  -5.833333   3.916667  -5.833333   3.916667  -5.833333   3.916667  -0.500000   0.500000      13.0
+15          butterworth           42/2_LT_Fits   c    13.839       0.176221       1       1      0.694095  0.098544 -0.026065  9.786745e+01  4.659462e+01  0.106843 -0.017766  2.103896e+00  1.837310e+00 -0.039270  11.916667  5.833333e-01  21.583333  5.833333e-01   2.250000  5.833333e-01   0.761574   4.414217     26.2  2.471169e+01  0.179085 -0.075183  2.753688e+00  6.836090e-01 -0.159180   4.750000   6.000000   4.750000   6.000000   4.750000   6.000000   3.813034   3.813034      25.0
+35       lowess1dt20wAR           42/3_ST_Fits   c     6.910       0.117135       5       0      0.918245  0.106155  0.001372  2.111963e+02  4.588231e+01  0.144950  0.013145  2.139181e+00  1.627397e+00 -0.013051   3.388889 -3.166667e+00  21.583333 -3.166667e+00 -12.916667 -3.166667e+00  -1.151042   3.470018     23.3  2.197186e+01  0.198827 -0.044272  2.230056e+00  1.123255e+00 -0.132961  -3.208333   2.250000 -10.416667   2.250000 -10.416667   2.250000   2.003205   2.003205      22.2
+93        CGWL10y_sUKCP  44/44_EarthModel_CGWL   c     3.283       0.054869      53       2      0.890013  0.073556  0.004935  1.958029e+02  4.153050e+01  0.092840  0.045569  6.434483e+00  5.329639e+00  0.032277  -0.250000  1.723492e-10  -0.250000  1.723492e-10  -0.250000  1.723492e-10  -2.246528   3.267559     15.0 -2.545336e+02  0.135371 -0.011454  4.548756e+00  4.820148e-22 -0.088347   2.250000   5.416667   2.250000   5.416667   2.250000   5.416667   1.660256   1.660256      17.0
+29       lowess1dt30wnc           42/3_ST_Fits   c     4.740       0.152652       6       5      0.801023  0.086387  0.001249  1.842353e+02  4.053340e+01  0.115951  0.012915  1.759170e+00  1.293534e+00 -0.009379  12.000000  1.723492e-10  21.916667  1.723492e-10   2.083333  1.723492e-10   0.354167   3.900751     19.2  2.547198e+01  0.180133 -0.044502  1.900690e+00  6.163473e-01 -0.129290   4.583333   5.416667   4.583333   5.416667   4.583333   5.416667   3.134615   3.134615      21.0
+33     lowess1dt20wARMA           42/3_ST_Fits   c     7.066       0.141715       0       0      0.905334  0.108710  0.000074  1.946468e+02  4.025792e+01  0.144950  0.013145  1.911893e+00  1.430263e+00 -0.013051   3.388889 -3.166667e+00  21.583333 -3.166667e+00 -12.916667 -3.166667e+00  -1.151042   3.470018     23.3  2.199069e+01  0.198827 -0.044272  2.009557e+00  1.102336e+00 -0.132961  -3.208333   2.250000 -10.416667   2.250000 -10.416667   2.250000   2.003205   2.003205      22.2
+92        CGWL10y_pUKCP  44/44_EarthModel_CGWL   c     1.476       0.137237      10       0      0.733146  0.118901  0.012455  1.678905e+02  3.577731e+01  0.173349  0.122029  1.925737e+00  1.172171e+00  0.227670  -1.166667 -3.166667e+00  -1.166667 -3.166667e+00  -1.166667 -3.166667e+00  -5.034722   7.408665     12.0  4.469225e+01  0.119354  0.065006  1.912102e+00  1.390448e+00  0.107045   1.333333   2.250000   1.333333   2.250000   1.333333   2.250000  -1.769231   1.769231      13.0
+48         cubic_spline           42/4_GAM_AR1   c     8.560       0.081195      63      11      0.628330  0.115036  0.006543  1.319494e+02  2.672335e+01  0.138535  0.029710  1.600206e+00  3.864932e+00  0.050592  12.458333  5.000000e-01  21.583333  5.000000e-01   3.333333  5.000000e-01   0.239583   4.376835     18.2 -7.544264e+01  0.190501 -0.027707  2.274137e+00  4.835779e-03 -0.069319   5.833333   5.916667   5.833333   5.916667   5.833333   5.916667   3.506410   3.506410      19.0
+21          OLS_hinge75           42/2_LT_Fits   c     2.956       0.037423      63      28      0.598787  0.069958 -0.008179  9.281205e+01  2.520626e+01  0.072211  0.003220  1.107196e+01  5.802394e-01 -0.003626  -0.166667  4.333333e+00  -0.166667  4.333333e+00  -0.166667  4.333333e+00  -0.375000   4.579544     12.0 -5.684911e+01  0.100622 -0.054196  1.005077e+01  1.043192e-04 -0.123536   2.333333   9.750000   2.333333   9.750000   2.333333   9.750000   3.769231   3.769231      13.0
+46              GAM_AR0           42/4_GAM_AR1   c     6.431       0.051212     164     110     -1.524981  0.142760 -0.070242 -3.217710e+02  2.037159e+01  0.100025  0.009216  2.962294e+00  2.054400e-01 -0.012818  11.625000  3.000000e+00  21.166667  3.000000e+00   2.083333  3.000000e+00   0.788194   4.117962     16.2 -2.567172e+02  0.169007 -0.048201  4.792782e+00  4.793457e-09 -0.132729  14.125000   8.416667  23.666667   8.416667   4.583333   8.416667   4.958333   4.958333      18.2
+37       lowess1dt20wnc           42/3_ST_Fits   c     6.910       0.199032       3       0      0.679213  0.106155  0.001372  1.562191e+02  1.579669e+01  0.144950  0.013145  1.375188e+00  9.710305e-01 -0.013051   3.388889 -3.166667e+00  21.583333 -3.166667e+00 -12.916667 -3.166667e+00  -1.153356   3.469490     23.3  7.016177e+00  0.198827 -0.044272  1.433309e+00  8.929930e-01 -0.132961  -3.208333   2.250000 -10.416667   2.250000 -10.416667   2.250000   2.001068   2.001068      22.2
+31            etrend15y           42/3_ST_Fits   c     6.214       0.059628     113      35      0.552582  0.100907 -0.000031  1.248835e+02  1.130144e+01  0.136802  0.013024  2.256755e+00  1.767689e+00 -0.013867  11.791667 -1.666667e+00  22.000000 -1.666667e+00   1.583333 -1.666667e+00   0.273148   4.328731     19.2  8.385333e+00  0.196131 -0.044393  2.280613e+00  4.622007e-01 -0.133777   4.083333   3.750000   4.083333   3.750000   4.083333   3.750000   2.762821   2.762821      19.0
+2                 raw1y         42/1_Run_Means   c    31.065       0.149305       3       2      0.511063  0.141521  0.002496  1.175445e+02  1.106425e+01  0.192195  0.012602  2.620507e+00  2.223377e+00 -0.004356   1.944444  3.305556e+00  19.416667  1.516667e+01 -13.583333 -5.500000e+00  -0.258796   4.362120     46.3 -2.193142e+01  0.228378 -0.044815  2.743160e+00  2.762012e+00 -0.124266   4.444444   8.722222  21.916667  20.583333 -11.083333  -0.083333   3.549359   3.549359      50.3
+50            Kalman_RW            42/5_Kalman   c     6.391       0.053939      39      11      0.929927  0.078167 -0.021697  2.138833e+02  1.016035e+01  0.103370 -0.032342  1.460196e+00  2.183115e+00 -0.048168  11.375000  1.916667e+00  20.750000  1.916667e+00   2.000000  1.916667e+00   2.614583   4.628049     20.2 -3.006997e+02  0.173997 -0.089759  1.899369e+00  1.917431e-04 -0.168078  13.875000   7.333333  23.250000   7.333333   4.500000   7.333333   6.608974   6.608974      21.2
+56          Kal_flexLin            42/5_Kalman   c     4.825       0.051937      70      23      0.851129  0.077835  0.004180  1.957598e+02  8.256118e+00  0.098171  0.011839  3.428497e+00  3.290570e+00 -0.007345  11.416667  1.083333e+00  21.083333  1.083333e+00   1.750000  1.083333e+00  -0.222222   4.218874     17.2 -3.100287e+02  0.163836 -0.045577  4.838050e+00  2.103877e-08 -0.127255  13.916667   6.500000  23.583333   6.500000   4.250000   6.500000   3.583333   3.583333      19.2
+1                 lag5y         42/1_Run_Means   c     5.994       0.046933     127      43      0.488580  0.091785 -0.016674  1.123734e+02  8.222748e-02  0.122895 -0.023004  1.220406e+00  6.374826e-01 -0.043807  11.916667  1.250000e+00  21.166667  1.250000e+00   2.666667  1.250000e+00   2.777778   5.322526     21.2 -1.519891e+02  0.187098 -0.080421  6.359205e-03  2.693918e-01 -0.163717  14.416667   6.666667  23.666667   6.666667   5.166667   6.666667   6.342949   6.342949      21.2
+0                lag10y         42/1_Run_Means   c     3.003       0.040680     126      52      0.657412  0.079427 -0.039684  1.512048e+02 -3.733474e-01  0.105705 -0.069506  5.620518e-03  4.487161e-01 -0.084500  13.875000  2.666667e+00  22.666667  2.666667e+00   5.083333  2.666667e+00   4.187500   5.442513     17.2 -2.181640e+02  0.186065 -0.126923  1.050433e-02  1.799965e-03 -0.204410   7.583333   8.083333   7.583333   8.083333   7.583333   8.083333   7.599359   7.599359      17.0
+63   cons_hArrh_CO2forc            43/0_Linear   c     1.472       0.205007     139      68    -10.592877  0.177488  0.134472 -2.372804e+03 -7.082588e+00  0.155306  0.092499  9.948999e-01  8.087334e-01  0.023543  -7.500000 -2.833333e+00  -7.500000 -2.833333e+00  -7.500000 -2.833333e+00  -5.416667  12.243668     11.0 -8.607151e+00  0.146627  0.035083  1.054769e+00  8.334697e-01 -0.096367  -5.000000   2.583333  -5.000000   2.583333  -5.000000   2.583333   0.500000   0.500000      11.0
+41       lowess2dt20wnc           42/3_ST_Fits   c    12.815       0.263246       3       0      0.418371  0.140301  0.002455  9.622539e+01 -9.593430e+00  0.193521  0.014068  1.065696e+00  7.636893e-01 -0.006534   2.666667 -2.666667e+00  20.500000 -5.916667e+00 -13.666667 -5.916667e+00  -0.598380   4.541711     30.3 -1.405153e+01  0.229844 -0.043348  1.140027e+00  7.835855e-01 -0.126444   5.166667   2.750000  23.000000   6.000000 -11.166667  -0.500000   2.660256   2.660256      33.3
+12         Bayes_seq_CP           42/2_LT_Fits   c     4.025       0.052252     122      83    -11.587980  0.164953 -0.080754 -2.213304e+03 -1.153256e+01  0.123068 -0.001985  8.181384e+00  6.486071e+00 -0.050386   9.625000  8.333333e-01  22.333333  8.333333e-01  -3.083333  8.333333e-01   0.423611   3.211714     15.2  9.281862e+01  0.189187 -0.059402  1.101623e+01  4.264983e-01 -0.170297  -0.583333   6.250000  -0.583333   6.250000  -0.583333   6.250000   3.929487   3.929487      16.0
+39       lowess1dt10wnc           42/3_ST_Fits   c    12.791       0.286648       0       0      0.405633  0.133639  0.002610  9.329568e+01 -1.507575e+01  0.183813  0.013973  9.586010e-01  7.253679e-01 -0.004373   2.583333 -2.750000e+00  20.166667 -5.916667e+00 -13.583333 -5.916667e+00  -0.754630   4.948283     31.3 -1.877821e+01  0.222493 -0.043443  1.008802e+00  7.450327e-01 -0.124283   5.083333   2.666667  22.666667   5.833333 -11.083333  -0.500000   3.118590   3.118590      33.3
+60       removeGreensfx         42/6_Remove_IV   c    19.189       0.060000      44      20     -0.019523  0.117392 -0.022904 -2.147549e+00 -1.863796e+01  0.123077 -0.022826  5.624509e+00  4.737305e-01 -0.042748   8.972222  5.000000e-01  21.500000  5.000000e-01   2.083333  5.000000e-01   2.447917   4.992814     32.3 -2.557424e+02  0.185282 -0.080243  4.440783e+00  2.884577e-02 -0.162658   5.208333   5.916667   5.833333   5.916667   4.583333   5.916667   5.593483   5.593483      31.2
+23        etrend30y_3CS           42/3_ST_Fits   c     3.412       0.048256     134      47      0.486354  0.090331 -0.020718  1.026207e+02 -2.425224e+01  0.122246 -0.026470  6.285092e+00  8.734008e-01  0.000327   2.000000  3.750000e+00   2.000000  3.750000e+00   2.000000  3.750000e+00   1.288194   3.297748     15.0 -1.251462e+01  0.158724 -0.083886  6.759552e+00  8.347079e-03 -0.119583   4.500000   9.166667   4.500000   9.166667   4.500000   9.166667   4.567308   4.567308      16.0
+43            offset11y           42/3_ST_Fits   c     2.639       0.039690     191     122     -2.165529  0.095823  0.065958 -4.980717e+02 -4.712597e+01  0.084147  0.031721  1.151538e+01  4.042833e+00  0.018667   0.500000  6.666667e-01   0.500000  6.666667e-01   0.500000  6.666667e-01  -1.562500   2.609300     16.0  3.420937e+01  0.134631 -0.025696  6.524923e+00  4.913695e-02 -0.101244   3.000000   6.083333   3.000000   6.083333   3.000000   6.083333   2.333333   2.333333      18.0
+54      Kal_flexLin_ocn            42/5_Kalman   c     5.350       0.047851     137      75     -0.279042  0.101705  0.038902 -6.417977e+01 -4.967657e+01  0.105052  0.022993  4.546781e+00  4.733600e+00  0.004063  11.333333  7.500000e-01  21.083333  7.500000e-01   1.583333  7.500000e-01  -0.541667   4.384348     17.2 -4.077117e+02  0.164975 -0.034424  6.142863e+00  3.595288e-10 -0.115847  13.833333   6.166667  23.583333   6.166667   4.083333   6.166667   3.662393   3.662393      20.2
+52        Kalman_RW_ocn            42/5_Kalman   c     7.571       0.051089     133      52      0.143709  0.098418  0.034403  3.305313e+01 -5.272531e+01  0.115653  0.028314  5.444111e+00  7.905907e+00  0.028364  10.833333 -1.333333e+00  20.416667 -1.333333e+00   1.250000 -1.333333e+00  -1.337963   4.666984     19.2 -2.548223e+02  0.157355 -0.029102  5.768275e+00  9.825950e-03 -0.091546  13.333333   4.083333  22.916667   4.083333   3.750000   4.083333   2.895299   2.895299      22.2
+90      GWI_anthro_CGWL     43/3_Human_Induced   c     2.696       0.082422     108      57     -1.667122  0.173557 -0.117888 -2.333971e+02 -5.517986e+01  0.147340 -0.094095  7.303195e-01  4.382928e+00 -0.023434   6.083333  3.583333e+00   6.083333  3.583333e+00   6.083333  3.583333e+00   3.868056   6.639920     12.0 -1.639701e+02  0.155617 -0.151511  9.759667e-02  2.612220e-01 -0.143344   8.583333   9.000000   8.583333   9.000000   8.583333   9.000000   7.967949   7.967949      13.0
+68         FaIR_all_unB          43/1_ERF_FaIR   c     9.771       0.087246       7       3      0.041308  0.159372  0.012030  6.609344e+00 -5.944635e+01  0.196387  0.001976  3.935378e+00  4.250438e+00 -0.084250   4.500000 -5.833333e-01  19.250000 -5.833333e-01  -5.666667 -5.833333e-01  -0.684028   4.875008     24.3 -3.500190e+02  0.255854 -0.055440  2.869398e+00  5.508009e-01 -0.204161   7.000000   4.833333  21.750000   4.833333  -3.166667   4.833333   3.164530   3.164530      24.3
+88           GWI_anthro     43/3_Human_Induced   c     2.465       0.079229     111      69     -1.865519  0.175961 -0.121839 -2.611727e+02 -7.259781e+01  0.152614 -0.099123  4.873091e-01  4.354327e+00 -0.024666   6.416667  3.666667e+00   6.416667  3.666667e+00   6.416667  3.666667e+00   4.069444   6.795457     12.0 -1.907258e+02  0.161018 -0.156540  4.788967e-02  2.179558e-01 -0.144576   8.916667   9.083333   8.916667   9.083333   8.916667   9.083333   8.750000   8.750000      13.0
+86      GWI_anthro_SR15     43/3_Human_Induced   c     2.391       0.078628     111      66     -1.885390  0.174903 -0.120324 -2.639546e+02 -7.452853e+01  0.152236 -0.096496  4.518263e-01  4.787133e+00 -0.019649   6.416667  3.166667e+00   6.416667  3.166667e+00   6.416667  3.166667e+00   3.854167   6.671309     12.0 -1.781893e+02  0.158764 -0.153912  4.316930e-02  3.436018e-01 -0.139559   8.916667   8.583333   8.916667   8.583333   8.916667   8.583333   8.544872   8.544872      13.0
+10              quartic           42/2_LT_Fits   c     3.471       0.061070      81      30     -0.569071  0.107562  0.002412 -7.966997e+01 -7.970947e+01  0.111180  0.051848  3.151902e+00  1.264213e+00 -0.012584 -10.833333  4.000000e+00 -13.083333  4.000000e+00 -13.083333  4.000000e+00  -2.812500   5.401501     16.2 -3.527132e+01  0.147616 -0.005569  2.490131e+00  1.140240e-01 -0.132494  -8.333333   9.416667 -10.583333   9.416667 -10.583333   9.416667   1.500000   1.500000      17.2
+58  removeMEI_volc_cons         42/6_Remove_IV   c    52.379       0.071755      69      30     -1.224775  0.168823  0.011987 -1.457482e+02 -1.289420e+02  0.176744 -0.003064  6.011420e+00  5.454445e-01 -0.055683   1.750000  6.305556e+00  18.416667  1.625000e+01 -13.250000  3.333333e-01   0.016435   4.979102     52.4 -3.235787e+02  0.228771 -0.060481  2.434612e+00  5.652225e+00 -0.175593   4.250000  11.722222  20.916667  21.666667 -10.750000   5.750000   3.649893   3.649893      55.4
+84       GWI_anthro_AR6     43/3_Human_Induced   c     2.105       0.072440     111      85     -4.940706  0.211861 -0.173180 -6.916989e+02 -3.755711e+02  0.204363 -0.167228  1.594187e-03  5.648987e-01 -0.079738  10.833333  7.000000e+00  10.833333  7.000000e+00  10.833333  7.000000e+00   7.930556   9.838276     12.0 -7.047734e+02  0.227691 -0.224645  1.441819e-05  9.267769e-05 -0.199648  13.333333  12.416667  13.333333  12.416667  13.333333  12.416667  13.141026  13.141026      12.0
+17       TheilSen_h7075           42/2_LT_Fits   c     2.349       0.030029     118      72     -1.844977  0.087384 -0.008312 -2.859714e+02 -3.786457e+02  0.103380  0.001109  1.055402e+01  8.716575e+00  0.044771  -0.500000  1.333333e+00  -0.500000  1.333333e+00  -0.500000  1.333333e+00  -0.652778   6.274858     12.0 -9.006773e+01  0.068365 -0.056308  1.361319e+00  1.114944e-03 -0.075140   2.000000   6.750000   2.000000   6.750000   2.000000   6.750000   3.365385   3.365385      13.0
+89              GWI_tot     43/3_Human_Induced   c     6.496       0.059594     136     128     -4.659369  0.223851 -0.197127 -6.523116e+02 -4.522766e+02  0.236089 -0.202452  9.795648e-03  1.424806e-02 -0.225669  12.944444  1.479167e+01  20.416667  1.825000e+01   8.083333  1.133333e+01  11.109954  12.675566     16.3 -8.549026e+02  0.301028 -0.259869  4.366893e-05  1.625763e-06 -0.345579  15.444444  16.750000  22.916667  16.750000  10.583333  16.750000  15.489316  15.489316      15.3
+87         GWI_tot_SR15     43/3_Human_Induced   c     3.168       0.056665     133     128     -5.334177  0.219050 -0.196941 -7.467848e+02 -5.013758e+02  0.229905 -0.201737  1.015791e-02  2.497570e-01 -0.225391   8.083333  9.166667e+00   8.083333  1.941667e+01   8.083333  1.500000e+00  10.711806  12.463517     14.0 -1.044497e+03  0.302254 -0.259154  4.628807e-04  1.553180e-21 -0.345301  10.583333   9.458333  10.583333  12.000000  10.583333   6.916667  15.051282  15.051282      12.0
+91         GWI_tot_CGWL     43/3_Human_Induced   c     2.876       0.062331     140     118     -5.153425  0.201079 -0.188871 -7.214795e+02 -5.384868e+02  0.202173 -0.193404  9.029580e-03  9.995991e-05 -0.208429  16.250000  1.725000e+01  20.000000  2.133333e+01  12.500000  1.316667e+01  11.052083  12.040784     15.2 -1.064641e+03  0.267355 -0.250821  1.118567e-03  1.211761e-19 -0.328340  18.750000  18.583333  22.500000  18.583333  15.000000  18.583333  14.375000  14.375000      14.2
+82             EBMKF_ta            43/2_Kalman   c     0.533       0.036951     176     127     -2.757655  0.103365  0.062108 -6.342605e+02 -6.513649e+02  0.140810  0.100294  4.286083e-03  4.156159e-02  0.085701 -10.916667  3.333333e+00 -10.916667  3.333333e+00 -10.916667  3.333333e+00  -5.784722   9.155896     12.0 -3.664417e+02  0.114976  0.042877  5.794413e-02  3.623013e-05 -0.034209  -8.416667   8.750000  -8.416667   8.750000  -8.416667   8.750000  -1.865385   1.865385      13.0
+24        opt_clim_norm           42/3_ST_Fits   c    11.441       0.042244     103      58     -6.039642  0.080330 -0.010045 -1.389118e+03 -7.288272e+02  0.086187 -0.026460  3.277435e-01  2.356329e+00 -0.020833   5.916667  2.500000e-01   5.916667  2.500000e-01   5.916667  2.500000e-01   1.002894   3.169833     21.0 -6.069257e+02  0.149313 -0.083877  4.983798e+00  1.055336e+00 -0.140743   8.416667   5.666667   8.416667   5.666667   8.416667   5.666667   6.746261   6.746261      21.0
+80            EBMKF_ta2            43/2_Kalman   c     2.019       0.037111     122      87     -3.040389  0.106381  0.062212 -6.992895e+02 -9.220859e+02  0.161784  0.133244  6.821507e-02  1.243296e+01  0.147660 -10.750000  8.333333e-02 -13.166667  8.333333e-02 -13.166667  8.333333e-02  -6.545139   7.792827     16.2 -6.223758e+02  0.138263  0.075827  2.928679e-01  5.420868e-04  0.027750  -8.250000   5.500000 -10.666667   5.500000 -10.666667   5.500000  -3.009615   3.009615      17.2
+59       removeMEI_cons         42/6_Remove_IV   c    50.134       0.065116      78      46    -10.751003  0.168795  0.006852 -1.182610e+03 -1.133139e+03  0.178884  0.000586  9.579143e+00  6.592234e-01 -0.044675   1.708333  3.291667e+00  18.583333  1.608333e+01 -13.250000 -5.250000e+00   0.093750   4.026027     56.4 -1.665745e+03  0.226575 -0.056831  2.880389e+00  1.502009e+01 -0.164586   4.208333   8.708333  21.083333  21.500000 -10.750000   0.166667   3.708547   3.708547      59.4
+85          GWI_tot_AR6     43/3_Human_Induced   c     2.017       0.046847     140     140    -13.261115  0.264131 -0.252162 -1.856556e+03 -1.328177e+03  0.282757 -0.271212  1.135185e-06  2.731159e-08 -0.285780  13.083333  2.016667e+01  13.083333  2.016667e+01  13.083333  2.016667e+01  15.027778  15.988639     10.0 -2.247121e+03  0.349163 -0.328629  1.297332e-09  1.051600e-36 -0.405690  15.583333  25.000000  15.583333  15.000000  15.583333  15.000000  19.147436  19.147436       8.0
+61    OLS_refit_CO2forc            43/0_Linear   c     1.944       0.022823     209     164    -16.869414  0.127810 -0.057180 -3.778749e+03 -1.613248e+03  0.170488 -0.143800  3.086168e-04  5.644060e-11 -0.164912   5.833333  2.008333e+01   5.833333  2.008333e+01   5.833333  2.008333e+01  10.263889  13.246811     10.0 -2.720511e+03  0.217258 -0.201217  6.409390e-07  1.715627e-21 -0.284822   8.333333  25.000000   8.333333  15.000000   8.333333  15.000000  14.730769  14.730769       9.0
+7             OLS_refit           42/2_LT_Fits   c     0.860       0.029421     133     129    -19.678050  0.204837 -0.159665 -2.754927e+03 -2.414380e+03  0.245873 -0.237350  1.157111e-13  3.964083e-18 -0.232994  15.958333  1.675000e+01  17.916667  1.675000e+01  14.000000  1.675000e+01  14.607639  14.960253     13.2 -3.550207e+03  0.304716 -0.294767  1.325394e-16  4.889617e-32 -0.352905  18.458333  22.166667  20.416667  22.166667  16.500000  22.166667  19.304487  19.304487      13.2
+76             FaIR_all          43/1_ERF_FaIR   c     9.739       0.005607     159     159 -21235.745476  0.250177 -0.187219 -3.397719e+06 -2.324831e+06  0.286061 -0.207991  0.000000e+00  0.000000e+00 -0.294220  12.861111  1.566667e+01  21.750000  1.933333e+01   6.000000  1.200000e+01  11.934028  13.402000     22.3 -3.632685e+06  0.364471 -0.265408  0.000000e+00  0.000000e+00 -0.414131  10.916667  17.416667  13.333333  17.416667   8.500000  17.416667  15.331197  15.331197      18.2
+301.049813289
+finished this run
+Model number:
+27
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/offset11y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+50
+58
+62
+66
+77
+85
+114
+121
+133
+137
+141
+144
+148
+153
+158
+208
+215
+220
+225
+232
+238
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_hadcrut_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+27
+Minimum MSE: 4.788550847512063e-10
+Minimum MSE Index: 34
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.009939108492961955 -2.7799798719500255
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta2_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_method.py
+CONSISTENCY CHECK
+OHCA + surf = 208.92033889949394
+sum TOA = 152.5953734578305
+Error:
+-0.3691131923945831
+OHCA_scale:
+0.7298815394576523
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_all_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_human_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_tot_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_for_halfU_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_forec_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL_10y_IPCC_method.py
+evaluating 13 of 0.1°C thresholds, starting at 1.1°C
+not found METHOD
+FaIR_all_unB
+not found METHOD
+FaIR_anthro_unB
+not found METHOD
+FaIR_comb_unB
+not found METHOD
+FaIR_nonat_unB
+55
+FaIR_anthro sampled, d llike: -0.3206189101537339
+FaIR_anthro sampled, d llike: -39.411072866978664
+FaIR_nonat sampled, d llike: 0.021573772273783542
+FaIR_nonat sampled, d llike: 0.07102938559739058
+FaIR_all_unB sampled, d llike: -1.3305448842775633
+FaIR_all_unB sampled, d llike: 0.05303594787166932
+FaIR_anthro_unB sampled, d llike: 0.011588309111669193
+FaIR_anthro_unB sampled, d llike: -37.93305996527663
+FaIR_comb_unB sampled, d llike: -0.0009815309474607847
+FaIR_comb_unB sampled, d llike: 0.13409002282448712
+FaIR_nonat_unB sampled, d llike: -0.003321511333834737
+FaIR_nonat_unB sampled, d llike: 0.07061095319294486
+FaIR_all sampled, d llike: -32836.18562622246
+FaIR_all sampled, d llike: 0.06053912101651249
+GWI_anthro_AR6 sampled, d llike: -0.1247931360993686
+GWI_tot_AR6 sampled, d llike: -0.33491263288538065
+GWI_anthro_SR15 sampled, d llike: -0.14632895757768594
+GWI_tot_SR15 sampled, d llike: -0.6016565271545877
+GWI_anthro sampled, d llike: -0.18564415040608118
+GWI_tot sampled, d llike: -0.6175873431133141
+GWI_anthro_CGWL sampled, d llike: -0.20545843632524552
+GWI_tot_CGWL sampled, d llike: -1.2672500958310833
+CGWL10y_pUKCP sampled, d llike: 0.013777705519494199
+CGWL10y_sUKCP sampled, d llike: -0.3937722227903857
+CGWL10y_sfUKCP sampled, d llike: -0.24561149817601013
+            method_name           method_class c/r  smooth_r  avg_unc.(1se)  #q<0.5  #q<0.1    log-likeli       RMS      bias        tlog-l      100log-l    100RMS   100bias           l15           l20    bias50    Edyrs15    Edyrs20    Mdyrs15    Mdyrs20    Fdyrs15    Fdyrs20     EdyrsA    RMSyrsA  ncEdyrs     e100log-l   e100RMS  e100bias          el15          el20   ebias50   eEdyrs15   eEdyrs20   eMdyrs15   eMdyrs20   eFdyrs15   eFdyrs20    eEdyrsA   eRMSyrsA  nceEdyrs
+78            EBMKF_ta4            43/2_Kalman   c     3.985       0.077183       5       0      1.304410  0.064175 -0.033109  3.000144e+02  1.031158e+02  0.074410 -0.019576  3.787838e+00  3.682683e+00 -0.058716  -3.083333   5.416667  -3.083333   5.416667  -3.083333   5.416667   2.227564   3.238412     14.0 -9.524145e+01  0.157139 -0.135104  3.260425e+00  9.022324e-01 -0.168222   3.000000  14.083333   3.000000  14.083333   3.000000  14.083333   8.772436   8.772436      14.0
+66           FaIR_nonat          43/1_ERF_FaIR   c     2.682       0.109364      78       0      0.261782  0.156370 -0.112841  4.188506e+01  8.084371e+01  0.087597 -0.038924  3.076053e+00  2.706355e+00 -0.081131  -0.500000   5.666667  -0.500000   5.666667  -0.500000   5.666667   5.179487   8.439136     12.0  2.644438e+01  0.159133 -0.154453  1.522753e+00  1.256042e+00 -0.190638   5.583333  14.333333   5.583333  14.333333   5.583333  14.333333  11.275641  11.275641      12.0
+64          FaIR_anthro          43/1_ERF_FaIR   c     2.251       0.092619     105      16     -1.131045  0.173010 -0.120047 -1.809673e+02  7.996493e+01  0.089037 -0.029818  3.153677e+00  3.608110e+00 -0.076651  -0.583333   5.666667  -0.583333   5.666667  -0.583333   5.666667   4.756410   8.285439     12.0  2.401923e+01  0.150838 -0.145347  1.774148e+00  1.103299e+00 -0.186157   5.500000  14.333333   5.500000  14.333333   5.500000  14.333333  10.852564  10.852564      12.0
+72        FaIR_comb_unB          43/1_ERF_FaIR   c     5.067       0.085672       0       0      1.013441  0.088874  0.002753  1.621505e+02  7.475843e+01  0.100239  0.039767  1.283473e+00  4.411878e+00  0.011184  -0.083333   0.027778  -5.500000   4.000000  -5.500000  -3.666667  -1.786325   3.171101     19.2 -1.393270e+01  0.126209 -0.075762  3.827078e+00  3.658698e+00 -0.098322   6.000000   8.694444  11.416667  12.666667   0.583333   5.000000   4.764957   4.764957      19.2
+19          hinge75meet           42/2_LT_Fits   c     2.581       0.081548      20       7      1.090000  0.084689 -0.015170  1.689500e+02  6.584292e+01  0.102466 -0.029839  3.122032e+00  4.380993e+00 -0.039834   2.166667   1.250000   2.166667   1.250000   2.166667   1.250000   2.628205   4.385290     14.0  2.517649e+00  0.171709 -0.145368  5.142951e-01  6.170612e-01 -0.149340   8.250000   9.916667   8.250000   9.916667   8.250000   9.916667   9.173077   9.173077      14.0
+86      GWI_anthro_SR15     43/3_Human_Induced   c     2.213       0.083502      49      26     -0.972405  0.155811 -0.097604 -1.361367e+02  6.493998e+01  0.106710 -0.053243  6.108009e+00  5.960424e+00 -0.035857   0.416667   1.000000   0.416667   1.000000   0.416667   1.000000   2.243590   3.640055     13.0 -1.620208e+02  0.175271 -0.168771  4.405884e-01  9.458124e-01 -0.145363   6.500000   9.666667   6.500000   9.666667   6.500000   9.666667   8.788462   8.788462      13.0
+90      GWI_anthro_CGWL     43/3_Human_Induced   c     2.461       0.087252      37      25     -0.936327  0.156687 -0.095339 -1.310858e+02  6.467702e+01  0.105140 -0.050869  6.116012e+00  5.798344e+00 -0.039691   0.083333   1.583333   0.083333   1.583333   0.083333   1.583333   1.653846   2.606083     13.0 -1.519306e+02  0.172361 -0.166398  6.143533e-01  8.106854e-01 -0.149197   6.166667  10.250000   6.166667  10.250000   6.166667  10.250000   8.198718   8.198718      13.0
+70      FaIR_anthro_unB          43/1_ERF_FaIR   c     2.245       0.092613      67       0      0.482410  0.125365 -0.014042  7.718557e+01  6.147730e+01  0.113311  0.076198  2.155133e+00  3.505839e+00  0.029370  -5.166667  -3.916667  -5.166667  -3.916667  -5.166667  -3.916667  -3.272436   4.521923     14.0  1.000707e+02  0.056333 -0.039331  2.976052e+00  2.878138e+00 -0.080136   0.916667   4.750000   0.916667   4.750000   0.916667   4.750000   3.272436   3.272436      14.0
+88           GWI_anthro     43/3_Human_Induced   c     2.262       0.084073      49      27     -1.048199  0.157873 -0.099258 -1.467478e+02  5.822249e+01  0.108933 -0.055912  6.124139e+00  5.770505e+00 -0.040926   0.416667   1.583333   0.416667   1.583333   0.416667   1.583333   2.480769   3.724701     13.0 -1.749659e+02  0.177593 -0.171441  3.825023e-01  7.434647e-01 -0.150432   6.500000  10.250000   6.500000  10.250000   6.500000  10.250000   9.025641   9.025641      13.0
+74       FaIR_nonat_unB          43/1_ERF_FaIR   c     2.687       0.087618      34       0      0.805080  0.106536  0.015948  1.288128e+02  5.484554e+01  0.115788  0.085078  1.488595e+00  3.885056e+00  0.042770  -5.250000  -5.000000  -5.250000  -5.000000  -5.250000  -5.000000  -4.118590   5.169470     15.0  1.128457e+02  0.048990 -0.030451  3.721198e+00  3.501731e+00 -0.066737   0.833333   3.666667   0.833333   3.666667   0.833333   3.666667   2.426282   2.426282      15.0
+15          butterworth           42/2_LT_Fits   c    15.873       0.187274       0       0      0.670003  0.119708 -0.035628  9.447041e+01  3.815823e+01  0.139004 -0.032801  1.338174e+00  3.318923e+00 -0.039105  -0.250000  -0.555556  11.000000  -7.416667  -7.333333  -7.416667   0.599359   3.589351     25.3 -8.315192e+00  0.228076 -0.148330  1.067599e+00  2.143081e+00 -0.148611   5.833333   8.111111  17.083333  14.333333  -1.250000   1.250000   7.144231   7.144231      25.3
+26       lowess1dg20wnc           42/3_ST_Fits   c     3.378       0.113711       6       5      0.878622  0.086217 -0.003627  2.020830e+02  3.769864e+01  0.122664  0.002201  1.555117e+00  1.849649e+00  0.008927  -4.166667  -2.000000  -4.166667  -7.833333  -4.166667  -7.833333  -0.612179   2.633939     17.0 -5.000251e+00  0.185123 -0.113328  2.282323e+00  2.045664e+00 -0.100580   1.916667   6.666667   1.916667  12.500000   1.916667   0.833333   5.932692   5.932692      17.0
+92        CGWL10y_pUKCP  44/44_EarthModel_CGWL   c     1.495       0.137237       7       0      0.617962  0.126658  0.019555  1.415133e+02  2.993258e+01  0.183703  0.150261  1.508893e+00  1.013820e+00  0.228317  -6.000000 -11.666667  -6.000000 -11.666667  -6.000000 -11.666667  -7.384615   9.548515     14.0  3.995378e+01  0.120758  0.033887  1.972679e+00  1.312468e+00  0.117058   0.083333  -3.000000   0.083333  -3.000000   0.083333  -3.000000  -0.839744   0.839744      14.0
+23        etrend30y_3CS           42/3_ST_Fits   c     3.838       0.051657     117      26      0.782236  0.096297 -0.009112  1.650517e+02  2.670941e+01  0.134579 -0.000736  1.009263e+00  3.869612e+00 -0.003604  -3.250000  -5.833333  -3.250000  -5.833333  -3.250000  -5.833333  -1.245192   3.884591     20.0 -6.725880e+01  0.166813 -0.116265  1.127510e+00  3.393903e+00 -0.113110   2.833333   2.833333   2.833333   2.833333   2.833333   2.833333   5.299679   5.299679      20.0
+29       lowess1dt30wnc           42/3_ST_Fits   c     4.789       0.153195      10       5      0.665964  0.113791 -0.000871  1.531718e+02  1.014226e+01  0.168317  0.005255  1.260203e+00  1.351709e+00  0.003251   1.166667  -1.055556  10.250000 -10.166667  -7.916667 -10.166667  -0.606838   4.331881     22.2 -2.377778e+01  0.235832 -0.110274  1.717563e+00  1.427087e+00 -0.106255   7.250000   7.611111  16.333333  15.250000  -1.833333  -1.500000   5.938034   5.938034      22.2
+44              GAM_AR1           42/4_GAM_AR1   c     9.879       0.059919     126      95     -6.733661  0.161451 -0.085316 -1.420803e+03  7.534661e+00  0.120686  0.000510  3.756169e+00  4.781115e+00  0.025378   1.250000  -1.541667   7.500000  -6.833333  -2.666667  -6.833333  -0.473291   3.470882     23.3 -1.018594e+02  0.184663 -0.115019  1.654694e+00  3.409951e+00 -0.084128   7.333333   7.125000  13.583333  12.416667   3.416667   1.833333   6.071581   6.071581      23.3
+2                 raw1y         42/1_Run_Means   c    31.249       0.159367       6       3      0.450682  0.150473  0.000190  1.036568e+02  5.257406e-01  0.211524  0.006851  1.668618e+00  1.557767e+00  0.024869  -3.687500  -3.750000 -10.500000 -11.583333 -10.500000 -11.583333  -0.020833   3.989122     47.4 -4.583431e+01  0.263293 -0.108677  2.178944e+00  2.523238e+00 -0.084637   2.395833   4.916667  14.083333  12.916667  -4.416667  -2.916667   5.092949   5.092949      45.4
+37       lowess1dt20wnc           42/3_ST_Fits   c     6.944       0.199353       7       0      0.590476  0.131339 -0.000439  1.358095e+02 -2.378798e+00  0.192976  0.005722  1.318115e+00  9.915552e-01  0.014405  -2.888889  -3.208333 -11.166667 -12.500000 -11.166667 -12.500000  -0.327991   5.024674     24.3 -2.351103e+01  0.257178 -0.109806  1.578200e+00  1.106970e+00 -0.095101   3.194444   5.458333  16.500000  14.750000  -5.083333  -3.833333   6.216880   6.216880      24.3
+33     lowess1dt20wARMA           42/3_ST_Fits   c     7.109       0.125491       7       5      0.690906  0.134967 -0.001864  1.485448e+02 -6.541833e+00  0.192976  0.005722  1.743185e+00  1.748729e+00  0.014405  -2.888889  -3.208333 -11.166667 -12.500000 -11.166667 -12.500000  -0.321581   5.023344     24.3 -6.916709e+01  0.257178 -0.109806  2.791229e+00  2.029832e+00 -0.095101   3.194444   5.458333  16.500000  14.750000  -5.083333  -3.833333   6.223291   6.223291      24.3
+35       lowess1dt20wAR           42/3_ST_Fits   c     6.944       0.105461      21       7      0.653770  0.131339 -0.000439  1.503671e+02 -1.935404e+01  0.192976  0.005722  1.712496e+00  1.920348e+00  0.014405  -2.888889  -3.208333 -11.166667 -12.500000 -11.166667 -12.500000  -0.321581   5.023344     24.3 -1.009830e+02  0.257178 -0.109806  3.106075e+00  2.273673e+00 -0.095101   3.194444   5.458333  16.500000  14.750000  -5.083333  -3.833333   6.223291   6.223291      24.3
+41       lowess2dt20wnc           42/3_ST_Fits   c    12.787       0.263646       0       0      0.355316  0.160667  0.000031  8.172258e+01 -2.085142e+01  0.232913  0.005400  1.072565e+00  7.437589e-01  0.031031   1.958333  -5.750000   9.083333 -15.750000  -5.166667 -15.750000  -0.143162   5.734317     32.2 -3.224474e+01  0.281168 -0.110129  1.228914e+00  8.532406e-01 -0.078476   8.041667   2.916667  15.166667  14.250000   0.916667  -7.083333   4.619658   4.619658      30.2
+39       lowess1dt10wnc           42/3_ST_Fits   c    12.812       0.286856       0       0      0.351666  0.150680  0.000084  8.088314e+01 -2.207271e+01  0.217595  0.005533  9.693618e-01  6.838249e-01  0.029584   1.083333  -4.541667   8.750000 -14.666667  -6.583333 -14.666667   0.685897   4.573429     31.2 -3.102071e+01  0.269349 -0.109995  1.118537e+00  7.849290e-01 -0.079923   7.166667   4.125000  14.833333  14.333333  -0.500000  -6.000000   5.455128   5.455128      29.2
+21          OLS_hinge75           42/2_LT_Fits   c     2.956       0.044275      85      36      0.302630  0.092778 -0.034323  4.690765e+01 -2.431021e+01  0.109392 -0.042339  3.147649e+00  7.778592e+00 -0.027674   2.083333   0.250000   2.083333   0.250000   2.083333   0.250000   3.057692   4.379866     13.0 -2.574692e+02  0.187573 -0.157868  3.911478e-03  5.742794e-02 -0.137180   8.166667   8.916667   8.166667   8.916667   8.166667   8.916667   9.602564   9.602564      13.0
+63   cons_hArrh_CO2forc            43/0_Linear   c     1.459       0.205007     165      68    -10.692530  0.212010  0.166144 -2.395127e+03 -2.444800e+01  0.234192  0.168153  8.904241e-01  7.908180e-01  0.030681 -12.166667  -7.666667 -12.166667  -7.666667 -12.166667  -7.666667  -2.134615  15.523607     10.0 -9.886284e+00  0.151783  0.052624  1.042714e+00  8.348850e-01 -0.078826  -6.083333   1.000000  -6.083333   1.000000  -6.083333   1.000000  -0.782051   0.782051      11.0
+94       CGWL10y_sfUKCP  44/44_EarthModel_CGWL   c     6.547       0.054298      48       7      0.461838  0.085645  0.001054  1.016043e+02 -4.395705e+01  0.116020  0.037107  7.343006e-01  5.764758e+00  0.042837  -5.583333  -3.250000  -5.583333 -10.333333  -5.583333 -10.333333  -2.744658   4.184217     20.0 -4.791029e+02  0.165308 -0.079267  6.328434e+00  4.429172e+00 -0.068422   0.500000   5.416667   0.500000  12.500000   0.500000  -1.666667   3.800214   3.800214      20.0
+48         cubic_spline           42/4_GAM_AR1   c     8.613       0.087910      49      28      0.183168  0.141200 -0.002641  3.846525e+01 -7.483888e+01  0.190071  0.005855  4.429645e-02  3.690671e+00 -0.003389  -7.083333  -1.166667  -7.083333  -9.666667  -7.083333  -9.666667  -2.724359   5.427086     21.0 -1.994986e+02  0.252966 -0.109674  2.890983e+00  3.624685e+00 -0.112895  -1.000000   7.500000  -1.000000  15.000000  -1.000000  -1.000000   3.820513   3.820513      21.0
+28            etrend30y           42/3_ST_Fits   c     3.109       0.051657     110      29      0.292697  0.100373 -0.008518  6.175897e+01 -7.713732e+01  0.141517  0.000613  1.009263e+00  3.869612e+00 -0.003604  -3.250000  -5.833333  -3.250000  -5.833333  -3.250000  -5.833333  -1.043269   4.315565     19.0 -6.521758e+01  0.187810 -0.114916  1.127510e+00  3.393903e+00 -0.113110   2.833333   2.833333   2.833333   2.833333   2.833333   2.833333   5.501603   5.501603      19.0
+93        CGWL10y_sUKCP  44/44_EarthModel_CGWL   c     3.314       0.055102      62      14      0.105443  0.092261  0.001804  2.319745e+01 -8.278591e+01  0.125103  0.040537  1.638799e-01  3.047827e+00  0.044065  -5.666667 -10.333333  -5.666667 -10.333333  -5.666667 -10.333333  -2.869658   4.881423     19.0 -7.498184e+02  0.167621 -0.075837  7.575674e+00  4.802672e+00 -0.067194   0.416667  -1.666667   0.416667  -1.666667   0.416667  -1.666667   3.677350   3.677350      19.0
+50            Kalman_RW            42/5_Kalman   c     6.417       0.053939      52      22      0.553871  0.090660 -0.023019  1.273902e+02 -8.758278e+01  0.129788 -0.038230  3.065818e+00  2.108487e+00 -0.028269   3.083333  -0.333333   9.250000  -6.666667  -3.083333  -6.666667   2.166667   3.712814     19.2 -5.938237e+02  0.220787 -0.153758  3.764915e+00  4.969659e+00 -0.137775   9.166667   8.333333  15.333333  14.666667   3.000000   2.000000   8.711538   8.711538      19.2
+12         Bayes_seq_CP           42/2_LT_Fits   c     5.229       0.058927     116      88    -13.417404  0.182023 -0.090666 -2.562724e+03 -8.805195e+01  0.153803 -0.010790  1.012199e+00  7.549681e+00  0.021035   2.166667  -6.750000   8.750000  -6.750000  -4.416667  -6.750000   0.112179   4.724106     19.2  5.208471e+01  0.225266 -0.126319  3.973264e+00  4.622308e+00 -0.088472   8.250000   1.916667  14.833333   1.916667   1.666667   1.916667   6.657051   6.657051      19.2
+60       removeGreensfx         42/6_Remove_IV   c    20.635       0.060000      62      30     -0.676581  0.136057 -0.025805 -7.442390e+01 -9.540206e+01  0.146144 -0.026155  4.563176e+00  6.449141e-01 -0.019334   3.250000   0.388889  10.500000  -7.250000  -4.000000  -7.250000   0.780983   3.557122     28.2 -4.717840e+02  0.227612 -0.141684  6.089196e+00  2.933487e+00 -0.128840   9.333333   9.055556  16.583333  15.666667   2.083333   1.416667   7.325855   7.325855      28.2
+31            etrend15y           42/3_ST_Fits   c     6.191       0.058720     125      62      0.072768  0.129230 -0.001807  1.644563e+01 -9.840206e+01  0.189700  0.005964  1.745787e-01  1.113770e+00  0.007814  -0.083333  -2.666667 -11.083333 -11.833333 -11.083333 -11.833333  -1.810897   5.461806     23.2 -1.665986e+02  0.258150 -0.109564  2.049378e+00  7.942207e-01 -0.101692   6.000000   6.000000  17.000000  15.166667  -5.000000  -3.166667   4.733974   4.733974      23.2
+84       GWI_anthro_AR6     43/3_Human_Induced   c     1.954       0.076341     116      62     -3.164280  0.183502 -0.148741 -4.429991e+02 -1.003585e+02  0.148730 -0.121707  1.573212e+00  2.754397e+00 -0.096704   4.500000   5.833333   4.500000   5.833333   4.500000   5.833333   7.185897   9.137161     12.0 -6.626998e+02  0.241189 -0.237236  8.616016e-04  8.211686e-03 -0.206210  10.583333  14.500000  10.583333  14.500000  10.583333  14.500000  13.282051  13.282051      12.0
+10              quartic           42/2_LT_Fits   c     3.536       0.064647      95      37     -0.778136  0.120274  0.013804 -1.089391e+02 -1.139013e+02  0.131982  0.068578  1.036633e-01  4.795180e-01  0.103444  -3.750000 -10.333333  -3.750000 -10.333333  -3.750000 -10.333333  -4.256410   6.558986     15.0  7.172180e+01  0.134525 -0.046951  2.406595e+00  4.712507e+00 -0.006062   2.333333  -1.666667   2.333333  -1.666667   2.333333  -1.666667   2.288462   2.288462      15.0
+0                lag10y         42/1_Run_Means   c     3.040       0.040677     137      62      0.011978  0.094857 -0.040182  2.754932e+00 -1.335752e+02  0.136873 -0.073099  9.386537e+00  2.386640e+00 -0.075750   5.416667   7.916667  11.916667   7.916667  -1.083333   7.916667   3.689103   4.110600     15.2 -4.828727e+02  0.238039 -0.188628  2.105459e-01  7.013300e-01 -0.185256  11.500000  16.583333  18.000000  16.583333   5.000000  16.583333  10.233974  10.233974      15.2
+1                 lag5y         42/1_Run_Means   c     6.198       0.046058     131      49     -0.092119  0.109276 -0.018142 -2.118747e+01 -1.378494e+02  0.158253 -0.030001  2.591388e-01  3.791654e-06 -0.019728   2.958333  -0.500000  10.000000  -7.833333  -4.083333  -7.833333   2.621795   4.702018     21.2 -3.770873e+02  0.238232 -0.145530  4.864143e+00  7.411585e+00 -0.129234   9.041667   8.166667  16.083333  15.500000   2.000000   0.833333   9.166667   9.166667      21.2
+56          Kal_flexLin            42/5_Kalman   c     4.858       0.051937      91      35      0.232877  0.095091  0.002301  5.356162e+01 -1.422364e+02  0.133313  0.003919  2.507244e-02  8.109905e+00  0.008788   1.500000  -1.222222   8.583333  -9.083333  -5.583333  -9.083333  -0.792735   2.175968     20.2 -5.605649e+02  0.200960 -0.111609  7.804636e+00  8.014165e+00 -0.100718   7.583333   7.444444  14.666667  14.333333   0.500000  -0.416667   5.752137   5.752137      20.2
+58  removeMEI_volc_cons         42/6_Remove_IV   c    52.163       0.076077      72      37     -1.404005  0.185454  0.010405 -1.670766e+02 -1.525405e+02  0.190551 -0.010273  4.125823e+00  2.407981e-03 -0.039196  -3.562500   0.950000 -10.833333  14.833333 -10.833333 -14.583333   0.781883   4.269189     65.4 -3.424917e+02  0.248983 -0.125801  3.027323e+00  6.231271e-01 -0.148702   2.520833   6.145833  14.250000  14.583333  -4.750000  -5.916667   6.115491   6.115491      61.4
+52        Kalman_RW_ocn            42/5_Kalman   c     7.781       0.051089     160      77     -0.414494  0.111736  0.038852 -9.533355e+01 -1.766359e+02  0.142675  0.026552  9.108629e-02  7.086112e+00  0.070707   1.083333  -3.458333   8.583333 -11.083333  -6.416667 -11.083333  -1.801282   4.396817     19.2 -5.019311e+02  0.196675 -0.088977  7.708368e+00  4.164646e+00 -0.038799   7.166667   5.208333  14.666667  12.833333  -0.333333  -2.416667   4.743590   4.743590      19.2
+46              GAM_AR0           42/4_GAM_AR1   c     6.578       0.055637     168     108     -2.819727  0.168263 -0.084184 -5.949624e+02 -1.795145e+02  0.154013 -0.006042  1.526743e-03  5.327640e+00 -0.032531  -5.916667   0.166667  -5.916667   7.000000  -5.916667  -6.666667  -0.846154   4.019683     18.0 -4.238311e+02  0.221322 -0.121570  6.051533e+00  4.461203e+00 -0.142037   0.166667   8.833333   0.166667  15.666667   0.166667   2.000000   5.698718   5.698718      18.0
+54      Kal_flexLin_ocn            42/5_Kalman   c     5.459       0.047851     169      95     -1.155109  0.117986  0.042805 -2.656750e+02 -2.377448e+02  0.139769  0.021551  6.641714e-04  5.391316e+00  0.040619   0.916667  -2.875000   8.083333 -10.083333  -6.250000 -10.083333  -2.275641   3.802868     20.2 -6.487560e+02  0.195219 -0.093978  8.847097e+00  5.695964e+00 -0.068887   7.000000   5.791667  14.166667  13.000000  -0.166667  -1.416667   4.269231   4.269231      20.2
+17       TheilSen_h7075           42/2_LT_Fits   c     2.143       0.032254     116      64     -1.264800  0.092916 -0.049041 -1.960440e+02 -2.692078e+02  0.112051 -0.069837  8.983795e+00  9.886367e-02 -0.074875   0.833333   5.333333   0.833333   5.333333   0.833333   5.333333   4.628205   5.237113     13.0 -1.297895e+03  0.198391 -0.185366  3.906269e-15  7.612522e-08 -0.184381   6.916667  14.000000   6.916667  14.000000   6.916667  14.000000  11.173077  11.173077      13.0
+68         FaIR_all_unB          43/1_ERF_FaIR   c    11.156       0.087918      32       5     -1.236193  0.198711 -0.023755 -1.977909e+02 -2.705987e+02  0.254862 -0.050973  9.595450e-01  2.688282e+00 -0.052371   1.041667  -0.375000   7.833333  -7.166667  -5.750000  -7.166667   4.018162   5.801594     25.2 -7.877901e+02  0.323468 -0.166502  4.013684e+00  3.776562e+00 -0.161878   7.125000   8.291667  13.916667  15.083333   0.333333   1.500000   9.075855   9.075855      23.2
+43            offset11y           42/3_ST_Fits   c     2.754       0.039922     198     131     -3.987762  0.108009  0.065423 -9.171853e+02 -4.697096e+02  0.116646  0.028004  2.277159e-02  1.284509e-01  0.025725  -5.166667  -9.250000  -5.166667  -9.250000  -5.166667  -9.250000  -1.823718   3.694840     16.0 -5.495581e+01  0.163450 -0.087525  7.576903e+00  1.062719e+01 -0.083781   0.916667  -0.583333   0.916667  -0.583333   0.916667  -0.583333   4.721154   4.721154      16.0
+89              GWI_tot     43/3_Human_Induced   c     7.221       0.061315     136     130     -6.911519  0.258627 -0.226812 -9.676126e+02 -7.164170e+02  0.279997 -0.238431  1.403713e+00  4.189776e-05 -0.226852  10.333333  17.750000  10.333333  17.750000  10.333333  17.750000  15.256410  16.097982     18.0 -1.558122e+03  0.390208 -0.353960  2.548577e-04  2.121551e-07 -0.336358  16.416667  25.000000  16.416667  15.000000  16.416667  15.000000  17.980769  17.980769      11.0
+24        opt_clim_norm           42/3_ST_Fits   c    13.639       0.045927     158     108     -4.311202  0.184335 -0.065781 -9.915765e+02 -7.695997e+02  0.284202 -0.164293  4.256775e-06  1.069621e-02 -0.120688  17.166667  -4.000000  17.166667 -10.583333  17.166667 -10.583333  10.488782  14.197136     21.0 -1.200798e+03  0.368564 -0.279822  5.056199e-09  1.179975e+01 -0.230195  23.250000   4.666667  23.250000  14.666667  23.250000  -1.916667  16.277244  16.277244      20.0
+91         GWI_tot_CGWL     43/3_Human_Induced   c     2.739       0.062810     134     121     -7.216854  0.221958 -0.209223 -1.010360e+03 -7.891270e+02  0.226629 -0.215247  8.764488e-03  2.976774e-05 -0.234379  11.333333  17.333333  11.333333  17.333333  11.333333  17.333333  10.955128  12.467800     13.0 -1.615465e+03  0.338921 -0.330776  3.440628e-04  5.904233e-06 -0.343885  17.416667  25.000000  17.416667  15.000000  17.416667  15.000000  17.512821  17.512821       9.0
+87         GWI_tot_SR15     43/3_Human_Induced   c     3.345       0.057552     137     120     -8.558495  0.253150 -0.226339 -1.198189e+03 -8.966238e+02  0.273413 -0.238119  2.211503e+00  2.987081e-03 -0.236378  13.583333  17.750000  13.583333  17.750000  13.583333  17.750000  13.929487  15.632080     14.0 -1.974058e+03  0.391507 -0.353647  2.441612e-01  6.047715e-01 -0.345884  19.666667  25.000000  19.666667  15.000000  19.666667  15.000000  17.519231  17.519231       9.0
+59       removeMEI_cons         42/6_Remove_IV   c    47.114       0.061543      78      55     -9.142822  0.185042  0.002923 -1.005710e+03 -9.879623e+02  0.199858 -0.002036  3.648666e+00  2.770875e-01 -0.018694  -3.533333  -0.200000 -10.750000  14.666667 -10.750000 -14.583333  -0.032265   3.611630     61.5 -1.632467e+03  0.254883 -0.117565  2.182820e-04  1.755880e+00 -0.128200   2.550000   4.750000  14.333333  14.416667  -4.666667  -5.916667   5.085684   5.085684      58.5
+82             EBMKF_ta            43/2_Kalman   c     0.524       0.036951     193     139     -4.814934  0.120665  0.077652 -1.107435e+03 -1.075986e+03  0.169684  0.134372  4.558582e-05  3.795212e-09  0.129936  -4.166667  -8.416667  -4.166667  -8.416667  -4.166667  -8.416667  -7.339744   9.397530     13.0  1.822773e+00  0.070425  0.018843  1.078953e-01  1.237906e+01  0.020430   1.916667   0.250000   1.916667   0.250000   1.916667   0.250000  -0.794872   0.794872      13.0
+80            EBMKF_ta2            43/2_Kalman   c     2.075       0.037111     135      96     -3.901494  0.113691  0.069169 -8.973436e+02 -1.110870e+03  0.173577  0.146656  4.492864e-11  2.828482e-10  0.178849  -6.000000 -11.750000  -6.000000 -11.750000  -6.000000 -11.750000  -8.541667  10.065020     16.0 -2.536586e+02  0.103435  0.031127  1.200652e+01  3.075317e-01  0.069343   0.083333  -3.083333   0.083333  -3.083333   0.083333  -3.083333  -1.996795   1.996795      16.0
+61    OLS_refit_CO2forc            43/0_Linear   c     1.931       0.024320     204     173    -17.309710  0.145363 -0.069140 -3.877375e+03 -1.729335e+03  0.204297 -0.177059  2.790536e-06  9.992437e-08 -0.231980  11.083333  23.416667  11.083333  23.416667  11.083333  23.416667  15.339744  16.865212     10.0 -4.024788e+03  0.304404 -0.292588  2.456585e-21  1.437581e-18 -0.341487  17.166667  25.000000  17.166667  15.000000  17.166667  15.000000  19.384615  19.384615       8.0
+85          GWI_tot_AR6     43/3_Human_Induced   c     2.089       0.047572     140     140    -16.816230  0.290011 -0.276410 -2.354272e+03 -1.769096e+03  0.315095 -0.301264  9.850041e-04  1.960839e-07 -0.302793  15.333333  22.333333  15.333333  22.333333  15.333333  22.333333  18.070513  19.163531     10.0 -3.403844e+03  0.431331 -0.416792  5.283722e-12  4.197992e-11 -0.412299  21.416667  25.000000  21.416667  15.000000  21.416667  15.000000  21.538462  21.538462       6.0
+7             OLS_refit           42/2_LT_Fits   c     0.874       0.031528     127     121    -19.187370  0.231259 -0.172404 -2.686232e+03 -2.397583e+03  0.281679 -0.261174  3.166323e-14  1.502257e-11 -0.300954  17.166667  17.166667  17.166667  17.166667  17.166667  17.166667  17.564103  17.987858     12.0 -4.785313e+03  0.388085 -0.376703  3.252354e-31  5.476480e-26 -0.410460  23.250000  25.000000  23.250000  15.000000  23.250000  15.000000  23.641026  23.641026       6.0
+76             FaIR_all          43/1_ERF_FaIR   c    11.132       0.005580     159     159 -36080.425357  0.302199 -0.222985 -5.772868e+06 -4.602600e+06  0.361182 -0.260936  1.892518e-98  0.000000e+00 -0.262285   6.166667  19.000000  11.166667  19.000000   1.166667  19.000000  15.298077  16.452263     17.2 -7.410910e+06  0.467595 -0.376465  0.000000e+00  0.000000e+00 -0.371791  12.250000  25.000000  17.250000  15.000000   7.250000  15.000000  17.794872  17.794872      11.2
+601.294486453
+finished this run
+All processes completed.

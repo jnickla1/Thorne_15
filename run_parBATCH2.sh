@@ -5,29 +5,29 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --mem-per-cpu=5g
-#SBATCH --array=44,46,48  # Sweeps ENSEMBLE_RUN
+#SBATCH --array=0-21  # Sweeps ENSEMBLE_RUN
 #SBATCH -o logs/aab8-%A_%a.out
 
 module load matlab/R2019a-rjyk3ws
 module load r
 
-i=$((${SLURM_ARRAY_TASK_ID}*1))
+i=$((${SLURM_ARRAY_TASK_ID}*2))
 eval "$(conda shell.bash hook)"
 conda activate cleanpy
 # Define scenarios
-scenarios=(
-    "fut_ESM1-2-LR_SSP126_constVolc"
-    "fut_ESM1-2-LR_SSP245_constVolc"
-    "fut_ESM1-2-LR_SSP370_constVolc"
-)
+#scenarios=(
+#    "fut_ESM1-2-LR_SSP126_constVolc"
+#    "fut_ESM1-2-LR_SSP245_constVolc"
+#    "fut_ESM1-2-LR_SSP370_constVolc"
+#)
 
 # Loop over scenarios and ranges in parallel
-for scenario in "${scenarios[@]}"; do
+#for scenario in "${scenarios[@]}"; do
     #for i in `seq 0 10 40`; do
-    if [ "$i" -lt 50 ]; then
-        python3 fut_evaluation_script.py "$scenario" "$i" &
-    fi
-done
+#    if [ "$i" -lt 50 ]; then
+#        python3 fut_evaluation_script.py "$scenario" "$i" &
+#    fi
+#done
 
 scenarios=(
    "fut_NorESM_RCP45_Volc"
@@ -36,9 +36,7 @@ scenarios=(
 
 # Loop over scenarios and ranges in parallel
 for scenario in "${scenarios[@]}"; do
-    #for i in `seq 0 10 50`; do
         python3 fut_evaluation_script.py "$scenario" "$i" &
-    #done
 done
 
 

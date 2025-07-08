@@ -1,0 +1,52 @@
+## SLURM PROLOG ###############################################################
+##    Job ID : 11943997
+##  Job Name : all_crossing_eval
+##  Nodelist : node2348
+##      CPUs : 1
+##   Mem/CPU : 5120 MB
+## Directory : /oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats
+##   Job Started : Fri Jul  4 08:18:13 PM EDT 2025
+###############################################################################
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+starting computation for fut_NorESM_RCP45_VolcConst
+max_runs62
+Model number:
+60
+
+
+
+
+starting computation for fut_NorESM_RCP45_Volc
+max_runs62
+Model number:
+60
+
+
+
+
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 648, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 152, in run_one_single_ens_member
+    (simall,start_sim,years, sim_corrected, simh_corrected)= select_data(years_past[-1],model_run,sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist)
+                                                             ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 77, in select_data
+    this_sim_yr = average_every_n(sims_tas[model_run,:], 12) #converting monthly to yearly
+                                  ~~~~~~~~^^^^^^^^^^^^^
+IndexError: index 60 is out of bounds for axis 0 with size 60
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 648, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 152, in run_one_single_ens_member
+    (simall,start_sim,years, sim_corrected, simh_corrected)= select_data(years_past[-1],model_run,sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist)
+                                                             ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 77, in select_data
+    this_sim_yr = average_every_n(sims_tas[model_run,:], 12) #converting monthly to yearly
+                                  ~~~~~~~~^^^^^^^^^^^^^
+IndexError: index 60 is out of bounds for axis 0 with size 60
+All processes completed.

@@ -93,7 +93,7 @@ def select_data(styr, model_run,sims_tas, stime_mon, sims_tas_hist,  stime_mon_h
         
     elif (exp_attr[1]=='NorESM'):
         #replacing temps_obs_past
-        long_past_index = (gen_orig_number(model_run,np.shape(sims_tas)[0]) // 20) #either 1, 2, or 3, still in right order
+        long_past_index = ((gen_orig_number(model_run,np.shape(sims_tas)[0])-1) // 20) #either 1, 2, or 3, still in right order
         long_past_data_loc = cdataprefix +'NorESM_volc/NorESM1-M-historical/hist_aave_tas.nc'
         variable = Dataset(long_past_data_loc, 'r').variables['tas']
         long_past_tas_array = variable[:].__array__()

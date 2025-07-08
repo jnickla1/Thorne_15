@@ -124,7 +124,7 @@ if __name__ == '__main__':
             
         elif (exp_attr[1]=='NorESM'):
             #replacing temps_obs_past
-            long_past_index = (gen_orig_number(model_run,np.shape(sims_tas)[0]) // 20) #either 1, 2, or 3, still in right order
+            long_past_index = ((gen_orig_number(model_run,np.shape(sims_tas)[0])-1) // 20) #either 1, 2, or 3, still in right order
             long_past_data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/NorESM_volc/NorESM1-M-historical/hist_aave_tas.nc'
             variable = Dataset(long_past_data_loc, 'r').variables['tas']
             long_past_tas_array = variable[:].__array__()

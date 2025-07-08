@@ -24,7 +24,7 @@ def gen_orig_number(new_member_number,sz_ens):
     else:
         return recovered_order[new_member_number]
 
-regen = 1 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
+regen = 2 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
 
 
 data = pd.read_csv("./Common_Data/HadCRUT5.csv")
@@ -94,7 +94,7 @@ def select_data(styr, model_run,sims_tas, stime_mon, sims_tas_hist,  stime_mon_h
         
     elif (exp_attr[1]=='NorESM'):
         #replacing temps_obs_past
-        long_past_index = (gen_orig_number(model_run,np.shape(sims_tas)[0]) // 20) #either 1, 2, or 3, still in right order
+        long_past_index = ((gen_orig_number(model_run,np.shape(sims_tas)[0])-1 )// 20) #either 1, 2, or 3, still in right order
         long_past_data_loc = cdataprefix+'NorESM_volc/NorESM1-M-historical/hist_aave_tas.nc'
         variable = Dataset(long_past_data_loc, 'r').variables['tas']
         long_past_tas_array = variable[:].__array__()
@@ -182,10 +182,20 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
             if os.path.exists(results_path):
                 with open(results_path, 'rb') as fp:
                     existing_results = pickle.load(fp)
-                    existing_results.pop("EBMKF_ta4",None) #redo EMBKF_ta3
-                    existing_results.pop("EBMKF_ta",None)
-                    existing_results.pop("FaIR_all",None) #redo EMBKF_ta3
-                    existing_results.pop("FaIR_anthro",None) 
+                   # existing_results.pop("EBMKF_ta4",None) #redo EMBKF_ta3
+                   # existing_results.pop("EBMKF_ta",None)
+                   # existing_results.pop("FaIR_all_unB",None) #redo EMBKF_ta3
+                   # existing_results.pop("FaIR_anthro_unB",None)
+                   # existing_results.pop("FaIR_nonat_unB",None)
+                   # existing_results.pop("FaIR_comb_unB",None)
+                    existing_results.pop("GWI_anthro",None) 
+                    existing_results.pop("GWI_anthro_AR6",None)
+                    existing_results.pop("GWI_anthro_CGWL",None)
+                    existing_results.pop("GWI_anthro_SR15",None)
+                    existing_results.pop("GWI_tot",None)     
+                    existing_results.pop("GWI_tot_AR6",None)
+                    existing_results.pop("GWI_tot_CGWL",None)
+                    existing_results.pop("GWI_tot_SR15",None)
                 completed_methods = set(existing_results.keys())
             else:
                 existing_results = {}

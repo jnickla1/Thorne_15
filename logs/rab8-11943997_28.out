@@ -1,0 +1,92 @@
+## SLURM PROLOG ###############################################################
+##    Job ID : 11944026
+##  Job Name : all_crossing_eval
+##  Nodelist : node2348
+##      CPUs : 1
+##   Mem/CPU : 5120 MB
+## Directory : /oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats
+##   Job Started : Fri Jul  4 08:18:13 PM EDT 2025
+###############################################################################
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:21: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+starting computation for fut_NorESM_RCP45_Volc
+max_runs58
+Model number:
+56
+
+
+
+
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 648, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 205, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                              (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                              model_run, experiment_type, methods_folder, completed_methods)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 106, in run_methods
+    method_module = importlib.import_module(module_name, package = "Thorne_15_codefigurestats")
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/importlib/__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py", line 44
+    str(model_run_noresm)+"_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2099.csv", header=[0, 1])
+IndentationError: unexpected indent
+starting computation for fut_NorESM_RCP45_VolcConst
+max_runs58
+Model number:
+56
+
+
+
+
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 648, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 205, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                              (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                              model_run, experiment_type, methods_folder, completed_methods)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 106, in run_methods
+    method_module = importlib.import_module(module_name, package = "Thorne_15_codefigurestats")
+  File "/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/importlib/__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py", line 44
+    str(model_run_noresm)+"_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2099.csv", header=[0, 1])
+IndentationError: unexpected indent
+All processes completed.

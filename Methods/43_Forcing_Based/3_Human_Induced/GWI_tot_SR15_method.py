@@ -41,7 +41,6 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/SR15_NorESM/"+
                 "GWI_results_SR15_HISTORICAL-ONLY_SCENARIO--NorESM_rcp45-"+exp_attr[3]+"_ENSEMBLE-MEMBER--"+
                                            str(model_run_noresm)+"_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2099.csv", header=[0, 1])
-                                           str(model_run_noresm)+"_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2099.csv", header=[0, 1])
             biasdict = {"Volc": -0.249811690999517, "VolcConst": -0.254162516921968}
             curbias = biasdict[exp_attr[3]]
     gwi_levels_curr =gwi_levels_curr0.iloc[1:,]
