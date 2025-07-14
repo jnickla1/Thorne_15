@@ -52,11 +52,24 @@ for ssp_id in [126, 245, 370]:
     if df_list:
         # Concatenate all filtered/sorted dataframes
         all_data = pd.concat(df_list)
-        # Average all rows grouped by method_name (or another identifier like a column named 'ssp_id' if present)
-        averaged = all_data.groupby('method_name', as_index=False).mean(numeric_only=True)
+        rmse_cols = ['RMS', '100RMS', 'e100RMS']
+        # Compute numeric means excluding RMSE columns
+        numeric_cols = all_data.select_dtypes(include=[np.number]).columns.difference(rmse_cols)
+        averaged_numeric = all_data.groupby('method_name')[numeric_cols].mean().reset_index()
+        # Compute RMSE-style means for the specified columns
+        rmse_processed = (
+            all_data
+            .groupby('method_name')[rmse_cols]
+            .apply(lambda x: np.sqrt((x**2).mean()))
+            .reset_index())
+        # Extract constant text columns
         text_columns = all_data[['method_name', 'method_class', 'c/r']].drop_duplicates('method_name')
-        # Merge back text columns with numeric means
-        final_result = pd.merge(text_columns, averaged, on='method_name', how='inner')
+        # Merge all parts together
+        final_result = (
+            text_columns
+            .merge(averaged_numeric, on='method_name', how='inner')
+            .merge(rmse_processed, on='method_name', how='inner')
+        )
         # Save to CSV
         final_result.to_csv(f"averaged_runs{ssp_id}.csv", index=False)
 try:
@@ -78,7 +91,6 @@ for volc_id in ["Volc","VolcConst"]:
         if os.path.exists(file_name):  # Check if the file exists
             # Read the CSV file
             df = pd.read_csv(file_name)
-              
             # Filter rows with the desired method_name
             filtered = df[df['method_name'].isin(sel_methods)]
             df_sorted = filtered.sort_values(by='method_name') 
@@ -96,11 +108,24 @@ for volc_id in ["Volc","VolcConst"]:
     if df_list:
         # Concatenate all filtered/sorted dataframes
         all_data = pd.concat(df_list)
-        # Average all rows grouped by method_name (or another identifier like a column named 'ssp_id' if present)
-        averaged = all_data.groupby('method_name', as_index=False).mean(numeric_only=True)
+        rmse_cols = ['RMS', '100RMS', 'e100RMS']
+        # Compute numeric means excluding RMSE columns
+        numeric_cols = all_data.select_dtypes(include=[np.number]).columns.difference(rmse_cols)
+        averaged_numeric = all_data.groupby('method_name')[numeric_cols].mean().reset_index()
+        # Compute RMSE-style means for the specified columns
+        rmse_processed = (
+            all_data
+            .groupby('method_name')[rmse_cols]
+            .apply(lambda x: np.sqrt((x**2).mean()))
+            .reset_index())
+        # Extract constant text columns
         text_columns = all_data[['method_name', 'method_class', 'c/r']].drop_duplicates('method_name')
-        # Merge back text columns with numeric means
-        final_result = pd.merge(text_columns, averaged, on='method_name', how='inner')
+        # Merge all parts together
+        final_result = (
+            text_columns
+            .merge(averaged_numeric, on='method_name', how='inner')
+            .merge(rmse_processed, on='method_name', how='inner')
+        )
         # Save to CSV
         final_result.to_csv(f"averaged_runs{volc_id}.csv", index=False)
 
