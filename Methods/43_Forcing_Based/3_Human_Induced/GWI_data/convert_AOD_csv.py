@@ -14,9 +14,9 @@ def convert_csv(ssp, cmip_model):
         cstr="/combined"
     elif cmip_model =="NorESM":
         cstr="_volc/BethkeEtAl2017"
-    ts_file = os.path.expanduser(f"~/climate_data/{cmip_model}{cstr}/{ssp}_aod.nc")
+    ts_file = os.path.expanduser(f"~/data/jnickla1/climate_data/{cmip_model}{cstr}/{ssp}_aod.nc")
     if cmip_model =="NorESM" and ssp == "hist":
-        ts_file = os.path.expanduser(f"~/climate_data/{cmip_model}_volc/NorESM1-M-historical/{ssp}_aod.nc")
+        ts_file = os.path.expanduser(f"~/data/jnickla1/climate_data/{cmip_model}_volc/NorESM1-M-historical/{ssp}_aod.nc")
     with xr.open_dataset(ts_file) as ds:
         vararray = ds['__xarray_dataarray_variable__'].values
 
@@ -34,7 +34,7 @@ def combine_write(ssp0, cmip_model,volc=""):
         nens=20
         comb_recAOD = np.concatenate((hist_rec[0:nens,:].T, sim_rec.T))/1000
 
-    erf_data = pd.read_csv(os.path.expanduser(f"~/climate_data/SSP_inputdata/ERFs-Smith-ar6/ERF_SSP245_1750-2500.csv"))
+    erf_data = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/climate_data/SSP_inputdata/ERFs-Smith-ar6/ERF_SSP245_1750-2500.csv"))
     
     
     
@@ -52,7 +52,7 @@ def combine_write(ssp0, cmip_model,volc=""):
         contrails = erf_data['contrails'][(1850-1750):(2006-1750)]
 
     
-    #df_solar = pd.read_csv(os.path.expanduser("~/Downloads/Thorne_15_codefigurestats/Common_Data/toyKFmodelData8c.csv"),header=None,index_col=0)
+    #df_solar = pd.read_csv(os.path.expanduser("~/data/jnickla1/Thorne_15_codefigurestats/Common_Data/toyKFmodelData8c.csv"),header=None,index_col=0)
     #solar = df_solar[8]
 
     #aerosol_rad = erf_data['aerosol-radiation_interactions'][(1980-1750):(2100-1750)]
@@ -69,7 +69,7 @@ def combine_write(ssp0, cmip_model,volc=""):
     tot_volc_erf = - np.tile(solar_full,(nens,1)).T*frac_blocked + 151.22 #23.7
     tot_nat_erf = tot_volc_erf + np.tile(solar,(nens,1)).T
     df = pd.DataFrame(tot_nat_erf, index=years)
-    output_dir = os.path.expanduser("~/Downloads/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_data")
+    output_dir = os.path.expanduser("~/data/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_data")
     output_path2 = os.path.join(output_dir, f"ERFnatural_{cmip_model}_{ssp0}.csv")
     df.to_csv(output_path2, index=True)
 
