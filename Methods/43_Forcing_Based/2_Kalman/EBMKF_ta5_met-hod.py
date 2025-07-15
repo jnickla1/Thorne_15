@@ -200,11 +200,11 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             elif (exp_attr[1]=='NorESM'):
                 from . import gen_eCO2
                 if exp_attr[3]=='Volc':
-                    erf_data = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/global-warming-index/data/ERFanthro_NorESM_rcp45Volc_full.csv"))
+                    erf_data = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_data/ERFanthro_NorESM_rcp45Volc_full.csv"))
                     #erf_data = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/climate_data/SSP_inputdata/ERF_NorESM_rcp45Volc.csv"))
-                    erf_natvolc = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/global-warming-index/data/ERFnatural_NorESM_rcp45Volc_full.csv")).to_numpy()[:,model_run+1]
+                    erf_natvolc = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_data/ERFnatural_NorESM_rcp45Volc_full.csv")).to_numpy()[:,model_run+1]
                 elif exp_attr[3]=='VolcConst':
-                    erf_data = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/global-warming-index/data/ERF_NorESM_rcp45VolcConst_full.csv"))
+                    erf_data = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_data/ERF_NorESM_rcp45VolcConst_full.csv"))
                     erf_natvolc = erf_data['ERF_natural']
                 model_outputlCo2 = gen_eCO2.calculate_equivalent_co2(erf_data['ERF_anthro'].values)
                 new_lCo2 = np.log10(model_outputlCo2)

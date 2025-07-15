@@ -20,10 +20,10 @@ min_fact = 4
 def run_method(years, temperature, uncert, model_run, experiment_type):
     empser  = np.full(np.shape(years),np.nan)
     if experiment_type == 'historical':
-        gwi_levels_retro0 = pd.read_csv(cur_path+"/global-warming-index/GWI_full_info.csv", header=[0, 1])
+        gwi_levels_retro0 = pd.read_csv(cur_path+"/GWI_data/GWI_full_info.csv", header=[0, 1])
         gwi_levels_retro =gwi_levels_retro0.iloc[1:,] #blank row
         gwi_r =gwi_levels_retro['Tot'].to_numpy()
-        gwi_levels_curr0 = pd.read_csv(cur_path+"/global-warming-index/GWI_hist_only.csv", header=[0, 1])
+        gwi_levels_curr0 = pd.read_csv(cur_path+"/GWI_data/GWI_hist_only.csv", header=[0, 1])
         gwi_levels_curr =gwi_levels_curr0.iloc[1:,]
         gwi_c =gwi_levels_curr['Tot'].to_numpy()
         lyearr = np.shape(gwi_r)[0]

@@ -185,10 +185,10 @@ class CustomSplineDistribution(rv_continuous):
 cur_path = os.path.dirname(os.path.realpath(__file__))
 
 #NOW IN GWI_anthro_orig
-##gwi_levels_retro0 = pd.read_csv(cur_path+"/global-warming-index/GWI_full_info.csv", header=[0, 1])
+##gwi_levels_retro0 = pd.read_csv(cur_path+"/GWI_data/GWI_full_info.csv", header=[0, 1])
 ##gwi_levels_retro =gwi_levels_retro0.iloc[1:,] #blank row
 ##gwi_r =gwi_levels_retro['Ant'].to_numpy()
-##gwi_levels_curr0 = pd.read_csv(cur_path+"/global-warming-index/GWI_hist_only.csv", header=[0, 1])
+##gwi_levels_curr0 = pd.read_csv(cur_path+"/GWI_data/GWI_hist_only.csv", header=[0, 1])
 ##gwi_levels_curr =gwi_levels_curr0.iloc[1:,]
 ##gwi_c =gwi_levels_curr['Ant'].to_numpy()
 ##lyearr = np.shape(gwi_r)[0]
