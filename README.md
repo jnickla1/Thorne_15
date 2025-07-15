@@ -24,7 +24,7 @@ R
 > install.packages("mgcv")
 ```
 
-To make this code work on your machine, you need to also install a climate_data directory [also hosted on github]([url](https://github.com/jnickla1/climate_data)). I've already compressed down lots of netcdf files into only the averages that we need (mostly using [NCO](https://nco.sourceforge.net/)  - I've left the code in this external repo. But I didn't include copies of the original big files from the [ESGF Grid](https://esgf.github.io/nodes.html)  - you can download them yourself if you want.
+To make this code work on your machine, you need to also install a climate_data directory [also hosted on github]([url](https://github.com/jnickla1/climate_data). I've already compressed down lots of netcdf files into only the averages that we need (mostly using [NCO](https://nco.sourceforge.net/)  - I've left the code in this external repo. But I didn't include copies of the original big files from the [ESGF Grid](https://esgf.github.io/nodes.html)  - you can download them yourself if you want.
 
 Then we need to overwrite a bunch of file paths saved throughout the code, relative to the home directory. Lots of these files may not matter, but I'm replacing all the paths regardless. Remove the extra '' below if you're not on a Mac, (-exec sed -i 's|data/), and if you are on a Mac, you might need to add this to the beginnning of each command: LC_CTYPE=C find ...)
 
