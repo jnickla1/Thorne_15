@@ -4,8 +4,14 @@ Code for evaluating various methods for determining a long-term temperature tren
 
 ## installation
 
+### submodules
+Before you do anything else, you must install a bunch of submodules git repositories that were originally developed by other authors, several of which I forked. The ones that are not forked are not used, but I investigated trying to turn them into potential methods (and possibly you will succeed in adding them to the list).
+```
+git submodule update --init --recursive
+```
+
 ### requirements
-- `anaconda` for `python3`
+- `anaconda` for `python3` (note do not use mamba - I know conda is slower but mamba produces a weird error.)
 - `python>=3.11` (or higher depending on Xarray requirements)
 - `R>=4.4.0` and `cmake>=3.2`
 - `Matlab >= R2016a` to access over the command line, just for Bayes_Sequential_Change_Point (intermediate output already saved in this repo)
@@ -23,26 +29,45 @@ As of around June 2024, some `R` environments may no longer install properly fro
 R
 > install.packages("mgcv")
 ```
-
+### external climate data (compressed to just necessary files)
 To make this code work on your machine, you need to also install a climate_data directory [also hosted on github](https://github.com/jnickla1/climate_data). I've already compressed down lots of netcdf files into only the averages that we need (mostly using [NCO](https://nco.sourceforge.net/)  - I've left the code in this external repo. But I didn't include copies of the original big files from the [ESGF Grid](https://esgf.github.io/nodes.html)  - you can download them yourself if you want.
 
-Then we need to overwrite a bunch of file paths saved throughout the code, relative to the home directory. Lots of these files may not matter, but I'm replacing all the paths regardless. Remove the extra '' below if you're not on a Mac, (-exec sed -i 's|data/), and if you are on a Mac, you might need to add this to the beginnning of each command: LC_CTYPE=C find ...)
+
+### fixing the file paths
+Then we need to overwrite a bunch of file paths saved throughout the code, relative to the home directory. 
+
+Let's say that you install the climate_data here: `~/climate_data`, and the codebase in your Downloads folder `~/Downloads/Throne_15`. Then run the following replacement commands. If you installed these two somewhere else, alter the commends below `|{this part!}|g`.
+
+Lots of these files may not matter, but I'm replacing all the paths regardless. Run the code below if you're NOT on a Mac:
 
 ```
-find . -type f -name '*.py'  -exec sed -i '' 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
-find . -type f -name '*.py'  -exec sed -i '' 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15_codefigurestats|g' '{}' \;
-find . -type f -name '*.m'  -exec sed -i '' 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
-find . -type f -name '*.m'  -exec sed -i '' 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15_codefigurestats|g' '{}' \;
-find . -type f -name '*.pyc'  -exec sed -i '' 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
-find . -type f -name '*.pyc'  -exec sed -i '' 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15_codefigurestats|g' '{}' \;
-find . -type f -name '*.ipynb'  -exec sed -i '' 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
-find . -type f -name '*.ipynb'  -exec sed -i '' 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15_codefigurestats|g' '{}' \;
+find . -type f -name '*.py'  -exec sed -i 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
+find . -type f -name '*.py'  -exec sed -i 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
+find . -type f -name '*.m'  -exec sed -i 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
+find . -type f -name '*.m'  -exec sed -i 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
+find . -type f -name '*.pyc'  -exec sed -i 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
+find . -type f -name '*.pyc'  -exec sed -i 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
+find . -type f -name '*.ipynb'  -exec sed -i 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
+find . -type f -name '*.ipynb'  -exec sed -i 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
  ```
 
-Once you have that installed, the main files are run from the code root directory like this. Negative indicates to only run that ensemble member once, positive means to run a batch of 2 (or 10 if you change the code) starting with that number. futplotcomb generates only one combination figure. For futplotcomb ESM1-2-LR the output depends on the inputted ensemble member: SSP370 and SSP126 plotted with that member highlighted, but futplotcomb for NorESM is not affected by anything - it resets both the secenario and ensemble member parameters.
+If you are on a Mac we need use slightly different replacement commands:
+```
+find . -type f -name '*.py'  -exec sed -i '' 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
+find . -type f -name '*.py'  -exec sed -i '' 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
+find . -type f -name '*.m'  -exec sed -i '' 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
+find . -type f -name '*.m'  -exec sed -i '' 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
+LC_CTYPE=C find . -type f -name '*.pyc'  -exec sed -i ''  's|data/jnickla1/climate_data|climate_data|g' '{}' \;
+LC_CTYPE=C find . -type f -name '*.pyc'  -exec sed -i '' 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
+find . -type f -name '*.ipynb'  -exec sed -i '' 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
+find . -type f -name '*.ipynb'  -exec sed -i '' 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
+ ```
+
+
+Once you have that installed, the main files are run from the code root directory like this. The hist_evaluation_script.py has no elim because we are evaluating it on all methods and then eliminating none. A negative number at the very end indicates to only run that ensemble member once, positive means to run a batch of 2 (or 10 if you change the code) starting with that number. futplotcomb generates only one combination figure. For futplotcomb ESM1-2-LR the output depends on the inputted ensemble member: SSP370 and SSP126 plotted with that member highlighted, but futplotcomb for NorESM is not affected by anything - it resets both the secenario and ensemble member parameters.
 
 ```
-python3 hist_evaluation_script_elim.py
+python3 hist_evaluation_script.py
 python3 fut_evaluation_script_elim.py fut_ESM1-2-LR_SSP370_constVolc -9
 python3 fut_evaluation_script.py fut_ESM1-2-LR_SSP245_constVolc 9
 python3 fut_evaluation_script_elim.py futplotcomb_ESM1-2-LR_SSP126_constVolc -15
