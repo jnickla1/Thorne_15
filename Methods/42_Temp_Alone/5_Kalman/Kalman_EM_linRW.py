@@ -9,7 +9,7 @@ import pandas as pd
 #T = 0.292*LandRec +0.708*OceanRec
 # LandRec = (T - 0.708*OceanRec)/ 0.292
 
-#data = np.genfromtxt(open(os.path.expanduser('~/')+'data/jnickla1/Thorne_15_codefigurestats/Common_Data/toyKFmodelData8c.csv', "rb"),dtype=float, delimiter=',')
+#data = np.genfromtxt(open(os.path.expanduser('~/')+'Downloads/Thorne_15_codefigurestats/Common_Data/toyKFmodelData8c.csv', "rb"),dtype=float, delimiter=',')
 data2 = pd.read_csv("../Common_Data/HadCRUT.5.0.2.0.analysis.summary_series.global.annual.csv")
 years= data2["Time"].to_numpy()
 #years[0]=1850
@@ -17,7 +17,7 @@ nyrs = len(years)
 temperature = data2["Anomaly (deg C)"].to_numpy()
 n_iter=len(temperature) -1 #175
 temperature=temperature[0:n_iter]
-data_ocn = pd.read_csv(os.path.expanduser('~/')+'data/jnickla1/Thorne_15_codefigurestats/Common_Data/HadSST.4.0.1.0_annual_GLOBE.csv', sep=',')
+data_ocn = pd.read_csv(os.path.expanduser('~/')+'Downloads/Thorne_15_codefigurestats/Common_Data/HadSST.4.0.1.0_annual_GLOBE.csv', sep=',')
 OceanRec = data_ocn['anomaly'].values
 OceanRec_sc =  OceanRec *0.9/0.7
 LandRec = (temperature- 0.708*OceanRec_sc[0:n_iter])/ 0.292

@@ -8,7 +8,7 @@ import sys
 from fut_evaluation_gen_ensemble import eval_standard
 #making all paths relative to ~/
 from os.path import expanduser
-cdataprefix = expanduser("~/") + 'data/jnickla1/climate_data/'
+cdataprefix = expanduser("~/") + 'climate_data/'
 
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""

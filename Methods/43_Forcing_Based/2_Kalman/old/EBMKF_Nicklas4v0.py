@@ -318,7 +318,7 @@ def average_every_n(lst, n):
 
 plt.figure()
 plt.plot(dates, TOA_swout)
-toa_file = os.path.expanduser(f"~/data/jnickla1/climate_data/NASA/global_rt_mon_CERES-EBAF-4-2_RSS_gn_200003-202310.nc")
+toa_file = os.path.expanduser(f"~/climate_data/NASA/global_rt_mon_CERES-EBAF-4-2_RSS_gn_200003-202310.nc")
 with xr.open_dataset(toa_file) as ds:
     TOA_measur = ds['rt'].values
     TOA_time = ds['time'].values

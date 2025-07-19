@@ -7,7 +7,7 @@ from netCDF4 import Dataset
 import sys
 from fut_evaluation_gen_ensemble import eval_standard
 from os.path import expanduser
-cdataprefix = expanduser("~/") + 'data/jnickla1/climate_data/'
+cdataprefix = expanduser("~/") + 'climate_data/'
 
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""
@@ -23,7 +23,7 @@ def gen_orig_number(new_member_number,sz_ens):
     else:
         return recovered_order[new_member_number]
     
-regen = 2 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
+regen = 1 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
 
 
 data = pd.read_csv("./Common_Data/HadCRUT5.csv")
@@ -695,6 +695,13 @@ if __name__ == '__main__':
         axens.plot([closest_years370[4],closest_years370[4]],[2.5,3],color = "black", lw=0.5)
         axens.text(closest_years370[4], 3.1, str(round(closest_years370[4], ndigits=1)), color = col370,horizontalalignment='center')
 
+        ax1b.plot([closest_years126[4],closest_years126[4]],[1.5,3],color = col126,lw=2.5)
+        ax1b.plot([closest_years126[4],closest_years126[4]],[2.5,3],color = "black", lw=0.5)
+        ax1b.text(closest_years126[4], 3.1, str(round(closest_years126[4], ndigits=1)), color = col126,horizontalalignment='center')
+        ax1a.plot([closest_years370[4],closest_years370[4]],[1.5,3],color = col370,lw=2.5)
+        ax1a.plot([closest_years370[4],closest_years370[4]],[2.5,3],color = "black", lw=0.5)
+        ax1a.text(closest_years370[4], 3.1, str(round(closest_years370[4], ndigits=1)), color = col370,horizontalalignment='center')
+
 
         
         axens.set_ylabel(ax1a.get_ylabel()) #matching ylabels
@@ -706,62 +713,64 @@ if __name__ == '__main__':
         #ax1b.get_legend().remove()
         #WORKS BEST WITH #11
         curcolor =  gen_color('43_Forcing_Based/2_Kalman')
-        ax1a.annotate('EBMKF_ta',
+        ax1b.annotate('EBMKF_ta',
             xy=(2020,1.35),
             xytext=(2015,1.75), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='left', verticalalignment='bottom') #somthing very funky is happening - should be horizontalalignmnet = center
-        ax1b.annotate('EBMKF_ta',
+        ax1a.annotate('EBMKF_ta',
             xy=(2035,1.95), xycoords='data',
             xytext=(2030,2.3), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='left', verticalalignment='bottom')
         curcolor =  gen_color('44_EarthModel_CGWL')
-        ax1a.annotate('CGWL10y_pUKCP',
+        ax1b.annotate('CGWL10y_pUKCP',
             xy=(2088,1.7),
             xytext=(2080,2.2), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='left', verticalalignment='bottom') #somthing very funky is happening - should be horizontalalignmnet = center
-        ax1b.annotate('CGWL10y_pUKCP',
+        ax1a.annotate('CGWL10y_pUKCP',
             xy=(2074,3.06), xycoords='data',
             xytext=(2048,3.2), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='left', verticalalignment='bottom')
 
         curcolor =  gen_color('42_Temp_Alone/2_LT_Fits')
-        ax1a.annotate(' OLS_hinge75\n TheilSen_h7075\n hinge75meet',
+        ax1b.annotate(' OLS_hinge75\n TheilSen_h7075\n hinge75meet',
             xy=(2072,1.8),
             xytext=(2072,1.15), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='center', verticalalignment='top') #somthing very funky is happening - should be horizontalalignmnet = center
-        ax1b.annotate(' OLS_hinge75\n TheilSen_h7075\n hinge75meet',
+        ax1a.annotate(' OLS_hinge75\n TheilSen_h7075\n hinge75meet',
             xy=(2085,2.79), xycoords='data',
             xytext=(2090,1.8), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='right', verticalalignment='top')
         
         curcolor = gen_color('43_Forcing_Based/1_ERF_FaIR')
-        ax1b.annotate(' FaIR_all\n FaIR_nonat\n FaIR_anthro',
+        ax1a.annotate(' FaIR_all\n FaIR_nonat\n FaIR_anthro',
             xy=(2092,3), xycoords='data',
             xytext=(2095,2.5), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='right', verticalalignment='top')
 
         curcolor =  gen_color('42_Temp_Alone/6_Remove_IV')
-        ax1a.annotate('removeMEI\nvolc_cons',
+        ax1b.annotate('removeMEI\nvolc_cons',
             xy=(2082,1.2),
             xytext=(2085,1), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='left', verticalalignment='top') #somthing very funky is happening - should be horizontalalignmnet = center
-        ax1b.annotate('removeMEI\nvolc_cons',
+        ax1a.annotate('removeMEI\nvolc_cons',
             xy=(2069,2.25), xycoords='data',
             xytext=(2055,1.2), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='center', verticalalignment='top')
 
-        ax1a.set_title(f"Evaluated Methods to find Current MPI-ESM-1-2-LR SSP1-2.6 (memb. #{gen_orig_number(-start_run,50)})")
-        ax1b.set_title(f"Evaluated Methods to find Current MPI-ESM-1-2-LR SSP3-7.0 (memb. #{gen_orig_number(-start_run,50)})")      
+        ax1b.set_title(f"Evaluated Methods to find Current MPI-ESM-1-2-LR SSP1-2.6 (memb. #{gen_orig_number(-start_run,50)})")
+        ax1a.set_title(f"Evaluated Methods to find Current MPI-ESM-1-2-LR SSP3-7.0 (memb. #{gen_orig_number(-start_run,50)})")
+        ax1a.get_legend().remove()
         fig1.savefig("spaghettiSSPs.png", dpi=500, bbox_inches='tight')
+
         #plt.show()
 
     elif exp_attr[0]=="futplotcomb" and exp_attr[1]=="NorESM":
@@ -827,6 +836,13 @@ if __name__ == '__main__':
         axens.plot([closest_years370[4],closest_years370[4]],[1.5,2.4],color = colvolc,lw=2.5)
         axens.plot([closest_years370[4],closest_years370[4]],[2.,2.4],color = "black", lw=0.5)
         axens.text(closest_years370[4], 2.45, str(round(closest_years370[4], ndigits=1)), color = colvolc,horizontalalignment='center')
+
+        ax1a.plot([closest_years126[4],closest_years126[4]],[1.5,2.4],color = colorcomb(colvolc,colnovolc),lw=2.5)
+        ax1a.plot([closest_years126[4],closest_years126[4]],[2.,2.4],color = "black", lw=0.5)
+        ax1a.text(closest_years126[4], 2.45, str(round(closest_years126[4], ndigits=1)), color = colorcomb(colvolc,colnovolc),horizontalalignment='center')
+        ax1b.plot([closest_years370[4],closest_years370[4]],[1.5,2.4],color = colvolc,lw=2.5)
+        ax1b.plot([closest_years370[4],closest_years370[4]],[2.,2.4],color = "black", lw=0.5)
+        ax1b.text(closest_years370[4], 2.45, str(round(closest_years370[4], ndigits=1)), color = colvolc,horizontalalignment='center')
         
         axens.set_ylabel(ax1a.get_ylabel()) #matching ylabels
         ax1a.set_ylim([0,2.75])
@@ -837,7 +853,7 @@ if __name__ == '__main__':
         ax1b.set_ylim([0,2.75])
         axens.set_ylim([0,2.75])
         axens.legend([(min_line,black_line),(max_line,black_line), (const_novolc_line,)], ["Volc. Sample Min","Volc. Sample Max", "Volc. Const."])
-        #ax1b.get_legend().remove()
+        ax1b.get_legend().remove()
         fig1.savefig("spaghettiVolc.png", dpi=500, bbox_inches='tight')
         #plt.show()    
 

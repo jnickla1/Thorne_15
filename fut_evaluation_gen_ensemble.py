@@ -35,17 +35,17 @@ def eval_standard(experiment_type):
     exp_attr = experiment_type.split("_")
     if (exp_attr[1]=='ESM1-2-LR'):
         max_runs = 50
-        fut_data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/'+exp_attr[1]+'/combined/'+exp_attr[2].lower()+'_aave_tas.nc'
-        hist_data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/'+exp_attr[1]+'/combined/historical_aave_tas.nc'
+        fut_data_loc = os.path.expanduser('~/')+'climate_data/'+exp_attr[1]+'/combined/'+exp_attr[2].lower()+'_aave_tas.nc'
+        hist_data_loc = os.path.expanduser('~/')+'climate_data/'+exp_attr[1]+'/combined/historical_aave_tas.nc'
         
     elif (exp_attr[1]=='NorESM'):
         max_runs = 60
-        fut_data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/'+exp_attr[2].lower()+exp_attr[3]+'_aave_tas.nc'
+        fut_data_loc = os.path.expanduser('~/')+'climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/'+exp_attr[2].lower()+exp_attr[3]+'_aave_tas.nc'
         
         if (exp_attr[3]=='NoVolc'):  #options NoVolc VolcConst Volc
-            hist_data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/historicalNoVolc_aave_tas.nc'
+            hist_data_loc = os.path.expanduser('~/')+'climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/historicalNoVolc_aave_tas.nc'
         else:
-            hist_data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/historicalVolc_aave_tas.nc'
+            hist_data_loc = os.path.expanduser('~/')+'climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/historicalVolc_aave_tas.nc'
         
     else:
         print("Error: unknown model to this eval script")

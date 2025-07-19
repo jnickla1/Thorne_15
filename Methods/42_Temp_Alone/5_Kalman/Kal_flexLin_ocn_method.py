@@ -83,7 +83,7 @@ def run_method(yrs, temps, uncert, model_run, experiment_type):
         exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #
         #overwrite OceanRec_sc
         if (exp_attr[1]=='ESM1-2-LR'):
-            ocean_data =Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/ESM1-2-LR/combined/"+exp_attr[2].lower()+"_ocean_tas.nc", 'r').variables['ocn_ave_tas']
+            ocean_data =Dataset(os.path.expanduser('~/')+"climate_data/ESM1-2-LR/combined/"+exp_attr[2].lower()+"_ocean_tas.nc", 'r').variables['ocn_ave_tas']
             ocean_arr = ocean_data[:].__array__()
             OceanRec_sc0 =  average_every_n(ocean_arr[model_run,:], 12)
             ocean_offset = np.mean(OceanRec[0:50] -  OceanRec_sc0[0:50])
@@ -91,7 +91,7 @@ def run_method(yrs, temps, uncert, model_run, experiment_type):
 
             
         elif (exp_attr[1]=='NorESM'):
-            ocean_data=Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_ocean_tas.nc", 'r').variables['ocn_ave_tas']
+            ocean_data=Dataset(os.path.expanduser('~/')+"climate_data/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_ocean_tas.nc", 'r').variables['ocn_ave_tas']
             ocean_arr = ocean_data[:].__array__()
             OceanRec_sc0 =  average_every_n(ocean_arr[model_run,:], 12)
             ocean_offset = np.mean(OceanRec[(1980-1850):(1980-1850+30)] -  OceanRec_sc0[0:30]) #starts in 1980
