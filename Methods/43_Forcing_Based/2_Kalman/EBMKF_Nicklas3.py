@@ -81,7 +81,7 @@ fdbkA = 0.42
 fdbkA_prior_mean =fdbkA
 #fdbkAsigma = –0.10 to 0.94 very likely 90% interval    0.12 to 0.72 likely interval 66%
 #[-0.10,0.12, 0.42, 0.72, 0.94]
-##= RESTART: /Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py
+##= RESTART: /Users/JohnMatthew/data/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py
 #fdbkAdist = CustomSplineDistribution(ordvalues=np.array([-0.10,0.12, 0.42, 0.72, 0.94]), a=-4, b=7)
 #fdbkAdist.mean=0.41999897588174223
 #fdbkAdist.std =0.3157512459188502

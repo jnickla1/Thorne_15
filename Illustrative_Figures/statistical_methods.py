@@ -27,7 +27,7 @@ for i, ax in enumerate(axes):
 
 
 import sys
-sys.path.append(os.path.expanduser("~/")+"Downloads/Thorne_15_codefigurestats/Methods/42_Temp_Alone/5_Kalman/")
+sys.path.append(os.path.expanduser("~/")+"data/jnickla1/Thorne_15_codefigurestats/Methods/42_Temp_Alone/5_Kalman/")
 import Kal_flexLin_method as KF
 
 z0=[0,KF.q00,KF.R000]

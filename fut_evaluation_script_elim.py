@@ -7,7 +7,7 @@ from netCDF4 import Dataset
 import sys
 from fut_evaluation_gen_ensemble import eval_standard
 from os.path import expanduser
-cdataprefix = expanduser("~/") + 'climate_data/'
+cdataprefix = expanduser("~/") + 'data/jnickla1/climate_data/'
 
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""
