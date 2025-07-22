@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import os
 from . import EBMKF_Nicklas2 as ekf
 #EBMKF_Nicklas as ekf
 

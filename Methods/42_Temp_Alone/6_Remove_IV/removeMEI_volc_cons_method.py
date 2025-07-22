@@ -2,8 +2,9 @@ import numpy as np
 import statsmodels.api as sm
 import pandas as pd
 from netCDF4 import Dataset
-import os
+#import os
 import pdb
+import config
 
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""
@@ -40,12 +41,12 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         new_iter=len(years)
         given_preind_base = np.mean(temperature[0:50])
 
-        dataOpenTSI = pd.read_csv(os.path.expanduser('~/')+"data/jnickla1/climate_data/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp126_1750-2500.csv")
+        dataOpenTSI = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp126_1750-2500.csv")
         TSIdata = dataOpenTSI['solar'][100:(100+len(years))]
         
 
         if (exp_attr[1]=='ESM1-2-LR'):
-            enso_data =Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/ESM1-2-LR/combined/"+exp_attr[2].lower()+"_nino34_aave_tas.nc", 'r').variables['__xarray_dataarray_variable__']
+            enso_data =Dataset(config.CLIMATE_DATA_PATH+"/ESM1-2-LR/combined/"+exp_attr[2].lower()+"_nino34_aave_tas.nc", 'r').variables['__xarray_dataarray_variable__']
             enso_arr = enso_data[:].__array__()
             ensoA = average_every_n(enso_arr[model_run,6:(-12+6)], 12) #start in August
             start_yr=1 #everyone else starts in 1851
@@ -59,7 +60,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             
             
         elif (exp_attr[1]=='NorESM'):
-            enso_data =Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_nino34_tas.nc", 'r').variables['__xarray_dataarray_variable__']
+            enso_data =Dataset(config.CLIMATE_DATA_PATH+"/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_nino34_tas.nc", 'r').variables['__xarray_dataarray_variable__']
             enso_arr = enso_data[:].__array__()
             ensoNew =np.zeros(len(TSIdata))
             ensoNew[22:(22+len(ensoA))]=ensoA
@@ -70,11 +71,11 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             start_shift = 0
             end_yr = len(ensoA)+start_yr #should be whole dataset
             if exp_attr[3]=="Volc":
-                AOD_simD =Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_aod.nc", 'r').variables['__xarray_dataarray_variable__']
+                AOD_simD =Dataset(config.CLIMATE_DATA_PATH+"/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_aod.nc", 'r').variables['__xarray_dataarray_variable__']
                 AOD_simA = AOD_simD[:].__array__()
                 AOD_sim = average_every_n(AOD_simA[model_run,:], 12)
             elif exp_attr[3]=="VolcConst":
-                aod_later = Dataset(os.path.expanduser('~/')+"/data/jnickla1/climate_data/NorESM_volc/BethkeEtAl2017/rcp45VolcConst_partial20_aod.nc", 'r').variables['__xarray_dataarray_variable__']
+                aod_later = Dataset(config.CLIMATE_DATA_PATH+"/NorESM_volc/BethkeEtAl2017/rcp45VolcConst_partial20_aod.nc", 'r').variables['__xarray_dataarray_variable__']
                 aod_l = aod_later[:].__array__()
                 AOD_sim = average_every_n(aod_l[model_run%20,:], 12)               
             AODdata0 = AODdata

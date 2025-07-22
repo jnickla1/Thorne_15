@@ -2,8 +2,9 @@ import numpy as np
 import statsmodels.api as sm
 import pandas as pd
 from sys import path
-import os
+#import os
 from netCDF4 import Dataset
+import config
 
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""
@@ -31,7 +32,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         
 
         if (exp_attr[1]=='ESM1-2-LR'):
-            enso_data =Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/ESM1-2-LR/combined/"+exp_attr[2].lower()+"_nino34_aave_tas.nc", 'r').variables['__xarray_dataarray_variable__']
+            enso_data =Dataset(config.CLIMATE_DATA_PATH+"/ESM1-2-LR/combined/"+exp_attr[2].lower()+"_nino34_aave_tas.nc", 'r').variables['__xarray_dataarray_variable__']
             enso_arr = enso_data[:].__array__()
             ensoA = average_every_n(enso_arr[model_run,6:(-12+6)], 12) #start in August
             start_yr=1
@@ -39,7 +40,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             
             
         elif (exp_attr[1]=='NorESM'):
-            enso_data =Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_nino34_tas.nc", 'r').variables['__xarray_dataarray_variable__']
+            enso_data =Dataset(config.CLIMATE_DATA_PATH+"/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_nino34_tas.nc", 'r').variables['__xarray_dataarray_variable__']
             enso_arr = enso_data[:].__array__()
             ensoA = average_every_n(enso_arr[model_run,6:], 12) #start in August
             start_yr=(1980-1850)
@@ -56,7 +57,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 ##        
 ##        if (exp_attr[1]=='ESM1-2-LR'):
 ##            start_yr = 1
-##            data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/'+exp_attr[1]+'/combined/'+exp_attr[2].lower()+'_nino34_aave_tas.nc'
+##            data_loc = config.CLIMATE_DATA_PATH+exp_attr[1]+'/combined/'+exp_attr[2].lower()+'_nino34_aave_tas.nc'
 ##            dataset = Dataset(data_loc, 'r')
 ##            variable = dataset.variables['__xarray_dataarray_variable__']
 ##            sims_tas = variable[:].__array__()
@@ -65,7 +66,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 ##            
 ##        elif (exp_attr[1]=='NorESM'):
 ##            start_yr = 22
-##            data_loc = os.path.expanduser('~/')+'data/jnickla1/climate_data/'+exp_attr[1]+'_volc/BethkeEtAl2017/'+exp_attr[2].lower()+exp_attr[3]+'_nino34_aave_tas.nc'
+##            data_loc = config.CLIMATE_DATA_PATH+exp_attr[1]+'_volc/BethkeEtAl2017/'+exp_attr[2].lower()+exp_attr[3]+'_nino34_aave_tas.nc'
 ##            dataset = Dataset(data_loc, 'r')
 ##            variable = dataset.variables['__xarray_dataarray_variable__']
 ##            sims_tas = variable[:].__array__()

@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import os
+import config
 #EBMKF_Nicklas as ekf
 from netCDF4 import Dataset
 import pdb
@@ -113,7 +113,7 @@ ekf.opt_depth=ta_smooth(unf_new_opt_depth,ekf.involcavg)
 given_preind_base = np.mean(temps_obs[0:50])
 temps = temps_obs-given_preind_base+preind_base + ekf.offset #ensure this matches expected starting temperature in 1850
 frac_blocked = 1-(5.5518/(unf_new_opt_depth+9.9735)) #(9.068/(comb_recAOD_cleaned+9.7279))
-erf_data_solar = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/climate_data/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv"))['solar'].to_numpy()[(1850-1750):]
+erf_data_solar = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")['solar'].to_numpy()[(1850-1750):]
 solar_full = erf_data_solar[:ekf.n_iters]+ 340.4099428 - 0.108214
 tot_volc_erf = (- solar_full*frac_blocked + 151.22)
 erf_trapez=(1*tot_volc_erf[0:-2]+2*tot_volc_erf[1:-1]+0*tot_volc_erf[2:] )/4 #want to snap back as quickly as possible, no volc signal
@@ -143,14 +143,14 @@ ekf.opt_depth=np.full(ekf.n_iters,(1/ekf.involcavg-9.7279))
 orig_lCo2 = ekf.lCo2.copy()
 ekf.lCo2= np.full(ekf.n_iters,np.log10(ekf.data[0,2]))
 #new_obs - be sure to extend to 2024. Uncertanties unchanged
-aer_temps_raw = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/attributable-warming_ESM1-2-LR/ts/aave_ts_Amon_MPI-ESM1-2-LR_hist-aer_r4i1p1f1_gn_185001-201412.nc", 'r').variables['ts']
+aer_temps_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ts/aave_ts_Amon_MPI-ESM1-2-LR_hist-aer_r4i1p1f1_gn_185001-201412.nc", 'r').variables['ts']
 aer_temps = average_every_n(aer_temps_raw[:].__array__(), 12)
 given_preind_base = np.mean(aer_temps[0:50])
 aer_temps = aer_temps - given_preind_base + preind_base + ekf.offset
-aer_ohca_raw = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/attributable-warming_ESM1-2-LR/ohca_aave/ohca_thetaot_Emon_MPI-ESM1-2-LR_hist-aer_r4i1p1f1_gn_185001-201412.nc", 'r').variables['__xarray_dataarray_variable__']
+aer_ohca_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ohca_aave/ohca_thetaot_Emon_MPI-ESM1-2-LR_hist-aer_r4i1p1f1_gn_185001-201412.nc", 'r').variables['__xarray_dataarray_variable__']
 aer_ohca = average_every_n(aer_ohca_raw[:].__array__(), 12)
 aer_ohca = aer_ohca - aer_ohca[0]
-aer_toa_raw = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-aer/global_rt_Amon_MPI-ESM1-2-LR_hist-aer_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
+aer_toa_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-aer/global_rt_Amon_MPI-ESM1-2-LR_hist-aer_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
 aer_toa = average_every_n(aer_toa_raw[:].__array__(), 12)
 new_observ_aer = np.array([[ext_timeser(aer_temps),ext_timeser(aer_ohca/ekf.zJ_from_W) ,ext_timeser(aer_toa)]]).T
 warming,warming_se,_,_ = ekf.ekf_run(new_observ_aer,ekf.n_iters,retPs=3)
@@ -160,7 +160,7 @@ aer_warming_se = warming_se.copy()
 ###FOURTH RUN is hist-totalO3
 #counts as a type of CO2
 #recalculate CO2
-forcingsdf = pd.read_csv(os.path.expanduser(f"~/data/jnickla1/climate_data/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv"))
+forcingsdf = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")
 forcing_O3= forcingsdf['solar'].to_numpy()[(1850-1750):(2024-1750)]
 ekf.lCo2= np.log10(calculate_equivalent_co2(forcing_O3))
 #aer set to 0
@@ -168,14 +168,14 @@ orig_anthro_clouds = (ekf.data[:,7]+1)
 ekf.anthro_clouds = np.full(ekf.n_iters, orig_anthro_clouds[0])
 #solar set to const - don't change
 #volc set to const - don't change
-totalO3_temps_raw = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/attributable-warming_ESM1-2-LR/ts/aave_ts_Amon_MPI-ESM1-2-LR_hist-totalO3_r4i1p1f1_gn_185001-201412.nc", 'r').variables['ts']
+totalO3_temps_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ts/aave_ts_Amon_MPI-ESM1-2-LR_hist-totalO3_r4i1p1f1_gn_185001-201412.nc", 'r').variables['ts']
 totalO3_temps = average_every_n(totalO3_temps_raw[:].__array__(), 12)
 given_preind_base = np.mean(totalO3_temps[0:50])
 totalO3_temps = totalO3_temps - given_preind_base + preind_base + ekf.offset
-totalO3_ohca_raw = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/attributable-warming_ESM1-2-LR/ohca_aave/ohca_thetaot_Emon_MPI-ESM1-2-LR_hist-totalO3_r4i1p1f1_gn_185001-201412.nc", 'r').variables['__xarray_dataarray_variable__']
+totalO3_ohca_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ohca_aave/ohca_thetaot_Emon_MPI-ESM1-2-LR_hist-totalO3_r4i1p1f1_gn_185001-201412.nc", 'r').variables['__xarray_dataarray_variable__']
 totalO3_ohca = average_every_n(totalO3_ohca_raw[:].__array__(), 12)
 totalO3_ohca = totalO3_ohca - totalO3_ohca[0]
-totalO3_toa_raw = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-totalO3/global_rt_Amon_MPI-ESM1-2-LR_hist-totalO3_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
+totalO3_toa_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-totalO3/global_rt_Amon_MPI-ESM1-2-LR_hist-totalO3_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
 totalO3_toa = average_every_n(totalO3_toa_raw[:].__array__(), 12)
 new_observ_totalO3 = np.array([[ext_timeser(totalO3_temps),ext_timeser(totalO3_ohca/ekf.zJ_from_W) ,ext_timeser(totalO3_toa)]]).T
 warming,warming_se,_,_= ekf.ekf_run(new_observ_totalO3,ekf.n_iters,retPs=3)
@@ -194,15 +194,15 @@ ekf.lCo2= np.log10(calculate_equivalent_co2(forcing_GHG_allyrs[(1850-1750):(2024
 #solar set to const - don't change
 #volc set to const - don't change
 #aer set to 0 - dont change
-GHG_temps_raw = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/attributable-warming_ESM1-2-LR/ts/aave_ts_Amon_MPI-ESM1-2-LR_hist-GHG_r4i1p1f1_gn_185001-201412.nc", 'r').variables['ts']
+GHG_temps_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ts/aave_ts_Amon_MPI-ESM1-2-LR_hist-GHG_r4i1p1f1_gn_185001-201412.nc", 'r').variables['ts']
 GHG_temps = average_every_n(GHG_temps_raw[:].__array__(), 12)
 given_preind_base = np.mean(GHG_temps[0:50])
 GHG_temps = GHG_temps - given_preind_base + preind_base+ ekf.offset
 #GHG_temps - ekf.Teq1850 only about 1.1 for run 4, close to 0.95 of HadCrut
-GHG_ohca_raw = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/attributable-warming_ESM1-2-LR/ohca_aave/ohca_thetaot_Emon_MPI-ESM1-2-LR_hist-GHG_r4i1p1f1_gn_185001-201412.nc", 'r').variables['__xarray_dataarray_variable__']
+GHG_ohca_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ohca_aave/ohca_thetaot_Emon_MPI-ESM1-2-LR_hist-GHG_r4i1p1f1_gn_185001-201412.nc", 'r').variables['__xarray_dataarray_variable__']
 GHG_ohca = average_every_n(GHG_ohca_raw[:].__array__(), 12)
 GHG_ohca = GHG_ohca - GHG_ohca[0]
-GHG_toa_raw = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-GHG/global_rt_Amon_MPI-ESM1-2-LR_hist-GHG_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
+GHG_toa_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-GHG/global_rt_Amon_MPI-ESM1-2-LR_hist-GHG_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
 GHG_toa = average_every_n(GHG_toa_raw[:].__array__(), 12)
 new_observ_GHG = np.array([[ext_timeser(GHG_temps),ext_timeser(GHG_ohca/ekf.zJ_from_W) ,ext_timeser(GHG_toa)]]).T
 warming,warming_se,_,_ = ekf.ekf_run(new_observ_GHG,ekf.n_iters,retPs=3)
@@ -218,14 +218,14 @@ ekf.opt_depth = unf_new_opt_depth
 #co2 set to const preind
 ekf.lCo2= np.full(ekf.n_iters,np.log10(ekf.data[0,2]))
 #aer set to 0 - dont change
-nat_temps_raw = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/attributable-warming_ESM1-2-LR/ts/aave_ts_Amon_MPI-ESM1-2-LR_hist-nat_r4i1p1f1_gn_185001-201412.nc", 'r').variables['ts']
+nat_temps_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ts/aave_ts_Amon_MPI-ESM1-2-LR_hist-nat_r4i1p1f1_gn_185001-201412.nc", 'r').variables['ts']
 nat_temps = average_every_n(nat_temps_raw[:].__array__(), 12)
 given_preind_base = np.mean(nat_temps[0:50])
 nat_temps = nat_temps - given_preind_base + preind_base + ekf.offset
-nat_ohca_raw = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/attributable-warming_ESM1-2-LR/ohca_aave/ohca_thetaot_Emon_MPI-ESM1-2-LR_hist-nat_r4i1p1f1_gn_185001-201412.nc", 'r').variables['__xarray_dataarray_variable__']
+nat_ohca_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ohca_aave/ohca_thetaot_Emon_MPI-ESM1-2-LR_hist-nat_r4i1p1f1_gn_185001-201412.nc", 'r').variables['__xarray_dataarray_variable__']
 nat_ohca = average_every_n(nat_ohca_raw[:].__array__(), 12)
 nat_ohca = nat_ohca - nat_ohca[0]
-nat_toa_raw = Dataset(os.path.expanduser('~/')+"data/jnickla1/climate_data/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-nat/global_rt_Amon_MPI-ESM1-2-LR_hist-nat_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
+nat_toa_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-nat/global_rt_Amon_MPI-ESM1-2-LR_hist-nat_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
 nat_toa = average_every_n(nat_toa_raw[:].__array__(), 12)
 new_observ_nat = np.array([[ext_timeser(nat_temps),ext_timeser(nat_ohca/ekf.zJ_from_W) ,ext_timeser(nat_toa)]]).T
 warming,warming_se,_,_ = ekf.ekf_run(new_observ_nat,ekf.n_iters,retPs=3)

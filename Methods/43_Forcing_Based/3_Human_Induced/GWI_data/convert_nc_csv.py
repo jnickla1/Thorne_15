@@ -1,5 +1,5 @@
 import xarray as xr
-import os
+import config
 import numpy as np
 import pandas as pd
 import pdb
@@ -14,9 +14,9 @@ def convert_csv(ssp, cmip_model):
         cstr="/combined"
     elif cmip_model =="NorESM":
         cstr="_volc/BethkeEtAl2017"
-    ts_file = os.path.expanduser(f"~/data/jnickla1/climate_data/{cmip_model}{cstr}/{ssp}_aave_tas.nc")
+    ts_file = config.CLIMATE_DATA_PATH+f"/{cmip_model}{cstr}/{ssp}_aave_tas.nc"
     if cmip_model =="NorESM" and ssp == "hist":
-        ts_file = os.path.expanduser(f"~/data/jnickla1/climate_data/{cmip_model}_volc/NorESM1-M-historical/{ssp}_aave_tas.nc")
+        ts_file = config.CLIMATE_DATA_PATH+f"/{cmip_model}_volc/NorESM1-M-historical/{ssp}_aave_tas.nc"
     with xr.open_dataset(ts_file) as ds:
         vararray = ds['tas'].values
 
@@ -38,7 +38,7 @@ def combine_write(ssp0, cmip_model,volc=""):
         years = np.arange(1850, 2006)
 
     df = pd.DataFrame(comb_rec, index=years)
-    output_dir = os.path.expanduser("~/data/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_data")
+    output_dir = config.CODEBASE_PATH+"/Methods/43_Forcing_Based/3_Human_Induced/GWI_data"
     output_path2 = os.path.join(output_dir, f"ts_{cmip_model}_{ssp0}.csv")
     df.to_csv(output_path2, index=True)
 

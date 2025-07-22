@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import config
 # Create a figure and a set of subplots
 npanels2=5
 fig, axes = plt.subplots(nrows=2, ncols=npanels2, figsize=(12, 7))#expand wi
@@ -408,7 +409,7 @@ ax.set_ylim(ylim)
 # Method: State Space Kalman Filter
 ax = axes[1, 3]
 import sys
-sys.path.append(os.path.expanduser("~/")+"data/jnickla1/Thorne_15_codefigurestats/Methods/42_Temp_Alone/5_Kalman/")
+sys.path.append(config.CODEBASE_PATH+"/Methods/42_Temp_Alone/5_Kalman/")
 import Kalman_EM_linRW as KF
 ax.scatter(years[0:KF.n_iter], KF.OceanRec-offset_t, color='skyblue', label='Ocean SST',s=2,alpha=0.4)
 ax.text(1950,0,"Ocean Surf.\n(HADSST4)",size=7,color='skyblue',alpha=0.8)

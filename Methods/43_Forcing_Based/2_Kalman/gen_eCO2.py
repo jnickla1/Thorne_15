@@ -1,4 +1,5 @@
 import os
+import config
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -109,13 +110,13 @@ def calculate_equivalent_co2(forcing_values):
 
 def recompute_eCO2(ssp, cmip_model):
     # File paths
-    co2_file = os.path.expanduser(f"~/data/jnickla1/climate_data/{cmip_model}/co2mass/{ssp}_co2mass.nc")
-    n2o_dir = os.path.expanduser("~/data/jnickla1/climate_data/SSP_inputdata/UoM1_2_0")
-    erf_file = os.path.expanduser(f"~/data/jnickla1/climate_data/SSP_inputdata/ERFs-Smith-ar6/ERF_{ssp}_1750-2500.csv")
-    output_dir = os.path.expanduser("~/data/jnickla1/climate_data/SSP_inputdata")
+    co2_file = config.CLIMATE_DATA_PATH+"/"+cmip_model+"/co2mass/"+ssp+"_co2mass.nc"
+    n2o_dir = config.CLIMATE_DATA_PATH+"/SSP_inputdata/UoM1_2_0")
+    erf_file = config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_{ssp}_1750-2500.csv")
+    output_dir = config.CLIMATE_DATA_PATH+"/SSP_inputdata"
 
     # Step 1: Read CO2 values and convert to ppm
-    co2_hist = os.path.expanduser(f"~/data/jnickla1/climate_data/{cmip_model}/co2mass/historical_co2mass.nc")
+    co2_hist = config.CLIMATE_DATA_PATH+"/"+cmip_model+"/co2mass/historical_co2mass.nc"
     co2_values_hist = read_co2_values(co2_hist)
     
     co2_values = read_co2_values(co2_file)

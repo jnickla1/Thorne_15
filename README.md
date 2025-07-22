@@ -27,42 +27,37 @@ As of around June 2024, some `R` environments may no longer install properly fro
 
 ```
 R
-> install.packages("mgcv")
+> install.packages("this.path","mgcv","KCC","abind")
 ```
 ### external climate data (compressed to just necessary files)
 To make this code work on your machine, you need to also install a climate_data directory [also hosted on github](https://github.com/jnickla1/climate_data). I've already compressed down lots of netcdf files into only the averages that we need (mostly using [NCO](https://nco.sourceforge.net/)  - I've left the code in this external repo. But I didn't include copies of the original big files from the [ESGF Grid](https://esgf.github.io/nodes.html)  - you can download them yourself if you want.
 
 
-### fixing the file paths
-Then we need to overwrite a bunch of file paths saved throughout the code, relative to the home directory. 
+### specifying the file paths
+Then we need to specify file paths saved throughout the code. To do this, you MUST create a new `config.py` file that you will save at the top level of the codebase directory (that's this Thorne_15 github directory or whatever you want to rename it to). This completes the installation.
 
-Let's say that you install the climate_data here: `~/climate_data`, and the codebase in your Downloads folder `~/Downloads/Throne_15`. Then run the following replacement commands. If you installed these two somewhere else, alter the commends below `|{this part!}|g`.
-
-Lots of these files may not matter, but I'm replacing all the paths regardless. Run the code below if you're NOT on a Mac:
-
+Let's say that you install the climate_data here: `~/climate_data`, and the codebase in your Downloads folder `~/Downloads/Throne_15`. Python will automatically expand out the home directory part as follows with 'os.path'. This is all that needs to be in config.py:
 ```
-find . -type f -name '*.py'  -exec sed -i 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
-find . -type f -name '*.py'  -exec sed -i 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
-find . -type f -name '*.m'  -exec sed -i 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
-find . -type f -name '*.m'  -exec sed -i 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
-find . -type f -name '*.pyc'  -exec sed -i 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
-find . -type f -name '*.pyc'  -exec sed -i 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
-find . -type f -name '*.ipynb'  -exec sed -i 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
-find . -type f -name '*.ipynb'  -exec sed -i 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
+# config.py
+#all are relative to home already so ~/Downloads is just Downloads
+import os
+CODEBASE_PATH = os.path.expanduser('~/')+"Downloads/Thorne_15"
+CLIMATE_DATA_PATH = os.path.expanduser('~/')+"climate_data"
  ```
-
-If you are on a Mac we need use slightly different replacement commands:
-```
-find . -type f -name '*.py'  -exec sed -i '' 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
-find . -type f -name '*.py'  -exec sed -i '' 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
-find . -type f -name '*.m'  -exec sed -i '' 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
-find . -type f -name '*.m'  -exec sed -i '' 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
-LC_CTYPE=C find . -type f -name '*.pyc'  -exec sed -i ''  's|data/jnickla1/climate_data|climate_data|g' '{}' \;
-LC_CTYPE=C find . -type f -name '*.pyc'  -exec sed -i '' 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
-find . -type f -name '*.ipynb'  -exec sed -i '' 's|data/jnickla1/climate_data|climate_data|g' '{}' \;
-find . -type f -name '*.ipynb'  -exec sed -i '' 's|data/jnickla1/Thorne_15_codefigurestats|Downloads/Thorne_15|g' '{}' \;
+ 
+ Remember, this config.py file is saved here:
  ```
-
+ Thorne_15/
+│
+├── config.py  # Contains the paths
+├── .gitignore  # Ignores the config.py file so pulls dont break other installs
+│...
+├── hist_evaluation_script.py
+│...
+├── Methods/
+├── Results/
+ ```
+ ##Running
 
 Once you have that installed, the main files are run from the code root directory like this. The hist_evaluation_script.py has no elim because we are evaluating it on all methods and then eliminating none. A negative number at the very end indicates to only run that ensemble member once, positive means to run a batch of 2 (or 10 if you change the code) starting with that number. futplotcomb generates only one combination figure. For futplotcomb ESM1-2-LR the output depends on the inputted ensemble member: SSP370 and SSP126 plotted with that member highlighted, but futplotcomb for NorESM is not affected by anything - it resets both the secenario and ensemble member parameters.
 

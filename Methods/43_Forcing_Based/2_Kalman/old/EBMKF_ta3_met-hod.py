@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import os
+import config
 #EBMKF_Nicklas as ekf
 from netCDF4 import Dataset
 import pdb
@@ -105,10 +105,10 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             new_opt_depth[0:ekf.n_iters]=nopt_depths
             
             import xarray as xr
-            ohca_later =Dataset(os.path.expanduser('~/')+"/data/jnickla1/climate_data/ESM1-2-LR/opottempmint/"+exp_attr[2].lower()+"_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
+            ohca_later =Dataset(config.CLIMATE_DATA_PATH+"/ESM1-2-LR/opottempmint/"+exp_attr[2].lower()+"_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
             ohca_l = ohca_later[:].__array__()
             ohca_ly = average_every_n(ohca_l[model_run,:], 12)
-            ohca_earlier = Dataset(os.path.expanduser('~/')+"/data/jnickla1/climate_data/ESM1-2-LR/opottempmint/historical_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
+            ohca_earlier = Dataset(config.CLIMATE_DATA_PATH+"/ESM1-2-LR/opottempmint/historical_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
             ohca_e = ohca_earlier[:].__array__()
             ohca_ey = average_every_n(ohca_e[model_run,:], 12)
             ohca_meas = np.concatenate((ohca_ey,ohca_ly ))
@@ -123,7 +123,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
         if ekf.n_iters != new_iter:
             new_tsi = np.full(new_iter, ekf.sw_in)
-            new_tsi = pd.read_csv(os.path.expanduser('~/')+"data/jnickla1/climate_data/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp119_1750-2500.csv")['solar'][100:(100+new_iter+1)].values
+            new_tsi = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp119_1750-2500.csv")['solar'][100:(100+new_iter+1)].values
             new_tsi = new_tsi + ekf.sw_in-np.mean(new_tsi)
 
             new_R_tvar =np.full(new_iter, np.mean(ekf.R_tvar[-11:-1]))
@@ -133,7 +133,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             new_Roc_tvar =np.full(new_iter, np.mean(ekf.Roc_tvar[-11:-1]))
             new_Roc_tvar[0:ekf.n_iters]= ekf.Roc_tvar
             
-            data3 =  np.genfromtxt(open(os.path.expanduser('~/')+"data/jnickla1/climate_data/SSP_inputdata/KF6projectionSSP.csv", "rb"),dtype=float, delimiter=',')
+            data3 =  np.genfromtxt(open(config.CLIMATE_DATA_PATH+"/SSP_inputdata/KF6projectionSSP.csv", "rb"),dtype=float, delimiter=',')
             SSPnames=[126,434,245,370,585]
             if exp_attr[2]=='RCP45':
                 find_case = 245
@@ -141,7 +141,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 find_case = int(exp_attr[2][3:])
             rcp = SSPnames.index(find_case)
             handoffyr = 1850+ekf.n_iters
-            new_Co2_df = pd.read_csv(open(os.path.expanduser('~/')+"data/jnickla1/climate_data/SSP_inputdata/eCO2_"+exp_attr[1]+"_"+exp_attr[2].lower()+".csv"),dtype=float, delimiter=',')
+            new_Co2_df = pd.read_csv(open(config.CLIMATE_DATA_PATH+"/SSP_inputdata/eCO2_"+exp_attr[1]+"_"+exp_attr[2].lower()+".csv"),dtype=float, delimiter=',')
             new_lCo2 = np.log10(new_Co2_df['eCO2'].values)
             #new_lCo2 = np.concatenate((ekf.lCo2, np.log10(data3[handoffyr-2015: 1850+new_iter-2015,1+rcp])))
             new_anthro_clouds = np.concatenate((ekf.anthro_clouds,data3[handoffyr-2015: 1850+new_iter-2015,6+rcp]+1))

@@ -1,4 +1,5 @@
-### Combining real oservations with future simulations
+### Combining real observations with future simulations
+
 
 # First evaluation
     data = pd.read_csv("./Common_Data/HadCRUT5.csv")
@@ -13,7 +14,7 @@
     experiment_type = 'fut-ESM1-2-LR-SSP126-constVolc'
     methods_folder=('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/2_LT_Fits','Methods/42_Temp_Alone/3_ST_Fits') #,'Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL')
     #big problems with future ENSO index (can't compute MEI) and need to get Bjorn Samset data 
-    dataset = Dataset(os.path.expanduser('~/')+'data/jnickla1/climate_data/ESM1-2-LR/combined/ssp126_aave_tas.nc', 'r')
+    dataset = Dataset(config.CLIMATE_DATA_PATH+"/ESM1-2-LR/combined/ssp126_aave_tas.nc', 'r')
     variable = dataset.variables['tas']
     sims_tas = variable[:].__array__()
     stimes = dataset.variables['time']

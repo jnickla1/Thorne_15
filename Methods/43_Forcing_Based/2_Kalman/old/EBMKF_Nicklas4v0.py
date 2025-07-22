@@ -311,14 +311,14 @@ ynorm  = stats.norm.pdf(xnorm)
 involcavg = np.mean(1/(opt_depth+9.7279))
 
 import xarray as xr
-import os
+import config
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""
     return np.array([np.mean(lst[i:i + n]) for i in range(0, len(lst), n)])
 
 plt.figure()
 plt.plot(dates, TOA_swout)
-toa_file = os.path.expanduser(f"~/data/jnickla1/climate_data/NASA/global_rt_mon_CERES-EBAF-4-2_RSS_gn_200003-202310.nc")
+toa_file = config.CLIMATE_DATA_PATH+"/NASA/global_rt_mon_CERES-EBAF-4-2_RSS_gn_200003-202310.nc"
 with xr.open_dataset(toa_file) as ds:
     TOA_measur = ds['rt'].values
     TOA_time = ds['time'].values

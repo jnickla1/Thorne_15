@@ -10,8 +10,9 @@ from sklearn.metrics import r2_score
 import matplotlib.transforms as mtransforms
 import pdb
 
-from os.path import expanduser
-common_dataprefix = expanduser("~/")+ "data/jnickla1/Thorne_15_codefigurestats/Common_data/"
+#from os.path import expanduser
+import config
+common_dataprefix = config.CODEBASE_PATH+"/Common_data/"
 
 colorekf=(26./255, 44./255, 105./255)
 colorstate=(62./255, 207./255, 117./255)
@@ -333,7 +334,7 @@ def average_every_n(lst, n):
 
 plt.figure()
 plt.plot(dates, TOA_swout)
-toa_file = os.path.expanduser(f"~/data/jnickla1/climate_data/NASA/global_rt_mon_CERES-EBAF-4-2_RSS_gn_200003-202310.nc")
+toa_file = config.CLIMATE_DATA_PATH+"/NASA/global_rt_mon_CERES-EBAF-4-2_RSS_gn_200003-202310.nc"
 with xr.open_dataset(toa_file) as ds:
     TOA_measur = ds['rt'].values
     TOA_time = ds['time'].values

@@ -6,8 +6,7 @@ sel_methods = ["CGWL10y_sfUKCP","FaIR_comb_unB","EBMKF_ta4"] #"FaIR_nonat""CGWL1
 from netCDF4 import Dataset
 import sys
 from fut_evaluation_gen_ensemble import eval_standard
-from os.path import expanduser
-cdataprefix = expanduser("~/") + 'data/jnickla1/climate_data/'
+cdataprefix = config.CLIMATE_DATA_PATH+'/'
 
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""
