@@ -113,7 +113,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 ohca_later = Dataset(config.CLIMATE_DATA_PATH+"/NorESM_volc/OHCA/rcp45VolcConst_partial20_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
                 ohca_l = ohca_later[:].__array__()
                 ohca_meas[(2006-1850):(2100-1850)]=ohca_l[model_run if (model_run>2 and model_run<14) else model_run%14,:]  + 2*ohca_meas[(2005-1850)]-ohca_meas[(2004-1850)]      
-            erf_data = pd.read_csv(os.path.expanduser(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")
+            erf_data = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")
             contrails = erf_data['contrails'][(1980-1750):(2100-1750)].values
             unf_new_opt_depth[(1980-1850):] = unf_new_opt_depth[(1980-1850):] + (contrails-0.015)/.18*.04  # get rid of gradual decline in the baseline over 21st century
 

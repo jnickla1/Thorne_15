@@ -3,7 +3,7 @@ import config
 import numpy as np
 import pandas as pd
 import pdb
-
+import os
 
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""

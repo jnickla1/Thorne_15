@@ -187,7 +187,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             if (exp_attr[1]=='ESM1-2-LR'):
                 new_Co2_df = pd.read_csv(open(config.CLIMATE_DATA_PATH+"/SSP_inputdata/eCO2_"+exp_attr[1]+"_"+exp_attr[2].lower()+".csv"),dtype=float, delimiter=',')
                 new_lCo2 = np.log10(new_Co2_df['eCO2'].values)
-                erf_data = pd.read_csv(os.path.expanduser(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERF_"+exp_attr[1]+"_"+exp_attr[2].lower()+".csv")
+                erf_data = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERF_"+exp_attr[1]+"_"+exp_attr[2].lower()+".csv")
                 erf_natvolc = erf_data['ERF_natural']
             elif (exp_attr[1]=='NorESM'):
                 from . import gen_eCO2

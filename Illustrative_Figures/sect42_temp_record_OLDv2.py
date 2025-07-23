@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 # Create a figure and a set of subplots
 npanels2=5
 fig, axes = plt.subplots(nrows=2, ncols=npanels2, figsize=(14, 7))
