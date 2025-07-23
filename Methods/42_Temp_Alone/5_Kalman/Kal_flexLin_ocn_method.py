@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 import config
+import os
 from netCDF4 import Dataset
 #regenerate the land surface and ocean surface estimates:
 #T = 0.292*LandRec +0.708*OceanRec

@@ -6,11 +6,13 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 import config
+import os
 from netCDF4 import Dataset
 import pdb
 #regenerate the land surface and ocean surface estimates:
 #T = 0.292*LandRec +0.708*OceanRec
 # LandRec = (T - 0.708*OceanRec)/ 0.292
+
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
     
