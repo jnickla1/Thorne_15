@@ -61,7 +61,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         t_crit = stats.t.ppf(.5+0.3413, df=n-2) #one standard error
 
         means[endd-1850] = y_pred[-1]
-        cis = confidence_interval(regX, y_pred, np.mean(regX), s_e, t_crit, n )
+        cis = np.abs(confidence_interval(regX, y_pred, np.mean(regX), s_e, t_crit, n ))
         ses[endd-1850] = cis[-1]
     print("Fitted line")
     print(slope,intercept)

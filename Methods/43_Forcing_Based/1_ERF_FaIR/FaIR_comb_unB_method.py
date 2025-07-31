@@ -194,9 +194,6 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         point = np.atleast_1d(point)
         # Initialize an array to store empirical p-values
         empirical_ll = np.full(np.shape(point), np.nan)
-
-        means = np.mean(samp_cur[years-1850, :], axis = 1)
-        ses= np.std(samp_cur[years-1850, :], axis = 1)
         
         for i in range(len(year_idx)):
             if (k==0):
@@ -204,12 +201,14 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             else:
                 dist0 = samp_ret[year_idx[i]-1850, :]
             dist = dist0[~np.isnan(dist0)]
-            if( ~np.isnan(point[i]) and len(dist)!=0 ):
+            if( len(dist)!=0 and ~np.isnan(point[i]).all()):
                 epdf = stats.gaussian_kde(dist)
                 empirical_ll[i] = epdf.logpdf(point[i])
             else:
                 empirical_ll[i] = np.nan
             if False: #i==26:
+                means = np.mean(samp_cur[years-1850, :], axis = 1)
+                ses= np.std(samp_cur[years-1850, :], axis = 1)
                 plt.figure()
                 #print(dist)
                 xfine = np.linspace(-0.05,0.05,100)
@@ -218,15 +217,31 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
                 plt.plot(xfine,epdf.pdf(xfine))
                 plt.plot(xfine,stats.norm.pdf(xfine, loc=means[i], scale=ses[i]))
-                #plt.plot(xfine,stats.norm.pdf(xfine, loc=means[i], scale=sesl[i]))
-                
-       
+
         return empirical_ll
+
+    def kde_resample(year_idx, nsamps,k):
+        if(k!=0 and k!=1):
+            return np.full(np.shape(year_idx),np.nan)
+        year_idx = np.atleast_1d(year_idx)
+        resamps = np.full((len(year_idx),nsamps), np.nan)
+        
+        for i in range(len(year_idx)):
+            if (k==0):
+                dist0 = samp_cur[year_idx[i]-1850, :]  # Distribution for the current year
+            else:
+                dist0 = samp_ret[year_idx[i]-1850, :]
+            dist = dist0[~np.isnan(dist0)]
+            if( len(dist)!=0 ):
+                epdf = stats.gaussian_kde(dist)
+                resamps[i] = epdf.resample(nsamps)
+
+        return resamps
 
     return {
         'mean': empirical_mean,
         'se': empirical_se,
         'pvalue': empirical_pvalue,
         'log_likelihood': empirical_log_likelihood,
-
+        'resample': kde_resample,
     }

@@ -152,12 +152,28 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             #print(empirical_l[i])     
         return np.log(empirical_l )  
 
+    def ppf_resample(year_idx, n_samples,k):
+        year_idx = np.atleast_1d(year_idx)
+        resamps = np.full((len(year_idx),n_samples), np.nan)
+        for i, yr in enumerate(year_idx):
+            if (yr >=lyear or yr <1850):
+                resamps[i] =  np.nan
+            elif (k==0):
+                if (yr >=1950):
+                    uniform_samples = np.random.uniform(0, 1, size=n_samples)
+                    resamps[i] = (cdists[yr-1950].ppf(uniform_samples))
+            elif (k==1):
+                if (yr >=1850):
+                    uniform_samples = np.random.uniform(0, 1, size=n_samples)
+                    resamps[i] = (rdists[yr-1850].ppf(uniform_samples))
+        return resamps
+
     return {
         'mean': empirical_mean,
         'se': empirical_se,
         'pvalue': empirical_pvalue,
         'log_likelihood': empirical_log_likelihood,
-
+        'resample': ppf_resample,
     }
 
     #return means, ses, empser.copy(), empser.copy()

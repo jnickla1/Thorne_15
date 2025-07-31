@@ -1,5 +1,4 @@
 from hist_evaluation_script import *
-regen=True
 annotate_fig=False
 crossing_figs=False
 sel_methods = ["CGWL10y_sfUKCP","FaIR_comb_unB","EBMKF_ta4"] #"FaIR_nonat""CGWL10y_for_halfU","CGWL10y_sfUKCP","FaIR_anthroA2","EBMKF_ta2","removeGreensfx" ]
@@ -22,7 +21,7 @@ def gen_orig_number(new_member_number,sz_ens):
     else:
         return recovered_order[new_member_number]
     
-regen = 1 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
+regen = 0 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
 
 
 data = pd.read_csv("./Common_Data/HadCRUT5.csv")
@@ -676,8 +675,8 @@ if __name__ == '__main__':
         axens.grid(color='silver',zorder=-1,which='both')
 
         nud = 0.5
-        closest_years126, closest_yearsE126 = run_one_single_ens_member(plotting_figs, exp1, start_run, ax1a, ax4a, col126, elim_list=e1list)
-        closest_years370, closest_yearsE370 = run_one_single_ens_member(plotting_figs, exp2, start_run, ax1b, ax4b, col370, elim_list=e1list)
+        closest_years126, closest_yearsE126 = run_one_single_ens_member(plotting_figs, exp1, start_run, ax1b, ax4b, col126, elim_list=e1list)
+        closest_years370, closest_yearsE370 = run_one_single_ens_member(plotting_figs, exp2, start_run, ax1a, ax4a, col370, elim_list=e1list)
         axens.plot([closest_yearsE126[4],closest_yearsE126[4]],[0.9,1.5],color = col126)
         axens.plot([closest_yearsE126[4]+nud,closest_yearsE126[4]+nud],[0.9,1.5],color = col126, lw=0.5)
         axens.plot([closest_yearsE126[4]-nud,closest_yearsE126[4]-nud],[0.9,1.5],color = col126, lw=0.5)
@@ -694,9 +693,9 @@ if __name__ == '__main__':
         axens.plot([closest_years370[4],closest_years370[4]],[2.5,3],color = "black", lw=0.5)
         axens.text(closest_years370[4], 3.1, str(round(closest_years370[4], ndigits=1)), color = col370,horizontalalignment='center')
 
-        ax1b.plot([closest_years126[4],closest_years126[4]],[1.5,3],color = col126,lw=2.5)
-        ax1b.plot([closest_years126[4],closest_years126[4]],[2.5,3],color = "black", lw=0.5)
-        ax1b.text(closest_years126[4], 3.1, str(round(closest_years126[4], ndigits=1)), color = col126,horizontalalignment='center')
+        ax1b.plot([closest_years126[4],closest_years126[4]],[1.5,2],color = col126,lw=2.5)
+        ax1b.plot([closest_years126[4],closest_years126[4]],[1.75,2],color = "black", lw=0.5)
+        ax1b.text(closest_years126[4], 2.1, str(round(closest_years126[4], ndigits=1)), color = col126,horizontalalignment='center')
         ax1a.plot([closest_years370[4],closest_years370[4]],[1.5,3],color = col370,lw=2.5)
         ax1a.plot([closest_years370[4],closest_years370[4]],[2.5,3],color = "black", lw=0.5)
         ax1a.text(closest_years370[4], 3.1, str(round(closest_years370[4], ndigits=1)), color = col370,horizontalalignment='center')
@@ -719,7 +718,7 @@ if __name__ == '__main__':
             horizontalalignment='left', verticalalignment='bottom') #somthing very funky is happening - should be horizontalalignmnet = center
         ax1a.annotate('EBMKF_ta',
             xy=(2035,1.95), xycoords='data',
-            xytext=(2030,2.3), textcoords='data',
+            xytext=(2028.5,2.3), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='left', verticalalignment='bottom')
         curcolor =  gen_color('44_EarthModel_CGWL')
@@ -768,7 +767,10 @@ if __name__ == '__main__':
         ax1b.set_title(f"Evaluated Methods to find Current MPI-ESM-1-2-LR SSP1-2.6 (memb. #{gen_orig_number(-start_run,50)})")
         ax1a.set_title(f"Evaluated Methods to find Current MPI-ESM-1-2-LR SSP3-7.0 (memb. #{gen_orig_number(-start_run,50)})")
         ax1a.get_legend().remove()
-        fig1.savefig("spaghettiSSPs.png", dpi=500, bbox_inches='tight')
+        ax1b.get_legend().remove()
+        ax1b.legend(fontsize=6.5,ncol=6)
+        axens.set_title("Data from MPI-ESM1.2LR (Mauritsen 2019): \nImpact of Shared Socioeconomic Pathways on future climate")
+        fig1.savefig("spaghettiSSPs.png", dpi=500,bbox_inches='tight')
 
         #plt.show()
 

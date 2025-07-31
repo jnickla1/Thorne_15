@@ -18,7 +18,7 @@ from datetime import datetime
 current_date = datetime.now()
 formatted_date = current_date.strftime("%y%m%d")
 
-historical_regen=True #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
+historical_regen=False #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
 
 # ================================
 # Define Method Full Names, Colors, Location on Violin plots
@@ -28,14 +28,14 @@ methods_names = [
     ['42_Temp_Alone/1_Run_Means', "4.3.1:\nRunning Means", 2, 1998,2022,.5], #98
     ['42_Temp_Alone/2_LT_Fits', "4.3.2:\nLong Term Fits", 7,  1998,2022,.4], #98
     ['42_Temp_Alone/3_ST_Fits', "4.3.3:\nShort Term Fits", 16 ,1998,2022,.9], #98
-    ['42_Temp_Alone/4_GAM_AR1', "4.3.4:\nSmoothing Splines", 24,1997,2022,1.2], #97
-    ['42_Temp_Alone/5_Kalman', "4.3.5:\nSimple State Space", 27.5,1997,2022,1], #97
-    ['42_Temp_Alone/6_Remove_IV', "4.3.6:\nFilter Internal\nVariability",33,1999,2022,0.4], #99
+    ['42_Temp_Alone/4_GAM_AR1', "4.3.4:\nSmoothing Splines", 25,1997,2022,1.2], #97
+    ['42_Temp_Alone/5_Kalman', "4.3.5:\nSimple State Space", 28.5,1997,2022,1], #97
+    ['42_Temp_Alone/6_Remove_IV', "4.3.6:\nFilter Internal\nVariability",33.5,1999,2022,0.4], #99
     ['43_Forcing_Based/0_Linear', "4.4.1:\nLinear CO2",               37,1999,2022,1.3],
-    ['43_Forcing_Based/1_ERF_FaIR',"4.4.2:\nConstrained\nEmulators",38+2.5,1999,2022,1.7],  #99
-    ['43_Forcing_Based/2_Kalman', "4.4.3:\nEnergy Balance\nKalman Filter",42+2,1999,2022,1.6],  #99
-    ['43_Forcing_Based/3_Human_Induced', "4.4.4:\nAttributable\nWarming", 46.5+7,1999,2022,0.3], #99
-    ['44_EarthModel_CGWL', "4.5:\nCombining\nESM Projections", 54+7,1998,2022,1.5]   #98
+    ['43_Forcing_Based/1_ERF_FaIR',"4.4.2:\nConstrained\nEmulators",38+4.5,1999,2022,1.7],  #99
+    ['43_Forcing_Based/2_Kalman', "4.4.3:\nEnergy Balance\nKalman Filter",42+5.5,1999,2022,1.6],  #99
+    ['43_Forcing_Based/3_Human_Induced', "4.4.4:\nAttributable\nWarming", 46.5+11,1999,2022,0.3], #99
+    ['44_EarthModel_CGWL', "4.5:\nCombining\nESM Projections", 54+11,1998,2022,1.5]   #98
     ] #Last three coordinates define location on violin plots
 
 def gen_color(ci, dark=False):
@@ -483,7 +483,7 @@ if __name__ == '__main__':
         c = 1*(get_brightness(lc)<120)
         label.set_color(alt_colors[c])
         label.set_backgroundcolor(lc)
-        label.get_bbox_patch().set_boxstyle("round,pad=0.22")
+        label.get_bbox_patch().set_boxstyle("round,pad=0.06")
 
         
     ax10.set_yticks(range(len(cmethods)))
@@ -492,7 +492,7 @@ if __name__ == '__main__':
         c = 1*(get_brightness(lc)<120)
         label.set_color(alt_colors[c])
         label.set_backgroundcolor(lc)
-        label.get_bbox_patch().set_boxstyle("round,pad=0.22")
+        label.get_bbox_patch().set_boxstyle("round,pad=0.06")
 
 
     hist_ax05.set_xlim([eval05min, eval05max-15])

@@ -107,15 +107,32 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 dist = samp_cur[year_idx[i]-1850, :]  # Distribution for the current year
             else:
                 dist = samp_ret[year_idx[i]-1850, :]
-            if(sum(np.isnan(dist))==0 and ~np.isnan(point[i])):
+            if(sum(np.isnan(dist))==0 and ~np.isnan(point[i]).all()):
                 epdf = stats.gaussian_kde(dist)
                 empirical_ll[i] = epdf.logpdf(point[i])
         return empirical_ll
-
+    
+    def kde_resample(year_idx, nsamps,k):
+        if(k!=0 and k!=1):
+            return np.full(np.shape(year_idx),np.nan)
+        year_idx = np.atleast_1d(year_idx)
+        resamps = np.full((len(year_idx),nsamps), np.nan)
+        
+        for i in range(len(year_idx)):
+            if (k==0):
+                dist0 = samp_cur[year_idx[i]-1850, :]  # Distribution for the current year
+            else:
+                dist0 = samp_ret[year_idx[i]-1850, :]
+            dist = dist0[~np.isnan(dist0)]
+            if( len(dist)!=0 ):
+                epdf = stats.gaussian_kde(dist)
+                resamps[i] = epdf.resample(nsamps)
+        return resamps
+    
     return {
         'mean': empirical_mean,
         'se': empirical_se,
         'pvalue': empirical_pvalue,
         'log_likelihood': empirical_log_likelihood,
-
+        'resample': kde_resample,
     }

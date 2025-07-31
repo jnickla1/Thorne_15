@@ -104,14 +104,20 @@ class CustomSplineDistribution(rv_continuous):
     # CDF: Inverse of the quantile function (PPF)
     def cdf(self, x):
         # We now directly invert the spline to get the cumulative distribution
-        if (np.isnan(x)):
+        if (np.isnan(x).all()):
             return np.nan
         else:
-            try:
-                x_inner = self.adjspline.solve( (x-self.median)/self.est_stdev , extrapolate=True)[0] #should have only one root
-            except:
-                breakpoint()
-            return stats.norm.cdf(x_inner)
+            xarr = np.atleast_1d(x) #allow this to take in a whole array
+            x_inner = np.full(np.shape(xarr),np.nan)
+            for i in range(len(xarr)):
+                try:
+                    x_inner[i] = self.adjspline.solve( (xarr[i]-self.median)/self.est_stdev , extrapolate=True)[0] #should have only one root
+                except:
+                    breakpoint()
+            if np.iterable(x):
+                return stats.norm.cdf(x_inner)
+            else:
+                return stats.norm.cdf(x_inner[0])
        # return np.clip(self.adjspline.solve(ielf.ppf, self.ppfprime,x, q_guess), 0, 1)  # use newton to invert the ppf function
 
     
@@ -129,7 +135,7 @@ class CustomSplineDistribution(rv_continuous):
 # PDF: Derivative of the CDF (approximated numerically)
     def pdf(self, x,alp0=1e-5):
         alp= self.est_stdev * alp0
-        if (np.isnan(x)):
+        if (np.isnan(x).all()):
             return np.nan
         else:
             return (self.cdf(x+alp)- self.cdf(x-alp))/2/alp
@@ -137,17 +143,29 @@ class CustomSplineDistribution(rv_continuous):
 
     def pdfn0(self, x):
         p=self.pdf(x)
-        if(p< 1e-10):
-            return stats.norm.pdf(x,loc = self.mean,scale = self.std)
-        else:
+        if(np.iterable(p)):
+            replace_locs = (p< 1e-10)
+            p[replace_locs] = stats.norm.pdf(x[replace_locs],loc = self.mean,scale = self.std)
             return p
+
+        else:
+            if(p< 1e-10):
+                 return stats.norm.pdf(x,loc = self.mean,scale = self.std) + 1e-300
+            else:
+                return p
 
     def cdfn0(self, x):
         p=self.cdf(x)
-        if( (p< 1e-10) or ((1-p)<1e-10)):
-            return stats.norm.cdf(x,loc = self.mean,scale = self.std)
-        else:
+        if(np.iterable(p)):
+            replace_locs = ((p< 1e-10) or ((1-p)<1e-10))
+            p[replace_locs] = stats.norm.cdf(x[replace_locs],loc = self.mean,scale = self.std)
             return p
+        
+        else:
+            if( (p< 1e-10) or ((1-p)<1e-10)):
+                return stats.norm.cdf(x,loc = self.mean,scale = self.std) + 1e-300
+            else:
+                return p
 
 
         
@@ -314,20 +332,30 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             if (yr >=lyear or yr <1850):
                 empirical_l[i] =  np.nan
             elif (k==0):
-                if (yr >=1950):
+                if (yr >=syear):
                     empirical_l[i] = (cdists[yr-syear].pdfn0(point[i]))
-                else:
-                    empirical_l[i] =  np.nan
+        if((empirical_l==0).any()):
+            breakpoint()
+        return np.log(empirical_l )
 
-            #print(yr)
-            #print(empirical_l[i])     
-        return np.log(empirical_l )   
+    def ppf_resample(year_idx, n_samples,k):
+        year_idx = np.atleast_1d(year_idx)
+        resamps = np.full((len(year_idx),n_samples), np.nan)
+        for i, yr in enumerate(year_idx):
+            if (yr >=lyear or yr <1850):
+                resamps[i] =  np.nan
+            elif (k==0):
+                if (yr >=syear):
+                    uniform_samples = np.random.uniform(0, 1, size=n_samples)
+                    resamps[i] = (cdists[yr-syear].ppf(uniform_samples))
+        return resamps
 
     return {
         'mean': empirical_mean,
         'se': empirical_se,
         'pvalue': empirical_pvalue,
         'log_likelihood': empirical_log_likelihood,
+        'resample': ppf_resample,
 
     }
 
