@@ -67,22 +67,54 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         samp_cur[i,:] = ( np.mean(chunk)/2 + forec_samps/2 ) #integer added to vector
             #np.random.normal(loc=0, scale=np.sqrt(np.var(chunk)/2/len(chunk)), size=cutoff_n)+
             #np.random.normal(loc=0, scale=np.sqrt(np.mean(chunk_uncert**2)/2/len(chunk)), size=cutoff_n) )
-
+    if experiment_type == 'historical': #retrospective and taper: exactly equal to 21yr running mean if farther than 10 years before present
+        import pandas as pd
+        samp_ret = np.full((np.shape(years)[0],cutoff_n) ,np.nan)
+        avg_len_l=10
+        avg_len_u=11 #actually 10 yrs below, that year, 10 yrs after
+        meansR = empser.copy()
+        sesR = empser.copy()
+        (temps_CIl, temps_CIu) = uncert
+        temps_1std = (temps_CIu - temps_CIl) / 4 #pm2 stdevs
+        cur_path = os.path.dirname(os.path.realpath(__file__))
+        hadcrutUncertFile = pd.read_csv(cur_path+"/../../Common_Data/HadCRUT.5.0.2.0_20_yr_run_mean.csv") 
+        hadcrutUncert = hadcrutUncertFile["Total_uncert_(1sigma)"]
+        for i in range(avg_len_l, len(years) - avg_len_u+1):
+            chunk=temperature[i-avg_len_l:i+avg_len_u]
+            chunk_uncert=temps_1std[i-avg_len_l:i+avg_len_u]
+            meansR[i] = np.mean(chunk)
+            tot_uncert = np.var(chunk) + np.mean(chunk_uncert**2)
+            sesR[i] = np.sqrt(tot_uncert)
+            samp_ret[i,:] = ( np.random.normal(np.sum(chunk), np.sqrt((np.var(chunk) + np.mean(chunk_uncert**2))), size=np.shape(forec_samps)) )/21 
+        taper_i = len(years) - avg_len_u+1
+        for i in range(taper_i, last_i+1):
+            chunk=temperature[i-avg_len_l:len(years)]
+            chunk_uncert=temps_1std[i-avg_len_l:len(years)]
+            forec_samps0 = np.sum(comput_temps_align[(len(years)-offset_yrs):(i+11-offset_yrs),:], axis = 0)
+            forec_samps = forec_samps0[sort_indices[:cutoff_n]]
+            meansR[i] = (np.sum(chunk)+ np.nanmean(forec_samps))/21
+            tot_uncert = (np.var(chunk) + np.mean(chunk_uncert**2))+ np.nanvar(forec_samps)
+            sesR[i] = np.sqrt(tot_uncert)/21
+            samp_ret[i,:] = ( np.random.normal(np.sum(chunk), np.sqrt((np.var(chunk) + np.mean(chunk_uncert**2))), size=np.shape(forec_samps)) + forec_samps )/21 #vector added to vector
 
     def empirical_mean(year_idx,k):
         if (k==0):
             return means[year_idx-1850]
+        elif (k==1 and experiment_type == 'historical'):
+            return meansR[year_idx-1850]
         else:
             return empser
 
     def empirical_se(year_idx,k):
         if (k==0):
             return ses[year_idx-1850]
+        elif (k==1 and experiment_type == 'historical'):
+            return sesR[year_idx-1850]
         else:
             return empser
 
     def empirical_pvalue(year_idx, point,k,two_sided=True, tail_threshold=1/100*4, num_closest_samples=int(100/7)):
-        if(k!=0):
+        if(k!=0 and k!=1):
             return np.full(np.shape(year_idx),np.nan)
         year_idx = np.atleast_1d(year_idx)
         point = np.atleast_1d(point)
@@ -92,13 +124,13 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             if ~np.isnan(point[i]):
                 if (k==0):
                     dist0 = samp_cur[year_idx[i]-1850, :]  # Distribution for the current year
-                else:
+                elif (k==1 and experiment_type == 'historical'):
                     dist0 = samp_ret[year_idx[i]-1850, :]  # Distribution for the current year
                 dist = dist0[~np.isnan(dist0)]
                 cdist = np.nanmean(dist)
                 if(len(dist)==0):
                     continue
-                
+
                 empirical_p_count2 = 2* min( np.sum((dist - point[i]) >= 0),  np.sum((- dist + point[i]) >= 0))/ len(dist) #count number of dist samples farther away than point
                 empirical_p_count = np.sum((dist - point[i]) >= 0)/ len(dist) #point[i] is greater than how many within dist?
                     
@@ -135,7 +167,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         return empirical_p
 
     def empirical_log_likelihood(year_idx, point,k):
-        if(k!=0):
+        if(k!=0 and k!=1):
             return np.full(np.shape(year_idx),np.nan)
         year_idx = np.atleast_1d(year_idx)
         point = np.atleast_1d(point)
@@ -146,8 +178,10 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 dist0 = samp_cur[year_idx[i]-1850, :]  # Distribution for the current year
                 mask = np.isnan(dist0)
                 dist = dist0[~mask]
-            else:
-                return empser
+            elif (k==1 and experiment_type == 'historical'):
+                dist0 = samp_ret[year_idx[i]-1850, :]  # Distribution for the current year
+                mask = np.isnan(dist0)
+                dist = dist0[~mask]
             if(sum(~np.isnan(dist))>0 and ~np.isnan(point[i]).all()):
                 epdf = stats.gaussian_kde(dist)
                 empirical_ll[i] = epdf.logpdf(point[i])
@@ -172,8 +206,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         for i in range(len(year_idx)):
             if (k==0):
                 dist0 = samp_cur[year_idx[i]-1850, :]  # Distribution for the current year
-            else:
-                return resamps
+            elif (k==1 and experiment_type == 'historical'):
+                dist0 = samp_ret[year_idx[i]-1850, :]
             dist = dist0[~np.isnan(dist0)]
             if( len(dist)!=0 ):
                 epdf = stats.gaussian_kde(dist)

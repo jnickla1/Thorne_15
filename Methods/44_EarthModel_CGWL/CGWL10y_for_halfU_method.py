@@ -38,6 +38,29 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         ses[i] = np.sqrt(tot_uncert/ len(chunk)) #smaller due to 10>4
         deviations = ( np.mean(chunk)/2 + forec_samps/2 ) - means[i]
         samp_cur[i,:] = means[i] + deviations*ses[i]/ses0
+
+#RETROSPECTIVE
+##    avg_len_l=10
+##    avg_len_u=11 #actually 10 yrs below, that year, 10 yrs after
+##    meansR = empser.copy()
+##    sesR = empser.copy()
+##    (temps_CIl, temps_CIu) = uncert
+##    temps_1std = (temps_CIu - temps_CIl) / 4 #pm2 stdevs
+##    if experiment_type == 'historical':
+##        cur_path = os.path.dirname(os.path.realpath(__file__))
+##        hadcrutUncertFile = pd.read_csv(cur_path+"/../../../Common_Data/HadCRUT.5.0.2.0_20_yr_run_mean.csv") 
+##        hadcrutUncert = hadcrutUncertFile["Total_uncert_(1sigma)"]
+##    for i in range(avg_len_l, len(years) - avg_len_u+1):
+##        chunk=temperature[i-avg_len_l:i+avg_len_u]
+##        chunk_uncert=temps_1std[i-avg_len_l:i+avg_len_u]
+##        meansR[i] = np.mean(chunk)
+##        if experiment_type == 'historical':
+##            tot_uncert = np.var(chunk) + np.mean(chunk_uncert**2)
+##        else:
+##            tot_uncert = ((hadcrutUncert[i-avg_len_l])**2 ) /len(chunk)
+##        sesR[i] = np.sqrt(tot_uncert)
+##        #NEED RAW Historical forecast data starting at 2024, currently dont' have this
+
         
 
     def empirical_mean(year_idx,k):

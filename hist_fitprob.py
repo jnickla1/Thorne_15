@@ -13,16 +13,22 @@ start = time.process_time()
 import collections
 from scipy.optimize import minimize
 import sys
-
+from netCDF4 import Dataset
+from fut_evaluation_gen_ensemble import eval_standard
 from datetime import datetime
 current_date = datetime.now()
 formatted_date = current_date.strftime("%y%m%d")
 
 historical_regen=True #MUST BE TRUE IN THIS FILE
 
+def average_every_n(lst, n):
+    """Calculates the average of every n elements in a list."""
+    return np.array([np.mean(lst[i:i + n]) for i in range(0, len(lst), n)])
 
-running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/3_Human_Induced')
-    #'Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
+
+running_subset = ('Methods/42_Temp_Alone', 'Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL')
+    #'Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/3_Human_Induced')
+    #
                 #'Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/3_Human_Induced',
                  # ,'Methods/43_Forcing_Based/0_Linear','Methods/44_EarthModel_CGWL')
 
@@ -98,7 +104,7 @@ except:
 #ftl = np.argsort(index_mapping) #from to list - where a certain method should be plotted
 
 
-
+from numpy.polynomial.hermite import hermgauss
 
 if __name__ == '__main__':
     regen=historical_regen #False #whether to execute all of the methods directly (True) or read from a pickle file to rapidly redraw the figures (False).
@@ -131,6 +137,9 @@ if __name__ == '__main__':
 
 #####START FUTURE PROCESSING CODE
     else:
+        temps_CIu_past =data.loc[:,"Upper"].to_numpy() #Lower confidence limit (2.5%)	Upper confidence limit (97.5%)
+        temps_CIl_past =data.loc[:,"Lower"].to_numpy()
+        temps_obs_past=temps_obs #already read in
         years_past=data.loc[:,"Time"].to_numpy()
         
         start_run = int(sys.argv[2])
@@ -246,7 +255,9 @@ if __name__ == '__main__':
     inum=12 #internal interpolation within years
     standard = results['cent20y']['LT_trend'][2] #retrospective
     standard_se=results['cent20y']['LT_trend'][3]
-    #breakpoint()
+    np.save(f'Results2/{outputfilename}_standard.npy', standard)
+    np.save(f'Results2/{outputfilename}_standard_se.npy', standard_se)
+    
     smooth_std = np.nanmean(np.abs(np.diff(np.diff(standard))))
 
 
@@ -275,6 +286,7 @@ if __name__ == '__main__':
 
     df_results = pd.DataFrame(columns=['method_name', 'short_method_class','err_var', 'err_var100', 'best_alter_scale'])
     i=0
+    all_central_est = []
     all_sampled_lls = []
     all_newsamples = []
     ci=0
@@ -354,20 +366,31 @@ if __name__ == '__main__':
                 err_var = np.nanmean((central_est-standard)**2)
                 err_var100 = np.nanmean((central_est[-100:] -standard[-100:])**2)
                 best_alter_scale = minimize(rescale_log_likelihood, x0=1, bounds=[(0.01, 100.0)]).x[0]
-                nsamples = 500
+                nsamples = 1000
+                nnodes = 100
                 nyrs = len(years)
-                standard_samples= np.random.normal(loc=standard[:, np.newaxis], scale=standard_se[:, np.newaxis], size=(nyrs,nsamples)) #dimensions
+                #standard_samples= np.random.normal(loc=standard[:, np.newaxis], scale=standard_se[:, np.newaxis], size=(nyrs,nsamples)) #dimensions
+                x, w = hermgauss(nnodes)
+                #alpha = w / np.sqrt(np.pi)  # normalized weights - will regenerate in next script
+                # Precompute y nodes for the target distribution
+                standard_samples = standard[:, None] + standard_se[:, None] * np.sqrt(2.0) * x[None, :] #size=(nyrs,nnodes)
+
                 if(isgauss):
                     sampled_lls = stats.norm.logpdf(standard_samples,loc=central_est[:, np.newaxis],scale=se[:, np.newaxis]*best_alter_scale)
                     newsamples = np.random.normal(loc=central_est[:, np.newaxis], scale=se[:, np.newaxis]*best_alter_scale, size=(nyrs,nsamples))
                 else:
-                    
-                    deviances = standard_samples - central_est[:, np.newaxis]
+                    deviances = standard_samples - central_est[:, np.newaxis] #relative to this method's central estimate
                     resc_standard_samples = central_est[:, np.newaxis] + deviances/best_alter_scale
                     sampled_lls = result['log_likelihood'](years, resc_standard_samples ,k) - np.log(best_alter_scale) #need to ensure dimensions work
                     newsamples = (result['resample'](years, nsamples,k) - central_est[:, np.newaxis])/best_alter_scale + central_est[:, np.newaxis]
 
+
+                #if(method_name=="CGWL10y_for_halfU"):
+                #    breakpoint()
+                #if(method_name=="EBMKF_ta2"):
+                #    breakpoint()
                 df_results.loc[i]= [ method_name,short_method_class,err_var, err_var100, best_alter_scale]
+                all_central_est.append(central_est)
                 all_sampled_lls.append(sampled_lls)      # shape (nyears,n_samples)
                 all_newsamples.append(newsamples)  
                 i=i+1
@@ -375,7 +398,8 @@ if __name__ == '__main__':
 
 
     df_results.to_csv(f'Results2/{outputfilename}_names_var_scale.csv', index=True)
-    np.save(f'Results2/{outputfilename}_sampled_lls.npy', np.stack(all_sampled_lls))
+    np.save(f'Results2/{outputfilename}_central_est.npy', np.stack(all_central_est))
+    np.save(f'Results2/{outputfilename}_hermguass_lls.npy', np.stack(all_sampled_lls))
     np.save(f'Results2/{outputfilename}_newsamples.npy', np.stack(all_newsamples))
     
 
