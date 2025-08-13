@@ -15,6 +15,7 @@ from scipy.optimize import minimize
 import sys
 from netCDF4 import Dataset
 from fut_evaluation_gen_ensemble import eval_standard
+from fut_evaluation_script import gen_orig_number
 from datetime import datetime
 current_date = datetime.now()
 formatted_date = current_date.strftime("%y%m%d")
@@ -124,7 +125,7 @@ if __name__ == '__main__':
     if (experiment_type =='historical'):
         outputfilename = experiment_type
         # Run all the methods
-
+        model_run= ''
         if regen:
             results = run_methods(years, temps_obs, (temps_CIl, temps_CIu),model_run, experiment_type)
             #no need to pickle
@@ -137,6 +138,7 @@ if __name__ == '__main__':
 
 #####START FUTURE PROCESSING CODE
     else:
+        model_run = sys.argv[2]
         temps_CIu_past =data.loc[:,"Upper"].to_numpy() #Lower confidence limit (2.5%)	Upper confidence limit (97.5%)
         temps_CIl_past =data.loc[:,"Lower"].to_numpy()
         temps_obs_past=temps_obs #already read in

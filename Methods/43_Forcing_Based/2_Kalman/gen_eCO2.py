@@ -111,8 +111,8 @@ def calculate_equivalent_co2(forcing_values):
 def recompute_eCO2(ssp, cmip_model):
     # File paths
     co2_file = config.CLIMATE_DATA_PATH+"/"+cmip_model+"/co2mass/"+ssp+"_co2mass.nc"
-    n2o_dir = config.CLIMATE_DATA_PATH+"/SSP_inputdata/UoM1_2_0")
-    erf_file = config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_{ssp}_1750-2500.csv")
+    n2o_dir = config.CLIMATE_DATA_PATH+"/SSP_inputdata/UoM1_2_0"
+    erf_file = config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_{ssp}_1750-2500.csv"
     output_dir = config.CLIMATE_DATA_PATH+"/SSP_inputdata"
 
     # Step 1: Read CO2 values and convert to ppm

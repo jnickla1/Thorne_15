@@ -126,6 +126,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                     dist0 = samp_cur[year_idx[i]-1850, :]  # Distribution for the current year
                 elif (k==1 and experiment_type == 'historical'):
                     dist0 = samp_ret[year_idx[i]-1850, :]  # Distribution for the current year
+                else:
+                    return np.full(np.shape(year_idx),np.nan)
                 dist = dist0[~np.isnan(dist0)]
                 cdist = np.nanmean(dist)
                 if(len(dist)==0):
@@ -182,6 +184,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 dist0 = samp_ret[year_idx[i]-1850, :]  # Distribution for the current year
                 mask = np.isnan(dist0)
                 dist = dist0[~mask]
+            else:
+                return np.full(np.shape(year_idx),np.nan)
             if(sum(~np.isnan(dist))>0 and ~np.isnan(point[i]).all()):
                 epdf = stats.gaussian_kde(dist)
                 empirical_ll[i] = epdf.logpdf(point[i])

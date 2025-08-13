@@ -24,7 +24,7 @@ def gen_orig_number(new_member_number,sz_ens):
     else:
         return recovered_order[new_member_number]
 
-regen = 2 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
+regen = 1 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
 
 
 data = pd.read_csv("./Common_Data/HadCRUT5.csv")
@@ -278,7 +278,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         ax4_labels=[]
         df_results = pd.DataFrame(columns=['method_name', 'method_class','c/r','smooth_r','avg_unc.(1se)','#q<0.5', '#q<0.1', 'q_min', 'q_small5',
                                            'log-likeli','RMS','bias','tlog-l',
-                                           '100log-l','100RMS','100bias',
+                                           '100log-l','100RMS','75RMS','100bias',
                                            'l15','l20',
                                            'bias50','Edyrs15','Edyrs20','Mdyrs15','Mdyrs20','Fdyrs15','Fdyrs20',
                                            'EdyrsA','RMSyrsA','ncEdyrs',
@@ -490,7 +490,9 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     candidate_row= [ method_name,short_method_class,labelcurr_or_retro,smooth_est/smooth_std,avg_uncert,
                                      qvals_count_yrs05,qvals_count_yrs01,  qvals_smallest,qvals_smallest5, np.nanmean(llikelihood), np.sqrt(np.nanmean((central_est-standard)**2)),
                                        np.nanmean(central_est-standard) , np.nansum(llikelihood),
-                                         np.nansum(llikelihood[lhund:-1]),np.sqrt(np.nanmean((central_est[lhund:-1]-standard[lhund:-1])**2)),np.nanmean(central_est[lhund:-1]-standard[lhund:-1]),
+                                         np.nansum(llikelihood[lhund:-1]),np.sqrt(np.nanmean((central_est[lhund:-1]-standard[lhund:-1])**2)),
+                                         np.sqrt(np.nanmean((central_est[(lhund+25):-1]-standard[(lhund+25):-1])**2)),
+                                         np.nanmean(central_est[lhund:-1]-standard[lhund:-1]),
                                          detailLL[0], detailLL[1],
                                          np.nanmean(central_est[-50:]-standard[-50:]),aedyrs[4], (aedyrs[9] if (len(aedyrs)>9) else -1),
                                          maedyrs[4], (maedyrs[9] if (len(maedyrs)>9) else -1),faedyrs[4], (faedyrs[9] if (len(faedyrs)>9) else -1),

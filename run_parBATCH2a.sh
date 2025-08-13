@@ -6,7 +6,7 @@
 #SBATCH -n 1
 #SBATCH --mem-per-cpu=5g
 #SBATCH --array=0-29  # Sweeps ENSEMBLE_RUN
-#SBATCH -o logs3/a-%A_%a.out
+#SBATCH -o logs3/f-%A_%a.out
 
 module load matlab/R2019a-rjyk3ws
 module load r
@@ -25,7 +25,7 @@ scenarios=(
 for scenario in "${scenarios[@]}"; do
     #for i in `seq 0 10 40`; do
     if [ "$i" -lt 50 ]; then
-        python3 fut_evaluation_script.py "$scenario" "$i" &
+        python3 hist_fitprob.py "$scenario" "$i" &
     fi
 done
 
@@ -36,7 +36,7 @@ scenarios=(
 
 # Loop over scenarios and ranges in parallel
 for scenario in "${scenarios[@]}"; do
-        python3 fut_evaluation_script.py "$scenario" "$i" &
+        python3 hist_fitprob.py "$scenario" "$i" &
 done
 
 
