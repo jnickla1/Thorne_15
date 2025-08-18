@@ -6,7 +6,7 @@
 #SBATCH -n 1
 #SBATCH --mem-per-cpu=5g
 #SBATCH --array=0-29  # Sweeps ENSEMBLE_RUN
-#SBATCH -o logs3/a-%A_%a.out
+#SBATCH -o logs3/b-%A_%a.out
 
 module load matlab/R2019a-rjyk3ws
 module load r

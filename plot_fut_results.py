@@ -108,7 +108,7 @@ for volc_id in ["Volc","VolcConst"]:
     if df_list:
         # Concatenate all filtered/sorted dataframes
         all_data = pd.concat(df_list)
-        rmse_cols = ['RMS', '100RMS', 'e100RMS']
+        rmse_cols = ['RMS', '100RMS','75RMS', 'e100RMS','e75RMS']
         # Compute numeric means excluding RMSE columns
         numeric_cols = all_data.select_dtypes(include=[np.number]).columns.difference(rmse_cols)
         averaged_numeric = all_data.groupby('method_name')[numeric_cols].mean().reset_index()
