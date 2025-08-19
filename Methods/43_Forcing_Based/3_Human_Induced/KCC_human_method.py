@@ -28,7 +28,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     for endi in range(stidx, len(years)):
         obt_array = obtain_file(endi+1850)
         #print(obt_array)
-        samp_cur[endi,:] = obt_array[endi,:]
+        samp_cur[endi,:] = obt_array[endi,:]+0.0393
         
     samp_ret=obtain_file(len(years)-1+1850)
 #load all samples into this module

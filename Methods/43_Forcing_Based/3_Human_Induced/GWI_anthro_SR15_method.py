@@ -25,7 +25,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/SR15_ESM1-2-LR/"+
                 "GWI_results_SR15_HISTORICAL-ONLY_SCENARIO--observed-SSP245_ENSEMBLE-MEMBER-"+
                                        "-all_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2024.csv", header=[0, 1])
-        curbias = 0
+        curbias = -0.0001
         
     else:
         #future case, grabbing the ANNUAL resutls

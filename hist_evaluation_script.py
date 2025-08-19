@@ -18,7 +18,7 @@ from datetime import datetime
 current_date = datetime.now()
 formatted_date = current_date.strftime("%y%m%d")
 
-historical_regen=False #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
+historical_regen=True #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
 
 # ================================
 # Define Method Full Names, Colors, Location on Violin plots

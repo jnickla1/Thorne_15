@@ -89,7 +89,7 @@ if __name__ == '__main__':
 
             
         elif nmethods ==30:
-            rmse_df = pd.read_csv("current_methods_statistics_250622True.csv")
+            rmse_df = pd.read_csv("current_methods_statistics_250818True.csv")
             bad_rmse_methods = rmse_df.loc[rmse_df['RMS'] > 0.06, 'method_name']
             #manual_exclude = ['CGWL10y_forec', 'some_other_method']  # replace with actual names
             manual_exclude = ['']

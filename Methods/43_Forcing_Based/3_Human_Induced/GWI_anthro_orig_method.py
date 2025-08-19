@@ -26,7 +26,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         gwi_r =gwi_levels_retro['Ant'].to_numpy()
         gwi_levels_curr0 = pd.read_csv(cur_path+"/GWI_data/GWI_hist_only.csv", header=[0, 1])
         gwi_levels_curr =gwi_levels_curr0.iloc[1:,]
-        gwi_c =gwi_levels_curr['Ant'].to_numpy()
+        gwi_c =gwi_levels_curr['Ant'].to_numpy() + 0.0116
         lyearr = np.shape(gwi_r)[0]
         lyearc = np.shape(gwi_c)[0]
         lyear = lyearr + 1850 
