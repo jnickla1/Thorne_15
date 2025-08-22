@@ -44,6 +44,9 @@ if __name__ == '__main__':
         best_scalesf = np.full(const_shape,np.nan)
         central_estfut = np.full(tseries_shape,np.nan)
         node_llsf = np.full((5,60,nmethods,nyears,nnodes),np.nan)
+
+        standardsf = np.full((5,60,nyears),np.nan)
+        standards_sef = np.full((5,60,nyears),np.nan)
         
         for exp_index, experiment_type in enumerate(scenarios):
             for model_run in range(60):
@@ -61,6 +64,8 @@ if __name__ == '__main__':
                     best_scalesf[exp_index,model_run,:] = df_results['best_alter_scale'].to_numpy()
                     central_estfut[exp_index,model_run,:,:] = np.load(f'Results2/{outputfilename}_central_est.npy',mmap_mode="r")[:,0:250]
                     node_llsf[exp_index,model_run,:,:,:] = np.load(f'Results2/{outputfilename}_hermguass_lls.npy',mmap_mode="r")[:,0:250,:]
+                    standardsf[exp_index,model_run,:] = np.load(f'Results2/{outputfilename}_standard.npy')[0:250]
+                    standards_sef[exp_index,model_run,:] = np.load(f'Results2/{outputfilename}_standard_se.npy')[0:250]
         
 
         if comparison_type[0]=='f':
@@ -74,11 +79,11 @@ if __name__ == '__main__':
 #            do this in a big outer loop
     nmethods_list = [8] #8 16 later 30
     years = np.arange(1850,1850+nyears)
-    for nmethods in nmethods_list:
+    for nnmethods in nmethods_list:
         #big outer loop
         mask_a=[]
         avail_methods_list = []
-        if nmethods ==10 or nmethods == 8:
+        if nnmethods ==10 or nnmethods == 8:
             # --- a) Subset to just the 8 selected methods ---
             avail_methods_list = [ "CGWL10y_for_halfU","EBMKF_ta2","EBMKF_ta4","GAM_AR1",
                  "lowess1dg20wnc","Kal_flexLin","FaIR_comb_unB","FaIR_nonat_unB","GWI_anthro_SR15","CGWL10y_sfUKCP"]
@@ -88,7 +93,7 @@ if __name__ == '__main__':
             
 
             
-        elif nmethods ==30:
+        elif nnmethods ==30:
             rmse_df = pd.read_csv("current_methods_statistics_250622True.csv")
             bad_rmse_methods = rmse_df.loc[rmse_df['RMS'] > 0.06, 'method_name']
             #manual_exclude = ['CGWL10y_forec', 'some_other_method']  # replace with actual names
@@ -98,7 +103,7 @@ if __name__ == '__main__':
             avail_methods = all_methods[mask_a]
 
 
-        elif nmethods ==16:
+        elif nnmethods ==16:
             rmse_df = pd.read_csv("current_methods_statistics_250622True.csv")
             bad_rmse_methods = rmse_df.loc[rmse_df['RMS'] > 0.06, 'method_name']
             #manual_exclude = ['CGWL10y_forec', 'some_other_method']  # replace with actual names
@@ -115,9 +120,8 @@ if __name__ == '__main__':
             mask_a = ~all_methods.isin(exclude_methods).values
             avail_methods = all_methods[mask_a]
             #print(avail_methods)
-        print(len(avail_methods))
-
-
+        print(str(len(avail_methods))+" methods")
+        nmethods=len(avail_methods)
 ##        if comparison_type=='hh':
 ##            vars100 = err_vars100[mask_a]
 ##            #scales =  best_scales[mask_a] #dont need from this point on to use the scales
@@ -135,7 +139,7 @@ if __name__ == '__main__':
 
         nruns = 60 #SETTING UP THE EVALUATION LOOP
         endyear=2099
-        crit_j=10
+        crit_j=2 #10
         summethods_shape = (5,60,2)
         ncrosses_array=np.full(summethods_shape,np.nan)
         firstcross15_diff=np.full(summethods_shape,np.nan)
@@ -143,62 +147,75 @@ if __name__ == '__main__':
         kl_array= np.full(summethods_shape,np.nan)
         sum2methods_shape = (5,2)
         firstcross15_sum=np.full(sum2methods_shape,np.nan)
-
+        lhund=-100  
         for exp_index, experiment_type in enumerate(scenarios):
             for model_run in range(nruns):
                 if(experiment_type[0:8]=="fut_ESM1" and model_run>=50):
                     continue
-                err_vars100a=np.copy(err_vars100)
-                err_vars100a[exp_index,model_run,mask_a]=np.nan #masking out this run's err_vars
-                vars100 = np.nanmean(err_vars100a[:,:,mask_a],axis=(0,1))
+                err_vars100a=err_vars100[:,:,mask_a].copy()
+                err_vars100a[exp_index,model_run,:]=np.nan #masking out this run's err_vars
+                vars100 = np.nanmean(err_vars100a,axis=(0,1))
                 #combine all to one variance estimate
                 #scales =  best_scales[:,:,mask_a] #DONT NEED to combine the scales
-                lls0 = node_lls[:,:,mask_a,:,:] #np.shape(lls) =(10, 175, 100)
-                lls = lls0.transpose(2, 0, 1, 3, 4).reshape(nmethods, nyears * 5 * 60, nnodes)
+                print("setting up lls")
+                lls0 = node_lls[:,:,mask_a,lhund:-10,:].copy() 
+                lls0[exp_index,model_run,:,:]=np.nan
+                lls_wnan = lls0.transpose(2, 0, 1, 3, 4).reshape(nmethods, (-10-lhund)* 5 * 60, nnodes)
+                finite = np.isfinite(lls_wnan)                           # (K, T, M)
+                valid_T = np.all(finite, axis=(0, 2))               # keep timepoints with no NaNs across models & nodes
+                lls = lls_wnan[:, valid_T, :]                      # (K, T_keep, M)
                 #TODO - for ff drop the particular one we are leaving out here
-                centralsf = central_estfut[:,:,mask_a,:].transpose(2, 0, 1, 3, 4).reshape(nmethods, nyears * 5 * 60)
-
-                #note that these two have different dimesions and that's ok
-                #both might be needed to calibrate the final se adjustment, then verify accuracy
-            
+                central_estfuta=central_estfut[:,:,mask_a,lhund:-10].copy()
+                central_estfuta[exp_index,model_run,:]=np.nan
+                centralsf0 = central_estfuta.transpose(2, 0, 1, 3).reshape(nmethods, (-10-lhund) * 5 * 60)
+                centralsf = centralsf0[:, valid_T] 
+                print("created lls") 
         #generate weights/distributions for each: IVW and stacking
                 ivweights = 1/vars100
                 x, w = hermgauss(100)
                 z = np.sqrt(2.0) * x
                 alpha = w / np.sqrt(np.pi)
-                infilled_lls = infill_log_likelihoods(lls[:,10:-10,:],penalty=0)
+                infilled_lls = infill_log_likelihoods(lls,penalty=0)
                 stack_weights = fit_stacking_weights_logp(infilled_lls,alpha)
+
+                print("weights fitted")
                 
-        #new center and dist generation function called once or many times for LOO
-                if comparison_type[0]=='h':
-                    ivcenters = np.nansum(centralsh * ivweights[:,None],axis=0) / np.nansum( ~np.isnan(centralsh) * ivweights[:,None],axis=0)
-                    blended = predict_non_nan(stack_weights, samplesh)
 
                 if comparison_type[0]=='f':
-                    #TODO COME BACK TO THIS FOR FF CASE
-                    ivcenters = np.nansum(centralsf * ivweights[None,None,:,None],axis=2) / np.nansum( ~np.isnan(centralsf) * ivweights[None,None,:,None],axis=2)
-                    blended = np.full((5,60,250,nsamples), np.nan)
-                    for exp_index, experiment_type in enumerate(scenarios):
-                        for model_run in range(60):
-                            if(experiment_type[0:8]=="fut_ESM1" and model_run>=50):
-                                continue
-                            #TODO: also continue if we hit the LOO one that 
-                            blended[exp_index,model_run,:,:] = predict_non_nan(stack_weights, samplesf[exp_index,model_run,:,:,:])
-
+                    #ivcenters = np.nansum(central_estfut[:,:,mask_a,lhund:-10] * ivweights[None,None,:,None],axis=2) / np.nansum( ~np.isnan(central_estfut[:,:,mask_a,lhund:-10]) * ivweights[None,None,:,None],axis=2)
+                    valid = np.any(~np.isnan(central_estfut[:, :, mask_a, lhund:-10]), axis=(2))
+                    num = np.nansum(central_estfut[:, :, mask_a, lhund:-10] * ivweights[None, None, :, None], axis=2)
+                    den = np.nansum((~np.isnan(central_estfut[:, :, mask_a, lhund:-10])) * ivweights[None, None, :, None], axis=2)
+                    ivcenters = np.full(num.shape, np.nan)
+                    np.divide(num, den, out=ivcenters, where=valid)
+                    #these constructed for all
+                    blended_trial = np.full((10,-10-lhund,nsamples), np.nan)
+                    standards_trial = np.full((10,-10-lhund), np.nan)
+                    standards_se_trial = np.full((10,-10-lhund), np.nan)
+                    for exp_indext, experiment_type in enumerate(scenarios):
+                        for model_runt in range(2):
+                            model_runt2 = model_runt*2
+                            if (exp_index == exp_indext and model_run==model_runt2):
+                                model_runt2 = model_runt+1
+                            else:
+                                model_runt2 = model_runt
+                            outputfilenamet = f'{experiment_type}{model_runt2}' 
+                            tempsamplesf = np.load(f'Results2/{outputfilenamet}_newsamples.npy',mmap_mode="r")[:,lhund:-10,:] #newsamplesfut[exp_index,model_run,:,:,:] =
+                            blended_trial[(exp_indext*2 + model_runt),:,:] = predict_non_nan(stack_weights, tempsamplesf[mask_a,:,:])
+                            standards_trial[(exp_indext*2 + model_runt),:] = standardsf[exp_indext,model_runt2,lhund:-10]
+                            standards_se_trial[(exp_indext*2 + model_runt),:] = standards_sef[exp_indext,model_runt2,lhund:-10]
 
         #training standard to fix variances
-                if comparison_type[0]=='h':
-                    standard = np.load(f'Results2/historical_standard.npy')
-                    standard_se = np.load(f'Results2/historical_standard_se.npy')
+                if True:
                     #def rescale_log_likelihood(scale_alt):
                     #    log_lik=stats.norm.logpdf(standard[-100:],loc=ivcenters[-100:],scale=scale_alt)
                     #    return -np.nansum(log_lik)
-                    def rescale_KL_anystd(scale,standardi,standard_sei,eeoffset=0):
-                        yearKL = np.log(scale/standard_sei[-100:-10-eeoffset]) + (standard_sei[-100:-10-eeoffset]**2 + (standardi[-100:-10-eeoffset]-ivcenters[-100:-10-eeoffset])**2 )/2/(scale)**2 - 0.5
-                        return np.nansum(yearKL)
+                    def rescale_KL_anystd(scale,standardi,standard_sei,eeoffset=0,ivcentersi=ivcenters):
+                        yearKL = np.log(scale/standard_sei) + (standard_sei**2 + (standardi-ivcentersi)**2 )/2/(scale)**2 - 0.5
+                        return np.nansum(yearKL,axis=None)
                     
                     def rescale_KL(scale): #now this is a passthrough function
-                        return rescale_KL_anystd(scale,standard,standard_se)
+                        return rescale_KL_anystd(scale,standardsf[:,:,lhund:-10],standards_sef[:,:,lhund:-10])
                     best_scale_iv = minimize(rescale_KL, x0=0.04, bounds=[(0.001, 1)]).x[0] #gets a constant uncertainty
                     best_iv_KL = rescale_KL(best_scale_iv)
 
@@ -241,12 +258,12 @@ if __name__ == '__main__':
 
                     
                     def rescale_KL_stack(scale: float):
-                        sharpened = sharpen_samples(blended, scale[0], seed = 42)
-                        return kl_total_true_vs_empirical_gh(sharpened, standard, standard_se)
+                        sharpened = sharpen_samples(blended_trial.reshape(-1, nsamples), scale[0], seed = 42)
+                        return kl_total_true_vs_empirical_gh(sharpened, standards_trial.reshape(-1), standards_se_trial.reshape(-1))
 
                     best_nsharp = minimize(rescale_KL_stack, x0=2, bounds=[(1, 10)], tol=0.005).x[0]
-                    sharpened_blended = sharpen_samples(blended, best_nsharp, seed = 2)
-                    best_stack_KL = kl_total_true_vs_empirical_gh(sharpened_blended, standard, standard_se)
+                    sharpened_blended = sharpen_samples(blended_trial.reshape(-1, nsamples), best_nsharp, seed = 2)
+                    best_stack_KL = kl_total_true_vs_empirical_gh(sharpened_blended, standards_trial.reshape(-1), standards_se_trial.reshape(-1))
                         
                 print("finished fitting weights and variances")
             #fut standard can read in from "Results/ensemble_mean_fut_ESM1-2-LR_SSP370_constVolc.csv"
@@ -257,14 +274,14 @@ if __name__ == '__main__':
 
                 print(model_run)
                 outputfilename = f'{experiment_type}{model_run}'
-                standard = np.load(f'Results2/{outputfilename}_standard.npy')[0:250]
-                standard_se = np.load(f'Results2/{outputfilename}_standard_se.npy')[0:250]
-                central_estfut[exp_index,model_run,:,:]
-                
-                ivcenters = np.nansum(centralsf[exp_index,model_run,:,:] * ivweights[:,None],axis=0) / np.nansum( ~np.isnan(centralsf[exp_index,model_run,:,:]) * ivweights[:,None],axis=0)
+                estartyr=(2000-1850)
+                standard = np.load(f'Results2/{outputfilename}_standard.npy')[estartyr:250]
+                standard_se = np.load(f'Results2/{outputfilename}_standard_se.npy')[estartyr:250]
+                centrals_testf = central_estfut[exp_index,model_run,mask_a,estartyr:250]
+                ivcenters_test = np.nansum(centrals_testf * ivweights[:,None],axis=0) / np.nansum( ~np.isnan(centrals_testf) * ivweights[:,None],axis=0)
                 #same best_scale_iv as calculated above
-                best_iv_KL = rescale_KL_anystd(best_scale_iv,standard,standard_se,eeoffset=0)
-                tempsamplesf = np.load(f'Results2/{outputfilename}_newsamples.npy',mmap_mode="r")[:,0:250,:] #newsamplesfut[exp_index,model_run,:,:,:] =
+                best_iv_KL = rescale_KL_anystd(best_scale_iv,standard,standard_se,eeoffset=0,ivcentersi=ivcenters_test)
+                tempsamplesf = np.load(f'Results2/{outputfilename}_newsamples.npy',mmap_mode="r")[:,estartyr:250,:] #newsamplesfut[exp_index,model_run,:,:,:] =
                 blended = predict_non_nan(stack_weights, tempsamplesf[mask_a,:,:])
                 sharpened_blended = sharpen_samples(blended, best_nsharp, seed = 6)
                 best_stack_KL = kl_total_true_vs_empirical_gh(sharpened_blended, standard, standard_se,eeoffset=0)
@@ -272,17 +289,19 @@ if __name__ == '__main__':
                     
         
                 inum=12 #internal interpolation within years
-                fineyrs_all = np.arange(years[0],years[-1]+1/inum,1/inum)
-                std_intp0 = np.interp(fineyrs_all,years,standard)
+                fineyrs_all = np.arange(years[estartyr],years[250-1]+1/inum,1/inum)
+                std_intp0 = np.interp(fineyrs_all,years[estartyr:250],standard)
                 std_intp = std_intp0[~np.isnan(std_intp0)]
                 fineyrs_c0 = fineyrs_all[~np.isnan(std_intp0)]
                 fineyrs_c = fineyrs_c0[1:]
-                thrshs= np.arange(0.5,np.nanmax(standard) ,.1) #thresholds #CHANGE FOR NONHISTORICAL
+                thrshs= np.arange(1.3,np.nanmax(standard) ,.1) #thresholds #CHANGE FOR NONHISTORICAL
                 #print(f"evaluating {len(thrshs)} of 0.1°C thresholds, starting at 0.5°C")
                 closest_years = [-1/inum/2+fineyrs_c[np.logical_and(std_intp[0:-1]<i, std_intp[1:]>=i)][0] for i in thrshs]
                                #will have a variable number of steps, at least including 0.5
                 closest_yrs_rnd = np.round(closest_years)
                 win_sz=25
+
+                
 
                 aedyrs=np.zeros((2,len(thrshs)))
                 maedyrs=np.zeros((2,len(thrshs)))
@@ -300,10 +319,10 @@ if __name__ == '__main__':
                             #this_method_p_steps = result['pvalue'](evalyrs, np.full(np.shape(evalyrs),thrshs[j]),k, two_sided=False)
                             this_method_p_steps=np.zeros(np.shape(evalyrs))
                             for i,e in enumerate(evalyrs):
-                                kde = gaussian_kde(sharpened_blended[e-1850])                  
+                                kde = gaussian_kde(sharpened_blended[e-2100-lhund])                  
                                 this_method_p_steps[i] = kde.integrate_box_1d(thrshs[j],15) #integrate probability above threshold
-                        else: #IV is the zeroth method
-                            this_method_p_steps = norm.cdf(((ivcenters[evalyrs-1850]-thrshs[j])/ best_scale_iv))
+                        else: #IV is the zeroth methodi
+                            this_method_p_steps = norm.cdf(((ivcenters_test[evalyrs-2100-lhund]-thrshs[j])/ best_scale_iv))
 
                         first_non_nan = np.argmax(~np.isnan(this_method_p_steps))
                         this_method_p_steps[:first_non_nan] = 0
@@ -331,14 +350,14 @@ if __name__ == '__main__':
                             feval = 15
                         maedyrs[m,j] = mevalmean
                         faedyrs[m,j]=feval
-                lhund=-100       
+     
                 sharp_blend_central = np.mean(sharpened_blended,axis=1)
                 sharp_blend_se = np.std(sharpened_blended,axis=1)
-                stack_rmse = np.sqrt(np.nanmean((sharp_blend_central[lhund:-1]-standard[lhund:-1])**2)) ######
-                ivarw_rmse = np.sqrt(np.nanmean((ivcenters[lhund:-1]-standard[lhund:-1])**2))           ######     
+                stack_rmse = np.sqrt(np.nanmean((sharp_blend_central-standard)**2)) ######
+                ivarw_rmse = np.sqrt(np.nanmean((ivcenters_test-standard)**2))           ######     
                 if comparison_type[1]=='f':
                     ncrosses_array[exp_index,model_run,:]=ncrosses
-                    firstcross15_diff[exp_index,model_run,:]= faedyrs[:,10]
+                    firstcross15_diff[exp_index,model_run,:]= faedyrs[:,crit_j]
                     rmse_array[exp_index,model_run,:]= [ivarw_rmse, stack_rmse]
                     kl_array[exp_index,model_run,:]= [best_iv_KL, best_stack_KL]
                 
@@ -377,7 +396,7 @@ if __name__ == '__main__':
         if comparison_type[1]=='f':
             ncrosses_sum=np.nanmean(ncrosses_array,axis=1) #average
             rmse_sum= np.sqrt(np.nanmean(rmse_array**2,axis=1)) #square and mean then sqrt
-            kl_array= np.nanmean(firstcross15_diff, axis=1)/90 #average, also /89 for nyears
+            kl_array= np.nanmean(kl_array, axis=1)/(-10-lhund) #average, also / # nyears
 
             arrays = {
                 "firstcross15": firstcross15_sum,

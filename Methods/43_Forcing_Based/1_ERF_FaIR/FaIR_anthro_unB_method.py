@@ -45,7 +45,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             elif exp_attr[2][3:6]=="245":
                 curbias= -0.07
             elif exp_attr[2][3:6]=="370":
-                curbias= -.143
+                curbias= -.143-.043
        
         elif (exp_attr[1]=='NorESM'):
             #combined_all_current_NorESMVolcConstr1_anthro.npy

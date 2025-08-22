@@ -387,7 +387,7 @@ if __name__ == '__main__':
         if comparison_type[1]=='f':
             ncrosses_sum=np.nanmean(ncrosses_array,axis=1) #average
             rmse_sum= np.sqrt(np.nanmean(rmse_array**2,axis=1)) #square and mean then sqrt
-            kl_array= np.nanmean(firstcross15_diff, axis=1)/90 #average, also /89 for nyears
+            kl_array= np.nanmean(kl_array, axis=1)/90 #average, also /89 for nyears
 
             arrays = {
                 "firstcross15": firstcross15_sum,

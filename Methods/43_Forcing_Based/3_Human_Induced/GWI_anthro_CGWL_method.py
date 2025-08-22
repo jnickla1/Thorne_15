@@ -34,14 +34,14 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/CGWL_ESM1-2-LR/"+
                 "GWI_results_CGWL_HISTORICAL-ONLY_SCENARIO--SMILE_ESM-"+exp_attr[2]+"_ENSEMBLE-MEMBER--"+
                                            str(model_run)+"_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2100.csv", header=[0, 1])
-            biasdict = {"SSP126": -0.053106814 , "SSP245": -0.050788712,"SSP370": -0.05621548}
+            biasdict = {"SSP126": -0.053106814-0.01538/2 , "SSP245": -0.050788712-0.02930/2,"SSP370": -0.05621548 -0.06436/2}
             curbias = biasdict[exp_attr[2]]
         elif (exp_attr[1]=='NorESM'):
             model_run_noresm = gen_orig_number(model_run,60)
             gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/CGWL_NorESM/"+
                 "GWI_results_CGWL_HISTORICAL-ONLY_SCENARIO--NorESM_rcp45-"+exp_attr[3]+"_ENSEMBLE-MEMBER--"+
                                            str(model_run_noresm)+"_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2099.csv", header=[0, 1])
-            biasdict = {"Volc": -0.203514147772356, "VolcConst": -0.245520955420054}
+            biasdict = {"Volc": -0.203514147772356/2 -0.18392/2, "VolcConst": -0.245520955420054/2-0.23793/2}
             curbias = biasdict[exp_attr[3]]
     gwi_levels_curr =gwi_levels_curr0.iloc[1:,]
     gwi_c =gwi_levels_curr['Ant'].to_numpy() - curbias
