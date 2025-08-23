@@ -12,6 +12,8 @@ comparison_type = 'ff'
 
 # Collect per-scenario stacks
 firstcross15_sum = np.full((5,2), np.nan)
+firstcross2_sum = np.full((5,2), np.nan)
+firstcross5_sum = np.full((5,2), np.nan)
 ncrosses_sum     = np.full((5,2), np.nan)
 rmse_sum         = np.full((5,2), np.nan)
 kl_array         = np.full((5,2), np.nan)
@@ -37,14 +39,15 @@ for exp_index, exp in enumerate(scenarios):
     for m in range(2):
         kde = gaussian_kde(fc_diffs[:runs_len, m].ravel())
         firstcross15_sum[exp_index, m] = kde.integrate_box_1d(-1, 1)
-
+        firstcross2_sum[exp_index, m] = kde.integrate_box_1d(-2, 2)
+        firstcross5_sum[exp_index, m] = kde.integrate_box_1d(-5, 5)
     # Averages across runs (your original logic)
     ncrosses_sum[exp_index] = np.nanmean(ncrosses_stack, axis=0)
     rmse_sum[exp_index]     = np.sqrt(np.nanmean(rmse_stack**2, axis=0))
     kl_array[exp_index]     = np.nanmean(kl_stack, axis=0) / (-10 - lhund)
 
 # Tidy → wide CSVs
-arrays = {"firstcross15": firstcross15_sum, "ncrosses": ncrosses_sum,
+arrays = {"firstcross1": firstcross15_sum,"firstcross2":firstcross2_sum,"firstcross5":firstcross5_sum, "ncrosses": ncrosses_sum,
           "rmse": rmse_sum, "kl": kl_array}
 records = []
 for metric, arr in arrays.items():
