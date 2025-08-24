@@ -645,7 +645,7 @@ if __name__ == '__main__':
         run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
         plt.show()
         
-    elif exp_attr[0]=="futplotcomb" and exp_attr[1]=="ESM1-2-LR":
+    elif exp_attr[0]=="futplotcomb" and exp_attr[1]=="ESM1-2-LR": #11
         fig1, (axens, ax1a,ax1b)= plt.subplots(3, 1, figsize=(10,10), gridspec_kw={ "height_ratios" :[.6,1,1],"hspace": 0.35})
         fig4, (ax4a,ax4b)= plt.subplots(2, 1, figsize=(10,10), gridspec_kw={  "hspace": 0.3})
         exp1 = "fut_ESM1-2-LR_SSP126_constVolc"
@@ -769,7 +769,8 @@ if __name__ == '__main__':
         ax1a.get_legend().remove()
         ax1b.get_legend().remove()
         ax1b.legend(fontsize=6.5,ncol=6)
-        axens.set_title("Data from MPI-ESM1.2LR (Mauritsen 2019): \nImpact of Shared Socioeconomic Pathways on future climate")
+        axens.set_title("Impacts of various emission pathways and related changes \nin the rates of warming on evaluated methods")
+        #axens.set_title("Data from MPI-ESM1.2LR (Mauritsen 2019): \nImpact of Shared Socioeconomic Pathways on future climate")
         fig1.savefig("spaghettiSSPs.png", dpi=500,bbox_inches='tight')
 
         #plt.show()
@@ -849,7 +850,8 @@ if __name__ == '__main__':
         ax1a.set_ylim([0,2.75])
         ax1a.set_title(f"Evaluated Methods to find Current NorESM1-M RCP 4.5 - Min. Volc. Activity (memb. #{gen_orig_number(-min_run,60)})")
         ax1b.set_title(f"Evaluated Methods to find Current NorESM1-M RCP 4.5 - Max. Volc. Activity (memb. #{gen_orig_number(-max_run,60)})")
-        axens.set_title("Data from Bethke et. al. 2017: \nPotential volcanic impacts on future climate variability")
+        axens.set_title("Impacts of potential volcanic eruptions on \nfuture climate variability and on evaluated methods")
+        #axens.set_title("Data from Bethke et. al. 2017: \nPotential volcanic impacts on ")
         ax1a.set_xlabel("")
         ax1b.set_ylim([0,2.75])
         axens.set_ylim([0,2.75])
