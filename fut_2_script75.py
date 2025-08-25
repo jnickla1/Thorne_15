@@ -198,12 +198,11 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         ci=0
         labelcolors=[]
 
-        lhund=-101
-        l75=-76
+
+        lhund=-76
         lten=-11
         if (exp_attr[1]=='NorESM'):
-            lhund=-100
-            l75=-75
+            lhund=-75
             lten = -10
 
             
@@ -213,9 +212,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         faedyrs=np.zeros((2,len(thrshs)))
         ncrosses = np.zeros(2)
         kls = np.zeros(2)
-        kls75 = np.zeros(2)
         rmses = np.zeros(2)
-        rmses75 = np.zeros(2)
                     
         for method_name, method_data in sorted_results:
             if method_name == 'cent20y':
@@ -249,16 +246,13 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     x, w = hermgauss(100)
                     z = np.sqrt(2.0) * x
                     alpha = w / np.sqrt(np.pi)
-                    def rescale_KL(scale, stand0, stand_se0, lasts, laste,eps=1e-300,eeoffset=0):
+                    def kl_total_true_h(scale, stand, stand_se, eps=1e-300,eeoffset=0):
                         """
                         Sum_y KL( P_y || Q_y ),  P_y = N(standard[y], standard_se[y]^2),
                         Q_y = empirical via scipy.stats.gaussian_kde on sharp[y, :], using Gauss–Hermite quadrature.
                         """
-                        stand = stand0[lasts:laste]
-                        stand_se= stand_se0[lasts:laste]
-                        
                         total = 0.0
-                        for y in range(len(stand)+lasts,len(stand)+laste-eeoffset):
+                        for y in range(len(stand)+lhund,len(stand)+lten-eeoffset):
                             if np.isnan(stand[y]):
                                 continue
                             mu, sd = float(stand[y]), float(max(stand_se[y], 1e-12))
@@ -285,11 +279,9 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                         log_lik=stats.norm.logpdf(standard[lhund:lten],loc=central_est[lhund:lten],scale=se[lhund:lten]*scale_alt)
                         return -np.nansum(log_lik)
                     
-                    def rescale_KL(scale,standardi0,standard_sei0,lasts, laste, eeoffset=0):
-                        ivcenters=central_est[lasts:laste]
-                        ivse =se[asts:laste]
-                        standardi=standardi0[lasts:laste]
-                        standard_sei=standard_sei0[lasts:laste]
+                    def rescale_KL(scale,standardi,standard_sei,eeoffset=0):
+                        ivcenters=central_est[lhund:lten]
+                        ivse =se[lhund:lten]
                         yearKL = np.log(scale*ivse/standard_sei) + (standard_sei**2 + (standardi-ivcenters)**2 )/2/(scale*ivse)**2 - 0.5
                         return np.nansum(yearKL,axis=None)
                     
@@ -311,8 +303,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         #Line PLOT TO SHOW WHAT IT'S DOING
 
                     best_alter_scale = minimize(rescale_log_likelihood, x0=1, bounds=[(0.01, 100.0)]).x[0]
-                    kls[i] = rescale_KL(best_alter_scale,standard,standard_se,lhund,lten )
-                    kls75[i] = rescale_KL(best_alter_scale,standard,standard_se,l75,lten )
+                    kls[i] = rescale_KL(best_alter_scale,standard[lhund:lten],standard_se[lhund:lten] )
                     m=i
                     if(labelcurr_or_retro=="c"):
   
@@ -393,7 +384,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     #rescale variance
 
                     rmses[m] = np.sqrt(np.nanmean((central_est[lhund:lten]-standard[lhund:lten])**2))
-                    rmses75[m] = np.sqrt(np.nanmean((central_est[l75:lten]-standard[l75:lten])**2))
+
                     
 
                     #output parameters
@@ -408,9 +399,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                         firstcross15_diff=faedyrs[:,crit_j],
                         ncrosses=ncrosses,
                         rmse=rmses,
-                        rmse75 = rmses75,
-                        kl=kls,
-                        kl75 = kls75)
+                        kl=kls)
        
  
                 

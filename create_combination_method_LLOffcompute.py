@@ -24,7 +24,7 @@ if __name__ == '__main__':
         all_methods = df_results['method_name']
         all_methodsh=all_methods.copy()
         err_vars = df_results['err_var'].to_numpy()
-        err_vars100 = df_results['err_var75'].to_numpy()
+        err_vars100 = df_results['err_var100'].to_numpy()
         best_scales = df_results['best_alter_scale'].to_numpy()
         central_est = np.load(f'Results2/{outputfilename}_central_est.npy')
         node_lls = np.load(f'Results2/{outputfilename}_hermguass_lls.npy')
@@ -60,7 +60,7 @@ if __name__ == '__main__':
                         all_methods = df_results['method_name'] #only need this once
                     err_varsf[exp_index,model_run,:] = df_results['err_var'].to_numpy()
                     try:
-                        err_vars100f[exp_index,model_run,:] = df_results['err_var75'].to_numpy()
+                        err_vars100f[exp_index,model_run,:] = df_results['err_var100'].to_numpy()
                     except:
                         print(exp_index)
                         print(model_run)
@@ -113,13 +113,13 @@ if __name__ == '__main__':
             #manual_exclude = ['CGWL10y_forec', 'some_other_method']  # replace with actual names
             manual_exclude = ['']
             df126 = pd.read_csv("averaged_runs126.csv")
-            bad_126 = df126.loc[df126['75RMS'] > 0.075, 'method_name']
+            bad_126 = df126.loc[df126['100RMS'] > 0.075, 'method_name']
             df245=pd.read_csv("averaged_runs245.csv")
-            bad_245 = df245.loc[df245['75RMS'] > 0.075, 'method_name']
+            bad_245 = df245.loc[df245['100RMS'] > 0.075, 'method_name']
             df370=pd.read_csv("averaged_runs370.csv")
-            bad_370 = df370.loc[df370['75RMS'] > 0.075, 'method_name']
+            bad_370 = df370.loc[df370['100RMS'] > 0.075, 'method_name']
             dfvolc = pd.read_csv("averaged_runsVolc.csv")
-            bad_volc = dfvolc.loc[ np.logical_and(dfvolc['75RMS'] > 0.085, dfvolc['e75RMS'] > 0.085), 'method_name']
+            bad_volc = dfvolc.loc[ np.logical_and(dfvolc['100RMS'] > 0.085, dfvolc['e100RMS'] > 0.085), 'method_name']
             exclude_methods = set(bad_rmse_methods).union(manual_exclude).union(bad_126).union(bad_245).union(bad_370).union(bad_volc)
             mask_a = ~all_methods.isin(exclude_methods).values
             avail_methods = all_methods[mask_a]
@@ -129,7 +129,7 @@ if __name__ == '__main__':
 
         nruns = 60 #SETTING UP THE EVALUATION LOOP
         endyear=2099
-        crit_j=0 #10
+        crit_j=4 #10
         summethods_shape = (5,60,2)
         #ncrosses_array=np.full(summethods_shape,np.nan)
         #firstcross15_diff=np.full(summethods_shape,np.nan)
@@ -137,7 +137,7 @@ if __name__ == '__main__':
         #kl_array= np.full(summethods_shape,np.nan)
         sum2methods_shape = (5,2)
         #firstcross15_sum=np.full(sum2methods_shape,np.nan)
-        lhund=-75 
+        lhund=-100
         for exp_index in [int(sys.argv[2])]:
             experiment_type = scenarios[exp_index]
             for model_run in [int(sys.argv[3])]:
@@ -201,14 +201,15 @@ if __name__ == '__main__':
                     #def rescale_log_likelihood(scale_alt):
                     #    log_lik=stats.norm.logpdf(standard[-100:],loc=ivcenters[-100:],scale=scale_alt)
                     #    return -np.nansum(log_lik)
-                    def rescale_KL_anystd(scale,standardi,standard_sei,eeoffset=0,ivcentersi=ivcenters):
-                        yearKL = np.log(scale/standard_sei) + (standard_sei**2 + (standardi-ivcentersi)**2 )/2/(scale)**2 - 0.5
+                    def rescale_KL_anystd(scale,standardi,standard_sei,eeoffset=0,ivcentersi=ivcenters,sshift=0):
+                        yearKL = np.log(scale/standard_sei) + (standard_sei**2 + (standardi-ivcentersi[sshift:])**2 )/2/(scale)**2 - 0.5
                         return np.nansum(yearKL,axis=None)
                     
                     def rescale_KL(scale): #now this is a passthrough function
                         return rescale_KL_anystd(scale,standardsf[:,:,lhund:-10],standards_sef[:,:,lhund:-10])
                     best_scale_iv = minimize(rescale_KL, x0=0.04, bounds=[(0.001, 1)]).x[0] #gets a constant uncertainty
-                    best_iv_KL = rescale_KL(best_scale_iv)
+                    best_iv_KL = rescale_KL_anystd(best_scale_iv,standardsf[:,:,lhund:-10],standards_sef[:,:,lhund:-10])
+                    best_iv_KL75 = rescale_KL_anystd(best_scale_iv,standardsf[:,:,(lhund+25):-10],standards_sef[:,:,(lhund+25):-10],sshift=25)
 
                     def sharpen_samples(blended_in: np.ndarray, nsharp: float, seed: int ) -> np.ndarray:
                         """Resample-with-replacement means (with fractional last draw) per year."""
@@ -230,13 +231,13 @@ if __name__ == '__main__':
                             out[y] = num / den
                         return out
 
-                    def kl_total_true_vs_empirical_gh(sharp, stand, stand_se, eps=1e-300,eeoffset=0):
+                    def kl_total_true_vs_empirical_gh(sharp, stand, stand_se,lstart=lhund eps=1e-300,eeoffset=0):
                         """
                         Sum_y KL( P_y || Q_y ),  P_y = N(standard[y], standard_se[y]^2),
                         Q_y = empirical via scipy.stats.gaussian_kde on sharp[y, :], using Gauss–Hermite quadrature.
                         """
                         total = 0.0
-                        for y in range(len(stand)+lhund,len(stand)-10-eeoffset):
+                        for y in range(len(stand)+lstart,len(stand)-10-eeoffset):
                             if np.isnan(stand[y]):
                                 continue
                             mu, sd = float(stand[y]), float(max(stand_se[y], 1e-12))
@@ -255,6 +256,7 @@ if __name__ == '__main__':
                     best_nsharp = minimize(rescale_KL_stack, x0=2, bounds=[(1, 10)], tol=0.005).x[0]
                     sharpened_blended = sharpen_samples(blended_trial.reshape(-1, nsamples), best_nsharp, seed = 2)
                     best_stack_KL = kl_total_true_vs_empirical_gh(sharpened_blended, standards_trial.reshape(-1), standards_se_trial.reshape(-1))
+                    best_stack_KL75 = kl_total_true_vs_empirical_gh(sharpened_blended, standards_trial.reshape(-1), standards_se_trial.reshape(-1),lstart=-75)
                         
                 print("finished fitting weights and variances")
             #fut standard can read in from "Results/ensemble_mean_fut_ESM1-2-LR_SSP370_constVolc.csv"
@@ -285,7 +287,7 @@ if __name__ == '__main__':
                 std_intp = std_intp0[~np.isnan(std_intp0)]
                 fineyrs_c0 = fineyrs_all[~np.isnan(std_intp0)]
                 fineyrs_c = fineyrs_c0[1:]
-                thrshs= np.arange(1.5,np.nanmax(standard) ,.1) #thresholds #CHANGE FOR NONHISTORICAL
+                thrshs= np.arange(1.1,np.nanmax(standard) ,.1) #thresholds #CHANGE FOR NONHISTORICAL
                 #print(f"evaluating {len(thrshs)} of 0.1°C thresholds, starting at 0.5°C")
                 closest_years = [-1/inum/2+fineyrs_c[np.logical_and(std_intp[0:-1]<i, std_intp[1:]>=i)][0] for i in thrshs]
                                #will have a variable number of steps, at least including 0.5
@@ -344,8 +346,11 @@ if __name__ == '__main__':
      
                 sharp_blend_central = np.mean(sharpened_blended,axis=1)
                 sharp_blend_se = np.std(sharpened_blended,axis=1)
-                stack_rmse = np.sqrt(np.nanmean((sharp_blend_central-standard)**2)) ######
-                ivarw_rmse = np.sqrt(np.nanmean((ivcenters_test-standard)**2))           ######     
+                stack_rmse = np.sqrt(np.nanmean((sharp_blend_central-standard)**2)) #already trimmed to lhund
+                ivarw_rmse = np.sqrt(np.nanmean((ivcenters_test-standard)**2))
+                stack_rmse75 = np.sqrt(np.nanmean((sharp_blend_central[25:]-standard[25:])**2))
+                ivarw_rmse75 = np.sqrt(np.nanmean((ivcenters_test[25:]-standard[25:])**2))
+                
                # if comparison_type[1]=='f':
                #     ncrosses_array[exp_index,model_run,:]=ncrosses
                #     firstcross15_diff[exp_index,model_run,:]= faedyrs[:,crit_j]
@@ -356,4 +361,6 @@ if __name__ == '__main__':
                     firstcross15_diff=faedyrs[:,crit_j],
                     ncrosses=ncrosses,
                     rmse=[ivarw_rmse, stack_rmse],
-                    kl=[best_iv_KL, best_stack_KL])
+                    kl=[best_iv_KL, best_stack_KL],
+                    rmse75=[ivarw_rmse75, stack_rmse75],
+                    kl75=[best_iv_KL75, best_stack_KL75])

@@ -316,18 +316,14 @@ if __name__ == '__main__':
     #if (len(index_mapping) != ncm): #not computing all methods, for debugging only
     #    index_mapping = np.arange(ncm)
     #    ftl = np.argsort(index_mapping)
-    lhund=-101 #length 251
-    lten=-11
-    if (exp_attr[1]=='NorESM'):
-        lhund=-100 #length 250
-        lten = -10
+        
     
     for method_name, method_data in sorted_results:
         print(f"Results from {method_name} (Method Class: {method_data['method_class']}):")
         result = method_data['LT_trend']
         labelcurr_or_retro=""
         isgauss = True #keep track of which kind of method it is
-
+        lhund=-75
         for k in range(1): #only care about current methods here
             central_est=np.full(len(years),np.nan) #make this blank to start
             if isinstance(result, dict):
@@ -342,9 +338,9 @@ if __name__ == '__main__':
                     print(f"{method_name} sampled, d llike: {np.nanmean(llikelihood)-np.nanmean(llikelihood2)}")
 
                 def rescale_log_likelihood(scale):
-                    deviance = standard[lhund:lten] - central_est[lhund:lten]
-                    resc_standard = central_est[lhund:lten] + deviance/scale #larger scale makes deviance appear smaller
-                    log_lik=result['log_likelihood'](years[lhund:lten], resc_standard,k) - np.log(scale) #pdf expands outward with small scale, so must compress vertically
+                    deviance = standard[lhund:] - central_est[lhund:]
+                    resc_standard = central_est[lhund:] + deviance/scale #larger scale makes deviance appear smaller
+                    log_lik=result['log_likelihood'](years[lhund:], resc_standard,k) - np.log(scale) #pdf expands outward with small scale, so must compress vertically
                     return -np.nansum(log_lik) #minimize this quanity
                     
             else:
@@ -356,7 +352,7 @@ if __name__ == '__main__':
                 llikelihood = stats.norm.logpdf(standard,loc=central_est,scale=se)
                 
                 def rescale_log_likelihood(scale_alt):
-                    log_lik=stats.norm.logpdf(standard[lhund:lten],loc=central_est[lhund:lten],scale=se[lhund:lten]*scale_alt)
+                    log_lik=stats.norm.logpdf(standard[lhund:],loc=central_est[lhund:],scale=se[lhund:]*scale_alt)
                     return -np.nansum(log_lik)
 
                 
