@@ -24,7 +24,7 @@ if __name__ == '__main__':
         all_methods = df_results['method_name']
         all_methodsh=all_methods.copy()
         err_vars = df_results['err_var'].to_numpy()
-        err_vars100 = df_results['err_var100'].to_numpy()
+        err_vars100 = df_results['err_var75'].to_numpy()
         best_scales = df_results['best_alter_scale'].to_numpy()
         central_est = np.load(f'Results2/{outputfilename}_central_est.npy')
         node_lls = np.load(f'Results2/{outputfilename}_hermguass_lls.npy')
@@ -60,7 +60,7 @@ if __name__ == '__main__':
                         all_methods = df_results['method_name'] #only need this once
             
                     err_varsf[exp_index,model_run,:] = df_results['err_var'].to_numpy()
-                    err_vars100f[exp_index,model_run,:] = df_results['err_var100'].to_numpy()
+                    err_vars100f[exp_index,model_run,:] = df_results['err_var75'].to_numpy()
                     best_scalesf[exp_index,model_run,:] = df_results['best_alter_scale'].to_numpy()
                     central_estfut[exp_index,model_run,:,:] = np.load(f'Results2/{outputfilename}_central_est.npy',mmap_mode="r")[:,0:250]
                     node_llsf[exp_index,model_run,:,:,:] = np.load(f'Results2/{outputfilename}_hermguass_lls.npy',mmap_mode="r")[:,0:250,:]
@@ -109,13 +109,13 @@ if __name__ == '__main__':
             #manual_exclude = ['CGWL10y_forec', 'some_other_method']  # replace with actual names
             manual_exclude = ['']
             df126 = pd.read_csv("averaged_runs126.csv")
-            bad_126 = df126.loc[df126['100RMS'] > 0.075, 'method_name']
+            bad_126 = df126.loc[df126['75RMS'] > 0.075, 'method_name']
             df245=pd.read_csv("averaged_runs245.csv")
-            bad_245 = df245.loc[df245['100RMS'] > 0.075, 'method_name']
+            bad_245 = df245.loc[df245['75RMS'] > 0.075, 'method_name']
             df370=pd.read_csv("averaged_runs370.csv")
-            bad_370 = df370.loc[df370['100RMS'] > 0.075, 'method_name']
+            bad_370 = df370.loc[df370['75RMS'] > 0.075, 'method_name']
             dfvolc = pd.read_csv("averaged_runsVolc.csv")
-            bad_volc = dfvolc.loc[ np.logical_and(dfvolc['100RMS'] > 0.085, dfvolc['e100RMS'] > 0.085), 'method_name']
+            bad_volc = dfvolc.loc[ np.logical_and(dfvolc['75RMS'] > 0.085, dfvolc['e75RMS'] > 0.085), 'method_name']
             exclude_methods = set(bad_rmse_methods).union(manual_exclude).union(bad_126).union(bad_245).union(bad_370).union(bad_volc)
             mask_a = ~all_methods.isin(exclude_methods).values
             avail_methods = all_methods[mask_a]
@@ -147,7 +147,7 @@ if __name__ == '__main__':
         #kl_array= np.full(summethods_shape,np.nan)
         sum2methods_shape = (5,2)
         #firstcross15_sum=np.full(sum2methods_shape,np.nan)
-        lhund=-100  
+        lhund=-75 
         for exp_index in [int(sys.argv[2])]:
             experiment_type = scenarios[exp_index]
             for model_run in [int(sys.argv[3])]:
@@ -246,7 +246,7 @@ if __name__ == '__main__':
                         Q_y = empirical via scipy.stats.gaussian_kde on sharp[y, :], using Gauss–Hermite quadrature.
                         """
                         total = 0.0
-                        for y in range(len(stand)-100,len(stand)-10-eeoffset):
+                        for y in range(len(stand)+lhund,len(stand)-10-eeoffset):
                             if np.isnan(stand[y]):
                                 continue
                             mu, sd = float(stand[y]), float(max(stand_se[y], 1e-12))

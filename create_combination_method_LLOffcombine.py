@@ -6,7 +6,7 @@ scenarios = ["fut_ESM1-2-LR_SSP126_constVolc","fut_ESM1-2-LR_SSP245_constVolc","
                    "fut_NorESM_RCP45_Volc","fut_NorESM_RCP45_VolcConst"]                     # list of 5 names
 approaches = ["inverse_variance","sharpened_blended"]
 nruns = 60                           # total runs per scenario
-lhund = -100                           # your existing var
+lhund = -75                          # your existing var
 nnmethods = int(sys.argv[1]) 
 comparison_type = 'ff'
 

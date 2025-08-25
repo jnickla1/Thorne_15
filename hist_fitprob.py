@@ -236,7 +236,6 @@ if __name__ == '__main__':
         futCIu = sim_corrected[start_sim:] - np.mean(temps_obs_past[-10:]- temps_CIu_past[-10:])
         # Run all the methods
         #print(len(np.concatenate((temps_CIl_hist,futCIl))))
-        #breakpoint()
         results_path = f'Results/results{experiment_type}{model_run}.pickle'
 
         if regen:
@@ -286,7 +285,7 @@ if __name__ == '__main__':
     
     central_yr_estimates =[]
 
-    df_results = pd.DataFrame(columns=['method_name', 'short_method_class','err_var', 'err_var100', 'best_alter_scale'])
+    df_results = pd.DataFrame(columns=['method_name', 'short_method_class','err_var', 'err_var100','err_var75','best_alter_scale'])
     i=0
     all_central_est = []
     all_sampled_lls = []
@@ -324,6 +323,7 @@ if __name__ == '__main__':
         result = method_data['LT_trend']
         labelcurr_or_retro=""
         isgauss = True #keep track of which kind of method it is
+        lhund=-75
         for k in range(1): #only care about current methods here
             central_est=np.full(len(years),np.nan) #make this blank to start
             if isinstance(result, dict):
@@ -338,9 +338,9 @@ if __name__ == '__main__':
                     print(f"{method_name} sampled, d llike: {np.nanmean(llikelihood)-np.nanmean(llikelihood2)}")
 
                 def rescale_log_likelihood(scale):
-                    deviance = standard - central_est
-                    resc_standard = central_est + deviance/scale #larger scale makes deviance appear smaller
-                    log_lik=result['log_likelihood'](years, resc_standard,k) - np.log(scale) #pdf expands outward with small scale, so must compress vertically
+                    deviance = standard[lhund:] - central_est[lhund:]
+                    resc_standard = central_est[lhund:] + deviance/scale #larger scale makes deviance appear smaller
+                    log_lik=result['log_likelihood'](years[lhund:], resc_standard,k) - np.log(scale) #pdf expands outward with small scale, so must compress vertically
                     return -np.nansum(log_lik) #minimize this quanity
                     
             else:
@@ -352,7 +352,7 @@ if __name__ == '__main__':
                 llikelihood = stats.norm.logpdf(standard,loc=central_est,scale=se)
                 
                 def rescale_log_likelihood(scale_alt):
-                    log_lik=stats.norm.logpdf(standard,loc=central_est,scale=se*scale_alt)
+                    log_lik=stats.norm.logpdf(standard[lhund:],loc=central_est[lhund:],scale=se[lhund:]*scale_alt)
                     return -np.nansum(log_lik)
 
                 
@@ -367,6 +367,7 @@ if __name__ == '__main__':
                 #CALCULATE things necessary for both combination approaches
                 err_var = np.nanmean((central_est-standard)**2)
                 err_var100 = np.nanmean((central_est[-100:] -standard[-100:])**2)
+                err_var75 = np.nanmean((central_est[-75:] -standard[-75:])**2)
                 best_alter_scale = minimize(rescale_log_likelihood, x0=1, bounds=[(0.01, 100.0)]).x[0]
                 nsamples = 1000
                 nnodes = 100
@@ -386,12 +387,7 @@ if __name__ == '__main__':
                     sampled_lls = result['log_likelihood'](years, resc_standard_samples ,k) - np.log(best_alter_scale) #need to ensure dimensions work
                     newsamples = (result['resample'](years, nsamples,k) - central_est[:, np.newaxis])/best_alter_scale + central_est[:, np.newaxis]
 
-
-                #if(method_name=="CGWL10y_for_halfU"):
-                #    breakpoint()
-                #if(method_name=="EBMKF_ta2"):
-                #    breakpoint()
-                df_results.loc[i]= [ method_name,short_method_class,err_var, err_var100, best_alter_scale]
+                df_results.loc[i]= [ method_name,short_method_class,err_var, err_var100,err_var75, best_alter_scale]
                 all_central_est.append(central_est)
                 all_sampled_lls.append(sampled_lls)      # shape (nyears,n_samples)
                 all_newsamples.append(newsamples)  

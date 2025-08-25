@@ -24,7 +24,7 @@ if __name__ == '__main__':
         all_methods = df_results['method_name']
         all_methodsh=all_methods.copy()
         err_vars = df_results['err_var'].to_numpy()
-        err_vars100 = df_results['err_var100'].to_numpy()
+        err_vars100 = df_results['err_var75'].to_numpy()
         best_scales = df_results['best_alter_scale'].to_numpy()
         central_est = np.load(f'Results2/{outputfilename}_central_est.npy')
         node_lls = np.load(f'Results2/{outputfilename}_hermguass_lls.npy')
@@ -58,9 +58,13 @@ if __name__ == '__main__':
                     df_results = pd.read_csv(f'Results2/{outputfilename}_names_var_scale.csv', index_col=0)
                     if(exp_index==0 and model_run==0):
                         all_methods = df_results['method_name'] #only need this once
-            
                     err_varsf[exp_index,model_run,:] = df_results['err_var'].to_numpy()
-                    err_vars100f[exp_index,model_run,:] = df_results['err_var100'].to_numpy()
+                    try:
+                        err_vars100f[exp_index,model_run,:] = df_results['err_var75'].to_numpy()
+                    except:
+                        print(exp_index)
+                        print(model_run)
+
                     best_scalesf[exp_index,model_run,:] = df_results['best_alter_scale'].to_numpy()
                     central_estfut[exp_index,model_run,:,:] = np.load(f'Results2/{outputfilename}_central_est.npy',mmap_mode="r")[:,0:250]
                     node_llsf[exp_index,model_run,:,:,:] = np.load(f'Results2/{outputfilename}_hermguass_lls.npy',mmap_mode="r")[:,0:250,:]
@@ -84,8 +88,8 @@ if __name__ == '__main__':
         mask_a=[]
         avail_methods_list = []
         if nnmethods ==10 or nnmethods == 8:
-            # --- a) Subset to just the 8 selected methods ---
-            avail_methods_list = [ "CGWL10y_for_halfU","EBMKF_ta2","EBMKF_ta4","GAM_AR1",
+            # --- a) Subset to just the 8 selected methods --- embkfta2
+            avail_methods_list = [ "CGWL10y_for_halfU","EBMKF_ta4","GAM_AR1",
                  "lowess1dg20wnc","Kal_flexLin","FaIR_comb_unB","GWI_tot_CGWL","GWI_tot_SR15","CGWL10y_sfUKCP"]
             mask_a = all_methods.isin(avail_methods_list).values
             avail_methods = all_methods[mask_a]
@@ -109,37 +113,23 @@ if __name__ == '__main__':
             #manual_exclude = ['CGWL10y_forec', 'some_other_method']  # replace with actual names
             manual_exclude = ['']
             df126 = pd.read_csv("averaged_runs126.csv")
-            bad_126 = df126.loc[df126['100RMS'] > 0.075, 'method_name']
+            bad_126 = df126.loc[df126['75RMS'] > 0.075, 'method_name']
             df245=pd.read_csv("averaged_runs245.csv")
-            bad_245 = df245.loc[df245['100RMS'] > 0.075, 'method_name']
+            bad_245 = df245.loc[df245['75RMS'] > 0.075, 'method_name']
             df370=pd.read_csv("averaged_runs370.csv")
-            bad_370 = df370.loc[df370['100RMS'] > 0.075, 'method_name']
+            bad_370 = df370.loc[df370['75RMS'] > 0.075, 'method_name']
             dfvolc = pd.read_csv("averaged_runsVolc.csv")
-            bad_volc = dfvolc.loc[ np.logical_and(dfvolc['100RMS'] > 0.085, dfvolc['e100RMS'] > 0.085), 'method_name']
+            bad_volc = dfvolc.loc[ np.logical_and(dfvolc['75RMS'] > 0.085, dfvolc['e75RMS'] > 0.085), 'method_name']
             exclude_methods = set(bad_rmse_methods).union(manual_exclude).union(bad_126).union(bad_245).union(bad_370).union(bad_volc)
             mask_a = ~all_methods.isin(exclude_methods).values
             avail_methods = all_methods[mask_a]
             #print(avail_methods)
         print(str(len(avail_methods))+" methods")
         nmethods=len(avail_methods)
-##        if comparison_type=='hh':
-##            vars100 = err_vars100[mask_a]
-##            #scales =  best_scales[mask_a] #dont need from this point on to use the scales
-##            lls = node_lls[mask_a] #np.shape(lls) =(10, 175, 100)
-##            centralsh = central_est[mask_a]
-##            samplesh = newsamples[mask_a]
-##
-##        elif comparison_type=='hf':
-##            mask_b = all_methodsh.isin(avail_methods).values
-##            vars100 = err_vars100[mask_b]
-##            lls = node_lls[mask_b]
-##            centralsh = central_est[mask_b]
-##            samplesh = newsamples[mask_b]
-##            centralsf = central_estfut[:,:,mask_a,:]
 
         nruns = 60 #SETTING UP THE EVALUATION LOOP
         endyear=2099
-        crit_j=2 #10
+        crit_j=0 #10
         summethods_shape = (5,60,2)
         #ncrosses_array=np.full(summethods_shape,np.nan)
         #firstcross15_diff=np.full(summethods_shape,np.nan)
@@ -147,7 +137,7 @@ if __name__ == '__main__':
         #kl_array= np.full(summethods_shape,np.nan)
         sum2methods_shape = (5,2)
         #firstcross15_sum=np.full(sum2methods_shape,np.nan)
-        lhund=-100  
+        lhund=-75 
         for exp_index in [int(sys.argv[2])]:
             experiment_type = scenarios[exp_index]
             for model_run in [int(sys.argv[3])]:
@@ -246,7 +236,7 @@ if __name__ == '__main__':
                         Q_y = empirical via scipy.stats.gaussian_kde on sharp[y, :], using Gauss–Hermite quadrature.
                         """
                         total = 0.0
-                        for y in range(len(stand)-100,len(stand)-10-eeoffset):
+                        for y in range(len(stand)+lhund,len(stand)-10-eeoffset):
                             if np.isnan(stand[y]):
                                 continue
                             mu, sd = float(stand[y]), float(max(stand_se[y], 1e-12))
@@ -275,7 +265,7 @@ if __name__ == '__main__':
 
                 print(model_run)
                 outputfilename = f'{experiment_type}{model_run}'
-                estartyr=(2000-1850)
+                estartyr=(2100-1850+lhund)
                 standard = np.load(f'Results2/{outputfilename}_standard.npy')[estartyr:250]
                 standard_se = np.load(f'Results2/{outputfilename}_standard_se.npy')[estartyr:250]
                 centrals_testf = central_estfut[exp_index,model_run,mask_a,estartyr:250]
@@ -295,7 +285,7 @@ if __name__ == '__main__':
                 std_intp = std_intp0[~np.isnan(std_intp0)]
                 fineyrs_c0 = fineyrs_all[~np.isnan(std_intp0)]
                 fineyrs_c = fineyrs_c0[1:]
-                thrshs= np.arange(1.3,np.nanmax(standard) ,.1) #thresholds #CHANGE FOR NONHISTORICAL
+                thrshs= np.arange(1.5,np.nanmax(standard) ,.1) #thresholds #CHANGE FOR NONHISTORICAL
                 #print(f"evaluating {len(thrshs)} of 0.1°C thresholds, starting at 0.5°C")
                 closest_years = [-1/inum/2+fineyrs_c[np.logical_and(std_intp[0:-1]<i, std_intp[1:]>=i)][0] for i in thrshs]
                                #will have a variable number of steps, at least including 0.5
