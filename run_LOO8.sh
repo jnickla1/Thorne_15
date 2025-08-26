@@ -6,7 +6,7 @@
 #SBATCH -n 1
 #SBATCH --mem-per-cpu=20g
 #SBATCH --array=0-59  # Sweeps ENSEMBLE_RUN
-#SBATCH -o logs3/de-%A_%a.out
+#SBATCH -o logs3/dh-%A_%a.out
 
 i=$((${SLURM_ARRAY_TASK_ID}*1))
 eval "$(conda shell.bash hook)"

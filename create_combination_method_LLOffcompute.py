@@ -55,6 +55,7 @@ if __name__ == '__main__':
                     #fill everything with nans
                 else:
                     outputfilename = f'{experiment_type}{model_run}'
+                    #print(outputfilename)
                     df_results = pd.read_csv(f'Results2/{outputfilename}_names_var_scale.csv', index_col=0)
                     if(exp_index==0 and model_run==0):
                         all_methods = df_results['method_name'] #only need this once
@@ -123,7 +124,7 @@ if __name__ == '__main__':
             exclude_methods = set(bad_rmse_methods).union(manual_exclude).union(bad_126).union(bad_245).union(bad_370).union(bad_volc)
             mask_a = ~all_methods.isin(exclude_methods).values
             avail_methods = all_methods[mask_a]
-            #print(avail_methods)
+            
         print(str(len(avail_methods))+" methods")
         nmethods=len(avail_methods)
 
@@ -208,8 +209,6 @@ if __name__ == '__main__':
                     def rescale_KL(scale): #now this is a passthrough function
                         return rescale_KL_anystd(scale,standardsf[:,:,lhund:-10],standards_sef[:,:,lhund:-10])
                     best_scale_iv = minimize(rescale_KL, x0=0.04, bounds=[(0.001, 1)]).x[0] #gets a constant uncertainty
-                    best_iv_KL = rescale_KL_anystd(best_scale_iv,standardsf[:,:,lhund:-10],standards_sef[:,:,lhund:-10])
-                    best_iv_KL75 = rescale_KL_anystd(best_scale_iv,standardsf[:,:,(lhund+25):-10],standards_sef[:,:,(lhund+25):-10],sshift=25)
 
                     def sharpen_samples(blended_in: np.ndarray, nsharp: float, seed: int ) -> np.ndarray:
                         """Resample-with-replacement means (with fractional last draw) per year."""
@@ -231,7 +230,7 @@ if __name__ == '__main__':
                             out[y] = num / den
                         return out
 
-                    def kl_total_true_vs_empirical_gh(sharp, stand, stand_se,lstart=lhund eps=1e-300,eeoffset=0):
+                    def kl_total_true_vs_empirical_gh(sharp, stand, stand_se,lstart=lhund, eps=1e-300,eeoffset=0):
                         """
                         Sum_y KL( P_y || Q_y ),  P_y = N(standard[y], standard_se[y]^2),
                         Q_y = empirical via scipy.stats.gaussian_kde on sharp[y, :], using Gauss–Hermite quadrature.
@@ -255,8 +254,6 @@ if __name__ == '__main__':
 
                     best_nsharp = minimize(rescale_KL_stack, x0=2, bounds=[(1, 10)], tol=0.005).x[0]
                     sharpened_blended = sharpen_samples(blended_trial.reshape(-1, nsamples), best_nsharp, seed = 2)
-                    best_stack_KL = kl_total_true_vs_empirical_gh(sharpened_blended, standards_trial.reshape(-1), standards_se_trial.reshape(-1))
-                    best_stack_KL75 = kl_total_true_vs_empirical_gh(sharpened_blended, standards_trial.reshape(-1), standards_se_trial.reshape(-1),lstart=-75)
                         
                 print("finished fitting weights and variances")
             #fut standard can read in from "Results/ensemble_mean_fut_ESM1-2-LR_SSP370_constVolc.csv"
@@ -274,12 +271,12 @@ if __name__ == '__main__':
                 ivcenters_test = np.nansum(centrals_testf * ivweights[:,None],axis=0) / np.nansum( ~np.isnan(centrals_testf) * ivweights[:,None],axis=0)
                 #same best_scale_iv as calculated above
                 best_iv_KL = rescale_KL_anystd(best_scale_iv,standard,standard_se,eeoffset=0,ivcentersi=ivcenters_test)
+                best_iv_KL75 = rescale_KL_anystd(best_scale_iv,standard[25:],standard_se[25:],ivcentersi=ivcenters_test,sshift=25)
                 tempsamplesf = np.load(f'Results2/{outputfilename}_newsamples.npy',mmap_mode="r")[:,estartyr:250,:] #newsamplesfut[exp_index,model_run,:,:,:] =
                 blended = predict_non_nan(stack_weights, tempsamplesf[mask_a,:,:])
                 sharpened_blended = sharpen_samples(blended, best_nsharp, seed = 6)
                 best_stack_KL = kl_total_true_vs_empirical_gh(sharpened_blended, standard, standard_se,eeoffset=0)
-
-                    
+                best_stack_KL75 = kl_total_true_vs_empirical_gh(sharpened_blended, standard, standard_se,lstart=25)                    
         
                 inum=12 #internal interpolation within years
                 fineyrs_all = np.arange(years[estartyr],years[250-1]+1/inum,1/inum)

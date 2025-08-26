@@ -145,12 +145,12 @@ class CustomSplineDistribution(rv_continuous):
         p=self.pdf(x)
         if(np.iterable(p)):
             replace_locs = (p< 1e-10)
-            p[replace_locs] = stats.norm.pdf(x[replace_locs],loc = self.mean,scale = self.std)
+            p[replace_locs] = stats.norm.pdf(x[replace_locs],loc = self.mean,scale = self.std) + 1e-200
             return p
 
         else:
             if(p< 1e-10):
-                 return stats.norm.pdf(x,loc = self.mean,scale = self.std) + 1e-300
+                 return stats.norm.pdf(x,loc = self.mean,scale = self.std) + 1e-200
             else:
                 return p
 
@@ -158,12 +158,12 @@ class CustomSplineDistribution(rv_continuous):
         p=self.cdf(x)
         if(np.iterable(p)):
             replace_locs = ((p< 1e-10) or ((1-p)<1e-10))
-            p[replace_locs] = stats.norm.cdf(x[replace_locs],loc = self.mean,scale = self.std)
+            p[replace_locs] = stats.norm.cdf(x[replace_locs],loc = self.mean,scale = self.std) + 1e-200
             return p
         
         else:
             if( (p< 1e-10) or ((1-p)<1e-10)):
-                return stats.norm.cdf(x,loc = self.mean,scale = self.std) + 1e-300
+                return stats.norm.cdf(x,loc = self.mean,scale = self.std) + 1e-200
             else:
                 return p
 

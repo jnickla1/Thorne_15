@@ -254,8 +254,8 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                         Sum_y KL( P_y || Q_y ),  P_y = N(standard[y], standard_se[y]^2),
                         Q_y = empirical via scipy.stats.gaussian_kde on sharp[y, :], using Gauss–Hermite quadrature.
                         """
-                        stand = stand0[lasts:laste]
-                        stand_se= stand_se0[lasts:laste]
+                        stand = stand0
+                        stand_se= stand_se0
                         
                         total = 0.0
                         for y in range(len(stand)+lasts,len(stand)+laste-eeoffset):
@@ -263,11 +263,10 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                                 continue
                             mu, sd = float(stand[y]), float(max(stand_se[y], 1e-12))
                             y_nodes = mu + sd * z                         # transform nodes to P_y support
-                            kde = gaussian_kde(sharp[y])                  # KDE for Q_y
-                            log_p = norm.logpdf(y_nodes, loc=mu, scale=sd)
-                            deviances = ynodes - central_est[:, np.newaxis]
-                            ynodes2 = central_est[:, np.newaxis] + deviances/scale
-                            log_q = result['log_likelihood'](y, y_nodes,k) - np.log(scale)
+                            log_p = stats.norm.logpdf(y_nodes, loc=mu, scale=sd)
+                            deviances = y_nodes - central_est[y]
+                            ynodes2 = central_est[y] + deviances/scale
+                            log_q = result['log_likelihood']([years[y]]*100, ynodes2,0) - np.log(scale)
                             total += float(np.sum(alpha * (log_p - log_q)))
                         return total
 
@@ -287,7 +286,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     
                     def rescale_KL(scale,standardi0,standard_sei0,lasts, laste, eeoffset=0):
                         ivcenters=central_est[lasts:laste]
-                        ivse =se[asts:laste]
+                        ivse =se[lasts:laste]
                         standardi=standardi0[lasts:laste]
                         standard_sei=standard_sei0[lasts:laste]
                         yearKL = np.log(scale*ivse/standard_sei) + (standard_sei**2 + (standardi-ivcenters)**2 )/2/(scale*ivse)**2 - 0.5

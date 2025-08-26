@@ -24,6 +24,7 @@ for exp_index, exp in enumerate(scenarios):
     # load all runs for this scenario
     files = sorted(glob.glob(f"Results3/nmes{nnmethods}run_exp{exp_index}_r*.npz"))
     ncrosses_stack = []; rmse_stack = []; fc_diffs = []; kl_stack=[]
+    rmse75_stack=[]; kl75_stack=[]
     print(exp+" "+str(len(files)))
     for f in files:
         z = np.load(f)
