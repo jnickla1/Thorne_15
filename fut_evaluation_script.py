@@ -650,7 +650,7 @@ if __name__ == '__main__':
     
     if exp_attr[0]=="fut":
         run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
-        #plt.show()
+        plt.show()
         
     elif exp_attr[0]=="futplotcomb" and exp_attr[1]=="ESM1-2-LR":
         fig1, (axens, ax1a,ax1b)= plt.subplots(3, 1, figsize=(10,10), gridspec_kw={ "height_ratios" :[.6,1,1],"hspace": 0.35})
