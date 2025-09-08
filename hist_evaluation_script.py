@@ -18,7 +18,7 @@ from datetime import datetime
 current_date = datetime.now()
 formatted_date = current_date.strftime("%y%m%d")
 
-historical_regen=True #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
+historical_regen=False #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
 
 # ================================
 # Define Method Full Names, Colors, Location on Violin plots
@@ -57,7 +57,8 @@ def gen_color(ci, dark=False):
     return colors[ci]
 
 
-running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV') #Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
+#running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV') #Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )#still working on debugging lfca
+running_subset = ('Methods/42_Temp_Alone/','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
                 #'Methods/42_Temp_Alone,'Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/3_Human_Induced',
                  # ,'Methods/43_Forcing_Based/0_Linear','Methods/44_EarthModel_CGWL')
 #running_subset = ('Methods/42_Temp_Alone/1_Run_Means', 'Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL') #methods we now want to run, smaller subset for debugging
@@ -149,6 +150,16 @@ except:
         return method_name_in
 #ftl = np.argsort(index_mapping) #from to list - where a certain method should be plotted
 
+select_hist=True #plot additional smaller histograms within error
+if select_hist:
+    avail_methods_list_7 = [ "CGWL10y_for_halfU","EBMKF_ta4","GAM_AR1",
+             "lowess1dg20wnc","Kal_flexLin","FaIR_comb_unB","GWI_tot_CGWL",] #"GWI_tot_SR15","CGWL10y_sfUKCP"
+    rmse_df = pd.read_csv("current_methods_statistics_250818True.csv")
+    avail_methods_list_30 = list(rmse_df.loc[rmse_df['RMS'] <= 0.06, 'method_name'])
+  
+hist_option='first'
+
+
 if __name__ == '__main__':
     regen=historical_regen #False #whether to execute all of the methods directly (True) or read from a pickle file to rapidly redraw the figures (False).
 
@@ -199,7 +210,7 @@ if __name__ == '__main__':
 
     #fig2, (ax05, hist_ax05)  = plt.subplots(2, 1, figsize=(7,10),gridspec_kw={'height_ratios': [4, 1] , 'left':0.28 , 'right':0.9 , 'top':0.88, 'bottom':0.12}) #, sharex=True)
     fig2, ax05  = plt.subplots(1, 1, figsize=(7,10),gridspec_kw={ 'left':0.28 , 'right':0.85 , 'top':0.92, 'bottom':0.08}) #, sharex=Tr
-    fig2b    , (hist_ax05 ,hist_ax10) = plt.subplots(2, 1, figsize=(5,5),gridspec_kw={ 'left':0.1 , 'right':0.9 , 'top':0.88, 'bottom':0.12, 'hspace':0.5}) #, sharex=Tr
+    fig2b    , (hist_ax05 ,hist_ax10) = plt.subplots(2, 1, figsize=(5,7),gridspec_kw={ 'left':0.1 , 'right':0.9 , 'top':0.88, 'bottom':0.12, 'hspace':.9}) #, sharex=Tr
     fig3, ax10   = plt.subplots(1, 1, figsize=(7,10),gridspec_kw={'left':0.28 , 'right':0.85 , 'top':0.92, 'bottom':0.08}) #, sharex=True)
 
     eval05min=1970
@@ -220,6 +231,10 @@ if __name__ == '__main__':
     eval10 = {}
     crossing_yrs05 =[]
     crossing_yrs10 =[]
+    crossing_yrs05_7 =[]
+    crossing_yrs10_7 =[]
+    crossing_yrs05_30 =[]
+    crossing_yrs10_30 =[]
     cmethods = []
 
     #ax1.hlines(0.5,xmin=eval05min,xmax = eval05max-15, color='black', linestyle='--', linewidth=2 )
@@ -234,7 +249,7 @@ if __name__ == '__main__':
     ax4_handles=[]
     ax4_labels=[]
     df_results = pd.DataFrame(columns=['method_name', 'method_class','c/r','smooth_r','avg_unc.(1se)','#q<0.5', '#q<0.1', 'q_min',
-                                       'q_small5','log-likeli','RMS','bias','tlog-l','100log-l','l05','l10','bias50','Edyrs2','Edyrs6'])
+                                       'q_small5','log-likeli','RMS','bias','tlog-l','100log-l','l05','l10','bias50','Edyrs2','Edyrs6','cross_err0.5','cross_err1.0'])
     i=0
     ci=0
     labelcolors=[]
@@ -335,6 +350,8 @@ if __name__ == '__main__':
      #Histogram plots at 0.5°C
                 edyrs=0
                 aedyrs=0
+                cross05v=0
+                cross10v=0
                 #breakpoint()
                 non_decreasing = np.sum([x>y for x, y in zip(central_est[125:-1], central_est[126:])])<= 10
                 if(labelcurr_or_retro=="c"):
@@ -365,7 +382,8 @@ if __name__ == '__main__':
                     crossing_exp_value = fineeval05yrs[np.argmin(abs(integrated_diffs))]
                     crossing_end =  fineeval05yrs[len(psteps_intp) -1 - np.argmax(psteps_intp[::-1]<(1-0.1587))]#interpolated last moment that this_method_p_steps exceeds 0.84
 
-                    crossing_yrs05.append(crossing_exp_value)
+                    #crossing_yrs05.append(crossing_exp_value)# do we want a histogram of the integrated average times - no first crossing time
+        
                     cmethods.append(method_name)
                     crossing_p_pos = this_method_crossing_p * (this_method_crossing_p>0)
                     crossing_p_pos = crossing_p_pos  / np.sum(crossing_p_pos) #normalize to a total area
@@ -379,6 +397,17 @@ if __name__ == '__main__':
                     fineeval05yrsh=fineeval05yrs[0:-1]/2 + fineeval05yrs[1:]/2
                     if(non_decreasing): #method_name in sel_methods):
                         ax05.plot(fineeval05yrsh[now_cross],[ci]*sum(now_cross),"d",markersize=5,markerfacecolor="white", markeredgecolor="black", zorder=5)
+                    diffcross = fineeval05yrsh[now_cross]
+                    if hist_option == 'first':
+                        cross05v = diffcross[0]
+                    elif hist_option == 'median':
+                        cross05v = crossing_exp_value
+                    crossing_yrs05.append(cross05v)
+                    if select_hist:
+                        if method_name in avail_methods_list_7:
+                            crossing_yrs05_7.append(cross05v)
+                        if method_name in avail_methods_list_30:
+                            crossing_yrs05_30.append(cross05v)
                     edyrs = edyrs + .5*np.mean(np.abs(fineeval05yrsh[now_cross] - closest_year05))
                     
 
@@ -411,7 +440,9 @@ if __name__ == '__main__':
                     crossing_exp_value = fineeval10yrs[np.argmin(abs(integrated_diffs))]
                     crossing_end =  fineeval10yrs[len(psteps_intp) -1 - np.argmax(psteps_intp[::-1]<(1-0.1587))]#interpolated last moment that this_method_p_steps exceeds 0.84
 
-                    crossing_yrs10.append(crossing_exp_value)
+                    #crossing_yrs10.append(crossing_exp_value) #do we want a histogram of the integrated average times
+
+                    
                     #cmethods.append(method_name) already done
                     crossing_p_pos = this_method_crossing_p * (this_method_crossing_p>0)
                     crossing_p_pos = crossing_p_pos  / np.sum(crossing_p_pos) #normalize to a total area
@@ -429,6 +460,17 @@ if __name__ == '__main__':
                         #plt.errorbar(crossing_exp_value, 0.5, xerr=xerr_arr.T, fmt='o', color=alt_colors[ci % 2], capsize=3)
                         #plt.fill_between(halfyrs, .5 - crossing_p_pos, .5 + crossing_p_pos,color=gen_color(ci, dark=False), alpha=0.6, edgecolor='none')
                     edyrs = edyrs + .5*np.mean(np.abs(fineeval10yrsh[now_cross] - closest_year10))
+                    diffcross = fineeval10yrsh[now_cross] 
+                    if hist_option == 'first':
+                        cross10v = diffcross[0]
+                    elif hist_option == 'median':
+                        cross10v = crossing_exp_value
+                    crossing_yrs10.append(cross10v)
+                    if select_hist:
+                        if method_name in avail_methods_list_7:
+                            crossing_yrs10_7.append(cross10v)
+                        if method_name in avail_methods_list_30:
+                            crossing_yrs10_30.append(cross10v)
                     
                     ci = ci+1 #increment current method counter
                 aedyrs=edyrs*2/len(closest_years)
@@ -467,7 +509,7 @@ if __name__ == '__main__':
                 df_results.loc[i]= [ method_name,short_method_class,labelcurr_or_retro,smooth_est/smooth_std,avg_uncert,
                                  qvals_count_yrs05,qvals_count_yrs01,  qvals_smallest,qvals_smallest5, np.nanmean(llikelihood), np.sqrt(np.nanmean((central_est-standard)**2)),
                                    np.nanmean(central_est-standard) , np.nansum(llikelihood),np.nansum(llikelihood[-100:-1]), np.exp(llikelihood[int(closest_year05)-1850]),
-                                     np.exp(llikelihood[int(closest_year10)-1850]),np.nanmean(central_est[-50:]-standard[-50:]),edyrs,aedyrs] 
+                                     np.exp(llikelihood[int(closest_year10)-1850]),np.nanmean(central_est[-50:]-standard[-50:]),edyrs,aedyrs, cross05v, cross10v] 
                 i=i+1
    
        # else:
@@ -507,11 +549,13 @@ if __name__ == '__main__':
     ax05.set_title("Crossing Years for 0.5°C Above Preindustrial by Method", pad=10)
     ax05.set_xticks( hist_ax05.get_xticks())
     ax05.invert_yaxis()
-    hist_ax05.hist(crossing_yrs05, color="skyblue", edgecolor='grey',bins =np.arange(eval05min, eval05max-15,1) )
+    hist_ax05.hist(crossing_yrs05, color="skyblue", edgecolor='grey',bins =np.arange(eval05min, eval05max-15,1) ,label = f"all {len(crossing_yrs05)} current methods")
     hist_ax05.set_ylabel("Count")
     hist_ax05.set_xlabel("Year")
-    hist_ax05.set_yticks( np.arange(0,12,2))
-    hist_ax10.set_yticks( np.arange(0,20,4))
+    hist_ax05.set_yticks( np.arange(0,20,2))
+    hist_ax10.set_yticks( np.arange(0,20,2))
+    hist_ax05.set_ylim( [0,16.5])
+    hist_ax10.set_ylim( [0,16.5])
 
     ax10.set_xlabel("Year")
     ax10.set_xlim([eval10min, eval10max])
@@ -521,8 +565,18 @@ if __name__ == '__main__':
     hist_ax10.hist(crossing_yrs10, color="skyblue", edgecolor='grey',bins =np.arange(eval10min, eval10max,1))
     hist_ax10.set_ylabel("Count")
     hist_ax10.set_xlabel("Year")
-    hist_ax05.set_title("Distribution of Median 0.5°C Crossing Time for All Methods")
-    hist_ax10.set_title("Distribution of Median 1.0°C Crossing Time for All Methods")
+    if hist_option == "first":
+        hist_ax05.set_title("Distribution of First 0.5°C Crossing Time")
+        hist_ax10.set_title("Distribution of First 1.0°C Crossing Time")
+    if hist_option == "median":
+        hist_ax10.set_title("Distribution of Median 1.0°C Crossing Time")
+        hist_ax05.set_title("Distribution of Median 0.5°C Crossing Time")
+    if select_hist:
+        hist_ax05.hist(crossing_yrs05_30, color="orange", edgecolor='yellow',bins =np.arange(eval05min, eval05max-15,1), label= f"{len(crossing_yrs05_30)} that passed historical RMSE")
+        hist_ax05.hist(crossing_yrs05_7, color="purple",edgecolor='pink',bins =np.arange(eval05min, eval05max-15,1), label= f"final {len(crossing_yrs05_7)} selected (realized warming)")
+        hist_ax10.hist(crossing_yrs10_30, color="orange",edgecolor='yellow',bins =np.arange(eval10min, eval10max,1) )
+        hist_ax10.hist(crossing_yrs10_7, color="purple",edgecolor='pink',bins =np.arange(eval10min, eval10max,1) )
+        hist_ax05.legend(bbox_to_anchor=(0.5, -0.28), loc='upper center')
 
     df_res_show = df_results.drop(columns=['tlog-l','100log-l'])
     df_res_show['smooth_r'] = df_results['smooth_r'].round(3)
@@ -580,7 +634,7 @@ if __name__ == '__main__':
 
 
     cai = [1985,2010]
-    caiht = np.array([12,20])*2/3
+    caiht = np.array([16,16])*2/3 #[12,20]
     
     for i,ax in enumerate([hist_ax05,hist_ax10]):
         ax.arrow(cai[i]-8, caiht[i], -4, 0,head_width=caiht[i]*3/12,head_length=2,facecolor='white',lw=2)
@@ -677,9 +731,16 @@ if __name__ == '__main__':
 
     fig.savefig('spaggheti_plot_v6.png', dpi=500, bbox_inches='tight')
     fig2.savefig('05_threshold_v6.png', dpi=500, bbox_inches='tight')
-    fig2b.savefig('crossing_pile_v6.png', dpi=500, bbox_inches='tight')
+    fig2b.savefig(f'crossing_pile_v6_{hist_option}.png', dpi=500, bbox_inches='tight')
     fig3.savefig('10_threshold_v6.png', dpi=500, bbox_inches='tight')
+    print(sum((crossing_yrs05_30 -closest_year05)<=0.5  ) / len(crossing_yrs05_30))
+    print(sum((crossing_yrs05_30 -closest_year05)<=1  ) / len(crossing_yrs05_30))
+    print(sum((crossing_yrs05_30 -closest_year05)<=2  ) / len(crossing_yrs05_30))
 
+    print(sum((crossing_yrs10_30 -closest_year10)<=0.5  ) / len(crossing_yrs10_30))
+    print(sum((crossing_yrs10_30 -closest_year10)<=1  ) / len(crossing_yrs10_30))
+    print(sum((crossing_yrs10_30 -closest_year10)<=2  ) / len(crossing_yrs10_30))
+    
 
 
         ##Process along time marginal for each temp rather than along the temperature marginal for each date
