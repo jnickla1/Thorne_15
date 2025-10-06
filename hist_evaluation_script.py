@@ -385,7 +385,7 @@ if __name__ == '__main__':
                     #crossing_yrs05.append(crossing_exp_value)# do we want a histogram of the integrated average times - no first crossing time
         
                     cmethods.append(method_name)
-                    crossing_p_pos = this_method_crossing_p * (this_method_crossing_p>0)
+                    crossing_p_pos = this_method_crossing_p * (this_method_crossing_p>0) #ensure positive
                     crossing_p_pos = crossing_p_pos  / np.sum(crossing_p_pos) #normalize to a total area
                     ax05.fill_between(halfyrs, ci - crossing_p_pos, ci + crossing_p_pos,color=gen_color(method_data['method_class'], dark=False), alpha=0.6, edgecolor='none')
                     labelcolors.append(gen_color(method_data['method_class'], dark=False))
