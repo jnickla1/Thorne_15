@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 #only does realized warming for the moment
 
-from hist_heads_tails_evaluation_script import evalmins, evalmaxs, relthresh
+from hist_heads_tails_evaluation_script import evalmins, evalmaxs, relthresh, sel_methods_list_real, sel_methods_list_anthro
 
 n_methods, n_yrs, n_thr = 5, 36, 3
 
@@ -30,11 +30,12 @@ def refine_pdf_repeat_gaussian(pdf_year, start_year, L=12, sigma_years=1.0):
     sigma_bins = sigma_years * L
     pdf_fine = gaussian_filter1d(pdf_fine, sigma=sigma_bins, mode="nearest")
     pdf_fine = np.clip(pdf_fine, 0, None)
-    pdf_fine /= 1 / L  # keep integral = L
+    pdf_fine =  pdf_fine * L  # keep integral = L
 
     # Fine-grid time axis at bin centers
     dt = 1.0 / L
     t_fine = np.arange(start_year, start_year + len(pdf_year), dt) + 0.5 * dt
+
     return t_fine, pdf_fine
 
 
@@ -139,7 +140,7 @@ def cdf_to_pdf(cdf: np.ndarray, axis: int = 1) -> np.ndarray:
     pdf = np.clip(pdf, 0.0, None)
     return pdf
 
-def load_and_average_pdfs(npy_files: List[Path]) -> np.ndarray | None:
+def load_and_average_pdfs(npy_files: List[Path], delete_slices = []) -> np.ndarray | None:
     """
     Load each npy (shape expected: [n_methods, n_yrs, 3] CDF),
     convert to PDF, pad fine axis to the maximum length, and average across files.
@@ -153,7 +154,8 @@ def load_and_average_pdfs(npy_files: List[Path]) -> np.ndarray | None:
     max_fine = 0
 
     # First pass: read and convert CDF → PDF, track shapes
-    arr = np.stack([np.load(p, allow_pickle=False) for p in npy_files], axis=0)
+    arr0 = np.stack([np.load(p, allow_pickle=False) for p in npy_files], axis=0)
+    arr = np.delete(arr0, delete_slices, axis=1)
     mean_cdf = np.nanmean(arr, axis=0)
     
     if mean_cdf.ndim != 3 or mean_cdf.shape[2] != 3:
@@ -164,6 +166,9 @@ def load_and_average_pdfs(npy_files: List[Path]) -> np.ndarray | None:
     
     return pdf
 
+
+
+    
 def combine_histens_data(
     experiment_type: str,
     results_dir: str | Path = "Results"
@@ -175,8 +180,19 @@ def combine_histens_data(
     """
     csvs, npys = discover_histens_files(experiment_type, results_dir)
     method_names = read_method_names_from_csvs(csvs)
+
+    to_remove = ["GWI_tot_SR15"]
+    indices_to_delete = []
+    for index, item in enumerate(method_names):
+        if item in to_remove:
+            indices_to_delete.append(index)
+
+    indices_to_delete.sort(reverse=True)
+    for index in indices_to_delete:
+        del method_names[index]
+    
     crossing_years = collect_crossing_years(csvs, method_names)
-    mean_pdf = load_and_average_pdfs(npys)
+    mean_pdf = load_and_average_pdfs(npys, delete_slices=indices_to_delete)
 
     if method_names:
         print(f"[{experiment_type}] methods: {len(method_names)}")
@@ -189,11 +205,11 @@ def combine_histens_data(
     for t in THRESH_COLS:
         total_entries = sum(sum(np.array(lst)<2050) for lst in crossing_years[t].values())
         print(f"[{experiment_type}] collected {total_entries} entries for {t}")
-    return method_names, mean_pdf, crossing_years
+    return method_names, mean_pdf, crossing_years, indices_to_delete
 
 
-method_names_rpi, mean_pdf_rpi, crossing_rpi = combine_histens_data("histens_rpi_real", results_dir="Results")
-method_names_sat, mean_pdf_sat, crossing_sat = combine_histens_data("histens_satcal_real", results_dir="Results")
+method_names_rpi, mean_pdf_rpi, crossing_rpi, del_idx = combine_histens_data("histens_rpi_real", results_dir="Results")
+method_names_sat, mean_pdf_sat, crossing_sat, del_idx = combine_histens_data("histens_satcal_real", results_dir="Results")
 method_names = method_names_rpi
 mean_pdfs= [mean_pdf_rpi,  mean_pdf_sat]
 hist_data = [crossing_rpi,crossing_sat]
@@ -209,12 +225,29 @@ PANEL_INFO = [
 
 csv_threshold_names = ['xyear0.5','xyear1.0','xyear1.5']
 fig, axes = plt.subplots(2, 3, figsize=(14, 7), sharex="col", sharey=False)
-#sel_methods = ['CGWL10y_sfUKCP', 'EBMKF_ta4','FaIR_comb_unB','GAM_AR1','GWI_tot_CGWL','Kal_flexLin','lowess1dg20wnc'] #'GWI_tot_SR15'
-#already sorted
-#sel_methods_colors = [ "#CC3311", "#999933","#44AA99" ,"#117733","#AA4499","#88CCEE","#DDCC77"]
-sel_methods_colorsR = [ "#CC3311", "#117733","#88CCEE","#DDCC77","#000000"]
-sel_methods_colors = sel_methods_colorsR[::-1]
-ylims=[0.4,0.4,0.05]
+
+
+
+parts = [p.split("/") for p in sel_methods_list_real]
+
+# verify last segment matches method_names_rpi (strip "_method.py")
+last_parts = [seg[-1].replace("_method.py", "") for seg in parts]
+
+for index in del_idx:
+    del last_parts[index]
+    del parts[index]
+
+assert last_parts == method_names_rpi, "Method name mismatch!"
+
+# build color keys: use "dir2/dir3" if present, otherwise just "dir2"
+combined_keys = [("/".join(seg[1:3]) if len(seg) >= 4 else seg[1]) for seg in parts]
+
+# combine 2nd and 3rd segments and get colors
+from hist_evaluation_script import gen_color
+
+sel_methods_colors = [gen_color(k) for k in combined_keys]
+
+ylims=[0.4,0.4,0.4]
 evalmins2=evalmins.copy()
 evalmins2[1]=1995
 import matplotlib.ticker as ticker
@@ -270,7 +303,7 @@ handles = [plt.Line2D([0],[0]) for _ in legend_labels]
 fig.legend(legend_labels, loc="upper center", ncol=min(len(legend_labels), 6), frameon=False)
 
 fig.tight_layout(rect=[0,0,1,0.93])
-plt.show()
-#outpath = "draft_heads_tails_probplot.png"
-#fig.savefig(outpath, dpi=600)
-#print(f"Saved figure: {outpath}")
+#plt.show()
+outpath = "real_heads_tails_probplot.png"
+fig.savefig(outpath, dpi=600)
+print(f"Saved figure: {outpath}")

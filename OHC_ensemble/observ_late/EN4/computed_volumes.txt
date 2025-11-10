@@ -1,0 +1,35 @@
+EN4.2.2 Water Volumes
+
+
+(metview) JohnMatthew@John-1969 EN.4.2.2.analyses.c14.1900 % ncap2 -O -s 'sum_a=area.total();' EN.4.2.2.f.analysis.c14.190002.stage3.nc3 "$tmp"                                       
+(metview) JohnMatthew@John-1969 EN.4.2.2.analyses.c14.1900 % ncks -H -C -v sum_a -s '%g\n' "$tmp"                                          
+5.08415e+14
+
+(metview) JohnMatthew@John-1969 EN.4.2.2.analyses.c14.1900 % ncap2 -O -s 'msk=(temperature==temperature)*(abs(temperature)<1.0e19); sum_w_ok=(w*msk).total();' EN.4.2.2.f.analysis.c14.190002.stage3.nc3 "$tmp"
+(metview) JohnMatthew@John-1969 EN.4.2.2.analyses.c14.1900 % ncks -H -C -v sum_w_ok -s '%g\n' "$tmp"
+1.51421e+18
+
+
+
+(metview) JohnMatthew@John-1969 EN.4.2.2.analyses.c14.1900 % ncap2 -O -s 'msk=(temperature==temperature)*(abs(temperature)<1.0e19); sum_w_ok=(wpol02000*msk).total();' EN.4.2.2.f.analysis.c14.190002.stage3.nc3 "$tmp"
+(metview) JohnMatthew@John-1969 EN.4.2.2.analyses.c14.1900 % ncks -H -C -v sum_a -s '%g\n' "$tmp"
+ncks: ERROR nco_xtr_mk() reports user-supplied variable name or regular expression 'sum_a' is not in and/or does not match contents of input file
+(metview) JohnMatthew@John-1969 EN.4.2.2.analyses.c14.1900 % ncks -H -C -v sum_w_ok -s '%g\n' "$tmp"
+5.99447e+16
+
+
+(metview) JohnMatthew@John-1969 EN.4.2.2.analyses.c14.1900 % ncap2 -O -s 'msk=(temperature==temperature)*(abs(temperature)<1.0e19); sum_w_ok=(wpol*msk).total();' EN.4.2.2.f.analysis.c14.190002.stage3.nc3 "$tmp"     
+(metview) JohnMatthew@John-1969 EN.4.2.2.analyses.c14.1900 % ncks -H -C -v sum_w_ok -s '%g\n' "$tmp"
+1.1335e+17
+
+
+(metview) JohnMatthew@John-1969 EN.4.2.2.analyses.c14.1900 % ncap2 -O -s 'msk=(temperature==temperature)*(abs(temperature)<1.0e19); sum_w_ok=(w2000_B*msk).total();' EN.4.2.2.f.analysis.c14.190002.stage3.nc3 "$tmp"
+(metview) JohnMatthew@John-1969 EN.4.2.2.analyses.c14.1900 % ncks -H -C -v sum_w_ok -s '%g\n' "$tmp"
+8.3328e+17
+
+
+(metview) JohnMatthew@John-1969 EN.4.2.2.analyses.c14.1900 % ncap2 -O -s 'msk=(temperature==temperature)*(abs(temperature)<1.0e19); sum_w_ok=(w700_B*msk).total();' EN.4.2.2.f.analysis.c14.190002.stage3.nc3 "$tmp" 
+(metview) JohnMatthew@John-1969 EN.4.2.2.analyses.c14.1900 % ncks -H -C -v sum_w_ok -s '%g\n' "$tmp"
+1.25957e+18
+
+

@@ -3,6 +3,7 @@ regen=True
 annotate_fig=False
 crossing_figs=False
 
+
 from netCDF4 import Dataset
 import sys
 #making all paths relative to ~/
@@ -63,14 +64,11 @@ sel_methods_list_real = ["Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py",
                              "Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py",
                              "Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py",
                              "Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py",
-                             "Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py"
-                         ] 
-
-                          #   "Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py",
-                          #   "Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_method.py",
-                          #   "Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py",
-                          #   "Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py",  
-                          #   ]
+                             "Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py",
+                             "Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py",
+                             "Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py",
+                             "Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_method.py",
+                             "Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py" ]
 
 sel_methods_list_anthro = ["Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py",
                            "Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py",
@@ -96,7 +94,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         max_runs = 1+start_run
         plotting_figs= True
     else:
-        max_runs = 50+start_run
+        max_runs = 20+start_run
         plotting_figs= False
     methods_folder= running_subset
 
@@ -154,7 +152,10 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
             if os.path.exists(results_path):
                 with open(results_path, 'rb') as fp:
                     existing_results = pickle.load(fp)
-                   # existing_results.pop("EBMKF_ta4",None) #redo EMBKF_ta4
+                    #existing_results.pop("EBMKF_ta4",None) #redo EMBKF_ta4
+                    #existing_results.pop("lowess1dt30wnc",None)
+
+                    
 
                 completed_methods = set(existing_results.keys())
             else:
@@ -198,20 +199,29 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
 
   
         standard = results['cent20y']['LT_trend'][2] #retrospective
-        smooth_std = np.nanmean(np.abs(np.diff(np.diff(standard))))
 
-        fineyrs_all = np.arange(1965,years[-1]+1/inum,1/inum) #1975 to deal with the dip
+        #extend standard 5 yrs into the future
+        extlength=6
+        m, b = np.polyfit(years[(-15-10):(-10)], standard[(-15-10):(-10)], 1)
+        new_years = np.arange(years[-10], years[-10] + extlength)
+        new_vals  = m * new_years + b
+        standard[(-10):(-10+extlength)] =new_vals
+        
+        smooth_std = np.nanmean(np.abs(np.diff(np.diff(standard))))
+        sfineyr = 1972
+        while standard[sfineyr-1850]> sthresh-0.03: #failsafe should any members not be larger than 0.5 in 1972
+            sfineyr=sfineyr-1
+        fineyrs_all = np.arange(sfineyr,years[-1]+1/inum,1/inum)
         std_intp0 = np.interp(fineyrs_all,years,standard)
         std_intp = std_intp0[~np.isnan(std_intp0)]
         fineyrs_c0 = fineyrs_all[~np.isnan(std_intp0)]
         fineyrs_c = fineyrs_c0[1:]
         thrshs= np.arange(sthresh,np.nanmax(standard) ,.1) #thresholds
-        print(f"evaluating {len(thrshs)} of 0.1°C thresholds, starting at 1.1°C")
+        print(f"evaluating {len(thrshs)} of 0.1°C thresholds, starting at 0.5°C")
         closest_years = [-1/inum/2+fineyrs_c[np.logical_and(std_intp[0:-1]<i, std_intp[1:]>=i)][0] for i in thrshs]
                    #will have a variable number of steps, at least including 0.5
         closest_yrs_rnd = np.round(closest_years)
 
-        #open file containing scalings for the se's
         scalvar = pd.read_csv('Results2/historical_names_var_scale.csv')
         
         central_yr_estimates =[]
@@ -284,27 +294,28 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     qvals_smallest5 = np.sort(qvals[1])[4]
                     avg_uncert = np.nanmean(se)
                     #print(qvals_count_yrs ,qvals_smallest, qvals_smallest5 )
+
+
                     
-
-
 
                     if(labelcurr_or_retro=="c"):
                         #calculate at intermediary 0.?°C
 
+                            
                         method_intp0 = np.interp(fineyrs_all,years,central_est)
                         method_intp = method_intp0[~np.isnan(method_intp0)]
                         fineyrs_m0 = fineyrs_all[~np.isnan(method_intp0)]
                         fineyrs_m = fineyrs_m0[1:]
                         thrshs= np.arange(sthresh,np.nanmax(central_est) ,.1) #threshold
-                        closest_yearsM = [-1/inum/2+fineyrs_m[np.logical_and(method_intp[0:-1]<i, method_intp[1:]>=i)][0] for i in thrshs]
-                            
+                        try:
+                            closest_yearsM = [-1/inum/2+fineyrs_m[np.logical_and(method_intp[0:-1]<i, method_intp[1:]>=i)][0] for i in thrshs]
+                        except:
+                            print(method_name)
+                            print(central_est)
+                            breakpoint()
                         #this is only picking the first crossing time if there are multiple ones
                         yearfcr05 = closest_yearsM[0]
-                        if len(closest_yearsM)<=5:
-                            yearfcr10= np.nan
-                        else:
-                            yearfcr10= closest_yearsM[5]
-                            
+                        yearfcr10= closest_yearsM[5]
                         if len(closest_yearsM)<=10:
                             yearfcr15= np.nan
                         else:
@@ -312,12 +323,20 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                         maxcut=0
 
                     else: #cent20yr standard
+                        #extend 5 yrs into the future
+                        m, b = np.polyfit(years[(-15-10):(-10)], central_est[(-15-10):(-10)], 1)
+                        new_years = np.arange(years[-10], years[-10] + extlength)
+                        new_vals  = m * new_years + b
+                        central_est[(-10):(-10+extlength)] =new_vals
                         yearfcr05 = closest_years[0]
                         if len(closest_years)<=5:
-                            yearfcr10= np.nan
-                        else:
-                            yearfcr10= closest_years[5]
+                            import matplotlib.pyplot as plt
+                            plt.figure()
+                            plt.plot(years,central_est)
+                            plt.show()
+                            breakpoint()
                             
+                        yearfcr10= closest_years[5]
                         if len(closest_years)<=10:
                             yearfcr15= np.nan
                         else:
@@ -337,6 +356,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                             best_alter_scale =1
                         else:
                             best_alter_scale = scalvar[scalvar["method_name"]==method_name]["best_alter_scale"].to_numpy()[0]
+
                         
                         if isinstance(result, dict):
                             #this_method_p_steps = result['pvalue'](evalyrs, np.full(np.shape(evalyrs),thrshs[j]),k, two_sided=False)
@@ -353,7 +373,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                         last_non_nan = len(this_method_p_steps) - np.argmax(~np.isnan(this_method_p_steps)[::-1]) - 1
                         try:
                             #psteps_intp = np.interp(fineevalyrs,evalyrs,this_method_p_steps)
-                            pcrossmatrix[i,0:len(this_method_p_steps),j]=this_method_p_steps 
+                            pcrossmatrix[i,0:len(this_method_p_steps),j]=this_method_p_steps
                         except:
                             breakpoint()
                         

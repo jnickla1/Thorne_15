@@ -1,0 +1,29 @@
+(metview) JohnMatthew@John-1957 CORA % cd /Volumes/NicklasExt/climate_data_external/CORA/INSITU_GLO_PHY_TS_OA_MY_013_052/cmems_obs-ins_glo_phy-temp-sal_my_cora-oa_P1M_202411/field/1960 
+(metview) JohnMatthew@John-1957 1960 % ncap2 -O -s 'sum_a=area.total();' OA_CORA5.2_19600115_fld_TEMP.stage3.nc3 "$tmp"                                                                  
+(metview) JohnMatthew@John-1957 1960 % ncks -H -C -v sum_a -s '%g\n' "$tmp"                                                                                                              
+5.03595e+14
+
+
+(metview) JohnMatthew@John-1957 1960 % ncap2 -O -s 'msk=(TEMP==TEMP)*(abs(TEMP)<1.0e19); sum_w_ok=(w*msk).total();' OA_CORA5.2_19600115_fld_TEMP.stage3.nc3 "$tmp"                                                                                 
+(metview) JohnMatthew@John-1957 1960 % ncks -H -C -v sum_w_ok -s '%g\n' "$tmp"    
+1.33285e+18
+
+
+(metview) JohnMatthew@John-1957 1960 % ncap2 -O -s 'msk=(TEMP==TEMP)*(abs(TEMP)<1.0e19); sum_w_ok=(wpol02000*msk).total();' OA_CORA5.2_19600115_fld_TEMP.stage3.nc3 "$tmp"
+(metview) JohnMatthew@John-1957 1960 % ncks -H -C -v sum_w_ok -s '%g\n' "$tmp"                                                                                            
+5.07055e+16
+
+
+(metview) JohnMatthew@John-1957 1960 % ncap2 -O -s 'msk=(TEMP==TEMP)*(abs(TEMP)<1.0e19); sum_w_ok=(wpol*msk).total();' OA_CORA5.2_19600115_fld_TEMP.stage3.nc3 "$tmp" 
+(metview) JohnMatthew@John-1957 1960 % ncks -H -C -v sum_w_ok -s '%g\n' "$tmp"                                                                                       
+9.15107e+16
+
+
+(metview) JohnMatthew@John-1957 1960 % ncap2 -O -s 'msk=(TEMP==TEMP)*(abs(TEMP)<1.0e19); sum_w_ok=(w2000_B*msk).total();' OA_CORA5.2_19600115_fld_TEMP.stage3.nc3 "$tmp" 
+(metview) JohnMatthew@John-1957 1960 % ncks -H -C -v sum_w_ok -s '%g\n' "$tmp"                                                                                          
+6.92709e+17
+
+
+(metview) JohnMatthew@John-1957 1960 % ncap2 -O -s 'msk=(TEMP==TEMP)*(abs(TEMP)<1.0e19); sum_w_ok=(w700_B*msk).total();' OA_CORA5.2_19600115_fld_TEMP.stage3.nc3 "$tmp"
+(metview) JohnMatthew@John-1957 1960 % ncks -H -C -v sum_w_ok -s '%g\n' "$tmp"                                                                                         
+1.10068e+18

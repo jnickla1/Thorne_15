@@ -32,7 +32,7 @@ n_iter=len(temperature) #174
 
 
 ##1. Initialize the procedure by selecting starting values for the parameters
-u0= np.array([[0],[0]])
+u0= np.array([[-0.35],[0]])
 sig0 = 0.2
 phi = np.array([[1,1],[0,1]]) ## we are keeping this as a random walk, so NOT updating this
 #Q =  np.array([[0.005,0.001],[0.001,0.0001]])
@@ -70,12 +70,12 @@ Qo=np.cov(diff_mean[(avg_len_u+1):-(avg_len_u+1)],diff_lin[avg_len_u:-(avg_len_u
 z1 = np.array([-0.02065589 , 5.94990778 , 0.23777725]) #precomputed
 
 def run_method(yrs, temps, uncert, model_run, experiment_type):
-    #data_orig = pd.read_csv("./Common_Data/HadCRUT5.csv")
-    #temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
-    preind_base = np.mean(temps[0:50])
+    data_orig = pd.read_csv("./Common_Data/HadCRUT5.csv")
+    temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
+    preind_base = np.mean(temps_obs[0:50])
     
-    xhat, P, xhathat, Phathat, thisllike = KF_compute(yrs, temps-preind_base,np.zeros(np.shape(temps)), z1)
-    return xhat+preind_base, P, xhathat+preind_base, Phathat
+    xhat, P, xhathat, Phathat, thisllike = KF_compute(yrs, temps+preind_base,np.zeros(np.shape(temps)), z1)
+    return xhat-preind_base, P, xhathat-preind_base, Phathat
 
 
 #while dellYtheta > 1:
