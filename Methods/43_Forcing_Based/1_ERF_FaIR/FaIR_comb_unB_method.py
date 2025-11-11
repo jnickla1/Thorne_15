@@ -26,15 +26,25 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     #Nres = np.shape(obt_array0)[1]
     #starts in 1750 so crop to 100th index
     #samp_cur = obt_array0[100:,:]
+    exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126 or _VolcConst #
 
     if experiment_type == 'historical':
         sfactor=0.2
         current_array = np.load(cur_path+"/resliced_NorESM/combined_hadcrut5_nonat.npy") #starts in 1930
         retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2022_temp_nonat.npy") #starts in 1750
         curbias=-0.014
+
+    elif (exp_attr[0]=="histens"):
+        sfactor=0.2
+        curbias=-0.014 #assuming this matches
+        #retro array doesn't matter
+        retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2022_temp_nonat.npy") #starts in 1750
+        current_array = np.load(cur_path+"/resliced_headstails/combined_all-headstails_currentr"+str(model_run+1)+"_nonat.npy")
+        if (exp_attr[1]=="satcal"):
+            offset = -np.mean(temperature[0:50])
+            current_array = current_array -offset
         
     else:
-        exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126 or _VolcConst #
         sfactor=0.6
         if (exp_attr[1]=='ESM1-2-LR'):
             #combined_all_current_MPIESM370r50_anthro.npy
@@ -73,6 +83,16 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         current_array = np.load(cur_path+"/resliced_NorESM/combined_hadcrut5_all.npy") #starts in 1930
         retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2022_temp_all.npy") #starts in 1750
         curbias = 0.01
+
+    elif (exp_attr[0]=="histens"):
+        sfactor=0.4
+        curbias= 0.01 #assuming this matches
+        #retro array doesn't matter
+        retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2022_temp_all.npy") #starts in 1750
+        current_array = np.load(cur_path+"/resliced_headstails/combined_all-headstails_currentr"+str(model_run+1)+"_all.npy")
+        if (exp_attr[1]=="satcal"):
+            offset = -np.mean(temperature[0:50])
+            current_array = current_array -offset
     else:
         exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126 or _VolcConst #
         sfactor=0.6

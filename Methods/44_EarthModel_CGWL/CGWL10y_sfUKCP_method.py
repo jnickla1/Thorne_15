@@ -8,6 +8,7 @@ import netCDF4
 np.random.seed(402)
 
 def run_method(years, temperature, uncert, model_run, experiment_type):
+
     avg_len_l=9
     avg_len_u=1 #actually 4 yrs below, that year, 0 yrs after
     empser  = np.full(np.shape(years),np.nan)
@@ -16,12 +17,18 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     sesl = empser.copy()
     (temps_CIl, temps_CIu) = uncert
     temps_1std = (temps_CIu - temps_CIl) / 4 #pm2 stdevs
+    exp_attr = experiment_type.split("_")
+    if (exp_attr[0]=="histens"):
+        pi50yoffset = np.average(temperature[0:50])
+        temperature= temperature - pi50yoffset
+    else:
+        pi50yoffset = 0
     
     cur_path = os.path.dirname(os.path.realpath(__file__))
     WMOoffset = 0.88 # for the WMO data 
-    exp_attr = experiment_type.split("_")
+
     
-    if (experiment_type=="historical" or exp_attr[2].lower()=="ssp245" or exp_attr[2].lower()=="rcp45"):
+    if (experiment_type=="historical" or exp_attr[2].lower()=="ssp245" or exp_attr[2].lower()=="rcp45" or exp_attr[0]=="histens"):
         filein = netCDF4.Dataset(cur_path+"/tasAnom_rcp45_land-prob_global_glb_sample_b8100_1y_ann_18591201-20991130.nc",'r')
         comput_temps = np.array(filein.variables['tasAnom'])
     elif (exp_attr[2].lower()=="ssp126"):
@@ -68,7 +75,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         samp_cur[i,:] = ( np.mean(chunk)/2 + forec_samps/2 ) #integer added to vector
             #np.random.normal(loc=0, scale=np.sqrt(np.var(chunk)/2/len(chunk)), size=cutoff_n)+
             #np.random.normal(loc=0, scale=np.sqrt(np.mean(chunk_uncert**2)/2/len(chunk)), size=cutoff_n) )
-    if experiment_type == 'historical': #retrospective and taper: exactly equal to 21yr running mean if farther than 10 years before present
+        
+    if experiment_type == 'historical' or exp_attr[0]=="histens": #retrospective and taper: exactly equal to 21yr running mean if farther than 10 years before present
         import pandas as pd
         samp_ret = np.full((np.shape(years)[0],cutoff_n) ,np.nan)
         avg_len_l=10
@@ -100,7 +108,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
     def empirical_mean(year_idx,k):
         if (k==0):
-            return means[year_idx-1850]
+            return means[year_idx-1850] + pi50yoffset
         elif (k==1 and experiment_type == 'historical'):
             return meansR[year_idx-1850]
         else:
@@ -118,7 +126,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         if(k!=0 and k!=1):
             return np.full(np.shape(year_idx),np.nan)
         year_idx = np.atleast_1d(year_idx)
-        point = np.atleast_1d(point)
+        point = np.atleast_1d(point) - pi50yoffset
         # Initialize an array to store empirical p-values
         empirical_p = np.full(np.shape(point), np.nan)
         for i in range(len(year_idx)):
@@ -173,7 +181,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         if(k!=0 and k!=1):
             return np.full(np.shape(year_idx),np.nan)
         year_idx = np.atleast_1d(year_idx)
-        point = np.atleast_1d(point)
+        point = np.atleast_1d(point) - pi50yoffset
         # Initialize an array to store empirical p-values
         empirical_ll = np.full(np.shape(point), np.nan)
         for i in range(len(year_idx)):
@@ -218,7 +226,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 epdf = stats.gaussian_kde(dist)
                 resamps[i] = epdf.resample(nsamps)
 
-        return resamps
+        return resamps + pi50yoffset
     
     return {
         'mean': empirical_mean,

@@ -58,15 +58,15 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     means2 = empser.copy()
     ses2 = empser.copy()
     from . import EBMKF_Nicklas4 as ekf #only change cloud feedback, but dynamically
+
+    exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #   
     
     if experiment_type == "historical":
-        
         ekf.n_iters = 174
         unf_new_opt_depth = ekf.data[:,3]*0.001
         ekf.opt_depth=ta_smooth(unf_new_opt_depth,ekf.involcavg)
         given_preind_base = np.mean(temperature[0:50])
         temps = temperature-given_preind_base+preind_base + ekf.offset #ensure this matches expected starting temperature in 1850
-
         frac_blocked = 1-(5.5518/(unf_new_opt_depth+9.9735)) #(9.068/(comb_recAOD_cleaned+9.7279))
         erf_data_solar = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")['solar'].to_numpy()[(1850-1750):]
         solar_full = erf_data_solar[:ekf.n_iters]+ 340.4099428 - 0.108214
@@ -82,9 +82,47 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         means[0:ekf.n_iters], ses[0:ekf.n_iters],means2[0:ekf.n_iters],ses2[0:ekf.n_iters] = ekf.ekf_run(new_observ,ekf.n_iters,retPs=3)
         return means +given_preind_base - ekf.offset-preind_base, np.sqrt(np.abs(ses))*1.2,means2 -ekf.offset-preind_base,np.sqrt(np.abs(ses2))
 
-    else:
+
+    elif (exp_attr[0]=="histens"):
+        ekf.n_iters = 174
+        #keeping optical depth (volcanoes) and solar forcing the same
+        unf_new_opt_depth = ekf.data[:,3]*0.001
+        ekf.opt_depth=ta_smooth(unf_new_opt_depth,ekf.involcavg)
+        given_preind_base = np.mean(temperature[0:50])
+
+        temps = temperature-given_preind_base+preind_base + ekf.offset #ensure this matches expected starting temperature in 1850, same baseline as HadCRUT
+        frac_blocked = 1-(5.5518/(unf_new_opt_depth+9.9735)) #(9.068/(comb_recAOD_cleaned+9.7279))
+        erf_data_solar = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")['solar'].to_numpy()[(1850-1750):]
+        solar_full = erf_data_solar[:ekf.n_iters]+ 340.4099428 - 0.108214
+        tot_volc_erf = (- solar_full*frac_blocked + 151.22)
+        erf_trapez=(1*tot_volc_erf[0:-2]+2*tot_volc_erf[1:-1]+0*tot_volc_erf[2:] )/4 #want to snap back as quickly as possible
+        temps[2:-1] = temps[2:-1] - erf_trapez/(ekf.heatCp - ekf.Cs)
+
+        ohca_meas_all = np.load(config.CODEBASE_PATH +"/OHC_ensemble/ohca_sampled_ensemble.npy")
+        ohca_meas = ohca_meas_all[model_run,0:ekf.n_iters]
+        ohca_meas = ohca_meas - ohca_meas[0]
+        ohca_uncert_all = np.load(config.CODEBASE_PATH +"/OHC_ensemble/ohca_uncertainty_ensemble.npy")
+        ohca_uncert = np.abs(ohca_uncert_all[model_run,0:ekf.n_iters]) #remember stored as complex number, this gives us the RMS uncertainty
+        ekf.Roc_tvar=np.square(ohca_uncert+5)/ekf.zJ_from_W/ekf.zJ_from_W #set minimum of 5ZJ uncertainty in 2010 standard year
+        ohca_meas[2:] = ohca_meas[2:] - (erf_trapez/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*200 #not perfect but good for now, also unclear where the 200 comes from
+        import os
+        cur_path = os.path.dirname(os.path.realpath(__file__))
+        TOA_meas_artif_all = np.load(cur_path + "/heads_tails_forcing/all-headstails_current_TOA_ensemble.npy")
+        TOA_meas_artif = TOA_meas_artif_all[model_run,0,0:ekf.n_iters] #.to_numpy() if pandas array
+        TOA_meas_artif1 =  TOA_meas_artif #- (tot_volc_erf ) * .4 #again removing the volcanic signal for the ta run
+        new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
+        ekf.dfrA_float_var = ekf.dfrA_float_var/40 # adjust uncertainty in TOA observations
+        means[0:ekf.n_iters], ses[0:ekf.n_iters],means2[0:ekf.n_iters],ses2[0:ekf.n_iters] = ekf.ekf_run(new_observ,ekf.n_iters,retPs=3)
         
-        exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #
+        #import matplotlib.pyplot as plt
+        #breakpoint()
+        #plt.plot(years,means +given_preind_base - ekf.offset-preind_base - offset_satcal)
+        #plt.show()
+        #we're already putting back the given preind base
+            
+        return means +given_preind_base - ekf.offset-preind_base , np.sqrt(np.abs(ses))*1.2,means2 +given_preind_base -ekf.offset-preind_base ,np.sqrt(np.abs(ses2))
+
+    else:
         new_iter=len(years)
         given_preind_base = np.mean(temperature[0:50])
         
@@ -299,6 +337,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         #breakpoint()
 
         means , ses ,means2 ,ses2 = ekf.ekf_run(new_observ,new_iter,retPs=3)
+
+        
         return means - ekf.offset-preind_base + given_preind_base , np.sqrt(np.abs(ses))*2,means2 -ekf.offset-preind_base + given_preind_base,np.sqrt(np.abs(ses2))*2
 
 

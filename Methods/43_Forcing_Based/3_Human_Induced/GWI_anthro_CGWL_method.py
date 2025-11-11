@@ -18,18 +18,36 @@ cur_path = os.path.dirname(os.path.realpath(__file__))
 ord_ind = [0,1,4,2,3]
 min_fact = 4
 
+
+#def collect_offset_1981(temperatures):
+    #st_array_rpi = np.loadtxt('Hist_heads_tails/sst_pseudo_rpi.csv', delimiter=',')
+    #st_array_satcal = np.loadtxt('Hist_heads_tails/sst_pseudo_satcal.csv', delimiter=',')
+    #sims_tas[:,model_run] # double checked that this provides the correct offset
+    #return np.mean(temperatures[(1981-1850):(2011-1850)])
+    
+
+
 def run_method(years, temperature, uncert, model_run, experiment_type):
     #ONLY DEFINED NOW FOR CURRENT WARMING LEVEL, so k must be 0 or will return just NANs
     syear = 1950
+    exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #
     if experiment_type == 'historical':
         gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/CGWL_ESM1-2-LR/"+
                 "GWI_results_CGWL_HISTORICAL-ONLY_SCENARIO--observed-SSP245_ENSEMBLE-MEMBER-"+
                                        "-all_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2024.csv", header=[0, 1])
-        curbias = 0.0276 
+        curbias = 0.0276
+        
+    elif (exp_attr[0]=="histens"):
+        curbias = 0.0276 #assuming this matches
+        gwi_levels_curr0 = pd.read_csv(cur_path+"/heads_tails/individual_members/"+
+                "GWI_results_CGWL_HISTORICAL-ONLY_SCENARIO--observed_JK-2024-SSP245_ENSEMBLE-MEMBER--"+str(model_run)+
+                                       "_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2024.csv", header=[0, 1])
+        if (exp_attr[1]=="satcal"):
+            offset = -np.mean(temperature[0:50])
+            curbias = curbias + offset
+            
     else:
         #future case, grabbing the ANNUAL resutls
-        exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #
-
         if (exp_attr[1]=='ESM1-2-LR'):
             gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/CGWL_ESM1-2-LR/"+
                 "GWI_results_CGWL_HISTORICAL-ONLY_SCENARIO--SMILE_ESM-"+exp_attr[2]+"_ENSEMBLE-MEMBER--"+

@@ -121,7 +121,7 @@ if __name__ == '__main__':
     nyrs = len(years)
     model_run = ''
     experiment_type = sys.argv[1] #'fut_ESM1-2-LR_SSP126_constVolc' #fut_NorESM_RCP45_Volc
-
+    exp_attr = experiment_type.split("_")
     if (experiment_type =='historical'):
         outputfilename = experiment_type
         # Run all the methods
@@ -137,6 +137,8 @@ if __name__ == '__main__':
 
 
 #####START FUTURE PROCESSING CODE
+
+    
     else:
         model_run = sys.argv[2]
         temps_CIu_past =data.loc[:,"Upper"].to_numpy() #Lower confidence limit (2.5%)	Upper confidence limit (97.5%)
@@ -147,7 +149,7 @@ if __name__ == '__main__':
         start_run = int(sys.argv[2])
         outputfilename = f'{experiment_type}{model_run}'
             
-        exp_attr = experiment_type.split("_")
+        
         if (exp_attr[1]=='ESM1-2-LR'):
             max_runs = 10+start_run #50  #5
             fut_data_loc = config.CLIMATE_DATA_PATH+'/'+exp_attr[1]+'/combined/'+exp_attr[2].lower()+'_aave_tas.nc'
@@ -318,7 +320,7 @@ if __name__ == '__main__':
     #    ftl = np.argsort(index_mapping)
     lhund=-101 #length 251
     lten=-11
-    if (exp_attr[1]=='NorESM'):
+    if (experiment_type == 'historical' or exp_attr[1]=='NorESM'):
         lhund=-100 #length 250
         lten = -10
     

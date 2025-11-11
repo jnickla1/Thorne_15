@@ -39,6 +39,7 @@ gamAR1 <- function(G,rho,method="ML") {
 args = commandArgs(trailingOnly=TRUE)
 
 library(mgcv)
+library(this.path)
 cur_loc=this.dir()
 # Read in some yearly temperature data with variables Time and Anomaly
 setwd(cur_loc)

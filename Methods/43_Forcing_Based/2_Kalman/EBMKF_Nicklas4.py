@@ -12,6 +12,12 @@ import pdb
 
 #from os.path import expanduser
 import config
+#import os
+#class configclass:
+#    def __init__(self):
+#        self.CODEBASE_PATH = os.path.expanduser('~/')+"Downloads/Thorne_15_codefigurestats"
+#        self.CLIMATE_DATA_PATH = os.path.expanduser('~/')+"climate_data" 
+#config = configclass()
 common_dataprefix = config.CODEBASE_PATH+"/Common_Data/"
 
 colorekf=(26./255, 44./255, 105./255)
@@ -21,7 +27,7 @@ colorgrey=(0.5,0.5,0.5)
 
 n_iters = 174 
 
-zJ_from_W = 5.1006447*3.154*0.71
+zJ_from_W = 5.1006447*3.154 #*0.71 #CHANGE NOV25
 zJtomm=0.121
 pcolor='deeppink'
 colorrts='goldenrod'
@@ -34,7 +40,7 @@ dates[0]=sdate
 
 
 #temps=data[:, 1]+287
-lCo2=np.log10(data[:,2])
+lCo2=np.log10(data[:,2]) 
 opt_depth=data[:,3]*0.001 #*0.053) #/1000?0.000100025
 anthro_clouds=(data[:,7]+1) #ONLY FOR HISTORICAL RUN
 
@@ -56,7 +62,7 @@ offset= -np.mean(temps[(1960-sdate):(1990-sdate)]) +JonesOffset + 273.15 #Jones2
 temps=temps+offset
 #pindavg= np.mean(temps[(1850-sdate):(1930-sdate)])
 
-heatCp=17
+heatCp=23 #17 #CHANGE NOV25
 
 sig=5.6704e-8
 
@@ -69,7 +75,7 @@ sw_in=340.2
 
 
 T02=temps[2002-1850] #~287.55 #in 2002 #(JMN rev 2024)
-Teq1850=np.mean(temps[0:25])
+Teq1850=286.75 #np.mean(temps[0:25]) #CHANGE NOV25 or 286.75 np.mean(temps[1:6])
 pindavg=Teq1850 #286.7 #preindustrial avg
 #print("Teq1850",Teq1850)
 
@@ -86,10 +92,10 @@ def precompute_coeffs(printThem):
     dfaS=fdbkS/(sw_in*a_refl*g_refl)
     dfaA=fdbkA/(sw_in*a_refl*g_refl)
     powp1 = fdbkW*4/3.22 #1.3
-    B1B0 = 12.74/sig/np.power( T02, 4-powp1 ) #15.45 #19.45
+    B1B0 = 12.74/sig/np.power( T02, 4-powp1 ) #12.74 15.45 #19.45
     inbndf= a_refl*g_refl*9.068 #sw_in* 137.49
     rad1850 = (sw_in*0.9318*a_refl*(1+dfaA*(Teq1850-T02))+anthro_clouds[0])*g_refl*(1+dfaS*(Teq1850-T02))
-    B1 = (rad1850 / 5.670e-8 / np.power( Teq1850, 4-powp1 ))+B1B0 *2.444 #594
+    B1 = (rad1850 / 5.670e-8 / np.power( Teq1850, 4-powp1 ))+B1B0 *lCo2[0] #594
     B0 = B1B0/B1
     outbndf= sig*B1
     Cs= 136.5*shaldepth/1000 #<17 like maybe 14
@@ -323,6 +329,7 @@ for k in range(1,n_iters):
 
 #recombining
 TOA_meas_artif = np.copy(TOA_swout)
+TOA_swout2 = np.copy(TOA_swout)
 TOA_meas_artif_var = (TOA_swout_low - TOA_swout_high)**2/16
 TOA_meas_artif_var[125:]=TOA_meas_artif_var[125]
 TOA_meas_artif[2001-1850:2023-1850] = TOA_crop
@@ -372,6 +379,7 @@ def ekf_run(z,n_iter,retPs=False):
                                                                                         [0       ,0       ,0,    dfrA_float_var/30]]) #,dfrA_float_var/200 ###30
                                                                                         #[0       ,0       ,0       ,0        , 0.14**2/40]])  # stuff  dfrA_float_var
 
+
         # change 30 -> 10 to reduce additional measurement noise
         # change dfrA_float_var/60 due to overdispersion of CMIP
 
@@ -382,6 +390,8 @@ def ekf_run(z,n_iter,retPs=False):
                                              [0   ,   Roc_tvar[k],0],
                                              [0   ,     0 ,       9*TOA_meas_artif_var[k]]]) #3x3 stuff, time-varying
 
+
+            
         K[k] = np.matmul(Pminus[k],np.matmul(np.transpose(A),np.linalg.inv(S[k])))
         y[k]=z[k]-np.matmul(A,(xhatminus[k]))
         xhat[k] = xhatminus[k]+np.matmul(K[k],y[k])
@@ -595,12 +605,12 @@ if (__name__ == "__main__") and True:
     ax4.set_xlabel('Year')
     ax4.set_ylabel('Heat (ZJ)')
     ax4.set_ylim([-150,600])
-    ax4b = ax4.twinx()
-    mn, mx = ax4.get_ylim()
-    ax4b.set_yticks(np.arange(-1,8,1))
-    ax4b.set_ylim(mn*zJtomm/10, mx*zJtomm/10)
+    #ax4b = ax4.twinx()
+    #mn, mx = ax4.get_ylim()
+    #ax4b.set_yticks(np.arange(-1,8,1))
+    #ax4b.set_ylim(mn*zJtomm/10, mx*zJtomm/10)
     
-    ax4b.set_ylabel('Thermosteric Sea Level Rise (cm)')
+    #ax4b.set_ylabel('Thermosteric Sea Level Rise (cm)')
 
     axes=(ax1,ax4)
     axlabels=['a)','b)','c)','d)']
@@ -726,11 +736,11 @@ if (__name__ == "__main__") and True:
     plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order],prop={'size': 10.5})
     ##plt.savefig("Figure_2.pdf", format = "pdf") #dpi=300,format="png")
     ax_dict["a"].set_ylim([-150,600])
-    ax4b = ax_dict["a"].twinx()
-    mn, mx = ax_dict["a"].get_ylim()
-    ax4b.set_ylim(mn*zJtomm/10, mx*zJtomm/10)
-    ax4b.set_yticks(np.arange(-1,8,1))
-    ax4b.set_ylabel('Thermosteric Sea Level Rise (cm)')
+    #ax4b = ax_dict["a"].twinx()
+    #mn, mx = ax_dict["a"].get_ylim()
+    #ax4b.set_ylim(mn*zJtomm/10, mx*zJtomm/10)
+    #ax4b.set_yticks(np.arange(-1,8,1))
+    #ax4b.set_ylabel('Thermosteric Sea Level Rise (cm)')
 
     #plt.rcParams['figure.figsize'] = (5, 4)
     ax1 = ax_dict["b"]
@@ -858,6 +868,7 @@ if (__name__ == "__main__") and True:
     plt.fill_between(dates[30:], (xh1TOA-2*stdPtoa), (xh1TOA+2*stdPtoa),label="95% CI ($\pm 2\sqrt{\hat{p}^H_t}$) of OHCA state $\^{H }_{t}$", color=colorstate)
     #TOA_meas_artif=z[30:,2].T[0]
     plt.plot(dates, TOA_meas_artif,'o',markersize=2,color=colorgrey)
+    plt.plot(dates, TOA_swout2,'--',color='darkgoldenrod')
             #plt.plot(dates, TOA_swout,'o',markersize=2,color='red')
     plt.fill_between(dates, TOA_meas_artif-2*np.sqrt(TOA_meas_artif_var), TOA_meas_artif+2*np.sqrt(TOA_meas_artif_var),label="associated 95% uncertainty of $\Psi_{t}$", color="grey",zorder=5,alpha=0.2,lw=0)
 
