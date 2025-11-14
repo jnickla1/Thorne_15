@@ -1,5 +1,6 @@
 import numpy as np
-# import pykalman
+import sys
+
 import matplotlib.pyplot as plt
 import matplotlib        as mpl
 import scipy.stats as stats
@@ -44,10 +45,14 @@ lCo2=np.log10(data[:,2])
 opt_depth=data[:,3]*0.001 #*0.053) #/1000?0.000100025
 anthro_clouds=(data[:,7]+1) #ONLY FOR HISTORICAL RUN
 
+sys.path.append(config.CODEBASE_PATH+"/OHC_ensemble/")
+from sample_int_variance import get_average_ohca
+comb_ohca, comb_ohca_uncer = get_average_ohca()
+comb_ohca_uncer2=comb_ohca_uncer[0:n_iters]
+Roc_tvar=np.square(comb_ohca_uncer2)/zJ_from_W/zJ_from_W
+ocean_heat_measured =  comb_ohca[0:n_iters]
 
-Roc_tvar=np.square(data[:,6])/zJ_from_W/zJ_from_W
 tsi=data[:,8]
-ocean_heat_measured = data[:,5]
 #critexp = np.ones(ln(transmd))
 
 #data2 = np.genfromtxt(open("HadCRUT5.global.annual.csv", "rb"),dtype=float, delimiter=',')
@@ -62,7 +67,7 @@ offset= -np.mean(temps[(1960-sdate):(1990-sdate)]) +JonesOffset + 273.15 #Jones2
 temps=temps+offset
 #pindavg= np.mean(temps[(1850-sdate):(1930-sdate)])
 
-heatCp=23 #17 #CHANGE NOV25
+heatCp=17 #change to 23 (0.037140) makes it worse NOV25
 
 sig=5.6704e-8
 
@@ -70,12 +75,10 @@ a_refl= 0.834 #constant clearsky albedo
 g_refl=0.909
 sw_in=340.2
 
-#Tconst=286.64 #86.7
 
 
-
-T02=temps[2002-1850] #~287.55 #in 2002 #(JMN rev 2024)
-Teq1850=286.75 #np.mean(temps[0:25]) #CHANGE NOV25 or 286.75 np.mean(temps[1:6])
+T02=np.mean(temps[(2000-1850):(2005-1850)])  #~287.55 #in 2002 #(JMN rev 2024)
+Teq1850=np.mean(temps[0:25]) #CHANGE NOV25 to 286.75 np.mean(temps[1:6])
 pindavg=Teq1850 #286.7 #preindustrial avg
 #print("Teq1850",Teq1850)
 
@@ -83,7 +86,7 @@ shaldepth=86
 deepdepth = 1141
 
 fdbkS = 0.35 
-fdbkA = 0.42 #- 0.12
+fdbkA = 0.42 # - 0.12
 fdbkA_sigma = 0.316 #dfaA=fdbkA/(sw_in*a_refl*g_refl)
 fdbkW = 1.3
 
@@ -243,7 +246,7 @@ def compute_update_hidden(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
 A = np.array([[1,0,0,0],
               [0,1,0,0],
               [0,0,1,0]])
-Q=(covM/30);
+Q=(covM/N);
 
 
 sz = (n_iters,4,1) # size of array
@@ -312,7 +315,7 @@ y_pred = regres.slope * regX + regres.intercept
 residuals_oceanl = oc_meas[2001 - 1850: 2023 - 1850] - y_pred
 
 
-cM2= np.cov(np.array([residuals_templ,residuals_oceanl, residuals_TOA]))/30 *9;
+cM2= np.cov(np.array([residuals_templ,residuals_oceanl, residuals_TOA]))/N *4;
 dfrA_float_var = (fdbkA_sigma/(sw_in*a_refl*g_refl))**2
 
 
@@ -333,7 +336,7 @@ TOA_swout2 = np.copy(TOA_swout)
 TOA_meas_artif_var = (TOA_swout_low - TOA_swout_high)**2/16
 TOA_meas_artif_var[125:]=TOA_meas_artif_var[125]
 TOA_meas_artif[2001-1850:2023-1850] = TOA_crop
-TOA_meas_artif_var[2001-1850:2023-1850] = TOA_crop_var/4
+TOA_meas_artif_var[2001-1850:2023-1850] = TOA_crop_var/9
 #plt.plot(, TOA_crop)
 #plt.title("TOA radiative imbalance")
 
@@ -376,14 +379,14 @@ def ekf_run(z,n_iter,retPs=False):
         Pminus[k] = np.matmul(np.matmul(F[k] ,P[k-1]), np.transpose(F[k])) +  np.array([[Q[0,0]   ,Q[0,1]   ,cM2[0,2] , 0],
                                                                                         [Q[1,0]  ,Q[1,1]    ,cM2[1,2] , 0],
                                                                                         [cM2[2,0]  ,cM2[2,1] ,cM2[2,2] , 0],
-                                                                                        [0       ,0       ,0,    dfrA_float_var/30]]) #,dfrA_float_var/200 ###30
+                                                                                        [0       ,0       ,0,    dfrA_float_var/N]]) #,dfrA_float_var/200 ###30
                                                                                         #[0       ,0       ,0       ,0        , 0.14**2/40]])  # stuff  dfrA_float_var
 
 
         # change 30 -> 10 to reduce additional measurement noise
         # change dfrA_float_var/60 due to overdispersion of CMIP
 
-        S[k]= np.matmul(np.matmul(A ,Pminus[k]), np.transpose(A))+ 30* np.array([[Q[0,0]  ,Q[0,1]  ,cM2[0,2]],
+        S[k]= np.matmul(np.matmul(A ,Pminus[k]), np.transpose(A))+ N* np.array([[Q[0,0]  ,Q[0,1]  ,cM2[0,2]],
                                                                                  [Q[1,0]  ,Q[1,1]  ,cM2[1,2]],
                                                                                  [cM2[2,0],cM2[2,1],cM2[2,2]]]) \
                                 + np.matrix([[R_tvar[k],0      ,  0],
@@ -556,9 +559,9 @@ if (__name__ == "__main__") and True:
     r2 = r2_score(observ[:,1], xblind[:,1])
     print('r2 score for OCHA to blind is', r2)
 
-    r2 = r2_score(moving_aves[15:-16], xh1s[15:-16]) #
+    r2 = r2_score(moving_aves[int(np.floor(N/2)):int(-(np.floor(N/2)+1))], xh1s[int(np.floor(N/2)):int(-(np.floor(N/2)+1))]) #
     print('r2 score for 30-mean GMST to EBM-KF is', r2)
-    r2 = r2_score(ocean_aves[15:-16], xh1d[15:-16])
+    r2 = r2_score(ocean_aves[int(np.floor(N/2)):int(-(np.floor(N/2)+1))], xh1d[int(np.floor(N/2)):int(-(np.floor(N/2)+1))])
     print('r2 score for 30-mean OCHA to EBM-KF is', r2)
 
     #plt.rcParams['figure.figsize'] = (7, 6)
@@ -594,7 +597,7 @@ if (__name__ == "__main__") and True:
     #plt.figure(2)
     plot_boilerplate(ax4)
     ax4.plot(dates,ocean_heat_measured,'o',label='noisy Zanna (2019) measurements $\Psi_{t}$',markersize=2,color=colorgrey)
-    ax4.fill_between(dates, ocean_heat_measured-2*data[:,6], ocean_heat_measured+2*data[:,6],label="associated 95% uncertainty of $ \Psi_{t}$", color="lightgrey")
+    ax4.fill_between(dates, ocean_heat_measured-2*comb_ohca_uncer2, ocean_heat_measured+2*comb_ohca_uncer2,label="associated 95% uncertainty of $ \Psi_{t}$", color="lightgrey")
     #ax4.plot(dates,this_xhat[:,1]*zJ_from_W,'-',label='posterior OHCA EBM-KF-uf state estimate $\^{H }_{t}}$', color=colorekf)
     ax4.plot(dates,xblind[:,1]*zJ_from_W,'--',label='blind model $ \~{H}_{t+1} = \mathbf{F}( \~{T}_{t}, \~{H}_{t} ; [eCO_2]_t ,AOD_t,AC_{t},(\\frac{1}{4}G_{SC})_t )$',color='darkgoldenrod')
     #ax4.legend(loc="upper left", fontsize="10.5")
@@ -728,7 +731,7 @@ if (__name__ == "__main__") and True:
     ##plt.fill_between(dates, xh1s-stdS, xh1s+stdS, color=(62./255, 140./255, 210./255))
     ax_dict["a"].fill_between(dates, (xh1d-2*stdPd)*zJ_from_W, (xh1d+2*stdPd)*zJ_from_W,label="95% CI ($\pm 2\sqrt{\hat{p}^H_t}$) of OHCA state $\^{H }_{t}$", color=colorstate)
     ax_dict["a"].plot(dates,ocean_heat_measured,'o',label='Zanna (2019) measurements $\Psi_{t}$',markersize=2,color=colorgrey)
-    ax_dict["a"].fill_between(dates, ocean_heat_measured-2*data[:,6], ocean_heat_measured+2*data[:,6],label="associated 95% uncertainty of $\Psi_{t}$", color="grey",zorder=5,alpha=0.2,lw=0)
+    ax_dict["a"].fill_between(dates, ocean_heat_measured-2*comb_ohca_uncer2, ocean_heat_measured+2*comb_ohca_uncer2,label="associated 95% uncertainty of $\Psi_{t}$", color="grey",zorder=5,alpha=0.2,lw=0)
     #plt.fill_between(dates, xhh1s-std, xhh1s+std, color=(171./255, 245./255, 206./255))
     #ax_dict["a"].legend(fontsize="10.5")
     handles, labels = plt.gca().get_legend_handles_labels()

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 from hist_heads_tails_evaluation_script import evalmins, evalmaxs, relthresh, sel_methods_list_real, sel_methods_list_anthro
 
-n_methods, n_yrs, n_thr = 5, 36, 3
+goal="anthro"
 
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -181,7 +181,10 @@ def combine_histens_data(
     csvs, npys = discover_histens_files(experiment_type, results_dir)
     method_names = read_method_names_from_csvs(csvs)
 
-    to_remove = ["GWI_tot_SR15"]
+    if goal=="real":
+        to_remove = ["GWI_tot_SR15"]
+    else:
+        to_remove = ["cent20y","GWI_anthro_SR15","GWI_anthro"]
     indices_to_delete = []
     for index, item in enumerate(method_names):
         if item in to_remove:
@@ -208,8 +211,8 @@ def combine_histens_data(
     return method_names, mean_pdf, crossing_years, indices_to_delete
 
 
-method_names_rpi, mean_pdf_rpi, crossing_rpi, del_idx = combine_histens_data("histens_rpi_real", results_dir="Results")
-method_names_sat, mean_pdf_sat, crossing_sat, del_idx = combine_histens_data("histens_satcal_real", results_dir="Results")
+method_names_rpi, mean_pdf_rpi, crossing_rpi, del_idx = combine_histens_data("histens_rpi_"+goal, results_dir="Results")
+method_names_sat, mean_pdf_sat, crossing_sat, del_idx = combine_histens_data("histens_satcal_"+goal, results_dir="Results")
 method_names = method_names_rpi
 mean_pdfs= [mean_pdf_rpi,  mean_pdf_sat]
 hist_data = [crossing_rpi,crossing_sat]
@@ -226,9 +229,13 @@ PANEL_INFO = [
 csv_threshold_names = ['xyear0.5','xyear1.0','xyear1.5']
 fig, axes = plt.subplots(2, 3, figsize=(14, 7), sharex="col", sharey=False)
 
+if goal=="real":
+    sel_methods_list_sel = sel_methods_list_real
+else:
+    sel_methods_list_sel = sel_methods_list_anthro
+    
 
-
-parts = [p.split("/") for p in sel_methods_list_real]
+parts = [p.split("/") for p in sel_methods_list_sel]
 
 # verify last segment matches method_names_rpi (strip "_method.py")
 last_parts = [seg[-1].replace("_method.py", "") for seg in parts]
@@ -304,6 +311,6 @@ fig.legend(legend_labels, loc="upper center", ncol=min(len(legend_labels), 6), f
 
 fig.tight_layout(rect=[0,0,1,0.93])
 #plt.show()
-outpath = "real_heads_tails_probplot.png"
+outpath = goal+"_heads_tails_probplot.png"
 fig.savefig(outpath, dpi=600)
 print(f"Saved figure: {outpath}")

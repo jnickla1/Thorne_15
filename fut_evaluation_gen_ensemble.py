@@ -2,7 +2,6 @@ from hist_evaluation_script import *
 regen=True
 annotate_fig=False
 crossing_figs=False
-sel_methods = ["CGWL10y_for_halfU","CGWL10y_sfUKCP","FaIR_anthroA2","EBMKF_ta3"  ]
 from netCDF4 import Dataset
 import sys
 

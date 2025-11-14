@@ -23,19 +23,19 @@ historical_regen=False #different variable name, whether we are regenerating dat
 # ================================
 # Define Method Full Names, Colors, Location on Violin plots
 # ================================
-
+lo=3
 methods_names = [
     ['42_Temp_Alone/1_Run_Means', "4.3.1:\nRunning Means", 2, 1998,2022,.5], #98
     ['42_Temp_Alone/2_LT_Fits', "4.3.2:\nLong Term Fits", 7,  1998,2022,.4], #98
     ['42_Temp_Alone/3_ST_Fits', "4.3.3:\nShort Term Fits", 16 ,1998,2022,.9], #98
-    ['42_Temp_Alone/4_GAM_AR1', "4.3.4:\nSmoothing Splines", 25,1997,2022,1.2], #97
-    ['42_Temp_Alone/5_Kalman', "4.3.5:\nSimple State Space", 28.5,1997,2022,1], #97
-    ['42_Temp_Alone/6_Remove_IV', "4.3.6:\nFilter Internal\nVariability",33.5,1999,2022,0.4], #99
-    ['43_Forcing_Based/0_Linear', "4.4.1:\nLinear CO2",               37,1999,2022,1.3],
-    ['43_Forcing_Based/1_ERF_FaIR',"4.4.2:\nConstrained\nEmulators",38+4.5,1999,2022,1.7],  #99
-    ['43_Forcing_Based/2_Kalman', "4.4.3:\nEnergy Balance\nKalman Filter",42+5.5,1999,2022,1.6],  #99
-    ['43_Forcing_Based/3_Human_Induced', "4.4.4:\nAttributable\nWarming", 46.5+11,1999,2022,0.3], #99
-    ['44_EarthModel_CGWL', "4.5:\nCombining\nESM Projections", 54+11,1998,2022,1.5]   #98
+    ['42_Temp_Alone/4_GAM_AR1', "4.3.4:\nSmoothing Splines", 25 + lo,1997,2022,1.2], #97
+    ['42_Temp_Alone/5_Kalman', "4.3.5:\nSimple State Space", 28.5 + lo,1997,2022,1], #97
+    ['42_Temp_Alone/6_Remove_IV', "4.3.6:\nFilter Internal\nVariability",33.5+ lo,1999,2022,0.4], #99
+    ['43_Forcing_Based/0_Linear', "4.4.1:\nLinear CO2",               37+ lo,1999,2022,1.3],
+    ['43_Forcing_Based/1_ERF_FaIR',"4.4.2:\nConstrained\nEmulators",38+4.5+ lo,1999,2022,1.7],  #99
+    ['43_Forcing_Based/2_Kalman', "4.4.3:\nEnergy Balance\nKalman Filter",42+5.5+ lo,1999,2022,1.6],  #99
+    ['43_Forcing_Based/3_Human_Induced', "4.4.4:\nAttributable\nWarming", 46.5+11+ lo,1999,2022,0.3], #99
+    ['44_EarthModel_CGWL', "4.5:\nCombining\nESM Projections", 54+11+ lo,1998,2022,1.5]   #98
     ] #Last three coordinates define location on violin plots
 
 def gen_color(ci, dark=False):
@@ -57,8 +57,9 @@ def gen_color(ci, dark=False):
     return colors[ci]
 
 
-#running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/6_Remove_IV') #Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )#still working on debugging lfca
+#running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/2_Kalman') #Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )#still working on debugging lfca
 running_subset = ('Methods/42_Temp_Alone/','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
+
                 #'Methods/42_Temp_Alone,'Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/3_Human_Induced',
                  # ,'Methods/43_Forcing_Based/0_Linear','Methods/44_EarthModel_CGWL')
 #running_subset = ('Methods/42_Temp_Alone/1_Run_Means', 'Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL') #methods we now want to run, smaller subset for debugging
@@ -132,22 +133,21 @@ import mplcursors
 spaglines = []
 
 alt_colors = ['black', 'white']
-sel_methods = [ "CGWL10y_for_halfU","FaIR_nonat","EBMKF_ta2"] #"EBMKF_ta4" "min_month_proj" "OLS_refit_CO2forc", "CGWL10y_for_halfU","TheilSen_h7075" ,"FaIR_anthroA",,"EBMKF_ta2"  ] #"EBMKF_ta",
-
-try:
-    index_mapping_new = pd.read_csv('all_methods_statistics_250616.csv')
-    def rank2(method_name_in):
-        try:
-            ret = index_mapping_new[index_mapping_new["method_name"]==method_name_in]["bias50"].values[0] #first is always current
-        except:
-            print("not found METHOD")
-            print(method_name_in)
-            ret = 0
-        return ret
-except:
-    print("not found newest DATAFRAME SAVED")
-    def rank2(method_name_in):
-        return method_name_in
+sel_methods = [ "GWI_tot_CGWL","EBMKF_ta4"]  #"CGWL10y_sfUKCP","FaIR_comb_unB"
+##try:
+##    index_mapping_new = pd.read_csv('all_methods_statistics_251110True.csv)
+##    def rank2(method_name_in):
+##        try:
+##            ret = index_mapping_new[index_mapping_new["method_name"]==method_name_in]["bias50"].values[0] #first is always current
+##        except:
+##            print("not found METHOD")
+##            print(method_name_in)
+##            ret = 0
+##        return ret
+##except:
+##    print("not found newest DATAFRAME SAVED")
+##    def rank2(method_name_in):
+##        return method_name_in
 #ftl = np.argsort(index_mapping) #from to list - where a certain method should be plotted
 
 select_hist=True #plot additional smaller histograms within error
@@ -249,11 +249,13 @@ if __name__ == '__main__':
     ax4_handles=[]
     ax4_labels=[]
     df_results = pd.DataFrame(columns=['method_name', 'method_class','c/r','smooth_r','avg_unc.(1se)','#q<0.5', '#q<0.1', 'q_min',
-                                       'q_small5','log-likeli','RMS','bias','tlog-l','100log-l','l05','l10','bias50','Edyrs2','Edyrs6','cross_err0.5','cross_err1.0'])
+                                       'q_small5','log-likeli','RMS','bias','tlog-l','100log-l','l05','l10','bias50','Edyrs2','Edyrs6','cross_err0.5','cross_err1.0','#yrs'])
     i=0
     ci=0
     labelcolors=[]
-    sorted_results = sorted(results.items(), key=lambda item: (item[1]['method_class'], rank2(item[0])))
+
+    import neworder
+    sorted_results = neworder.sort_results(results) #sorted(results.items(), key=lambda item: (item[1]['method_class'], rank2(item[0])))
 
 
     ncm = 0 #number of current methods
@@ -339,7 +341,10 @@ if __name__ == '__main__':
                             patch = ax4.fill_between(years, central_est-se-standard, central_est+se-standard, alpha=0.5, color = gen_color(method_data['method_class'], dark=False),zorder=4)
                             line, = ax4.plot(years, central_est-standard, color = gen_color(method_data['method_class'], dark=True))
                         else:
-                            patch = ax4.fill_between(years, central_est-se-standard, central_est+se-standard, alpha=0.3, color = gen_color(method_data['method_class'], dark=False))
+                            #assuming hist_fitprob.py -historical has already been run
+                            scalvar = pd.read_csv('Results2/historical_names_var_scale.csv')
+                            best_alter_scale = scalvar[scalvar["method_name"]==method_name]["best_alter_scale"].to_numpy()[0]
+                            patch = ax4.fill_between(years, central_est-se*best_alter_scale-standard, central_est+se*best_alter_scale-standard, alpha=0.3, color = gen_color(method_data['method_class'], dark=False))
                             line, = ax4.plot(years, central_est-standard, color = gen_color(method_data['method_class'], dark=True))
                             
                         if (method_name!="FaIR_anthroA"):
@@ -509,7 +514,7 @@ if __name__ == '__main__':
                 df_results.loc[i]= [ method_name,short_method_class,labelcurr_or_retro,smooth_est/smooth_std,avg_uncert,
                                  qvals_count_yrs05,qvals_count_yrs01,  qvals_smallest,qvals_smallest5, np.nanmean(llikelihood), np.sqrt(np.nanmean((central_est-standard)**2)),
                                    np.nanmean(central_est-standard) , np.nansum(llikelihood),np.nansum(llikelihood[-100:-1]), np.exp(llikelihood[int(closest_year05)-1850]),
-                                     np.exp(llikelihood[int(closest_year10)-1850]),np.nanmean(central_est[-50:]-standard[-50:]),edyrs,aedyrs, cross05v, cross10v] 
+                                     np.exp(llikelihood[int(closest_year10)-1850]),np.nanmean(central_est[-50:]-standard[-50:]),edyrs,aedyrs, cross05v, cross10v, np.count_nonzero(~np.isnan(central_est))] 
                 i=i+1
    
        # else:
@@ -622,7 +627,6 @@ if __name__ == '__main__':
 
 
 
-
     hai = [2000,2025]
 
     for i,ax in enumerate([ax05,ax10]):
@@ -645,7 +649,7 @@ if __name__ == '__main__':
     curcolor =  gen_color('42_Temp_Alone/2_LT_Fits')
     ax1.annotate('OLS_refit',
             xy=(2002,0.65), xycoords='data',
-            xytext=(2018, .78-.35), textcoords='data', color =curcolor,
+            xytext=(2014, .78-.35), textcoords='data', color =curcolor,
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     ax1.annotate('quartic',
@@ -667,14 +671,25 @@ if __name__ == '__main__':
             horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('42_Temp_Alone/3_ST_Fits')
     ax1.annotate('11y_offset',
-            xy=(1885,0.17), xycoords='data',
-            xytext=(1887, .35), textcoords='data',color=curcolor,
+            xy=(1887,0.17), xycoords='data',
+            xytext=(1890, .35), textcoords='data',color=curcolor,
+            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
+            horizontalalignment='center', verticalalignment='bottom')
+    ax1.annotate('min_month_proj',
+            xy=(1878,0.3), xycoords='data',
+            xytext=(1878, .5), textcoords='data',color=curcolor,
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('43_Forcing_Based/3_Human_Induced')
     ax1.annotate('KCC_all',
-            xy=(1920,.22), xycoords='data',
-            xytext=(1922, .4), textcoords='data',color=curcolor,
+            xy=(1911,.16), xycoords='data',
+            xytext=(1912, .35), textcoords='data',color=curcolor,
+            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
+            horizontalalignment='center', verticalalignment='bottom')
+    curcolor =  gen_color('43_Forcing_Based/0_Linear')
+    ax1.annotate('cons_cArrh_CO2forc',
+            xy=(1925,.22), xycoords='data',
+            xytext=(1927, .52), textcoords='data',color=curcolor,
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('43_Forcing_Based/1_ERF_FaIR')
@@ -724,6 +739,18 @@ if __name__ == '__main__':
     df_res_cur2 = df_res_show2[df_results['c/r']=='c']
     dfres2 = df_res_cur2.sort_values('log-likeli',ascending=False)
     dfres2.to_csv('current_methods_statistics_'+formatted_date+str(historical_regen)+'.csv', index=False)
+    dfres3 = df_res_cur2.sort_values('RMS',ascending=True)
+    dfres3.rename(columns={'cross_err0.5': 'cross_year0.5','cross_err1.0': 'cross_year1.0'}, inplace=True)
+    columns_to_keep = ["method_name","method_class","#q<0.5","log-likeli","RMS","bias",'cross_year0.5','cross_year1.0','#yrs']
+    def increment_second_digit(s):
+        if len(s) >= 2 and s[1].isdigit():
+            # Convert the second character to an integer, add 1, and convert back to string
+            new_digit = str(int(s[1]) + 1)
+            # Reconstruct the string with the updated second digit
+            return s[0] + new_digit + s[2:]
+        return s # Return original string if not applicable
+    dfres3["method_class"] = dfres3["method_class"].apply(increment_second_digit)
+    dfres3[columns_to_keep].to_csv('current_methods_statistics_cropped'+formatted_date+str(historical_regen)+'.csv', index=False)
     df_results.to_csv('all_methods_statistics_'+formatted_date+str(historical_regen)+'.csv', index=False)
     #sorted_df = df_res_cur2.reset_index(drop=True).sort_values(by=['method_class', 'bias50']).reset_index()
     #sorted_df[['index']].to_csv('to_index_mapping.csv', index=False)

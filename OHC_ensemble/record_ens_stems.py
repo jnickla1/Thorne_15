@@ -98,10 +98,8 @@ def get_record_subtype_cycle() -> List[Tuple[str, str]]:
 
 def combine_ohca_values(val1: float, val2: float) -> float:
     """Combine two OHCA values (simple addition)"""
-    if np.isnan(val1):
-        return val2
-    if np.isnan(val2):
-        return val1
+    if np.isnan(val1) or np.isnan(val2):
+        raise ExceptionType("Trying to combine NaN ohca values")
     return val1 + val2
 
 
@@ -233,7 +231,7 @@ def initialize_arrays(record_data: Dict) -> Tuple[np.ndarray, np.ndarray, np.nda
             for year_idx, year in enumerate(YEARS):
                 year_data = df_main[df_main['year'] == year]
                 
-                if not year_data.empty:
+                if not year_data.empty and (not np.isnan(year_data[primary_domain].values[0])):
                     if len(value_cols)>1:
                         for i in range(len(value_cols)):
                             ei = len(value_cols)-1 -i
@@ -560,11 +558,14 @@ def infill_missing_years(ohca_change: np.ndarray, ohca_uncertainty: np.ndarray,
             depth_min, depth_max, lat_cov = parse_domain(domain_str)
             
             if depth_min == 0 and depth_max == 6000 and lat_cov == 'allLat':
-                complete_records.append((row_idx, domain_str))
+                if not np.isnan(ohca_change[row_idx, year_idx]):
+                    complete_records.append((row_idx, domain_str))
 
     if include_zanna:
         complete_records.append((-1, "0-6000m_allLat_Zanna"))
-    
+
+    if year_idx ==50:
+        breakpoint()
     if not complete_records:
         return
     
@@ -764,7 +765,7 @@ def plot_ensemble_stems(ohca: np.ndarray, coverage_string: np.ndarray,
 # ============================================================================
 
 if __name__ == "__main__":
-    run_ensemble=False
+    run_ensemble=True
     
     if(run_ensemble):
         ohca_change, ohca_uncertainty, coverage_string, years = create_ensemble()

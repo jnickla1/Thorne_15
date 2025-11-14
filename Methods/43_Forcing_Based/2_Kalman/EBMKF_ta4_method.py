@@ -68,16 +68,23 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         given_preind_base = np.mean(temperature[0:50])
         temps = temperature-given_preind_base+preind_base + ekf.offset #ensure this matches expected starting temperature in 1850
         frac_blocked = 1-(5.5518/(unf_new_opt_depth+9.9735)) #(9.068/(comb_recAOD_cleaned+9.7279))
-        erf_data_solar = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")['solar'].to_numpy()[(1850-1750):]
+        erf_data= pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")
+        erf_data_solar = erf_data['solar'].to_numpy()[(1850-1750):]
         solar_full = erf_data_solar[:ekf.n_iters]+ 340.4099428 - 0.108214
         tot_volc_erf = (- solar_full*frac_blocked + 151.22)
-        erf_trapez=(1*tot_volc_erf[0:-2]+2*tot_volc_erf[1:-1]+0*tot_volc_erf[2:] )/4 #want to snap back as quickly as possible
+        contrails = erf_data['contrails'][(1850-1750):(2024-1750)].values
+        TOA_correction = (tot_volc_erf - np.mean(tot_volc_erf[90:100])+ contrails)
+        TOA_correction = TOA_correction #- np.mean(TOA_correction)*2/3
+        TOA_correction[0:75] = TOA_correction[0:75] + 0.2
+        erf_trapez=(1*TOA_correction[0:-2]+2*TOA_correction[1:-1]+0*TOA_correction[2:] )/3 #want to snap back as quickly as possible
+
         temps[2:-1] = temps[2:-1] - erf_trapez/(ekf.heatCp - ekf.Cs)
         ohca_meas = ekf.oc_meas*ekf.zJ_from_W
-        #temps[7:] = temps[7:] + erf_trapez[:-5]/(ekf.heatCp - ekf.Cs)
-        ohca_meas[2:] = ohca_meas[2:] - (erf_trapez/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*200 #not perfect but good for now, also unclear where the 200 comes from
-        TOA_meas_artif1 =  ekf.TOA_meas_artif - (tot_volc_erf ) * .75 
+        ohca_meas[2:] = ohca_meas[2:] - (erf_trapez/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*50 #not perfect but good for now, also unclear where the 50 comes from
+        TOA_meas_artif1 =  ekf.TOA_meas_artif - TOA_correction * .75
         new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
+        #temps = temperature-given_preind_base+preind_base + ekf.offset
+        #new_observ = np.array([[temps[:ekf.n_iters],ekf.oc_meas,ekf.TOA_meas_artif]]).T
         ekf.dfrA_float_var = ekf.dfrA_float_var/40
         means[0:ekf.n_iters], ses[0:ekf.n_iters],means2[0:ekf.n_iters],ses2[0:ekf.n_iters] = ekf.ekf_run(new_observ,ekf.n_iters,retPs=3)
         return means +given_preind_base - ekf.offset-preind_base, np.sqrt(np.abs(ses))*1.2,means2 -ekf.offset-preind_base,np.sqrt(np.abs(ses2))

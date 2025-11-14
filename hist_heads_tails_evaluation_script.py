@@ -74,7 +74,7 @@ sel_methods_list_anthro = ["Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py"
                            "Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py",
                            "Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py",
                            "Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py",
-                           "Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py"
+                           "Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py"
                            ]
 
 
