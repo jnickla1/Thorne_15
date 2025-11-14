@@ -53,7 +53,7 @@ def run_method(years, temperature, uncert, model_run0, experiment_type):
         elif exp_attr[1] == 'NorESM':
             model_run = gen_orig_number(model_run0,60)
                 
-        cache_dir = os.path.join(dir_path, "lfca_cache")
+        cache_dir = os.path.join(dir_path, "/lfca/Python/lfca_cache")
         cache_file = os.path.join(cache_dir, f"lfca_{experiment_type}_run{model_run}.npy")
         
         # Check if LFCA results exist, if not, compute them
