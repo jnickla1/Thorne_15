@@ -129,7 +129,9 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         max_runs = 1+start_run
         plotting_figs= True
     else:
-        max_runs = 10+start_run
+        max_runs = 20+start_run
+        print("max runs")
+        print(max_runs)
         plotting_figs= False
     
     methods_folder=('Methods/42_Temp_Alone/','Methods/43_Forcing_Based/','Methods/44_EarthModel_CGWL')
