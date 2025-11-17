@@ -77,9 +77,7 @@ sw_in=340.2
 
 
 
-T02=np.mean(temps[(2000-1850):(2005-1850)])  #~287.55 #in 2002 #(JMN rev 2024)
-Teq1850=np.mean(temps[0:25]) #CHANGE NOV25 to 286.75 np.mean(temps[1:6])
-pindavg=Teq1850 #286.7 #preindustrial avg
+
 #print("Teq1850",Teq1850)
 
 shaldepth=86
@@ -91,7 +89,10 @@ fdbkA_sigma = 0.316 #dfaA=fdbkA/(sw_in*a_refl*g_refl)
 fdbkW = 1.3
 
 def precompute_coeffs(printThem):
-    global dfaS, dfaA, powp1, inbndf, rad1850, B1, B0, B1B0, outbndf, Cs, Cd
+    global dfaS, dfaA, powp1, inbndf, rad1850, B1, B0, B1B0, outbndf, Cs, Cd, T02, Teq1850
+    T02=np.mean(temps[(2000-1850):(2005-1850)])  #~287.55 #in 2002 #(JMN rev 2024)
+    Teq1850=np.mean(temps[0:50]) #CHANGE NOV25 to 286.75 np.mean(temps[1:6])
+    #pindavg=Teq1850 #286.7 #preindustrial avg
     dfaS=fdbkS/(sw_in*a_refl*g_refl)
     dfaA=fdbkA/(sw_in*a_refl*g_refl)
     powp1 = fdbkW*4/3.22 #1.3
@@ -104,7 +105,8 @@ def precompute_coeffs(printThem):
     Cs= 136.5*shaldepth/1000 #<17 like maybe 14
     Cd= 136.5*deepdepth/1000
     if(printThem):
-        print(np.mean(temps[-31:-1])-pindavg)
+        print(T02)
+        print(np.mean(temps[-31:-1])-Teq1850)
         print("inbndf = " + str(inbndf*tsi[0]))
         print("B1B0 = " + str(B1B0))
         print("rad1850 = " + str(rad1850))
@@ -344,12 +346,12 @@ TOA_meas_artif_var[2001-1850:2023-1850] = TOA_crop_var/9
 
 def ekf_run(z,n_iter,retPs=False):
     global gad
-    xblind2=np.zeros((n_iter,2,1))
-    xblind2[0,0:2,0]= np.array([Teq1850,oc_meas[0]])
+    xblind2=np.zeros((n_iter,3,1))
+    xblind2[0,0:3,0]= np.array([Teq1850,oc_meas[0],0])
     for k in range(1,n_iter):
         temp_update = compute_update_hidden(
-           np.array([[xblind2[k-1,0,0],xblind2[k-1,1,0],0,1]]).T,k) #first compute the expected values of TOA radiation
-        xblind2[k]=temp_update[0:2]
+           np.array([[xblind2[k-1,0,0],xblind2[k-1,1,0],0,1]]).T,k) ##xblind not including correction to forcing
+        xblind2[k]=temp_update[0:3]
 
     if(n_iter>(2030-1850)):
         gad = gad * ( .5 + .5 * z[(2020-1850),1,0]/ xblind2[(2020-1850),1,0]) #scale gad to reflect z
@@ -466,7 +468,7 @@ def ekf_run(z,n_iter,retPs=False):
             xblind3[0,0:3,0]= np.array([Teq1850,oc_meas[0],0])
             for k in range(1,n_iter):
                 temp_update = compute_update_hidden(
-                np.array([[xblind3[k-1,0,0],xblind3[k-1,1,0],0,xh1fdbk[k]/(sw_in*a_refl*g_refl)+1]]).T,k) #first compute the expected values of TOA radiation
+                np.array([[xblind3[k-1,0,0],xblind3[k-1,1,0],0,xh1fdbk[k]/(sw_in*a_refl*g_refl)+1]]).T,k) #xblind while yes including correction to forcing
                 xblind3[k]=temp_update[0:3]
             
             plt.figure()
@@ -478,6 +480,8 @@ def ekf_run(z,n_iter,retPs=False):
             plt.fill_between(dates, (xh1TOA[30:]-2*stdPtoa), (xh1TOA[30:]+2*stdPtoa),label="95% CI ($\pm 2\sqrt{\hat{p}^H_t}$) of OHCA state $\^{H }_{t}$", color=colorstate)
             TOA_meas_artif=z[:,2].T[0]
             plt.plot(datesAll, TOA_meas_artif,'o',markersize=2,color=colorgrey)
+            toa_xblind0=xblind2[:,2].T[0]
+            plt.plot(datesAll, toa_xblind0,'o',markersize=2,color='red')
             toa_xblind=xblind3[:,2].T[0]
             plt.plot(datesAll, toa_xblind,color='orange')
             plt.fill_between(datesAll, TOA_meas_artif-2*np.sqrt(TOA_meas_artif_var), TOA_meas_artif+2*np.sqrt(TOA_meas_artif_var), color="grey",zorder=5,alpha=0.2,lw=0)
@@ -773,8 +777,6 @@ if (__name__ == "__main__") and True:
         ax.text(0.0, 1.0, label, transform=ax.transAxes + trans,
             fontsize='large', va='bottom') #, fontfamily='serif')
 
-    plt.savefig("mainOHCA.pdf", format = "pdf")
-    plt.savefig("mainOHCA.png", dpi=400,format="png")
 
 
     plt.rcParams['figure.figsize'] = (7, 6)
@@ -814,8 +816,8 @@ if (__name__ == "__main__") and True:
 ##    ax1.plot(xnorm,ynorm, color=pcolor)
 ##    ax1.set_xlabel("Model Predictive Standard Deviations")
 ##    ax1.set_ylabel("Probability Density")
-    plt.savefig("RTS_smoother_changes.pdf", format = "pdf")
-    plt.savefig("RTS_smoother_changes.png", dpi=400,format="png")
+  #  plt.savefig("RTS_smoother_changes.pdf", format = "pdf")
+  #  plt.savefig("RTS_smoother_changes.png", dpi=400,format="png")
 
     
 
