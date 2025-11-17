@@ -119,7 +119,7 @@ def select_data(styr, model_run,sims_tas, stime_mon, sims_tas_hist,  stime_mon_h
 
     
 def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax4, colorraw=None):
-    from hist_evaluation_script import rank2
+    #from hist_evaluation_script import rank2
     # First evaluation
 
     exp_attr = experiment_type.split("_")
@@ -291,7 +291,9 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         i=0
         ci=0
         labelcolors=[]
-        sorted_results = sorted(results.items(), key=lambda item: (item[1]['method_class'], rank2(item[0])))
+       # sorted_results = sorted(results.items(), key=lambda item: (item[1]['method_class'], rank2(item[0])))
+        import neworder
+        sorted_results = neworder.sort_results(results)
 
         lhund=-100
         if (exp_attr[1]=='NorESM'):

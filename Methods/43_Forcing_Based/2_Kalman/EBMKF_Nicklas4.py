@@ -449,7 +449,7 @@ def ekf_run(z,n_iter,retPs=False):
         return xhat[0:n_iter], P[0:n_iter], S[0:n_iter], xhatminus[0:n_iter,0]
     elif (retPs==3):
         #breakpoint()
-        if True:
+        if False:
             
             dates = np.arange(1850+30,1850+n_iter)
             datesAll = np.arange(1850,1850+n_iter)
@@ -882,7 +882,7 @@ if (__name__ == "__main__") and True:
 
 
     
-    plt.show()
+   # plt.show()
 
 
 

@@ -78,7 +78,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         #TOA_correction[0:75] = TOA_correction[0:75] + 0.2
         
         TOA_correction[np.where(TOA_correction> -0.25)] = 0
-        breakpoint()
+       # breakpoint()
         #clamp down some of the uncertainties so that the KF pays most attention to the temperatures
         ekf.Q = ekf.Q * 0.25
         ekf.cM2 = ekf.cM2 * 0.5
@@ -114,14 +114,30 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         unf_new_opt_depth = ekf.data[:,3]*0.001
         ekf.opt_depth=ta_smooth(unf_new_opt_depth,ekf.involcavg)
         given_preind_base = np.mean(temperature[0:50])
-
+        contrails = erf_data['contrails'][(1850-1750):(2024-1750)].values
+        TOA_correction = (tot_volc_erf - np.mean(tot_volc_erf[90:100])+ contrails)
         temps = temperature-given_preind_base+preind_base + ekf.offset #ensure this matches expected starting temperature in 1850, same baseline as HadCRUT
         frac_blocked = 1-(5.5518/(unf_new_opt_depth+9.9735)) #(9.068/(comb_recAOD_cleaned+9.7279))
-        erf_data_solar = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")['solar'].to_numpy()[(1850-1750):]
+        erf_data= pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")
+        erf_data_solar = erf_data['solar'].to_numpy()[(1850-1750):]
         solar_full = erf_data_solar[:ekf.n_iters]+ 340.4099428 - 0.108214
         tot_volc_erf = (- solar_full*frac_blocked + 151.22)
-        erf_trapez=(1*tot_volc_erf[0:-2]+2*tot_volc_erf[1:-1]+0*tot_volc_erf[2:] )/4 #want to snap back as quickly as possible
-        temps[2:-1] = temps[2:-1] - erf_trapez/(ekf.heatCp - ekf.Cs)
+        contrails = erf_data['contrails'][(1850-1750):(2024-1750)].values
+        TOA_correction = (tot_volc_erf - np.mean(tot_volc_erf[90:100])+ contrails)
+
+        TOA_correction[np.where(TOA_correction> -0.25)] = 0
+        #clamp down some of the uncertainties so that the KF pays most attention to the temperatures
+        ekf.Q = ekf.Q * 0.25
+        ekf.cM2 = ekf.cM2 * 0.5
+        ekf.dfrA_float_var = ekf.dfrA_float_var *.25
+        #now this is somewhat flat and only makes corrections when there is a major volcanic eruption
+        erf_trapez=(1*TOA_correction[0:-2]+2*TOA_correction[1:-1]+0*TOA_correction[2:] )/3 #want to snap back as quickly as possible 
+        tsi_orig = ekf.tsi.copy()
+        #NOTE: smoothing the tsi stuff is not implemented in the future cases tests (yet)!
+        ekf.tsi = 2* ta_smooth(ekf.tsi,ekf.sw_in,optical=False,N=34) - ekf.sw_in  #np.full(np.shape(ekf.tsi),np.mean(ekf.tsi))
+        #makes centered mean
+        ekf.tsi[16:] = 2*ekf.tsi[16:]-ekf.tsi[:-16]
+        #projecting forward into future
 
         ohca_meas_all = np.load(config.CODEBASE_PATH +"/OHC_ensemble/ohca_sampled_ensemble.npy")
         ohca_meas = ohca_meas_all[model_run,0:ekf.n_iters]
@@ -134,8 +150,13 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         cur_path = os.path.dirname(os.path.realpath(__file__))
         TOA_meas_artif_all = np.load(cur_path + "/heads_tails_forcing/all-headstails_current_TOA_ensemble.npy")
         TOA_meas_artif = TOA_meas_artif_all[model_run,0,0:ekf.n_iters] #.to_numpy() if pandas array
-        #TODO: still need to make everything else match
-        TOA_meas_artif1 =  TOA_meas_artif #- (tot_volc_erf ) * .4 #again removing the volcanic signal for the ta run
+       
+        temps[9:ekf.n_iters] = temps[9:ekf.n_iters] - erf_trapez[:-7]/(ekf.heatCp - ekf.Cs)/2 #surface temp of 20 yr mean still depressed
+        ohca_meas[9:ekf.n_iters] = ohca_meas[9:ekf.n_iters] - (erf_trapez[:-7]/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*50/2
+
+        TOA_meas_artif1 =  ekf.TOA_meas_artif - TOA_correction * .75
+        new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
+
         new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
         ekf.dfrA_float_var = ekf.dfrA_float_var/40 # adjust uncertainty in TOA observations
         means[0:ekf.n_iters], ses[0:ekf.n_iters],means2[0:ekf.n_iters],ses2[0:ekf.n_iters] = ekf.ekf_run(new_observ,ekf.n_iters,retPs=3)
