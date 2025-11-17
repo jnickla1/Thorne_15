@@ -21,7 +21,7 @@ def gen_orig_number(new_member_number,sz_ens):
     else:
         return recovered_order[new_member_number]
     
-regen = 1 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
+regen = 2 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
 
 
 data = pd.read_csv("./Common_Data/HadCRUT5.csv")
@@ -129,7 +129,9 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         max_runs = 1+start_run
         plotting_figs= True
     else:
-        max_runs = 10+start_run
+        max_runs = 20+start_run
+        print("max runs")
+        print(max_runs-1)
         plotting_figs= False
     
     methods_folder=('Methods/42_Temp_Alone/','Methods/43_Forcing_Based/','Methods/44_EarthModel_CGWL')
@@ -182,8 +184,8 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
             if os.path.exists(results_path):
                 with open(results_path, 'rb') as fp:
                     existing_results = pickle.load(fp)
-                    existing_results.pop("EBMKF_ta2",None) #redo EMBKF_ta3
-                    existing_results.pop("EBMKF_ta",None) 
+                    existing_results.pop("EBMKF_ta4",None) #redo EMBKF_ta3
+                   # existing_results.pop("EBMKF_ta",None) 
                 completed_methods = set(existing_results.keys())
             else:
                 existing_results = {}
@@ -777,6 +779,7 @@ if __name__ == '__main__':
         #plt.show()
 
     elif exp_attr[0]=="futplotcomb" and exp_attr[1]=="NorESM":
+
         fig1, (axens, ax1a,ax1b)= plt.subplots(3, 1, figsize=(10,10), gridspec_kw={ "height_ratios" :[.6,1,1],"hspace": 0.35})
         fig4, (ax4a,ax4b)= plt.subplots(2, 1, figsize=(10,10), gridspec_kw={  "hspace": 0.3})
         exp1 = "fut_NorESM_RCP45_VolcConst"
@@ -858,6 +861,6 @@ if __name__ == '__main__':
         axens.set_ylim([0,2.75])
         axens.legend([(min_line,black_line),(max_line,black_line), (const_novolc_line,)], ["Volc. Sample Min","Volc. Sample Max", "Volc. Const."])
         ax1b.get_legend().remove()
-        fig1.savefig("spaghettiVolc.png", dpi=500, bbox_inches='tight')
-        #plt.show()    
+        #fig1.savefig("spaghettiVolc.png", dpi=500, bbox_inches='tight')
+        plt.show()    
 

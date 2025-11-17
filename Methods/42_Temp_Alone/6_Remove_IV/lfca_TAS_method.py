@@ -45,6 +45,9 @@ def run_method(years, temperature, uncert, model_run0, experiment_type):
         ses_r[(1957-1850):(2022-1850)] = residual_std_dev/np.sqrt(3)
 
     else:
+        #remove if I get it working!
+        return means_c, ses_c, means_r, ses_r
+        #processing taking too long
         # Future experiment processing
         #Determine baseline period based on experiment type
         exp_attr = experiment_type.split("_")
