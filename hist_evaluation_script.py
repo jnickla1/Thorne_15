@@ -18,7 +18,7 @@ from datetime import datetime
 current_date = datetime.now()
 formatted_date = current_date.strftime("%y%m%d")
 
-historical_regen=True #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
+historical_regen=False #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
 
 # ================================
 # Define Method Full Names, Colors, Location on Violin plots
@@ -57,8 +57,8 @@ def gen_color(ci, dark=False):
     return colors[ci]
 
 
-#running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/2_Kalman') #Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )#still working on debugging lfca
-running_subset = ('Methods/42_Temp_Alone/','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
+running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/2_Kalman') #Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )#still working on debugging lfca
+#running_subset = ('Methods/42_Temp_Alone/','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
 
                 #'Methods/42_Temp_Alone,'Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/3_Human_Induced',
                  # ,'Methods/43_Forcing_Based/0_Linear','Methods/44_EarthModel_CGWL')
@@ -154,7 +154,7 @@ select_hist=True #plot additional smaller histograms within error
 if select_hist:
     avail_methods_list_7 = [ "CGWL10y_for_halfU","EBMKF_ta4","GAM_AR1",
              "lowess1dg20wnc","Kal_flexLin","FaIR_comb_unB","GWI_tot_CGWL",] #"GWI_tot_SR15","CGWL10y_sfUKCP"
-    rmse_df = pd.read_csv("current_methods_statistics_250818True.csv")
+    rmse_df = pd.read_csv("current_methods_statistics_251110True.csv")
     avail_methods_list_30 = list(rmse_df.loc[rmse_df['RMS'] <= 0.06, 'method_name'])
   
 hist_option='first'

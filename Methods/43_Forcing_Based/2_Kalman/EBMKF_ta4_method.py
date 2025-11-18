@@ -26,13 +26,13 @@ def ta_smooth(orig_opt_depths,fill_value,optical=True, N=30):
         wt_opt_depths = 1/(orig_opt_depths+9.7279)
     else:
         wt_opt_depths =orig_opt_depths
-    N = 30
-    nwt_opt_depths=np.full(len(orig_opt_depths),fill_value)
+    nwt_opt_depths=np.full(len(orig_opt_depths),float(fill_value))
     cN=int(np.ceil(N/2))
     fN=int(np.floor(N/2))
-    for i in range((fN),(len(nwt_opt_depths)-1)):
+    for i in range((fN),(len(nwt_opt_depths))):
         lasta=i+cN;firsta=i-fN
-        nwt_opt_depths[i] = (np.sum(wt_opt_depths[(firsta):i+1])+ fill_value*(cN-1))/N
+        nwt_opt_depths[i] = (np.sum(wt_opt_depths[(firsta):i+1])+ fill_value*(cN-1))/float(N)
+
     #computing half-average - future is assumed to be the average
     if(optical):
         return(1/nwt_opt_depths-9.7279)
@@ -78,7 +78,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         #TOA_correction[0:75] = TOA_correction[0:75] + 0.2
         
         TOA_correction[np.where(TOA_correction> -0.25)] = 0
-       # breakpoint()
+        breakpoint()
         #clamp down some of the uncertainties so that the KF pays most attention to the temperatures
         ekf.Q = ekf.Q * 0.25
         ekf.cM2 = ekf.cM2 * 0.5
@@ -114,30 +114,14 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         unf_new_opt_depth = ekf.data[:,3]*0.001
         ekf.opt_depth=ta_smooth(unf_new_opt_depth,ekf.involcavg)
         given_preind_base = np.mean(temperature[0:50])
-        contrails = erf_data['contrails'][(1850-1750):(2024-1750)].values
-        TOA_correction = (tot_volc_erf - np.mean(tot_volc_erf[90:100])+ contrails)
+
         temps = temperature-given_preind_base+preind_base + ekf.offset #ensure this matches expected starting temperature in 1850, same baseline as HadCRUT
         frac_blocked = 1-(5.5518/(unf_new_opt_depth+9.9735)) #(9.068/(comb_recAOD_cleaned+9.7279))
-        erf_data= pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")
-        erf_data_solar = erf_data['solar'].to_numpy()[(1850-1750):]
+        erf_data_solar = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")['solar'].to_numpy()[(1850-1750):]
         solar_full = erf_data_solar[:ekf.n_iters]+ 340.4099428 - 0.108214
         tot_volc_erf = (- solar_full*frac_blocked + 151.22)
-        contrails = erf_data['contrails'][(1850-1750):(2024-1750)].values
-        TOA_correction = (tot_volc_erf - np.mean(tot_volc_erf[90:100])+ contrails)
-
-        TOA_correction[np.where(TOA_correction> -0.25)] = 0
-        #clamp down some of the uncertainties so that the KF pays most attention to the temperatures
-        ekf.Q = ekf.Q * 0.25
-        ekf.cM2 = ekf.cM2 * 0.5
-        ekf.dfrA_float_var = ekf.dfrA_float_var *.25
-        #now this is somewhat flat and only makes corrections when there is a major volcanic eruption
-        erf_trapez=(1*TOA_correction[0:-2]+2*TOA_correction[1:-1]+0*TOA_correction[2:] )/3 #want to snap back as quickly as possible 
-        tsi_orig = ekf.tsi.copy()
-        #NOTE: smoothing the tsi stuff is not implemented in the future cases tests (yet)!
-        ekf.tsi = 2* ta_smooth(ekf.tsi,ekf.sw_in,optical=False,N=34) - ekf.sw_in  #np.full(np.shape(ekf.tsi),np.mean(ekf.tsi))
-        #makes centered mean
-        ekf.tsi[16:] = 2*ekf.tsi[16:]-ekf.tsi[:-16]
-        #projecting forward into future
+        erf_trapez=(1*tot_volc_erf[0:-2]+2*tot_volc_erf[1:-1]+0*tot_volc_erf[2:] )/4 #want to snap back as quickly as possible
+        temps[2:-1] = temps[2:-1] - erf_trapez/(ekf.heatCp - ekf.Cs)
 
         ohca_meas_all = np.load(config.CODEBASE_PATH +"/OHC_ensemble/ohca_sampled_ensemble.npy")
         ohca_meas = ohca_meas_all[model_run,0:ekf.n_iters]
@@ -150,13 +134,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         cur_path = os.path.dirname(os.path.realpath(__file__))
         TOA_meas_artif_all = np.load(cur_path + "/heads_tails_forcing/all-headstails_current_TOA_ensemble.npy")
         TOA_meas_artif = TOA_meas_artif_all[model_run,0,0:ekf.n_iters] #.to_numpy() if pandas array
-       
-        temps[9:ekf.n_iters] = temps[9:ekf.n_iters] - erf_trapez[:-7]/(ekf.heatCp - ekf.Cs)/2 #surface temp of 20 yr mean still depressed
-        ohca_meas[9:ekf.n_iters] = ohca_meas[9:ekf.n_iters] - (erf_trapez[:-7]/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*50/2
-
-        TOA_meas_artif1 =  ekf.TOA_meas_artif - TOA_correction * .75
-        new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
-
+ 
+        TOA_meas_artif1 =  TOA_meas_artif #- (tot_volc_erf ) * .4 #again removing the volcanic signal for the ta run
         new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
         ekf.dfrA_float_var = ekf.dfrA_float_var/40 # adjust uncertainty in TOA observations
         means[0:ekf.n_iters], ses[0:ekf.n_iters],means2[0:ekf.n_iters],ses2[0:ekf.n_iters] = ekf.ekf_run(new_observ,ekf.n_iters,retPs=3)
@@ -296,7 +275,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             new_R_tvar[0:ekf.n_iters]=ekf.R_tvar[0:ekf.n_iters]
             
 
-            new_Roc_tvar =np.full(new_iter, np.mean(ekf.Roc_tvar[-10:])) #np.mean(ekf.Roc_tvar[-10:]))
+            new_Roc_tvar =np.full(new_iter, np.mean(ekf.Roc_tvar[-50:])) #np.mean(ekf.Roc_tvar[-10:]))
             new_Roc_tvar[0:ekf.n_iters]= ekf.Roc_tvar[0:ekf.n_iters]
             
             data3 =  np.genfromtxt(open(config.CLIMATE_DATA_PATH+"/SSP_inputdata/KF6projectionSSP.csv", "rb"),dtype=float, delimiter=',')
@@ -312,7 +291,9 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 new_lCo2 = np.log10(new_Co2_df['eCO2'].values)
                 new_lCo2 -= new_lCo2[0]
                 #warming_scale = ( np.average(ekf.temps[(1990-1850):(2010-1850)]) - np.average(ekf.temps[0:50])) / ( np.average(temperature[(1990-1850):(2010-1850)]) - np.average(temperature[0:50]))
-                new_lCo2 *= (ekf.lCo2[(2013-1850)] - ekf.lCo2[0])/ new_lCo2[(2013-1850)]*0.9 #1 for 370, .9 for 245 and 126
+                new_lCo2 *= (ekf.lCo2[(2013-1850)] - ekf.lCo2[0])/ new_lCo2[(2013-1850)]  #1 for 370, .9 for 245 and 126
+                ekf.fdbkA = 0.25 #this going way down was helpful
+                ekf.gad = 0.67 * 0.85
                 new_lCo2 += ekf.lCo2[0]
                 erf_data = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERF_"+exp_attr[1]+"_"+exp_attr[2].lower()+".csv")
                 erf_natvolc = erf_data['ERF_natural']
@@ -330,21 +311,29 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 #rescaling because the Co2 scaling doesnt match somehow
                 new_lCo2 -= new_lCo2[0]
                 #warming_scale = ( np.average(ekf.temps[(1990-1850):(2010-1850)]) - np.average(ekf.temps[0:50])) / ( np.average(temperature[(1990-1850):(2010-1850)]) - np.average(temperature[0:50]))
-                new_lCo2 *= (ekf.lCo2[(2013-1850)] - ekf.lCo2[0])/ new_lCo2[(2013-1850)] *0.88 #0.9 works well
+                new_lCo2 *= (ekf.lCo2[(2013-1850)] - ekf.lCo2[0])/ new_lCo2[(2013-1850)] * 0.93 #allowed to adjust since it's wmghg *0.88 with standard gad #0.9 works well
                 new_lCo2 += ekf.lCo2[0]
+
+                ekf.gad = 0.67 * 1.35
                 
                 #np.concatenate((np.log10(ekf.data[:(1980-1850),2]), np.log10(ekf.data[(1981-1850),2] - model_outputlCo2[0]  + model_outputlCo2)))            #compute_update(xhatf[k-1],0,volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1]+1)
             #np.log10(data3[:,1+rcp]),data3[:,6+rcp]
             new_anthro_clouds = np.concatenate((ekf.anthro_clouds,data3[handoffyr-2015: 1850+new_iter-2015,6+rcp]+1))
 
             #clamp down some of the uncertainties so that the KF pays most attention to the temperatures
-            ekf.Q = ekf.Q * 0.25
-            ekf.cM2 = ekf.cM2 * 0.5
-            ekf.dfrA_float_var = ekf.dfrA_float_var *.25
+
+            ekf.Q = ekf.Q * 0.15
+            ekf.cM2 = ekf.cM2 * 0.4
+            ekf.dfrA_float_var = ekf.dfrA_float_var *.15
             
             ekf.opt_depth=new_opt_depth # * 2- 0.005
             ekf.tsi = new_tsi
-            ekf.R_tvar = new_R_tvar
+            #same as in historical - shouldn't affect much, just smooths out this input
+            ekf.tsi = 2* ta_smooth(ekf.tsi,ekf.sw_in,optical=False,N=34) - ekf.sw_in  #np.full(np.shape(ekf.tsi),np.mean(ekf.tsi))
+            #makes centered mean
+            ekf.tsi[16:] = 2*ekf.tsi[16:]-ekf.tsi[:-16]
+
+            ekf.R_tvar = new_R_tvar  #/10 SR15 try
             ekf.Roc_tvar=new_Roc_tvar
             ekf.lCo2=new_lCo2
             ekf.anthro_clouds = new_anthro_clouds
@@ -356,12 +345,12 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             
             #TOA_meas_artif0 =  new_rtTOA - (erf_natvolc - erf_data_solar[:len(new_rtTOA )]) * .75  #+ np.mean(erf_volc)  to be removing this year's volcanism
             TOA_meas_artif0 =  new_rtTOA #TOA_meas_artif1*TOA_scale
-            TOA_meas_artif = TOA_meas_artif0 - np.mean(TOA_meas_artif0[0:70]) #this should be balanced at the start originally
-            #TOA_scale = np.mean(ekf.TOA_crop)/np.mean(TOA_meas_artif1[2001-1850:2023-1850])
+            TOA_meas_artif = TOA_meas_artif0 - np.mean(TOA_meas_artif0[0:70])/2 + (np.mean(ekf.TOA_meas_artif[2001-1850:2023-1850]) -np.mean( TOA_meas_artif0[2001-1850:2023-1850]))/2
+                      #this should be balanced at the start originally, and also match recent observations
+            #TOA_scale = np.mean(ekf.TOA_crop)/np.mean(TOA_meas_artif1[2001-1850:2023-1850]) 
 
 
-            
-
+        
 
             #ekf.Q[0,0]=ekf.Q[0,0]/2;
             
@@ -369,7 +358,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             #np.sum(TOA_meas_artif)
             print("CONSISTENCY CHECK")
             
-            surf_heat = (temps[-1]-np.mean(temps[0:50]))/(ekf.heatCp-ekf.Cs)
+            surf_heat = (temps[-1]-np.mean(temps[0:50]))*(ekf.heatCp-ekf.Cs)
             print(f"OHCA + surf = {ohca_meas[-1]/ekf.zJ_from_W + surf_heat}")
             print(f"sum TOA = {np.sum(TOA_meas_artif)}")
             print("Error:")
@@ -391,14 +380,20 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         #new_observ = np.transpose(np.array([temperature-given_preind_base+preind_base + ekf.offset,ohca_meas/ekf.zJ_from_W ]))
         ekf.TOA_meas_artif_var = np.full(new_iter,ekf.TOA_crop_var/4) #just put constant variance on this
         ndim =4
-        if(abs(TOA_error < 0.2)):
-            #TOA_meas_artif1 =  TOA_meas_artif* (1-TOA_error)  - TOA_correction * .75 #TOA_meas_artif # already corrected
-            TOA_meas_artif1 =  TOA_meas_artif  - TOA_correction * .75
-            ohca_meas = ohca_meas*ohca_scale
-        else:
-            TOA_meas_artif1 =  TOA_meas_artif  - TOA_correction * .75
-            ohca_meas = ohca_meas*ohca_scale
-            #ekf.Roc_tvar[170:]=new_Roc_tvar[170:]*4 #expanding uncertainty here since we had to correct the ocean
+        if True: #(abs(TOA_error < 0.2)):
+            TOA_meas_artif1 =  TOA_meas_artif* (1-TOA_error)  - TOA_correction * .75 #TOA_meas_artif # already corrected
+            #TOA_meas_artif1 =  TOA_meas_artif  - TOA_correction * .75
+            #print("TOA correction")
+           # print((TOA_correction))
+            #ohca_meas = ohca_meas*ohca_scale
+        ##else:
+        #   TOA_meas_artif1 =  TOA_meas_artif  - TOA_correction * .75
+        #    ohca_meas = ohca_meas*ohca_scale
+        #    #ekf.Roc_tvar[170:]=new_Roc_tvar[170:]*4 #expanding uncertainty here since we had to correct the ocean
+        #temps2=np.copy(temps) #repeating the logic of SR15 here
+        #temps2[15:] = 15/8*ta_smooth(temps,0,optical=False, N=30)[15:]
+        #temps2[7:] = 2*temps2[7:]-temps2[:-7]
+        
         new_observ = np.array([[temps,ohca_meas/ekf.zJ_from_W,TOA_meas_artif1]]).T #*ohca_scale testing temperature offset
         sz = (new_iter,ndim,1) # size of array
         ekf.sz=sz

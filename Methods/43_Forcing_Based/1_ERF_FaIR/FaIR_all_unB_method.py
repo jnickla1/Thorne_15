@@ -51,17 +51,17 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             #all_current_MPIESM370r19cut2099_temp_anthro.npy
             retro_array = np.load(cur_path+"/retrospective/all_current_MPIESM"+exp_attr[2][3:6]+"r"+str(model_run+1)+"cut2099_temp_all.npy") #starts in 1750
             if exp_attr[2][3:6]=="126":
-                curbias=.047
+                curbias=.04729
             elif exp_attr[2][3:6]=="245":
-                curbias=-0.04
+                curbias=0.03538
             elif exp_attr[2][3:6]=="370":
-                curbias=-.127
+                curbias=0.0024
                 
         elif (exp_attr[1]=='NorESM'):
             #combined_all_current_NorESMVolcConstr1_anthro.npy
             current_array = np.load(cur_path+"/resliced_NorESM/combined_all_current_NorESM"+exp_attr[3]+"r"+str(model_run+1)+"_all.npy") #starts in 1930
             retro_array = np.load(cur_path+"/retrospective/all_current_NorESM"+exp_attr[3]+"r"+str(model_run+1)+"cut2099_temp_all.npy") #starts in 1750
-            curbias= -.21
+            curbias= -0.19436
             
     samp_cur = np.full((len(years),np.shape(current_array)[1]),np.nan)
     end_fill_sampc = (1930-1850)+np.shape(current_array)[0]
