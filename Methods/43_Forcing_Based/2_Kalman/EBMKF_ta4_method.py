@@ -39,7 +39,8 @@ def ta_smooth(orig_opt_depths,fill_value,optical=True, N=30):
     else:
         return(nwt_opt_depths)
 
-def run_method(years, temperature, uncert, model_run, experiment_type):
+def run_method(years, temperature0, uncert, model_run, experiment_type):
+    temperature = temperature0.astype(np.float64)
     #temperature has 2024, dont have all forcings for this yet - must update ekf.n_iters
     data_orig = pd.read_csv("./Common_Data/HadCRUT5.csv")
     temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
@@ -47,6 +48,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     
     #ekf.temps = temperature[0:ekf.n_iters] +ekf.offset
     (temps_CIl, temps_CIu) = uncert
+    temps_CIl = temps_CIl.astype(np.float64)
+    temps_CIu = temps_CIu.astype(np.float64)
     temps_1std = (temps_CIu - temps_CIl) / 4
     
     #ekf.R_tvar=np.square(temps_1std[0:ekf.n_iters])
@@ -121,11 +124,19 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
         temps = temperature-given_preind_base+preind_base + ekf.offset #ensure this matches expected starting temperature in 1850, same baseline as HadCRUT
         frac_blocked = 1-(5.5518/(unf_new_opt_depth+9.9735)) #(9.068/(comb_recAOD_cleaned+9.7279))
-        erf_data_solar = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")['solar'].to_numpy()[(1850-1750):]
+        erf_data= pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")
+        erf_data_solar = erf_data['solar'].to_numpy()[(1850-1750):]
         solar_full = erf_data_solar[:ekf.n_iters]+ 340.4099428 - 0.108214
         tot_volc_erf = (- solar_full*frac_blocked + 151.22)
-        erf_trapez=(1*tot_volc_erf[0:-2]+2*tot_volc_erf[1:-1]+0*tot_volc_erf[2:] )/4 #want to snap back as quickly as possible
-        temps[2:] = temps[2:] - erf_trapez/(ekf.heatCp - ekf.Cs)
+        contrails = erf_data['contrails'][(1850-1750):(2024-1750)].values
+        TOA_correction = (tot_volc_erf - np.mean(tot_volc_erf[90:100])+ contrails)
+        TOA_correction[np.where(TOA_correction> -0.25)] = 0
+        #clamp down some of the uncertainties so that the KF pays most attention to the temperatures
+        ekf.Q = ekf.Q * 0.25
+        ekf.cM2 = ekf.cM2 * 0.5
+        ekf.dfrA_float_var = ekf.dfrA_float_var *.25
+        #now this is somewhat flat and only makes corrections when there is a major volcanic eruption
+        erf_trapez=(1*TOA_correction[0:-2]+2*TOA_correction[1:-1]+0*TOA_correction[2:] )/3 
 
         ohca_meas_all = np.load(config.CODEBASE_PATH +"/OHC_ensemble/ohca_sampled_ensemble.npy")
         ohca_meas = ohca_meas_all[model_run,0:ekf.n_iters]
@@ -133,7 +144,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         ohca_uncert_all = np.load(config.CODEBASE_PATH +"/OHC_ensemble/ohca_uncertainty_ensemble.npy")
         ohca_uncert = np.abs(ohca_uncert_all[model_run,0:ekf.n_iters]) #remember stored as complex number, this gives us the RMS uncertainty
         ekf.Roc_tvar=np.square(ohca_uncert+5)/ekf.zJ_from_W/ekf.zJ_from_W #set minimum of 5ZJ uncertainty in 2010 standard year
-        ohca_meas[2:] = ohca_meas[2:] - (erf_trapez/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*200 #not perfect but good for now, also unclear where the 200 comes from
+        
+
         import os
         cur_path = os.path.dirname(os.path.realpath(__file__))
         TOA_meas_artif_all = np.load(cur_path + "/heads_tails_forcing/all-headstails_current_TOA_ensemble.npy")
@@ -147,8 +159,17 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         ekf.anthro_clouds = np.append(ekf.anthro_clouds,[2024*4.482E-5 -.018479 ])
         new_tsi = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp119_1750-2500.csv")['solar'][100:(100+ekf.n_iters+1)].values
         
-        ekf.tsi = np.append(ekf.tsi,[new_tsi[2024-1850]+ekf.sw_in-np.mean(new_tsi)])
+        new2_tsi = np.append(ekf.tsi,[new_tsi[2024-1850]+ekf.sw_in-np.mean(new_tsi)])
         ekf.lCo2= np.append(ekf.lCo2,[np.log10(data3[2024-2015,1+2]-data3[2023-2015,1+2] + ekf.data[2023-1850,2])])
+        ekf.tsi = 2* ta_smooth(new2_tsi,ekf.sw_in,optical=False,N=34) - ekf.sw_in  #np.full(np.shape(ekf.tsi),np.mean(ekf.tsi))
+        #makes centered mean
+        ekf.tsi[16:] = 2*ekf.tsi[16:]-ekf.tsi[:-16]
+
+        temps[9:ekf.n_iters] = temps[9:ekf.n_iters] - erf_trapez[:-7]/(ekf.heatCp - ekf.Cs)/2 #surface temp of 20 yr mean still depressed
+        ohca_meas[9:ekf.n_iters] = ohca_meas[9:ekf.n_iters] - (erf_trapez[:-7]/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*50/2
+        TOA_meas_artif1 =  ekf.TOA_meas_artif - TOA_correction * .75
+        new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
+        ekf.dfrA_float_var = ekf.dfrA_float_var/40
         #lots of trouble to add one more output point
         ndim=4
         sz = (ekf.n_iters,ndim,1) # size of array
