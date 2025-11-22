@@ -198,14 +198,14 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         ci=0
         labelcolors=[]
         print(len(years))
-        lhund=-101 #-101
-        l75=-76 #-76
+        lhund=-101
+        l75=-76
         lten=-10
         if (exp_attr[1]=='NorESM'):
             lhund=-100
             l75=-75
             lten = -10
-
+            #so there are fewer points to average over in the NorESM case
             
 
         aedyrs=np.zeros((2,len(thrshs)))
@@ -320,7 +320,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                         ncross=0
                         for j in range(len(closest_years)):
                             evalmin=int(closest_years[j])-win_sz
-                            evalmax=min(int(closest_years[j])+win_sz,2000-lhund)
+                            evalmax=min(int(closest_years[j])+win_sz,1850+len(standard))
                             evalyrs = np.arange(evalmin,evalmax)
                             fineevalyrs = np.arange(evalyrs[0],evalyrs[-1]+1/inum,1/inum) 
                             this_method_p_steps = np.full(np.shape(evalyrs),np.nan)
@@ -397,13 +397,13 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
 
                     #output parameters
                     np.set_printoptions(precision=9)
-                    print(central_est[lhund])
-                    print(standard[lhund])
-                    print(central_est[lten-1])
-                    print(standard[lten-1])
-                    
-                    print(method_name)
-                    print(i)
+                    #print(central_est[lhund])
+                    #print(standard[lhund])
+                    #print(central_est[lten-1])
+                    #print(standard[lten-1:])
+                    #print(len(standard))
+                    #print(method_name)
+                    #print(i)
                     i=i+1
 
 
@@ -415,12 +415,9 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                         kl=kls,
                         kl75 = kls75)
 
-        np.set_printoptions(precision=9)
- 
-        
-
-        print(rmses75) 
-        print(rmses) 
+        #np.set_printoptions(precision=9)
+        #print(rmses75) 
+        #print(rmses) 
 
 
         print(time.process_time() - start)

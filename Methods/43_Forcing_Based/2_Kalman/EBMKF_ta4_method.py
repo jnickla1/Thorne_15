@@ -472,7 +472,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
         ekf.y=np.zeros((new_iter,3,1))
         ekf.qqy=np.zeros((new_iter,3))
         
-        breakpoint()
+        #breakpoint()
 
         means , ses ,means2 ,ses2 = ekf.ekf_run(new_observ,new_iter,retPs=3)
 

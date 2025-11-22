@@ -96,7 +96,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         max_runs = 1+start_run
         plotting_figs= True
     else:
-        max_runs = 20+start_run
+        max_runs = 5+start_run
         plotting_figs= False
     methods_folder= running_subset
 
