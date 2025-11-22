@@ -148,11 +148,10 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
 
         import os
         cur_path = os.path.dirname(os.path.realpath(__file__))
+        #also reading this from a FaIR file
         TOA_meas_artif_all = np.load(cur_path + "/heads_tails_forcing/all-headstails_current_TOA_ensemble.npy")
         TOA_meas_artif = TOA_meas_artif_all[model_run,0,0:ekf.n_iters] #.to_numpy() if pandas array
-        TOA_meas_artif1 =  TOA_meas_artif #- (tot_volc_erf ) * .4 #again removing the volcanic signal for the ta run
-        new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
-        ekf.dfrA_float_var = ekf.dfrA_float_var/40 # adjust uncertainty in TOA observations
+        TOA_meas_artif1 =  TOA_meas_artif - TOA_correction *.75 #(tot_volc_erf ) * .4 #again removing the volcanic signal for the ta run
         
         data3 =  np.genfromtxt(open(config.CLIMATE_DATA_PATH+"/SSP_inputdata/KF6projectionSSP.csv", "rb"),dtype=float, delimiter=',')
         #ekf.anthro_clouds = np.append(ekf.anthro_clouds,[data3[2024-2015,6+2]+1])
@@ -167,7 +166,6 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
 
         temps[9:ekf.n_iters] = temps[9:ekf.n_iters] - erf_trapez[:-7]/(ekf.heatCp - ekf.Cs)/2 #surface temp of 20 yr mean still depressed
         ohca_meas[9:ekf.n_iters] = ohca_meas[9:ekf.n_iters] - (erf_trapez[:-7]/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*50/2
-        TOA_meas_artif1 =  ekf.TOA_meas_artif - TOA_correction * .75
         new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
         ekf.dfrA_float_var = ekf.dfrA_float_var/40
         #lots of trouble to add one more output point
@@ -222,7 +220,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
             ohca_earlier = Dataset(config.CLIMATE_DATA_PATH+"/ESM1-2-LR/opottempmint/historical_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
             ohca_e = ohca_earlier[:].__array__()
             ohca_ey = average_every_n(ohca_e[model_run,:], 12)
-            ohca_meas = np.concatenate((ohca_ey,ohca_ly))
+            ohca_meas = np.concatenate((ohca_ey,ohca_ly)).astype(np.float64)
             ohca_meas = ohca_meas - ohca_meas[0] #start at 0 #supplies full record
 
             rt_later =Dataset(config.CLIMATE_DATA_PATH+"/ESM1-2-LR/rt/global_rt_"+exp_attr[2].lower()+".nc", 'r').variables['rt']
@@ -244,7 +242,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
             long_past_index = ((gen_orig_number(model_run,60) -1 )// 20)
             unf_new_opt_depth[(1850-1850):(2006-1850)]= average_every_n(aod_s[long_past_index,:], 12)/1000
             
-            ohca_meas=np.zeros(new_iter)
+            ohca_meas=np.zeros(new_iter).astype(np.float64)
             #ohca_meas[0:ekf.n_iters] = ekf.ocean_heat_measured/ekf.zJ_from_W   #DONE - replace with NorESM simulation
             ohca_spinup = Dataset(config.CLIMATE_DATA_PATH+"/NorESM_volc/NorESM1-M-historical/hist_ohca_mon.nc", 'r').variables['__xarray_dataarray_variable__']
             ohca_s = ohca_spinup[:].__array__()
@@ -402,7 +400,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
 
             
             #TOA_meas_artif0 =  new_rtTOA - (erf_natvolc - erf_data_solar[:len(new_rtTOA )]) * .75  #+ np.mean(erf_volc)  to be removing this year's volcanism
-            TOA_meas_artif0 =  new_rtTOA #TOA_meas_artif1*TOA_scale
+            TOA_meas_artif0 =  new_rtTOA.astype(np.float64) #TOA_meas_artif1*TOA_scale
             TOA_meas_artif = TOA_meas_artif0 - np.mean(TOA_meas_artif0[0:70])/2 + (np.mean(ekf.TOA_meas_artif[2001-1850:2023-1850]) -np.mean( TOA_meas_artif0[2001-1850:2023-1850]))/2
                       #this should be balanced at the start originally, and also match recent observations
             #TOA_scale = np.mean(ekf.TOA_crop)/np.mean(TOA_meas_artif1[2001-1850:2023-1850]) 
@@ -474,7 +472,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
         ekf.y=np.zeros((new_iter,3,1))
         ekf.qqy=np.zeros((new_iter,3))
         
-        #breakpoint()
+        breakpoint()
 
         means , ses ,means2 ,ses2 = ekf.ekf_run(new_observ,new_iter,retPs=3)
 

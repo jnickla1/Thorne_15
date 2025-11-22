@@ -2,7 +2,7 @@ from hist_evaluation_script import *
 regen=True
 annotate_fig=False
 crossing_figs=False
-sel_methods = ["CGWL10y_sfUKCP","FaIR_comb_unB","EBMKF_ta4"]
+sel_methods = ["GWI_tot_CGWL","EBMKF_ta4"]
 from netCDF4 import Dataset
 import sys
 from scipy.optimize import minimize
@@ -121,7 +121,6 @@ from numpy.polynomial.hermite import hermgauss
 
     
 def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax4, colorraw=None,exp_index=0):
-    from hist_evaluation_script import rank2
     # First evaluation
 
     exp_attr = experiment_type.split("_")
@@ -174,7 +173,8 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         standard_se = results['cent20y']['LT_trend'][3] #retrospective
         smooth_std = np.nanmean(np.abs(np.diff(np.diff(standard))))
 
-        sorted_results = sorted(results.items(), key=lambda item: (item[1]['method_class'], rank2(item[0])))
+        import neworder
+        sorted_results = neworder.sort_results(results) #sorted(results.items(), key=lambda item: (item[1]['method_class'], rank2(item[0])))
 
         fineyrs_all = np.arange(years[0],years[-1]+1/inum,1/inum)
         std_intp0 = np.interp(fineyrs_all,years,standard)
@@ -197,10 +197,10 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         i=0
         ci=0
         labelcolors=[]
-
-        lhund=-101
-        l75=-76
-        lten=-11
+        print(len(years))
+        lhund=-101 #-101
+        l75=-76 #-76
+        lten=-10
         if (exp_attr[1]=='NorESM'):
             lhund=-100
             l75=-75
@@ -396,7 +396,11 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     
 
                     #output parameters
-
+                    np.set_printoptions(precision=9)
+                    print(central_est[lhund])
+                    print(standard[lhund])
+                    print(central_est[lten-1])
+                    print(standard[lten-1])
                     
                     print(method_name)
                     print(i)
@@ -410,12 +414,13 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                         rmse75 = rmses75,
                         kl=kls,
                         kl75 = kls75)
-       
- 
-                
 
+        np.set_printoptions(precision=9)
  
         
+
+        print(rmses75) 
+        print(rmses) 
 
 
         print(time.process_time() - start)

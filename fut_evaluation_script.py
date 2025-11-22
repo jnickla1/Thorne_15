@@ -127,7 +127,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
               
     
     if start_run < 0:
-        start_run = -start_run
+        start_run = -start_run-1
         max_runs = 1+start_run
         plotting_figs= True
     else:
