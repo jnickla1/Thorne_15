@@ -51,7 +51,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     samp_cur = np.full((np.shape(years)[0],cutoff_n) ,np.nan)
         
     offset_yrs= 1860-years[0]
-    last_i = min(len(years) - avg_len_u, np.shape(comput_temps)[0] - 11 + offset_yrs )
+    last_i = min(len(years) - avg_len_u+1, np.shape(comput_temps)[0] - 11 + offset_yrs )
     for i in range(avg_len_l+10, last_i):
         chunk=temperature[i-avg_len_l:i+avg_len_u]
         chunk_uncert=temps_1std[i-avg_len_l:i+avg_len_u]
@@ -76,7 +76,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             #np.random.normal(loc=0, scale=np.sqrt(np.var(chunk)/2/len(chunk)), size=cutoff_n)+
             #np.random.normal(loc=0, scale=np.sqrt(np.mean(chunk_uncert**2)/2/len(chunk)), size=cutoff_n) )
         
-    if experiment_type == 'historical' or exp_attr[0]=="histens": #retrospective and taper: exactly equal to 21yr running mean if farther than 10 years before present
+    if (experiment_type == 'historical' or exp_attr[0]=="histens"): #retrospective and taper: exactly equal to 21yr running mean if farther than 10 years before present
         import pandas as pd
         samp_ret = np.full((np.shape(years)[0],cutoff_n) ,np.nan)
         avg_len_l=10
@@ -96,7 +96,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             sesR[i] = np.sqrt(tot_uncert)
             samp_ret[i,:] = ( np.random.normal(np.sum(chunk), np.sqrt((np.var(chunk) + np.mean(chunk_uncert**2))), size=np.shape(forec_samps)) )/21 
         taper_i = len(years) - avg_len_u+1
-        for i in range(taper_i, last_i+1):
+        for i in range(taper_i, last_i):
             chunk=temperature[i-avg_len_l:len(years)]
             chunk_uncert=temps_1std[i-avg_len_l:len(years)]
             forec_samps0 = np.sum(comput_temps_align[(len(years)-offset_yrs):(i+11-offset_yrs),:], axis = 0)
@@ -109,7 +109,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     def empirical_mean(year_idx,k):
         if (k==0):
             return means[year_idx-1850] + pi50yoffset
-        elif (k==1 and experiment_type == 'historical'):
+        elif (k==1 and (experiment_type == 'historical' or exp_attr[0]=="histens")):
             return meansR[year_idx-1850]
         else:
             return empser
@@ -117,7 +117,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     def empirical_se(year_idx,k):
         if (k==0):
             return ses[year_idx-1850]
-        elif (k==1 and experiment_type == 'historical'):
+        elif (k==1 and (experiment_type == 'historical' or exp_attr[0]=="histens")):
             return sesR[year_idx-1850]
         else:
             return empser
@@ -189,7 +189,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 dist0 = samp_cur[year_idx[i]-1850, :]  # Distribution for the current year
                 mask = np.isnan(dist0)
                 dist = dist0[~mask]
-            elif (k==1 and experiment_type == 'historical'):
+            elif (k==1 and (experiment_type == 'historical' or exp_attr[0]=="histens")):
                 dist0 = samp_ret[year_idx[i]-1850, :]  # Distribution for the current year
                 mask = np.isnan(dist0)
                 dist = dist0[~mask]
@@ -219,7 +219,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         for i in range(len(year_idx)):
             if (k==0):
                 dist0 = samp_cur[year_idx[i]-1850, :]  # Distribution for the current year
-            elif (k==1 and experiment_type == 'historical'):
+            elif (k==1 and (experiment_type == 'historical' or exp_attr[0]=="histens")):
                 dist0 = samp_ret[year_idx[i]-1850, :]
             dist = dist0[~np.isnan(dist0)]
             if( len(dist)!=0 ):

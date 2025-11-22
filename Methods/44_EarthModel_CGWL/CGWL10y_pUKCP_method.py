@@ -42,7 +42,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     samp_cur = np.full((np.shape(years)[0],nsamps) ,np.nan)
         
     offset_yrs= 1860-years[0]
-    last_i = min(len(years) - avg_len_u, np.shape(comput_temps)[0] - 11 + offset_yrs )
+    last_i = min(len(years) - avg_len_u+1, np.shape(comput_temps)[0] - 11 + offset_yrs )
     for i in range(avg_len_l, last_i):
         chunk=temperature[i-avg_len_l:i+avg_len_u]
         chunk_uncert=temps_1std[i-avg_len_l:i+avg_len_u]

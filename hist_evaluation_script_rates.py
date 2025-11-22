@@ -18,8 +18,9 @@ from datetime import datetime
 current_date = datetime.now()
 formatted_date = current_date.strftime("%y%m%d")
 
-historical_regen=True #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
-
+historical_regen=False #whether we are regenerating data (some from saved intermediates or just reading from pickle.
+#set to true if you cant read a pickle
+plotting=False
 # ================================
 # Define Method Full Names, Colors, Location on Violin plots
 # ================================
@@ -57,10 +58,10 @@ def gen_color(ci, dark=False):
     return colors[ci]
 
 
-running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/2_ST_Fits') #,'Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' ) # 'Methods/43_Forcing_Based',
+#running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/2_ST_Fits') #,'Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' ) # 'Methods/43_Forcing_Based',
                 #'Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/3_Human_Induced',
                  # ,'Methods/43_Forcing_Based/0_Linear','Methods/44_EarthModel_CGWL')
-#running_subset = ('Methods/42_Temp_Alone/1_Run_Means', 'Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL') #methods we now want to run, smaller subset for debugging
+running_subset = ('Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL') #methods we now want to run, smaller subset for debugging
 
 def get_brightness(hex_color):
     """Calculates the perceived brightness of a CSS color, a float between 0 and 1.
@@ -132,23 +133,10 @@ spaglines = []
 
 alt_colors = ['black', 'white']
 sel_methods = [ "CGWL10y_for_halfU","FaIR_nonat","EBMKF_ta2"] #"EBMKF_ta4" "min_month_proj" "OLS_refit_CO2forc", "CGWL10y_for_halfU","TheilSen_h7075" ,"FaIR_anthroA",,"EBMKF_ta2"  ] #"EBMKF_ta",
-sel_methods2 = [ "CGWL10y_for_halfU","EBMKF_ta2","EBMKF_ta4","GAM_AR1",
-                 "lowess1dg20wnc","Kal_flexLin","FaIR_comb_unB","FaIR_nonat_unB","GWI_anthro_SR15","CGWL10y_sfUKCP"]
+sel_methods2 = [ "EBMKF_ta4","GAM_AR1",
+                 "lowess1dg36wnc","Kal_flexLin","FaIR_comb_unB","FaIR_nonat_unB","GWI_anthro_CGWL","CGWL10y_sfUKCP"]
+#"CGWL10y_for_halfU",,"EBMKF_ta2",
 
-try:
-    index_mapping_new = pd.read_csv('all_methods_statistics_250616.csv')
-    def rank2(method_name_in):
-        try:
-            ret = index_mapping_new[index_mapping_new["method_name"]==method_name_in]["bias50"].values[0] #first is always current
-        except:
-            print("not found METHOD")
-            print(method_name_in)
-            ret = 0
-        return ret
-except:
-    print("not found newest DATAFRAME SAVED")
-    def rank2(method_name_in):
-        return method_name_in
 #ftl = np.argsort(index_mapping) #from to list - where a certain method should be plotted
 
 if __name__ == '__main__':
@@ -240,7 +228,8 @@ if __name__ == '__main__':
     i=0
     ci=0
     labelcolors=[]
-    sorted_results = sorted(results.items(), key=lambda item: (item[1]['method_class'], rank2(item[0])))
+    import neworder
+    sorted_results = neworder.sort_results(results)
 
 
     ncm = 0 #number of current methods
@@ -271,14 +260,15 @@ if __name__ == '__main__':
         #print(f"Results from {method_name} (Method Class: {method_data['method_class']}):")
         result = method_data['LT_trend']
         labelcurr_or_retro="" #only set if the current method is not blank
-        print(method_name)
+        #print(method_name)
         if method_name in sel_methods2:
-            can_data = results2[method_name]['LT_trend'][2]
+            can_data = results[method_name]['LT_trend'][2]
+            
             if(sum(~np.isnan(can_data))>0):
-                sel2data.append(results2[method_name]['LT_trend'][2][-15:])
+                sel2data.append(results[method_name]['LT_trend'][2][-15:])
                 sel2names.append(method_name)
             else:
-                sel2data.append(results2[method_name]['LT_trend'][0][-15:]) #appending purely current method instead
+                sel2data.append(results[method_name]['LT_trend'][0][-15:]) #appending purely current method instead
                 sel2names.append(method_name+"_cur")
         for k in range(2):
             central_est=np.full(len(years),np.nan) #make this blank to start
@@ -540,7 +530,7 @@ if __name__ == '__main__':
     df_res_show['smooth_r'] = df_results['smooth_r'].round(3)
     df_res_cur = df_res_show[df_results['c/r']=='c']
     
-    print(df_res_cur.sort_values('log-likeli',ascending=False).head(20))
+    #print(df_res_cur.sort_values('log-likeli',ascending=False).head(20))
 
     ax1.grid(color='silver',zorder=-1)
     ax4.grid(color='silver',zorder=-1)
@@ -572,10 +562,7 @@ if __name__ == '__main__':
     #plt.plot(standard10)
     #plt.show()
 
-#compute all retrospecive methods and crop back 10 yrs
-    plt.figure()
-    for i in range(len(sel2data)):
-        plt.plot(sel2data[i],label=sel2names[i])
+
     
 
     tslope = np.arange(15)
@@ -597,9 +584,10 @@ if __name__ == '__main__':
 
     # Fit all and collect slopes and variances
     slopes_vars = np.array([fit_quad(y) for y in sel2data])
+    #breakpoint()
     slopes = slopes_vars[:, 0]
     vars_ = slopes_vars[:, 1]
-    plt.legend()
+    
     slope_combined = np.mean(slopes) *10
     # Uncertainty of the combined slope (standard error)
     slope_combined_std = np.sqrt(np.mean(vars_)+np.var(slopes)) *10 *1.96
@@ -607,41 +595,48 @@ if __name__ == '__main__':
     
     #df_results.to_csv('method_statistics_results.csv', index=False)
     #ax1.legend(fontsize=6.5,ncol=4)
-    handles, labels = ax1.get_legend_handles_labels()
-    numcurmethods = len(labels)
+    
+    if plotting:
+        #compute all retrospecive methods and crop back 10 yrs
+        plt.figure()
+        for i in range(len(sel2data)):
+            plt.plot(sel2data[i],label=sel2names[i])
+        plt.legend()
+        handles, labels = ax1.get_legend_handles_labels()
+        numcurmethods = len(labels)
 
-    for ci in range(len(methods_names)):
-        ax1.plot([1800,1801], [0,0], label= methods_names[ci][1].split(":")[1].replace('\n',' ').strip(), color = gen_color(methods_names[ci][0], dark=False),lw=0.5)
-    
-    handles, labels = ax1.get_legend_handles_labels()
-    new_handles = handles[numcurmethods:]
-    new_labels = labels[numcurmethods:]
-    ax1.legend(new_handles, new_labels,ncol=2)
-    
-    ax4.set_ylim(bottom=-0.12,top=0.12)
-    xmin, xmax = [1850,2025] #ax1.get_xlim()
-    ax4.set_xlim([xmin, xmax])
-    ax4.set_xticks(np.arange(1850,2026,25))
-    ax4.set_yticks(np.arange(-0.1,0.11,0.025))
-    ax1.set_xticks(np.arange(1850,2026,25))
-    ax1.set_xlim([xmin, xmax])
-    line_20yr = ax4.hlines(y=0,xmin=years[np.argmax(~np.isnan(standard))],
-            xmax=years[-np.argmax(~np.isnan(np.flip(standard)))],  color='k', linestyle='-', lw=3)
-    patch_20yr=ax4.fill_between(years,-results['cent20y']['LT_trend'][3],results['cent20y']['LT_trend'][3],facecolor='lightgray',edgecolor='black',alpha=0.35)
-    ax4_handles.insert(0,(patch_20yr,line_20yr))
-    ax4_labels.insert(0,"20-yr centred running \n    mean (HadCRUT5)")
-    ax4.legend(ax4_handles,ax4_labels,loc='lower left')
-    ax1.set_xlabel("Year")
-    ax1.set_title("Evaluated Methods to find Current Long-Term Temperature", pad=10)
-    ax4.set_title("`Error` of Top-Performing Methods\n (Method) — 20-yr running mean", pad=10)
-    ax4.set_xlabel("Year")
-    ax1.set_ylabel("Temperature (°C) Anomaly\n relative to 1850-1900")
-    ax4.set_ylabel("Temperature (°C) Difference\n relative to 20-yr running mean")
-    
+        for ci in range(len(methods_names)):
+            ax1.plot([1800,1801], [0,0], label= methods_names[ci][1].split(":")[1].replace('\n',' ').strip(), color = gen_color(methods_names[ci][0], dark=False),lw=0.5)
+        
+        handles, labels = ax1.get_legend_handles_labels()
+        new_handles = handles[numcurmethods:]
+        new_labels = labels[numcurmethods:]
+        ax1.legend(new_handles, new_labels,ncol=2)
+        
+        ax4.set_ylim(bottom=-0.12,top=0.12)
+        xmin, xmax = [1850,2025] #ax1.get_xlim()
+        ax4.set_xlim([xmin, xmax])
+        ax4.set_xticks(np.arange(1850,2026,25))
+        ax4.set_yticks(np.arange(-0.1,0.11,0.025))
+        ax1.set_xticks(np.arange(1850,2026,25))
+        ax1.set_xlim([xmin, xmax])
+        line_20yr = ax4.hlines(y=0,xmin=years[np.argmax(~np.isnan(standard))],
+                xmax=years[-np.argmax(~np.isnan(np.flip(standard)))],  color='k', linestyle='-', lw=3)
+        patch_20yr=ax4.fill_between(years,-results['cent20y']['LT_trend'][3],results['cent20y']['LT_trend'][3],facecolor='lightgray',edgecolor='black',alpha=0.35)
+        ax4_handles.insert(0,(patch_20yr,line_20yr))
+        ax4_labels.insert(0,"20-yr centred running \n    mean (HadCRUT5)")
+        ax4.legend(ax4_handles,ax4_labels,loc='lower left')
+        ax1.set_xlabel("Year")
+        ax1.set_title("Evaluated Methods to find Current Long-Term Temperature", pad=10)
+        ax4.set_title("`Error` of Top-Performing Methods\n (Method) — 20-yr running mean", pad=10)
+        ax4.set_xlabel("Year")
+        ax1.set_ylabel("Temperature (°C) Anomaly\n relative to 1850-1900")
+        ax4.set_ylabel("Temperature (°C) Difference\n relative to 20-yr running mean")
+        plt.show()
 
     
     print(time.process_time() - start)
-    plt.show()
+    
     
    #sorted_df = df_res_cur2.reset_index(drop=True).sort_values(by=['method_class', 'bias50']).reset_index()
     #sorted_df[['index']].to_csv('to_index_mapping.csv', index=False)

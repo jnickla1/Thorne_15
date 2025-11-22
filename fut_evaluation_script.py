@@ -24,7 +24,7 @@ def gen_orig_number(new_member_number,sz_ens):
     else:
         return recovered_order[new_member_number]
 
-regen = 1 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
+regen = 2 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
 
 
 data = pd.read_csv("./Common_Data/HadCRUT5.csv")
@@ -131,7 +131,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         max_runs = 1+start_run
         plotting_figs= True
     else:
-        max_runs = 2+start_run
+        max_runs = 60+start_run #2+
         plotting_figs= False
     methods_folder= running_subset
 
@@ -187,15 +187,15 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                    # existing_results.pop("FaIR_all_unB",None) #redo EMBKF_ta3
                    # existing_results.pop("FaIR_anthro_unB",None)
                    # existing_results.pop("FaIR_nonat_unB",None)
-                   # existing_results.pop("FaIR_comb_unB",None)
-                    existing_results.pop("GWI_anthro",None) 
-                    existing_results.pop("GWI_anthro_AR6",None)
-                    existing_results.pop("GWI_anthro_CGWL",None)
-                    existing_results.pop("GWI_anthro_SR15",None)
-                    existing_results.pop("GWI_tot",None)     
-                    existing_results.pop("GWI_tot_AR6",None)
-                    existing_results.pop("GWI_tot_CGWL",None)
-                    existing_results.pop("GWI_tot_SR15",None)
+                    existing_results.pop("FaIR_comb_unB",None)
+                  #  existing_results.pop("GWI_anthro",None) 
+                  #  existing_results.pop("GWI_anthro_AR6",None)
+                  #  existing_results.pop("GWI_anthro_CGWL",None)
+                  #  existing_results.pop("GWI_anthro_SR15",None)
+                  #  existing_results.pop("GWI_tot",None)     
+                  #  existing_results.pop("GWI_tot_AR6",None)
+                  #  existing_results.pop("GWI_tot_CGWL",None)
+                  #  existing_results.pop("GWI_tot_SR15",None)
                 completed_methods = set(existing_results.keys())
             else:
                 existing_results = {}
@@ -205,10 +205,11 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
             results = run_methods(years, simall,
                                       (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
                                       model_run, experiment_type, methods_folder, completed_methods)
-            
+
             # Process results for saving
             results2 = {}
             for method_name, method_data in results.items():
+                
                 result = method_data['LT_trend']
                 method_class = method_data['method_class']
                 

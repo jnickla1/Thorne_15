@@ -4,7 +4,7 @@ import pandas as pd
 import config
 # Create a figure and a set of subplots
 npanels2=5
-fig, axes = plt.subplots(nrows=2, ncols=npanels2, figsize=(12, 7))#expand wi
+fig, axes = plt.subplots(nrows=2, ncols=npanels2, figsize=(14, 7))#expand wi
 # Generate fictitious temperature data (for demonstration)
 data = np.genfromtxt(open("../Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
 data2 = pd.read_csv("../Common_Data/HadCRUT.5.0.2.0.analysis.summary_series.global.annual.csv")
@@ -20,7 +20,7 @@ all_method_names = ["5yr lagging", "10yr lagging",
                     "Autoregression",
                     "Remove El Nino", "Remove Greens Functions"]
 
-impl_methods = ["30yr (20yr) centred", "10yr (20yr) lagging","OLS Fit", "Hinge Fit", "11yr offset (Trewin)", "15yr-linear (SR1.5)","Butterworth Adapt. (Mann)",
+impl_methods = ["30yr (20yr) centred", "10yr (20yr) lagging","OLS Fit", "Hinge Fit", "11yr offset (Trewin)", "15yr-linear fit endpoint","Butterworth Adapt. (Mann)",
                 "GAM AR1 (Stephenson)", "Kalman: Random Walk", "Remove ENSO (Foster)"]
 
 # Loop over each subplot (method) to configure the layout and base plot
@@ -518,6 +518,8 @@ handles, labels = ax.get_legend_handles_labels()
 
 # Adjust layout to minimize spacing between panes
 plt.tight_layout(rect=[0, 0, 0.9, 1])
+fig.subplots_adjust(left=0.1) 
 plt.savefig("sec42.pdf")
+plt.savefig("sec42.png",dpi=500)
 # Display the figure
-plt.show()
+#plt.show()

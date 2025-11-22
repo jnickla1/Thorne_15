@@ -57,6 +57,7 @@ def collect_data(exp_attr ):
 # "EBMKF_ta4","GAM_AR1",
 #"lowess1dg20wnc","Kal_flexLin","FaIR_comb_unB","GWI_tot_CGWL","CGWL10y_sfUKCP" ## "GWI_tot_SR15",
 
+retIDlabels = ['c','r']
 
                  
 #sel_methods = ["CGWL10y_sfUKCP","FaIR_comb_unB","EBMKF_ta4"]  
@@ -68,7 +69,8 @@ sel_methods_list_real = ["Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py",
                              "Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py",
                              "Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py",
                              "Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_method.py",
-                             "Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py" ]
+                             "Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py"
+                         ]
 
 sel_methods_list_anthro = ["Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py",
                            "Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py",
@@ -90,7 +92,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
     sthresh = 0.5 if exp_attr[1]=="rpi" else (relthresh+0.5)
     
     if start_run < 0:
-        start_run = -start_run
+        start_run = -start_run-1
         max_runs = 1+start_run
         plotting_figs= True
     else:
@@ -143,6 +145,10 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                         result2=(result['mean'](years,0),result['se'](years,0),result['mean'](years,1),result['se'](years,1))
                     else:
                         result2=result
+
+                    #if(method_name=="CGWL10y_sfUKCP"):
+                    #    print(result2)
+                    #    breakpoint()
                     
                     results2[method_name] = {'method_class': method_class,'LT_trend': result2}
                 pickle.dump(results2, fp)
