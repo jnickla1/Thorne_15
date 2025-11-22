@@ -6,12 +6,13 @@
 #SBATCH -n 1
 #SBATCH --mem-per-cpu=5g
 #SBATCH --array=0-29  # Sweeps ENSEMBLE_RUN
-#SBATCH -o logs3/f-%A_%a.out
+#SBATCH -o logs4/f-%A_%a.out
 
 module load matlab/R2019a-rjyk3ws
 module load r
 
-i=$((${SLURM_ARRAY_TASK_ID}*2+1))
+i=$((${SLURM_ARRAY_TASK_ID}*2)) 
+##no +1 since reading in the 0-49 model number
 eval "$(conda shell.bash hook)"
 conda activate cleanpy
 # Define scenarios

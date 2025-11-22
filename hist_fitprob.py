@@ -88,20 +88,6 @@ spaglines = []
 alt_colors = ['black', 'white']
 sel_methods = [ "CGWL10y_for_halfU","FaIR_nonat","EBMKF_ta2"] #"EBMKF_ta4" "min_month_proj" "OLS_refit_CO2forc", "CGWL10y_for_halfU","TheilSen_h7075" ,"FaIR_anthroA",,"EBMKF_ta2"  ] #"EBMKF_ta",
 
-try:
-    index_mapping_new = pd.read_csv('all_methods_statistics_250616.csv')
-    def rank2(method_name_in):
-        try:
-            ret = index_mapping_new[index_mapping_new["method_name"]==method_name_in]["bias50"].values[0] #first is always current
-        except:
-            print("not found METHOD")
-            print(method_name_in)
-            ret = 0
-        return ret
-except:
-    print("not found newest DATAFRAME SAVED")
-    def rank2(method_name_in):
-        return method_name_in
 #ftl = np.argsort(index_mapping) #from to list - where a certain method should be plotted
 
 
@@ -294,8 +280,9 @@ if __name__ == '__main__':
     all_newsamples = []
     ci=0
     labelcolors=[]
-    sorted_results = sorted(results.items(), key=lambda item: (item[1]['method_class'], rank2(item[0])))
-
+  #  sorted_results = sorted(results.items(), key=lambda item: (item[1]['method_class'], rank2(item[0])))
+    import neworder
+    sorted_results = neworder.sort_results(results)
 
     ncm = 0 #number of current methods
     for method_name, method_data in sorted_results:
@@ -319,7 +306,7 @@ if __name__ == '__main__':
     #    index_mapping = np.arange(ncm)
     #    ftl = np.argsort(index_mapping)
     lhund=-101 #length 251
-    lten=-11
+    lten=-10
     if (experiment_type == 'historical' or exp_attr[1]=='NorESM'):
         lhund=-100 #length 250
         lten = -10
@@ -372,8 +359,8 @@ if __name__ == '__main__':
 
                 #CALCULATE things necessary for both combination approaches
                 err_var = np.nanmean((central_est-standard)**2)
-                err_var100 = np.nanmean((central_est[-100:] -standard[-100:])**2)
-                err_var75 = np.nanmean((central_est[-75:] -standard[-75:])**2)
+                err_var100 = np.nanmean((central_est[lhund:] -standard[lhund:])**2)
+                err_var75 = np.nanmean((central_est[(lhund+25):] -standard[(lhund+25):])**2)
                 best_alter_scale = minimize(rescale_log_likelihood, x0=1, bounds=[(0.01, 100.0)]).x[0]
                 nsamples = 1000
                 nnodes = 100

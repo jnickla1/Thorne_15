@@ -62,14 +62,32 @@ CLIMATE_DATA_PATH = os.path.expanduser('~/')+"climate_data"
 Once you have that installed, the main files are run from the code root directory like this. The hist_evaluation_script.py has no elim because we are evaluating it on all methods and then eliminating none. A negative number at the very end indicates to only run that ensemble member once, positive means to run a batch of 2 (or 10 if you change the code) starting with that number. futplotcomb generates only one combination figure. For futplotcomb ESM1-2-LR the output depends on the inputted ensemble member: SSP370 and SSP126 plotted with that member highlighted, but futplotcomb for NorESM is not affected by anything - it resets both the secenario and ensemble member parameters.
 
 ```
+### Run Order (so everything is created correctly), assume you have a slurm parallel computing cluster.
+```
+python3 hist_fitprob.py -historical
 python3 hist_evaluation_script.py
-python3 fut_evaluation_script_elim.py fut_ESM1-2-LR_SSP370_constVolc -9
-python3 fut_evaluation_script.py fut_ESM1-2-LR_SSP245_constVolc 9
-python3 fut_evaluation_script_elim.py futplotcomb_ESM1-2-LR_SSP126_constVolc -15
-python3 fut_evaluation_script_elim.py futplotcomb_NorESM_RCP45_Volc 20
-python3 fut_evaluation_script_elim.py fut_NorESM_RCP45_VolcConst -28
+sbatch run_parBATCH_future.sh
+python3 plot_fut_results.py
+
+python3 fut_evaluation_script_elim.py futplotcomb_ESM1-2-LR_SSP126_constVolc -11
+python3 fut_evaluation_script_elim.py futplotcomb_NorESM_RCP45_Volc -11
+
+sbatch run_histens.sh
+python3 plot_heads_tails_probs.py
+python3 hist_evaluation_script_rates.py
+
+sbatch run_parBATCH_hist_fitprob_ff.sh
+sbatch run_LOO2.sh
+python3 create_combination_method_LOOffcombine.py -2
+sbatch run_LOO16.sh
+python3 create_combination_method_LOOffcombine.py -16
+sbatch run_LOO8.sh
+python3 create_combination_method_LOOffcombine.py -8
+
  ```
-Other important figure-generating scripts are plot_fut_results.py and are found in /Illustrative_Figures. The batch script for running things in parallel on a large computing cluster is run_parBATCH.sh (and other versions of it like run_parBATCH2.sh).
+Other important figure-generating scripts are plot_fut_results.py and are found in /Illustrative_Figures.
+
+Make sure hist_regen=True and all of the Methods subfolders are selected in the hist_evaluation_script.py (apologies for not keeping this perfectly tidy).
 
 The current results for the [historical hindcase](https://docs.google.com/spreadsheets/d/10izz9VruI9L1pNT3pwKLlNPVhzrvGRdYk3VxvdQ1es8/edit?usp=sharing), [MPI-ESM-1-2-LR](https://docs.google.com/spreadsheets/d/1eWAeL1HHHSqyL1YF2IYaQwgMQuh8Y1RJ/edit?usp=sharing&ouid=101500668294780806861&rtpof=true&sd=true), and [NorESM1](https://docs.google.com/spreadsheets/d/1gHNtpZ4MVIw_NYp62kjtuCHZ2kZcWYwo/edit?usp=sharing&ouid=101500668294780806861&rtpof=true&sd=true) comparisons are linked
 
