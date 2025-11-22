@@ -78,7 +78,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         #TOA_correction[0:75] = TOA_correction[0:75] + 0.2
         
         TOA_correction[np.where(TOA_correction> -0.25)] = 0
-        breakpoint()
+        #breakpoint()
         #clamp down some of the uncertainties so that the KF pays most attention to the temperatures
         ekf.Q = ekf.Q * 0.25
         ekf.cM2 = ekf.cM2 * 0.5
@@ -109,9 +109,13 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
 
     elif (exp_attr[0]=="histens"):
-        ekf.n_iters = 174
+        ekf.n_iters = len(years)
+        new_iter=len(years)
         #keeping optical depth (volcanoes) and solar forcing the same
-        unf_new_opt_depth = ekf.data[:,3]*0.001
+        unf_new_opt_depth0 = ekf.data[:,3]*0.001
+        #add one more to the opt_depth - haven't yet worked out a new data source
+        unf_new_opt_depth = np.append(unf_new_opt_depth0,[np.average(unf_new_opt_depth0[-10:])])
+
         ekf.opt_depth=ta_smooth(unf_new_opt_depth,ekf.involcavg)
         given_preind_base = np.mean(temperature[0:50])
 
@@ -121,7 +125,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         solar_full = erf_data_solar[:ekf.n_iters]+ 340.4099428 - 0.108214
         tot_volc_erf = (- solar_full*frac_blocked + 151.22)
         erf_trapez=(1*tot_volc_erf[0:-2]+2*tot_volc_erf[1:-1]+0*tot_volc_erf[2:] )/4 #want to snap back as quickly as possible
-        temps[2:-1] = temps[2:-1] - erf_trapez/(ekf.heatCp - ekf.Cs)
+        temps[2:] = temps[2:] - erf_trapez/(ekf.heatCp - ekf.Cs)
 
         ohca_meas_all = np.load(config.CODEBASE_PATH +"/OHC_ensemble/ohca_sampled_ensemble.npy")
         ohca_meas = ohca_meas_all[model_run,0:ekf.n_iters]
@@ -134,10 +138,43 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         cur_path = os.path.dirname(os.path.realpath(__file__))
         TOA_meas_artif_all = np.load(cur_path + "/heads_tails_forcing/all-headstails_current_TOA_ensemble.npy")
         TOA_meas_artif = TOA_meas_artif_all[model_run,0,0:ekf.n_iters] #.to_numpy() if pandas array
- 
         TOA_meas_artif1 =  TOA_meas_artif #- (tot_volc_erf ) * .4 #again removing the volcanic signal for the ta run
         new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
         ekf.dfrA_float_var = ekf.dfrA_float_var/40 # adjust uncertainty in TOA observations
+        
+        data3 =  np.genfromtxt(open(config.CLIMATE_DATA_PATH+"/SSP_inputdata/KF6projectionSSP.csv", "rb"),dtype=float, delimiter=',')
+        #ekf.anthro_clouds = np.append(ekf.anthro_clouds,[data3[2024-2015,6+2]+1])
+        ekf.anthro_clouds = np.append(ekf.anthro_clouds,[2024*4.482E-5 -.018479 ])
+        new_tsi = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp119_1750-2500.csv")['solar'][100:(100+ekf.n_iters+1)].values
+        
+        ekf.tsi = np.append(ekf.tsi,[new_tsi[2024-1850]+ekf.sw_in-np.mean(new_tsi)])
+        ekf.lCo2= np.append(ekf.lCo2,[np.log10(data3[2024-2015,1+2]-data3[2023-2015,1+2] + ekf.data[2023-1850,2])])
+        #lots of trouble to add one more output point
+        ndim=4
+        sz = (ekf.n_iters,ndim,1) # size of array
+        ekf.sz=sz
+        sz2d=(new_iter,ndim,ndim)
+        ekf.sz2d=sz2d
+        ekf.xhat=np.zeros(sz)      # a posteri estimate of x
+        ekf.P=np.zeros(sz2d)         # a posteri error estimate
+        ekf.F=np.zeros(sz2d)         # state transitions
+        ekf.xhatminus=np.zeros(sz) # a priori estimate of x
+        ekf.Pminus=np.zeros(sz2d)    # a priori error estimate
+        ekf.K=np.zeros((new_iter,ndim,3))         # gain or blending factor
+        ekf.xhathat=np.zeros(sz)   # smoothed a priori estimate of x
+        ekf.Phat=np.zeros(sz2d)      # smoothed posteri error estimate 
+        ekf.Khat=np.zeros((new_iter,ndim,ndim))      # smoothed gain or blending factor
+        ekf.Shat=np.zeros((new_iter,3,3))
+        ekf.S=np.zeros((new_iter,3,3))
+        ekf.xblind=np.zeros((new_iter,2,1))
+        ekf.lml=np.zeros(sz)
+        ekf.lsml=0
+        ekf.y=np.zeros((new_iter,3,1))
+        ekf.qqy=np.zeros((new_iter,3))
+
+        ekf.R_tvar =np.zeros(ekf.n_iters)
+        ekf.Roc_tvar = np.zeros(ekf.n_iters)
+        ekf.TOA_meas_artif_var = np.zeros(ekf.n_iters)
         means[0:ekf.n_iters], ses[0:ekf.n_iters],means2[0:ekf.n_iters],ses2[0:ekf.n_iters] = ekf.ekf_run(new_observ,ekf.n_iters,retPs=3)
         
         #import matplotlib.pyplot as plt

@@ -122,10 +122,12 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     dev_origAll = samp_curAll - samp_meanAll[:, np.newaxis]
     dev_20All = np.mean(samp_meanAll[(2000-1850):(2020-1850)]) - np.mean(temperature[(2000-1850):(2020-1850)])
     newcorrectonAll = np.concatenate((np.zeros(150), np.ones(10)*dev_20All, (dev_20All+ np.linspace(0, (curbias-dev_20All)*9/4, (np.shape(temperature)[0]-160)))))
-    samp_cur = 2/3*samp_cur + 1/3*(samp_meanAll[:, np.newaxis] + np.sqrt( dev_origAll**2)*sfactor *np.sign(dev_origAll)- newcorrectonAll[:, np.newaxis])
-                        #shrinks their distribution down
+    samp_cur_all = samp_meanAll[:, np.newaxis] + np.sqrt( dev_origAll**2)*sfactor *np.sign(dev_origAll)- newcorrectonAll[:, np.newaxis]
+    samp_cur[0:4] = 3.3/4*samp_cur[0:4] + .7/4*(samp_cur_all[0:4])
+    samp_cur[4:] = 2.45/4*samp_cur[4:] + 1/4*(samp_cur_all[4:]) + .55/4 *samp_cur_all[:-4]
+                        #shrinks their distribution dow
     
-    samp_ret = 2/3*samp_ret + 1/3 * retro_array[100:,:]#starts in 1750 so crop to 100th index
+    samp_ret = 2/3*samp_ret + 1/3 * retro_array[100:,:] + 1/6 * retro_array[95:-5,:] #starts in 1750 so crop to 100th index
 
     for i in range(len(years)):
         samp_ret[i,:] =samp_ret[i,:]+ np.random.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)), size=np.shape(samp_ret)[1])

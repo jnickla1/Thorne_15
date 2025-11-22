@@ -18,12 +18,12 @@ from datetime import datetime
 current_date = datetime.now()
 formatted_date = current_date.strftime("%y%m%d")
 
-historical_regen=False #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
-
+historical_regen=False#True #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
+adjusted_vars = True #must run the hist_fitprob.py script first if this is true to generate correction for the variance
 # ================================
 # Define Method Full Names, Colors, Location on Violin plots
 # ================================
-lo=3
+lo=3 #adjustment to all below ST fits
 methods_names = [
     ['42_Temp_Alone/1_Run_Means', "4.3.1:\nRunning Means", 2, 1998,2022,.5], #98
     ['42_Temp_Alone/2_LT_Fits', "4.3.2:\nLong Term Fits", 7,  1998,2022,.4], #98
@@ -57,7 +57,8 @@ def gen_color(ci, dark=False):
     return colors[ci]
 
 
-#running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/2_Kalman') #Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )#still working on debugging lfca
+#running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/3_ST_Fits') #Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )#still working on debugging lfca
+#running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/2_Kalman')
 running_subset = ('Methods/42_Temp_Alone/','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
 
                 #'Methods/42_Temp_Alone,'Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/3_Human_Induced',
@@ -89,7 +90,11 @@ def run_methods(years, avg_temperatures, temp_uncert,model_run, experiment_type,
             for file in files:
                 if file.endswith('_method.py'):
                     method_files.append(os.path.join(root, file))
-        incomplete_method_files = [f for f in method_files if os.path.basename(f).replace('_method.py', '') not in completed_methods]
+        incomplete_method_files =[]
+        for f in method_files :
+            if os.path.basename(f).replace('_method.py', '') not in completed_methods: 
+                incomplete_method_files.append(f)
+        
     else:
         incomplete_method_files = methods_folder
     # Initialize result storage
@@ -153,11 +158,11 @@ sel_methods = [ "GWI_tot_CGWL","EBMKF_ta4"]  #"CGWL10y_sfUKCP","FaIR_comb_unB"
 select_hist=True #plot additional smaller histograms within error
 if select_hist:
     avail_methods_list_7 = [ "CGWL10y_for_halfU","EBMKF_ta4","GAM_AR1",
-             "lowess1dg20wnc","Kal_flexLin","FaIR_comb_unB","GWI_tot_CGWL",] #"GWI_tot_SR15","CGWL10y_sfUKCP"
-    rmse_df = pd.read_csv("current_methods_statistics_251110True.csv")
+             "lowess1dt36wnc","Kal_flexLin","FaIR_comb_unB","GWI_tot_CGWL",] #"GWI_tot_SR15","CGWL10y_sfUKCP"
+    rmse_df = pd.read_csv("current_methods_statistics_251119True.csv")
     avail_methods_list_30 = list(rmse_df.loc[rmse_df['RMS'] <= 0.06, 'method_name'])
   
-hist_option='first'
+hist_option='median'#'first'
 
 
 if __name__ == '__main__':
@@ -249,7 +254,7 @@ if __name__ == '__main__':
     ax4_handles=[]
     ax4_labels=[]
     df_results = pd.DataFrame(columns=['method_name', 'method_class','c/r','smooth_r','avg_unc.(1se)','#q<0.5', '#q<0.1', 'q_min',
-                                       'q_small5','log-likeli','RMS','bias','tlog-l','100log-l','l05','l10','bias50','Edyrs2','Edyrs6','cross_err0.5','cross_err1.0','#yrs'])
+                                       'q_small5','log-likeli','RMS','bias','tlog-l','100log-l','l05','l10','bias50','Edyrs2','Edyrs6','cross_err0.5','cross_err1.0','#yrs','100#q<0.5'])
     i=0
     ci=0
     labelcolors=[]
@@ -291,8 +296,26 @@ if __name__ == '__main__':
                 # Empirical method: Call the functions at each time point
                 central_est = result['mean'](years,k)
                 se = result['se'](years,k)
-                pvals = result['pvalue'](years, standard,k)
-                llikelihood = result['log_likelihood'](years, standard,k)
+                best_alter_scale = 1
+                if (adjusted_vars):
+                    scalvar = pd.read_csv('Results2/historical_names_var_scale.csv')
+                    if(k==0):
+                        try:
+                            best_alter_scale = scalvar[scalvar["method_name"]==method_name]["best_alter_scale"].to_numpy()[0]
+                        except:
+                            print(method_name+" SCALE NOT FOUND")
+                            best_alter_scale =1
+                    else:
+                        best_alter_scale =1
+                    se=se*best_alter_scale
+                    deviances = standard - central_est #relative to this method's central estimate
+                    resc_standard_samples = central_est + deviances/best_alter_scale
+                    pvals = result['log_likelihood'](years, resc_standard_samples ,k)
+                    llikelihood = result['log_likelihood'](years, resc_standard_samples ,k) - np.log(best_alter_scale) #need to ensure dimensions work
+
+                else:
+                    pvals = result['pvalue'](years, standard,k)
+                    llikelihood = result['log_likelihood'](years, standard,k)
                 llikelihood2 = stats.norm.logpdf(standard,loc=central_est,scale=se)
                 
                 if(sum(~np.isnan(central_est))>0):
@@ -302,8 +325,21 @@ if __name__ == '__main__':
             else:
                 central_est = result[k*2]
                 se = result[k*2+1]
+
+                #assuming hist_fitprob.py -historical has already been run
+                if (adjusted_vars):
+                    scalvar = pd.read_csv('Results2/historical_names_var_scale.csv')
+                    if(k==0):
+                        try:
+                            best_alter_scale = scalvar[scalvar["method_name"]==method_name]["best_alter_scale"].to_numpy()[0]
+                        except:
+                            print(method_name+" SCALE NOT FOUND")
+                            best_alter_scale =1
+                    else:
+                        best_alter_scale =1
+                    se = se*best_alter_scale
                 # want to save and store the more accurate calculation if regen: else: load calculations
-                pvals = stats.norm.sf(abs((standard-central_est)/ se))*2
+                pvals = stats.norm.sf(abs((standard-central_est)/ se))*2 #probability of seeing the standard or something more extreme under central est distribution
                 llikelihood = stats.norm.logpdf(standard,loc=central_est,scale=se)
 
                 
@@ -315,6 +351,7 @@ if __name__ == '__main__':
                 nnans = ~(np.isnan(pvals))
                 qvals = multi.multipletests(pvals[nnans], alpha=0.5, method='fdr_bh')
                 qvals_count_yrs05 = np.sum(qvals[0])
+                qvals_100_yrs05 = np.sum(qvals[0][-100:-1])
                 qvals_count_yrs01 = np.sum(qvals[1]<0.1)
                 qvals_smallest = np.min(qvals[1])
                 qvals_smallest5 = np.sort(qvals[1])[4]
@@ -334,17 +371,15 @@ if __name__ == '__main__':
                         #ax1.fill_between(years, central_est-se, central_est+se, alpha=0.6)
                         #ax1.plot(years, central_est, lw=5,)
 
-                        if (method_name=="FaIR_anthroA"):
-                            patch = ax4.fill_between(years, central_est-se-standard, central_est+se-standard, alpha=0.05, color = gen_color(method_data['method_class'], dark=False))
-                            #line, = ax4.plot(years, central_est-standard, color = gen_color(ci, dark=True))
-                        elif (method_name=="FaIR_nonat"):
-                            patch = ax4.fill_between(years, central_est-se-standard, central_est+se-standard, alpha=0.5, color = gen_color(method_data['method_class'], dark=False),zorder=4)
-                            line, = ax4.plot(years, central_est-standard, color = gen_color(method_data['method_class'], dark=True))
-                        else:
-                            #assuming hist_fitprob.py -historical has already been run
-                            scalvar = pd.read_csv('Results2/historical_names_var_scale.csv')
-                            best_alter_scale = scalvar[scalvar["method_name"]==method_name]["best_alter_scale"].to_numpy()[0]
-                            patch = ax4.fill_between(years, central_est-se*best_alter_scale-standard, central_est+se*best_alter_scale-standard, alpha=0.3, color = gen_color(method_data['method_class'], dark=False))
+                       # if (method_name=="FaIR_anthroA"):
+                       #     patch = ax4.fill_between(years, central_est-se-standard, central_est+se-standard, alpha=0.05, color = gen_color(method_data['method_class'], dark=False))
+                       #     #line, = ax4.plot(years, central_est-standard, color = gen_color(ci, dark=True))
+                       # elif (method_name=="FaIR_nonat"):
+                       #     patch = ax4.fill_between(years, central_est-se-standard, central_est+se-standard, alpha=0.5, color = gen_color(method_data['method_class'], dark=False),zorder=4)
+                       #     line, = ax4.plot(years, central_est-standard, color = gen_color(method_data['method_class'], dark=True))
+                       # else:
+                        if (method_name!="FaIR_anthroA"):
+                            patch = ax4.fill_between(years, central_est-se-standard, central_est+se-standard, alpha=0.3, color = gen_color(method_data['method_class'], dark=False))
                             line, = ax4.plot(years, central_est-standard, color = gen_color(method_data['method_class'], dark=True))
                             
                         if (method_name!="FaIR_anthroA"):
@@ -363,7 +398,12 @@ if __name__ == '__main__':
                     #first compute the p-vals but one-sided
                     this_method_p_steps = np.full(np.shape(eval05yrs),np.nan)
                     if isinstance(result, dict):
-                        this_method_p_steps = result['pvalue'](eval05yrs, np.full(np.shape(eval05yrs),0.5),k, two_sided=False)
+                        if (adjusted_vars):
+                            deviances = np.full(np.shape(eval05yrs),0.5) - central_est[eval05yrs-1850] #relative to this method's central estimate
+                            resc_cross_samples = central_est[eval05yrs-1850] + deviances/best_alter_scale
+                            this_method_p_steps = result['pvalue'](eval05yrs, resc_cross_samples,k, two_sided=False)
+                        else:
+                            this_method_p_steps = result['pvalue'](eval05yrs, np.full(np.shape(eval05yrs),0.5),k, two_sided=False)
                     else:
                         this_method_p_steps = stats.norm.cdf(((central_est[eval05yrs-1850]-0.5)/ se[eval05yrs-1850]))
 
@@ -421,7 +461,13 @@ if __name__ == '__main__':
                     #first compute the p-vals but one-sided
                     this_method_p_steps = np.full(np.shape(eval10yrs),np.nan)
                     if isinstance(result, dict):
-                        this_method_p_steps = result['pvalue'](eval10yrs, np.full(np.shape(eval10yrs),1.0),k, two_sided=False)
+                        if (adjusted_vars):
+                            deviances = np.full(np.shape(eval10yrs),1.0) - central_est[eval10yrs-1850] #relative to this method's central estimate
+                            resc_cross_samples = central_est[eval10yrs-1850] + deviances/best_alter_scale
+                            this_method_p_steps = result['pvalue'](eval10yrs, resc_cross_samples,k, two_sided=False)
+                        else:
+                            this_method_p_steps = result['pvalue'](eval10yrs, np.full(np.shape(eval10yrs),1.0),k, two_sided=False)
+                
                     else:
                         this_method_p_steps = stats.norm.cdf(((central_est[eval10yrs-1850]-1.0)/ se[eval10yrs-1850]))
 
@@ -489,7 +535,12 @@ if __name__ == '__main__':
                         fineevalyrs = np.arange(evalyrs[0],evalyrs[-1]+1/inum,1/inum) 
                         this_method_p_steps = np.full(np.shape(evalyrs),np.nan)
                         if isinstance(result, dict):
-                            this_method_p_steps = result['pvalue'](evalyrs, np.full(np.shape(evalyrs),thrshs[j]),k, two_sided=False)
+                            if (adjusted_vars):
+                                deviances = np.full(np.shape(evalyrs),thrshs[j]) - central_est[evalyrs-1850] #relative to this method's central estimate
+                                resc_cross_samples = central_est[evalyrs-1850] + deviances/best_alter_scale
+                                this_method_p_steps = result['pvalue'](evalyrs, resc_cross_samples,k, two_sided=False)
+                            else:
+                                this_method_p_steps = result['pvalue'](evalyrs, np.full(np.shape(evalyrs),thrshs[j]),k, two_sided=False)
                         else:
                             this_method_p_steps = stats.norm.cdf(((central_est[evalyrs-1850]-thrshs[j])/ se[evalyrs-1850]))
                         # Replace NaNs at the start with 0s
@@ -513,8 +564,8 @@ if __name__ == '__main__':
                 short_method_class = method_data['method_class'][0:2] +"/"+method_data['method_class'].split('/')[-1]
                 df_results.loc[i]= [ method_name,short_method_class,labelcurr_or_retro,smooth_est/smooth_std,avg_uncert,
                                  qvals_count_yrs05,qvals_count_yrs01,  qvals_smallest,qvals_smallest5, np.nanmean(llikelihood), np.sqrt(np.nanmean((central_est-standard)**2)),
-                                   np.nanmean(central_est-standard) , np.nansum(llikelihood),np.nansum(llikelihood[-100:-1]), np.exp(llikelihood[int(closest_year05)-1850]),
-                                     np.exp(llikelihood[int(closest_year10)-1850]),np.nanmean(central_est[-50:]-standard[-50:]),edyrs,aedyrs, cross05v, cross10v, np.count_nonzero(~np.isnan(central_est))] 
+                                   np.nanmean(central_est-standard) , np.nansum(llikelihood),np.nanmean(llikelihood[-100:-1]), np.exp(llikelihood[int(closest_year05)-1850]),
+                                     np.exp(llikelihood[int(closest_year10)-1850]),np.nanmean(central_est[-50:]-standard[-50:]),edyrs,aedyrs, cross05v, cross10v, np.count_nonzero(~np.isnan(central_est)),qvals_100_yrs05 ] 
                 i=i+1
    
        # else:
@@ -557,10 +608,11 @@ if __name__ == '__main__':
     hist_ax05.hist(crossing_yrs05, color="skyblue", edgecolor='grey',bins =np.arange(eval05min, eval05max-15,1) ,label = f"all {len(crossing_yrs05)} current methods")
     hist_ax05.set_ylabel("Count")
     hist_ax05.set_xlabel("Year")
-    hist_ax05.set_yticks( np.arange(0,20,2))
-    hist_ax10.set_yticks( np.arange(0,20,2))
-    hist_ax05.set_ylim( [0,16.5])
-    hist_ax10.set_ylim( [0,16.5])
+    yheight=23
+    hist_ax05.set_yticks( np.arange(0,yheight+5,5))
+    hist_ax10.set_yticks( np.arange(0,yheight+5,5))
+    hist_ax05.set_ylim( [0,yheight+.5])
+    hist_ax10.set_ylim( [0,yheight+.5])
 
     ax10.set_xlabel("Year")
     ax10.set_xlim([eval10min, eval10max])
@@ -638,7 +690,7 @@ if __name__ == '__main__':
 
 
     cai = [1985,2010]
-    caiht = np.array([16,16])*2/3 #[12,20]
+    caiht = np.array([yheight,yheight])*2/3 #[12,20]
     
     for i,ax in enumerate([hist_ax05,hist_ax10]):
         ax.arrow(cai[i]-8, caiht[i], -4, 0,head_width=caiht[i]*3/12,head_length=2,facecolor='white',lw=2)
@@ -741,7 +793,7 @@ if __name__ == '__main__':
     dfres2.to_csv('current_methods_statistics_'+formatted_date+str(historical_regen)+'.csv', index=False)
     dfres3 = df_res_cur2.sort_values('RMS',ascending=True)
     dfres3.rename(columns={'cross_err0.5': 'cross_year0.5','cross_err1.0': 'cross_year1.0'}, inplace=True)
-    columns_to_keep = ["method_name","method_class","#q<0.5","log-likeli","RMS","bias",'cross_year0.5','cross_year1.0','#yrs']
+    columns_to_keep = ["method_name","method_class","#q<0.5","100#q<0.5","log-likeli","100log-l","RMS","bias",'cross_year0.5','cross_year1.0','#yrs']
     def increment_second_digit(s):
         if len(s) >= 2 and s[1].isdigit():
             # Convert the second character to an integer, add 1, and convert back to string

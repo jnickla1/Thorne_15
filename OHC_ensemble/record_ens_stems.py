@@ -564,8 +564,7 @@ def infill_missing_years(ohca_change: np.ndarray, ohca_uncertainty: np.ndarray,
     if include_zanna:
         complete_records.append((-1, "0-6000m_allLat_Zanna"))
 
-    if year_idx ==50:
-        breakpoint()
+
     if not complete_records:
         return
     

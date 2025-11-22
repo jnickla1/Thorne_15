@@ -634,11 +634,11 @@ if __name__ == '__main__':
     exp_attr = experiment_type.split("_")
 
     e0list = ["11y_offset","KCC_all","quartic","OLS_refit","lag10y","remove_MEI_volc_refit","lfca_SST"] #can be eliminated by inspection alone
-    e06list = ['lfca_hadcrut','GAM_AR0','lowess1dt20wnc','GWI_tot','lowess1dt20wAR',
-                   'lowess1dt20wARMA','cubic_spline','eROF_anthro','KCC_human',
-                   'lowess1dt10wnc','lowess2dt20wnc','eROF_tot','lfca_SST','raw1y','KCC_all','removeMEI_volc_refit',
+    e06list = ['lfca_TAS','GAM_AR0','lowess1dt20wnc','GWI_tot',
+                   'lowess1dg20wnc','cubic_spline','eROF_anthro','KCC_human',
+                   'lowess1dt10wnc','lowess2dt20wnc','lowess2dt30wnc','eROF_tot','lfca_SST','raw1y','KCC_all','removeMEI_volc_refit',
                    'etrend30y_3CS','quartic','lag10y','removeMEI_cons','Bayes_seq_CP','offset11y','opt_clim_norm',
-                   'OLS_refit','OLS_refit_CO2forc','cons_hArrh_CO2forc',
+                   'OLS_refit','OLS_refit_CO2forc','cons_hArrh_CO2forc','removeMEI_volc_refit',
                   'GWI_tot_CGWL','GWI_tot_SR15','GWI_tot','GWI_tot_orig','GWI_tot_AR6','GWI_anthro_AR6','GWI_anthro_orig'] #do not meet RMSE cutoff of 0.06
     e1list = e0list + list(set(e06list) - set(e0list))
     efutlist = ['EBMKF_ta','CGWL10y_pUKCP','OLS_hinge75','TheilSen_h7075','hinge75meet','removeMEI_volc_cons','FaIR_anthro','FaIR_all','FaIR_nonat']
@@ -720,8 +720,8 @@ if __name__ == '__main__':
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='left', verticalalignment='bottom') #somthing very funky is happening - should be horizontalalignmnet = center
         ax1a.annotate('EBMKF_ta',
-            xy=(2035,1.95), xycoords='data',
-            xytext=(2028.5,2.3), textcoords='data',
+            xy=(2035,1.75), xycoords='data',
+            xytext=(2028.5,2.1), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='left', verticalalignment='bottom')
         curcolor =  gen_color('44_EarthModel_CGWL')
@@ -731,7 +731,7 @@ if __name__ == '__main__':
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='left', verticalalignment='bottom') #somthing very funky is happening - should be horizontalalignmnet = center
         ax1a.annotate('CGWL10y_pUKCP',
-            xy=(2074,3.06), xycoords='data',
+            xy=(2069,2.643), xycoords='data',
             xytext=(2048,3.2), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='left', verticalalignment='bottom')
@@ -743,17 +743,17 @@ if __name__ == '__main__':
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='center', verticalalignment='top') #somthing very funky is happening - should be horizontalalignmnet = center
         ax1a.annotate(' OLS_hinge75\n TheilSen_h7075\n hinge75meet',
-            xy=(2085,2.79), xycoords='data',
+            xy=(2085,2.6), xycoords='data',
             xytext=(2090,1.8), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='right', verticalalignment='top')
         
         curcolor = gen_color('43_Forcing_Based/1_ERF_FaIR')
         ax1a.annotate(' FaIR_all\n FaIR_nonat\n FaIR_anthro',
-            xy=(2092,3), xycoords='data',
-            xytext=(2095,2.5), textcoords='data',
+            xy=(2050,1.75), xycoords='data',
+            xytext=(2048,1.25), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
-            horizontalalignment='right', verticalalignment='top')
+            horizontalalignment='center', verticalalignment='top')
 
         curcolor =  gen_color('42_Temp_Alone/6_Remove_IV')
         ax1b.annotate('removeMEI\nvolc_cons',
@@ -763,7 +763,7 @@ if __name__ == '__main__':
             horizontalalignment='left', verticalalignment='top') #somthing very funky is happening - should be horizontalalignmnet = center
         ax1a.annotate('removeMEI\nvolc_cons',
             xy=(2069,2.25), xycoords='data',
-            xytext=(2055,1.2), textcoords='data',
+            xytext=(2067,1.8), textcoords='data',
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
             horizontalalignment='center', verticalalignment='top')
 
@@ -861,6 +861,6 @@ if __name__ == '__main__':
         axens.set_ylim([0,2.75])
         axens.legend([(min_line,black_line),(max_line,black_line), (const_novolc_line,)], ["Volc. Sample Min","Volc. Sample Max", "Volc. Const."])
         ax1b.get_legend().remove()
-        #fig1.savefig("spaghettiVolc.png", dpi=500, bbox_inches='tight')
-        plt.show()    
+        fig1.savefig("spaghettiVolc.png", dpi=500, bbox_inches='tight')
+        #plt.show()    
 

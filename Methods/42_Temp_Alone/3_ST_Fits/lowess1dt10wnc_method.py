@@ -94,9 +94,9 @@ def lowess(x, y, xwidth=10, degree=1, kernel='tricube', retP =False, ridge=0):
 
         
     if not(retP):
-        return y_sm, y_stderr
+        return y_sm, y_stderr*2.75
     else:
-        return y_sm, y_stderr, H_diag
+        return y_sm, y_stderr*2.75, H_diag
 
 
 def run_method(years, temperature, uncert, model_run, experiment_type):
