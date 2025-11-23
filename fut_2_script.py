@@ -197,7 +197,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         i=0
         ci=0
         labelcolors=[]
-        print(len(years))
+        #print(len(years))
         lhund=-101
         l75=-76
         lten=-10
@@ -396,13 +396,15 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     
 
                     #output parameters
-                    np.set_printoptions(precision=9)
+                    #np.set_printoptions(precision=9)
                     #print(central_est[lhund])
                     #print(standard[lhund])
                     #print(central_est[lten-1])
                     #print(standard[lten-1:])
                     #print(len(standard))
                     #print(method_name)
+                    #print(rmses75[m])
+                    #breakpoint()
                     #print(i)
                     i=i+1
 

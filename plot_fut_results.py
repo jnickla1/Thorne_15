@@ -25,6 +25,7 @@ sel_methodsA = ['FaIR_nonat_unB','GWI_anthro_CGWL']
 sel_methods_colorsA = ["#44AA99","#AA4499"]
 # Define the file pattern and loop through all matching files
 file_pattern = "/Results/current_fut_statistics_fut_ESM1-2-LR_SSP{ssp_id}_constVolc{run}.csv"
+rmse_cols = ['RMS', '100RMS','75RMS', 'e100RMS','e75RMS']
 for ssp_id in [126, 245, 370]:
     df_list = []
     for run in range(50):
@@ -58,7 +59,6 @@ for ssp_id in [126, 245, 370]:
     if df_list:
         # Concatenate all filtered/sorted dataframes
         all_data = pd.concat(df_list)
-        rmse_cols = ['RMS', '100RMS', 'e100RMS']
         # Compute numeric means excluding RMSE columns
         numeric_cols = all_data.select_dtypes(include=[np.number]).columns.difference(rmse_cols)
         averaged_numeric = all_data.groupby('method_name')[numeric_cols].mean().reset_index()
@@ -117,7 +117,6 @@ for volc_id in ["Volc","VolcConst"]:
     if df_list:
         # Concatenate all filtered/sorted dataframes
         all_data = pd.concat(df_list)
-        rmse_cols = ['RMS', '100RMS','75RMS', 'e100RMS','e75RMS']
         # Compute numeric means excluding RMSE columns
         numeric_cols = all_data.select_dtypes(include=[np.number]).columns.difference(rmse_cols)
         averaged_numeric = all_data.groupby('method_name')[numeric_cols].mean().reset_index()

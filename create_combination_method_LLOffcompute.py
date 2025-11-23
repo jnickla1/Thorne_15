@@ -91,11 +91,16 @@ if __name__ == '__main__':
         if nnmethods ==10 or nnmethods == 8:
             # --- a) Subset to just the 8 selected methods --- embkfta2
             avail_methods_list = [ "CGWL10y_for_halfU","EBMKF_ta4","GAM_AR1",
-                 "lowess1dg20wnc","Kal_flexLin","FaIR_comb_unB","GWI_tot_CGWL","GWI_tot_SR15","CGWL10y_sfUKCP"]
+                 "lowess1dt36wnc","Kal_flexLin","FaIR_comb_unB","GWI_tot_CGWL","GWI_tot_SR15","CGWL10y_sfUKCP"]
             mask_a = all_methods.isin(avail_methods_list).values
             avail_methods = all_methods[mask_a]
             #df_cropped = df[mask_a].reset_index(drop=True)
-            
+        if nnmethods == 7:
+            # --- a) Subset to just the 8 selected methods --- embkfta2
+            avail_methods_list = [ "EBMKF_ta4","GAM_AR1",
+                 "lowess1dt36wnc","Kal_flexLin","FaIR_comb_unB","GWI_tot_CGWL","CGWL10y_sfUKCP"]
+            mask_a = all_methods.isin(avail_methods_list).values
+            avail_methods = all_methods[mask_a] 
 
             
         elif nnmethods ==30:

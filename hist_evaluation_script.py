@@ -58,8 +58,8 @@ def gen_color(ci, dark=False):
 
 
 #running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/3_ST_Fits') #Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )#still working on debugging lfca
-#running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/2_Kalman')
-running_subset = ('Methods/42_Temp_Alone/','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
+running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/2_Kalman')
+#running_subset = ('Methods/42_Temp_Alone/','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
 
                 #'Methods/42_Temp_Alone,'Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/3_Human_Induced',
                  # ,'Methods/43_Forcing_Based/0_Linear','Methods/44_EarthModel_CGWL')

@@ -507,6 +507,11 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                                          np.nanmean(central_est[-50:]-ens_standard[-50:]),aedyrsE[4], (aedyrsE[9] if (len(aedyrsE)>9) else -1),
                                          maedyrsE[4], (maedyrsE[9] if (len(maedyrsE)>9) else -1), faedyrsE[4], (faedyrsE[9] if (len(faedyrsE)>9) else -1),
                                          np.mean(aedyrsE),np.sqrt(np.mean(aedyrsE)**2),ncrossE]
+                   
+                    if(method_name=="EBMKF_ta4"):
+                        print(np.sqrt(np.nanmean((central_est[(lhund+25):]-standard[(lhund+25):])**2)))
+                        breakpoint()
+
                     #breakpoint()
                     df_results.loc[i]=candidate_row
                     i=i+1

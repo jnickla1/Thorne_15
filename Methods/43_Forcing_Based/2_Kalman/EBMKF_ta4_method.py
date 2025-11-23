@@ -39,6 +39,38 @@ def ta_smooth(orig_opt_depths,fill_value,optical=True, N=30):
     else:
         return(nwt_opt_depths)
 
+
+from . import EBMKF_Nicklas4 as ekf #only change cloud feedback, but dynamically
+if not hasattr(ekf, "_orig_state_saved"):
+    ekf._orig_state_saved = True
+    # Arrays
+    ekf._orig_Q = ekf.Q.copy()
+    ekf._orig_cM2 = ekf.cM2.copy()
+    ekf._orig_opt_depth = ekf.opt_depth.copy()
+    ekf._orig_tsi = ekf.tsi.copy()
+    ekf._orig_R_tvar = ekf.R_tvar.copy()
+    ekf._orig_Roc_tvar = ekf.Roc_tvar.copy()
+    ekf._orig_TOA_meas_artif_var = ekf.TOA_meas_artif_var.copy()
+    ekf._orig_lCo2 = ekf.lCo2.copy()
+    ekf._orig_anthro_clouds = ekf.anthro_clouds.copy()
+    # Scalars
+    ekf._orig_dfrA_float_var = ekf.dfrA_float_var
+    ekf._orig_gad = ekf.gad
+
+def restore_baselines():
+    ekf.Q = ekf._orig_Q.copy()
+    ekf.cM2 = ekf._orig_cM2.copy()
+    ekf.opt_depth = ekf._orig_opt_depth.copy()
+    ekf.tsi = ekf._orig_tsi.copy()
+    ekf.R_tvar = ekf._orig_R_tvar.copy()
+    ekf.Roc_tvar = ekf._orig_Roc_tvar.copy()
+    ekf.TOA_meas_artif_var = ekf._orig_TOA_meas_artif_var.copy()
+    ekf.lCo2 = ekf._orig_lCo2.copy()
+    ekf.anthro_clouds = ekf._orig_anthro_clouds.copy()
+    ekf.dfrA_float_var = ekf._orig_dfrA_float_var
+    ekf.gad = ekf._orig_gad
+    
+
 def run_method(years, temperature0, uncert, model_run, experiment_type):
     temperature = temperature0.astype(np.float64)
     #temperature has 2024, dont have all forcings for this yet - must update ekf.n_iters
@@ -60,11 +92,12 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
     ses = empser.copy()
     means2 = empser.copy()
     ses2 = empser.copy()
-    from . import EBMKF_Nicklas4 as ekf #only change cloud feedback, but dynamically
+
 
     exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #   
     
     if experiment_type == "historical":
+        restore_baselines()
         ekf.n_iters = 174
         unf_new_opt_depth = ekf.data[:,3]*0.001
         ekf.opt_depth=ta_smooth(unf_new_opt_depth,(1/(unf_new_opt_depth[20]+9.7279)))
@@ -112,6 +145,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
 
 
     elif (exp_attr[0]=="histens"):
+        restore_baselines()
         ekf.n_iters = len(years)
         new_iter=len(years)
         #keeping optical depth (volcanoes) and solar forcing the same
@@ -205,6 +239,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
         return means +given_preind_base - ekf.offset-preind_base , np.sqrt(np.abs(ses))*1.2,means2 +given_preind_base -ekf.offset-preind_base ,np.sqrt(np.abs(ses2))
 
     else:
+        restore_baselines()
         new_iter=len(years)
         given_preind_base = np.mean(temperature[0:50])
         erf_data = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")

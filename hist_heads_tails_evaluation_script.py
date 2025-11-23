@@ -62,7 +62,7 @@ retIDlabels = ['c','r']
                  
 #sel_methods = ["CGWL10y_sfUKCP","FaIR_comb_unB","EBMKF_ta4"]  
 sel_methods_list_real = ["Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py",
-                             "Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py",
+                             "Methods/42_Temp_Alone/3_ST_Fits/lowess1dt36wnc_method.py",
                              "Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py",
                              "Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py",
                              "Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py",
@@ -76,7 +76,8 @@ sel_methods_list_anthro = ["Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py"
                            "Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py",
                            "Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py",
                            "Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py",
-                           "Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py"
+                           "Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py",
+                           "Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py"
                            ]
 
 
