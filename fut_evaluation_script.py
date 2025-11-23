@@ -131,7 +131,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         max_runs = 1+start_run
         plotting_figs= True
     else:
-        max_runs = 2+start_run #2+
+        max_runs = 1+start_run #2+
         plotting_figs= False
     methods_folder= running_subset
 
@@ -296,9 +296,9 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         import neworder
         sorted_results = neworder.sort_results(results)
 
-        lhund=-100
+        lhund=-101
         if (exp_attr[1]=='NorESM'):
-            lhund=-99
+            lhund=-100
             
         ncm = 0 #number of current methods
         for method_name, method_data in sorted_results:
@@ -493,16 +493,16 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     candidate_row= [ method_name,short_method_class,labelcurr_or_retro,smooth_est/smooth_std,avg_uncert,
                                      qvals_count_yrs05,qvals_count_yrs01,  qvals_smallest,qvals_smallest5, np.nanmean(llikelihood), np.sqrt(np.nanmean((central_est-standard)**2)),
                                        np.nanmean(central_est-standard) , np.nansum(llikelihood),
-                                         np.nansum(llikelihood[lhund:-1]),np.sqrt(np.nanmean((central_est[lhund:-1]-standard[lhund:-1])**2)),
-                                         np.sqrt(np.nanmean((central_est[(lhund+25):-1]-standard[(lhund+25):-1])**2)),
-                                         np.nanmean(central_est[lhund:-1]-standard[lhund:-1]),
+                                         np.nansum(llikelihood[lhund:]),np.sqrt(np.nanmean((central_est[lhund:]-standard[lhund:])**2)),
+                                         np.sqrt(np.nanmean((central_est[(lhund+25):]-standard[(lhund+25):])**2)),
+                                         np.nanmean(central_est[lhund:]-standard[lhund:]),
                                          detailLL[0], detailLL[1],
                                          np.nanmean(central_est[-50:]-standard[-50:]),aedyrs[4], (aedyrs[9] if (len(aedyrs)>9) else -1),
                                          maedyrs[4], (maedyrs[9] if (len(maedyrs)>9) else -1),faedyrs[4], (faedyrs[9] if (len(faedyrs)>9) else -1),
                                          np.mean(aedyrs),np.sqrt(np.mean(aedyrs**2)),ncross,
-                                         np.nansum(ellikelihood[lhund:-1]),np.sqrt(np.nanmean((central_est[lhund:-1]-ens_standard[lhund:-1])**2)),
-                                         np.sqrt(np.nanmean((central_est[(lhund+25):-1]-ens_standard[(lhund+25):-1])**2)),
-                                         np.nanmean(central_est[lhund:-1]-ens_standard[lhund:-1]),
+                                         np.nansum(ellikelihood[lhund:]),np.sqrt(np.nanmean((central_est[lhund:]-ens_standard[lhund:])**2)),
+                                         np.sqrt(np.nanmean((central_est[(lhund+25):]-ens_standard[(lhund+25):])**2)),
+                                         np.nanmean(central_est[lhund:]-ens_standard[lhund:]),
                                          detaileLL[0], detaileLL[1],
                                          np.nanmean(central_est[-50:]-ens_standard[-50:]),aedyrsE[4], (aedyrsE[9] if (len(aedyrsE)>9) else -1),
                                          maedyrsE[4], (maedyrsE[9] if (len(maedyrsE)>9) else -1), faedyrsE[4], (faedyrsE[9] if (len(faedyrsE)>9) else -1),
