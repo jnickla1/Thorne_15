@@ -40,8 +40,12 @@ retIDlabels = ['c','r']
 
 alt_colors = ['black', 'white']
 sel_methods = [ "CGWL10y_for_halfU","FaIR_nonat","EBMKF_ta2"] #"EBMKF_ta4" "min_month_proj" "OLS_refit_CO2forc", "CGWL10y_for_halfU","TheilSen_h7075" ,"FaIR_anthroA",,"EBMKF_ta2"  ] #"EBMKF_ta",
-sel_methods2 = [ "EBMKF_ta4","GAM_AR1",
-                 "lowess1dg36wnc","Kal_flexLin","FaIR_comb_unB","FaIR_nonat_unB","GWI_anthro_CGWL","CGWL10y_sfUKCP"]
+#sel_methods2 = [ "EBMKF_ta4","GAM_AR1",
+#                 "lowess1dg36wnc","Kal_flexLin","FaIR_comb_unB","FaIR_nonat_unB","GWI_anthro_CGWL","CGWL10y_sfUKCP"]
+
+
+            
+
 #"CGWL10y_for_halfU",,"EBMKF_ta2",
 
 #ftl = np.argsort(index_mapping) #from to list - where a certain method should be plotted
@@ -93,17 +97,45 @@ if __name__ == '__main__':
     years = np.arange(1850,2025)
 #To read it back:
 
+    if exp_attr[2]=="real":
+        from plot_fut_results import sel_methods as sel_methods2
+    else:
+        from plot_fut_results import sel_methodsA as sel_methods2
+
+
     with open (results_path, 'rb') as fp:
         results = pickle.load(fp)
 
-    pcross_path = 'Results/headstails_method_fineprobs_'+experiment_type+str(model_run)+'.npy'
-    with open (pcross_path, 'rb') as fp:
-        pcrossmatrix = np.load(pcross_path)
+##    pcross_path = 'Results/headstails_method_fineprobs_'+experiment_type+str(model_run)+'.npy'
+##    with open (pcross_path, 'rb') as fp:
+##        pcrossmatrix = np.load(pcross_path)
 
     #heights0=np.arange(.2,4.2,0.05) #heights to test at thresholds: 0.05°C increments
     #nthresholds = np.size(heights0)
     inum=12 #internal interpolation within years
-    standard = results['cent20y']['LT_trend'][2] #retrospective
+
+    #CALCULATE RATES ... need to push cent10y through again
+
+    (sims_tas, stimes) = collect_data(exp_attr)
+    simall = sims_tas[:,model_run]
+    years = stimes.astype(int)
+    data = pd.read_csv("./Common_Data/HadCRUT5.csv")
+    temps_obs = data.loc[:,"Anomaly"].to_numpy()
+    temps_CIu =data.loc[:,"Upper"].to_numpy() #Lower confidence limit (2.5%)	Upper confidence limit (97.5%)
+    temps_CIl =data.loc[:,"Lower"].to_numpy()
+    temps_CIl_hist = simall[0:len(years)]+  temps_CIl - temps_obs
+    temps_CIu_hist = simall[0:len(years)]+  temps_CIu - temps_obs
+    
+
+    if exp_attr[2]=='real':
+        standard = results['cent20y']['LT_trend'][2] #retrospective
+    else:
+        standardmethod_module = importlib.import_module("Methods.43_Forcing_Based.1_ERF_FaIR.FaIR_anthro_unB_method", package = "Thorne_15_codefigurestats")
+        result = standardmethod_module.run_method(years, simall,(temps_CIl_hist,temps_CIu_hist),model_run, experiment_type)
+        standard = result['mean'](years,1)#retrospective
+        standardunc = result['se'](years,1) #retrospective
+        
+    
     #breakpoint()
     smooth_std = np.nanmean(np.abs(np.diff(np.diff(standard))))
 
@@ -198,22 +230,17 @@ if __name__ == '__main__':
            # print(f"  Percentiles: {percentiles}"
     
 
-#CALCULATE RATES ... need to push cent10y through again
-    
-    (sims_tas, stimes) = collect_data(exp_attr)
-    simall = sims_tas[:,model_run]
-    years = stimes.astype(int)
-    data = pd.read_csv("./Common_Data/HadCRUT5.csv")
-    temps_obs = data.loc[:,"Anomaly"].to_numpy()
-    temps_CIu =data.loc[:,"Upper"].to_numpy() #Lower confidence limit (2.5%)	Upper confidence limit (97.5%)
-    temps_CIl =data.loc[:,"Lower"].to_numpy()
-    temps_CIl_hist = simall[0:len(years)]+  temps_CIl - temps_obs
-    temps_CIu_hist = simall[0:len(years)]+  temps_CIu - temps_obs
-    
-    standard10method_module = importlib.import_module("Methods.42_Temp_Alone.1_Run_Means.cent10y_method", package = "Thorne_15_codefigurestats")
-    result10 = standard10method_module.run_method(years, simall,(temps_CIl_hist,temps_CIu_hist),model_run, experiment_type)
-    standard10 = result10[2] #retrospective
-    standard10unc = result10[3] #retrospective
+
+    if exp_attr[2]=='real':
+        standard10method_module = importlib.import_module("Methods.42_Temp_Alone.1_Run_Means.cent10y_method", package = "Thorne_15_codefigurestats")
+        result10 = standard10method_module.run_method(years, simall,(temps_CIl_hist,temps_CIu_hist),model_run, experiment_type)
+        standard10 = result10[2] #retrospective
+        standard10unc = result10[3] #retrospective
+        stdname="cent10y_20y"
+    else:
+        standard10 = standard
+        standard10unc = standardunc
+        stdname='FaIR_anthro_unB'
 
     eval05min=1960
     eval10max=2020
@@ -314,7 +341,7 @@ if __name__ == '__main__':
     slope_combined = np.mean(slopes) *10
     # Uncertainty of the combined slope (standard error)
     slope_combined_std = np.sqrt(np.mean(vars_)+np.var(slopes)) *10 *1.96
-    print(f"Decadal rate in 2024: {slope_combined:.4f} ± {slope_combined_std:.4f}")
+    #print(f"Decadal rate in 2024: {slope_combined:.4f} ± {slope_combined_std:.4f}")
     
     #df_results.to_csv('method_statistics_results.csv', index=False)
     #ax1.legend(fontsize=6.5,ncol=4)
@@ -327,7 +354,7 @@ if __name__ == '__main__':
     frontend_rows = [
         {
             "level": "0.5°C",
-            "method": "cent10y_20y",
+            "method": stdname,
             "year_cross": closest_year05,
             "rate": rate05a,
             "rate_uncert": uncert05a,
@@ -335,7 +362,7 @@ if __name__ == '__main__':
         },
         {
             "level": "1.0°C",
-            "method": "cent10y_20y",
+            "method": stdname,
             "year_cross": closest_year10,
             "rate": rate10a,
             "rate_uncert": uncert10a,
@@ -363,28 +390,76 @@ if __name__ == '__main__':
         }
         method_rows.append(row)
 
-##    # ------------------------------------------------------------------
-##    # Add equal-weight combined row for 2024
-##    # ------------------------------------------------------------------
-##
-##    try:
-##        warm_2024_comb = float(np.mean(sel2data[:, 2]))
-##    except:
-##        warm_2024_comb = np.nan  # placeholder
-##
-##    comb_row = {
-##        "level": "2024",
-##        "method": "equal_weight_comb",
-##        "year_cross": warm_2024_comb,
-##        "rate": float(combined_slope_2024),       # fill in
-##        "rate_uncert": float(combined_slope_err)  # fill in
-##    }
-##
-##    method_rows.append(comb_row)
+    # ------------------------------------------------------------------
+    # Add equal-weight combined row for 2024
+    # ------------------------------------------------------------------
+    warm_2024_comb = np.nanmean(sel3data[:,-1])
+
+    comb_row = {
+        "level": "2024",
+        "method": "equal_weight_comb",
+        "year_cross": warm_2024_comb,
+        "rate": slope_combined ,
+        "rate_uncert": slope_combined_std,
+        "rate_window": -15
+    }
+
+    method_rows.append(comb_row)
+
 
     # ------------------------------------------------------------------
-    # Append these new rows to the main dataframe
+    # Add IV-weight combined row for 2024
     # ------------------------------------------------------------------
+
+
+    df_results = pd.read_csv(f'Results2/historical_names_var_scale.csv', index_col=0)
+    all_methods = df_results['method_name']
+    err_vars = df_results['err_var'].to_numpy()
+    err_vars100 = df_results['err_var100'].to_numpy()
+    #best_scales = df_results['best_alter_scale'].to_numpy()
+    #central_est = np.load(f'Results2/{outputfilename}_central_est.npy')
+    #node_lls = np.load(f'Results2/{outputfilename}_hermguass_lls.npy')
+    #newsamples = np.load(f'Results2/{outputfilename}_newsamples.npy')
+    #nyears = central_est.shape[1]
+    mask_a = all_methods.isin(sel2names).values
+    vars100 = err_vars100[mask_a]
+    ivweights = 1/vars100
+    ivcenter = np.nansum(sel3data[:,-1] * ivweights[:],axis=0) / np.nansum( ~np.isnan(sel3data[:,-1]) * ivweights[:],axis=0)
+    ivslope_combined = np.nansum(slopes * ivweights[:],axis=0) / np.nansum( ~np.isnan(slopes) * ivweights[:],axis=0)*10
+    # Uncertainty of the combined slope (standard error)
+    ivslope_combined_std = np.sqrt( np.nansum(vars_ * ivweights[:],axis=0) / np.nansum( ~np.isnan(vars_) * ivweights[:],axis=0)
+                                  +np.nansum(((slopes-ivslope_combined/10)**2 * ivweights),axis=0) / np.nansum( ~np.isnan(slopes) * ivweights[:],axis=0)) *10 *1.96    
+
+    
+         
+##    warm_2024_comb = np.nanmean(sel3data[:,-1])
+##
+##    ivcenters = np.nansum(centralsh * ivweights[:,None],axis=0) / np.nansum( ~np.isnan(centralsh) * ivweights[:,None],axis=0)
+##    
+##
+    ivcomb_row = {
+        "level": "2024",
+        "method": "PIVW_comb",
+        "year_cross": ivcenter,
+        "rate": ivslope_combined ,
+        "rate_uncert": ivslope_combined_std,
+        "rate_window": -15
+    }
+
+    method_rows.append(ivcomb_row)
+
+
+#Implementing CSCM is more complex than what I have time for right now, since we need newsamples for each of the histens members
+##newsamples = np.load(f'Results2/{outputfilename}_newsamples.npy')
+##
+##samplesh = newsamples[mask_a]
+##
+##        alpha = w / np.sqrt(np.pi)
+##        infilled_lls = infill_log_likelihoods(lls[:,10:-10,:],penalty=0)
+##        stack_weights = fit_stacking_weights_logp(infilled_lls,alpha)
+###blended = predict_non_nan(stack_weights, samplesh)
+###sharpened_blended = sharpen_samples(blended, best_nsharp, seed = 2)
+###sharp_blend_central = np.mean(sharpened_blended,axis=1)
 
     df_methods_2024 = pd.DataFrame(
         method_rows,

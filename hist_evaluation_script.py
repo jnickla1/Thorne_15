@@ -18,7 +18,7 @@ from datetime import datetime
 current_date = datetime.now()
 formatted_date = current_date.strftime("%y%m%d")
 
-historical_regen=False#True #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
+historical_regen=True #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
 adjusted_vars = True #must run the hist_fitprob.py script first if this is true to generate correction for the variance
 # ================================
 # Define Method Full Names, Colors, Location on Violin plots
@@ -564,7 +564,7 @@ if __name__ == '__main__':
                 short_method_class = method_data['method_class'][0:2] +"/"+method_data['method_class'].split('/')[-1]
                 df_results.loc[i]= [ method_name,short_method_class,labelcurr_or_retro,smooth_est/smooth_std,avg_uncert,
                                  qvals_count_yrs05,qvals_count_yrs01,  qvals_smallest,qvals_smallest5, np.nanmean(llikelihood), np.sqrt(np.nanmean((central_est-standard)**2)),
-                                   np.nanmean(central_est-standard) , np.nansum(llikelihood),np.nanmean(llikelihood[-100:-1]), np.exp(llikelihood[int(closest_year05)-1850]),
+                                   np.nanmean(central_est-standard) , np.nansum(llikelihood),np.nanmean(llikelihood[-100:]), np.exp(llikelihood[int(closest_year05)-1850]),
                                      np.exp(llikelihood[int(closest_year10)-1850]),np.nanmean(central_est[-50:]-standard[-50:]),edyrs,aedyrs, cross05v, cross10v, np.count_nonzero(~np.isnan(central_est)),qvals_100_yrs05 ] 
                 i=i+1
    
