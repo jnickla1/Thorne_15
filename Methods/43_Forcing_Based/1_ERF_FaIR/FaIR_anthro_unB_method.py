@@ -37,11 +37,12 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         sfactor=0.23
         curbias=-0.015 #assuming this matches
         #retro array doesn't matter
-        retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2022_temp_anthro.npy") #starts in 1750
+        retro_array = np.load(cur_path+"/retrospective/all-headstails_currentr"+str(model_run+1)+"cut2023_temp_anthro.npy") #starts in 1750
         current_array = np.load(cur_path+"/resliced_headstails/combined_all-headstails_currentr"+str(model_run+1)+"_anthro.npy")
         if (exp_attr[1]=="satcal"):
             offset = -np.mean(temperature[0:50])
-            current_array = current_array -offset
+            current_array = current_array - offset
+            retro_array = retro_array - offset
     else:
         sfactor=0.75
         if (exp_attr[1]=='ESM1-2-LR'):

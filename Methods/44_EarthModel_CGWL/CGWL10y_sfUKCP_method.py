@@ -110,7 +110,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         if (k==0):
             return means[year_idx-1850] + pi50yoffset
         elif (k==1 and (experiment_type == 'historical' or exp_attr[0]=="histens")):
-            return meansR[year_idx-1850]
+            return meansR[year_idx-1850]+ pi50yoffset
         else:
             return empser
 

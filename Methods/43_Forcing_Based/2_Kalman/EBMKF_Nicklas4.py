@@ -475,9 +475,9 @@ def ekf_run(z,n_iter,retPs=False):
             xh1TOA=xhat[:,2].T[0]
             stdPtoa=np.sqrt(np.abs(P))[30:,2,2]
             stdStoa=np.sqrt(np.abs(S))[30:,2,2]
-            plt.plot(datesAll,xh1TOA,'-',label='posterior OHCA EBM-KF-uf state estimate $\^{H }_{t}$', color=colorekf)
-            plt.fill_between(dates, (xh1TOA[30:]-2*stdStoa), (xh1TOA[30:]+2*stdStoa),label="95% CI ($\pm 2\sqrt{\hat{s}^H_t}$) of forecast OHCA $\^{H }_{t|t-1}$", color=coloruncert)
-            plt.fill_between(dates, (xh1TOA[30:]-2*stdPtoa), (xh1TOA[30:]+2*stdPtoa),label="95% CI ($\pm 2\sqrt{\hat{p}^H_t}$) of OHCA state $\^{H }_{t}$", color=colorstate)
+            plt.plot(datesAll,xh1TOA,'-',label='posterior OHCA EBM-KF-uf state estimate H_t', color=colorekf)
+            plt.fill_between(dates, (xh1TOA[30:]-2*stdStoa), (xh1TOA[30:]+2*stdStoa),label="95% CI S_t", color=coloruncert)
+            plt.fill_between(dates, (xh1TOA[30:]-2*stdPtoa), (xh1TOA[30:]+2*stdPtoa),label="95% CI pm P_t", color=colorstate)
             TOA_meas_artif=z[:,2].T[0]
             plt.plot(datesAll, TOA_meas_artif,'o',markersize=2,color=colorgrey)
             toa_xblind0=xblind2[:,2].T[0]
@@ -490,9 +490,9 @@ def ekf_run(z,n_iter,retPs=False):
             xh1ohca=xhat[:,1].T[0]
             stdPohca=np.sqrt(np.abs(P))[30:,1,1]
             stdSohca=np.sqrt(np.abs(S))[30:,1,1]
-            plt.plot(datesAll,xh1ohca,'-',label='posterior OHCA EBM-KF-uf state estimate $\^{H }_{t}$', color=colorekf)
-            plt.fill_between(dates, (xh1ohca[30:]-2*stdSohca), (xh1ohca[30:]+2*stdSohca),label="95% CI ($\pm 2\sqrt{\hat{s}^H_t}$) of forecast OHCA $\^{H }_{t|t-1}$", color=coloruncert)
-            plt.fill_between(dates, (xh1ohca[30:]-2*stdPohca), (xh1ohca[30:]+2*stdPohca),label="95% CI ($\pm 2\sqrt{\hat{p}^H_t}$) of OHCA state $\^{H }_{t}$", color=colorstate)
+            plt.plot(datesAll,xh1ohca,'-',label='posterior OHCA EBM-KF-uf state estimate Ht$', color=colorekf)
+            plt.fill_between(dates, (xh1ohca[30:]-2*stdSohca), (xh1ohca[30:]+2*stdSohca),label="95% CI S_t", color=coloruncert)
+            plt.fill_between(dates, (xh1ohca[30:]-2*stdPohca), (xh1ohca[30:]+2*stdPohca),label="95% CI P_t", color=colorstate)
             ohca_meas=z[:,1].T[0]
             plt.plot(datesAll, ohca_meas,'o',markersize=2,color=colorgrey)
             ohca_xblind=xblind2[:,1].T[0]
@@ -504,9 +504,9 @@ def ekf_run(z,n_iter,retPs=False):
             xh1T=xhat[:,0].T[0]
             stdPT=np.sqrt(np.abs(P))[30:,0,0]
             stdST=np.sqrt(np.abs(S))[30:,0,0]
-            plt.plot(datesAll,xh1T,'-',label='posterior OHCA EBM-KF-uf state estimate $\^{H }_{t}$', color=colorekf)
-            plt.fill_between(dates, (xh1T[30:]-2*stdST), (xh1T[30:]+2*stdST),label="95% CI ($\pm 2\sqrt{\hat{s}^H_t}$) of forecast OHCA $\^{H }_{t|t-1}$", color=coloruncert)
-            plt.fill_between(dates, (xh1T[30:]-2*stdPT), (xh1T[30:]+2*stdPT),label="95% CI ($\pm 2\sqrt{\hat{p}^H_t}$) of OHCA state $\^{H }_{t}$", color=colorstate)
+            plt.plot(datesAll,xh1T,'-',label='posterior OHCA EBM-KF-uf state estimate Ht', color=colorekf)
+            plt.fill_between(dates, (xh1T[30:]-2*stdST), (xh1T[30:]+2*stdST),label="95% CI ST", color=coloruncert)
+            plt.fill_between(dates, (xh1T[30:]-2*stdPT), (xh1T[30:]+2*stdPT),label="95% CI PT", color=colorstate)
             T_meas=z[:,0].T[0]
             plt.plot(datesAll, T_meas,'o',markersize=2,color=colorgrey)
             T_xblind=xblind2[:,0].T[0]
@@ -577,7 +577,7 @@ if (__name__ == "__main__") and True:
     ax1.plot(dates,temps,'o',label='noisy HadCRUT5 GMST measurements $Y_{t}$',markersize=2,color=colorgrey)
     ax1.fill_between(dates, temps-2*data[:,4], temps+2*data[:,4],label="associated 95% uncertainty of $Y_{t}$", color="lightgrey")
    # ax1.plot(dates,this_xhat[:,0],'-',label='posterior GMST EBM-KF-uf state estimate $\^{T }_{t}}$', color=colorekf)
-    ax1.plot(dates,xblind[:,0],'--',label='blind model $\~{T}_{t+1} = \mathbf{F}( \~{T}_{t}, \~{H}_{t} ; [eCO_2]_t ,AOD_t,AC_{t},(\\frac{1}{4}G_{SC})_t )$',color='darkgoldenrod')
+    ax1.plot(dates,xblind[:,0],'--',label='blind model',color='darkgoldenrod')
     #ax1.legend(loc="upper left", fontsize="10.5")
     handles, labels = ax1.get_legend_handles_labels()
     order = [1,0,2]#[1,2,0,3]
@@ -600,10 +600,10 @@ if (__name__ == "__main__") and True:
     #plt.rcParams['figure.figsize'] = (7, 6)
     #plt.figure(2)
     plot_boilerplate(ax4)
-    ax4.plot(dates,ocean_heat_measured,'o',label='noisy Zanna (2019) measurements $\Psi_{t}$',markersize=2,color=colorgrey)
-    ax4.fill_between(dates, ocean_heat_measured-2*comb_ohca_uncer2, ocean_heat_measured+2*comb_ohca_uncer2,label="associated 95% uncertainty of $ \Psi_{t}$", color="lightgrey")
+    ax4.plot(dates,ocean_heat_measured,'o',label='noisy Zanna (2019) measurements Psi_t',markersize=2,color=colorgrey)
+    ax4.fill_between(dates, ocean_heat_measured-2*comb_ohca_uncer2, ocean_heat_measured+2*comb_ohca_uncer2,label="associated 95% uncertainty of Psi_t", color="lightgrey")
     #ax4.plot(dates,this_xhat[:,1]*zJ_from_W,'-',label='posterior OHCA EBM-KF-uf state estimate $\^{H }_{t}}$', color=colorekf)
-    ax4.plot(dates,xblind[:,1]*zJ_from_W,'--',label='blind model $ \~{H}_{t+1} = \mathbf{F}( \~{T}_{t}, \~{H}_{t} ; [eCO_2]_t ,AOD_t,AC_{t},(\\frac{1}{4}G_{SC})_t )$',color='darkgoldenrod')
+    ax4.plot(dates,xblind[:,1]*zJ_from_W,'--',label='blind model ',color='darkgoldenrod')
     #ax4.legend(loc="upper left", fontsize="10.5")
     handles, labels = ax4.get_legend_handles_labels()
    # order = [1,2,0,3]
@@ -635,9 +635,9 @@ if (__name__ == "__main__") and True:
     fig = plt.figure(figsize=(8.25,6))
     #(H - Cs*(x-Teq1850))/Cd+oc1850
     plt.plot(dates,(oc_meas - heatCp*(temps-Teq1850))/Cd+oc1850,'o',markersize=2,label='inferred from both Zanna and HADCRUT5 measurements',color=colorgrey)
-    plt.plot(dates,(this_xhat[:,1]- heatCp*(this_xhat[:,0]-Teq1850))/Cd+oc1850,'-', label="posterior ocean cons. temp. EBM-KF state estimate $ \^{\\theta }_{t} $",color=colorekf)
+    plt.plot(dates,(this_xhat[:,1]- heatCp*(this_xhat[:,0]-Teq1850))/Cd+oc1850,'-', label="posterior ocean cons. temp. EBM-KF state estimate theta",color=colorekf)
                                                                                                                 
-    plt.plot(dates,(xblind[:,1]- heatCp*(xblind[:,0]-Teq1850))/Cd+oc1850,'--',label='blind model prediction $\~{\\theta }_{t}$',color='darkgoldenrod')
+    plt.plot(dates,(xblind[:,1]- heatCp*(xblind[:,0]-Teq1850))/Cd+oc1850,'--',label='blind model prediction theta',color='darkgoldenrod')
     plt.legend()
     ax=plt.gca()
     ax.set_ylabel('Temperature (K)')
@@ -663,13 +663,13 @@ if (__name__ == "__main__") and True:
     plt.yticks(np.arange(286.2,288.3,0.2))
     #plt.plot(dates,xhatminus,'b-',label='a priori EBM-KF estimate', linewidth=3.0)
     ax_dict["a"].set_title('Estimated Climate State with Extended Kalman Filter (unfiltered)')
-    ax_dict["a"].plot(dates,this_xhat[:,0],'-',label='posterior EBM-KF-uf state estimate $\^{T }_{t}$', color=colorekf)
+    ax_dict["a"].plot(dates,this_xhat[:,0],'-',label='posterior EBM-KF-uf state estimate Tt', color=colorekf)
   #  plt.plot(dates,xh0s, 'k.')
-    ax_dict["a"].fill_between(dates, xh0s-2*stdS, xh0s+2*stdS,label="95% CI ($\pm 2\sqrt{\hat{s}^T_t}$) of forecast GMST $ \^{T }_{t|t-1} $", color=coloruncert)
+    ax_dict["a"].fill_between(dates, xh0s-2*stdS, xh0s+2*stdS,label="95% CI forecast GMST ", color=coloruncert)
     ##plt.fill_between(dates, xh1s-stdS, xh1s+stdS, color=(62./255, 140./255, 210./255))
-    ax_dict["a"].fill_between(dates, xh1s-2*stdP, xh1s+2*stdP,label="95% CI ($\pm 2\sqrt{\hat{p}^T_t}$) of GMST state $\^{T }_{t}$", color=colorstate)
-    ax_dict["a"].plot(dates,temps,'o',label='HadCRUT5 GMST measurements $Y_{t}$',markersize=2,color=colorgrey)
-    ax_dict["a"].fill_between(dates, temps-2*data[:,4], temps+2*data[:,4],label="associated 95% uncertainty of $Y_{t}$", color="grey",alpha=0.2,zorder=5,lw=0)
+    ax_dict["a"].fill_between(dates, xh1s-2*stdP, xh1s+2*stdP,label="95% CI  GMST state ", color=colorstate)
+    ax_dict["a"].plot(dates,temps,'o',label='HadCRUT5 GMST measurements Yt',markersize=2,color=colorgrey)
+    ax_dict["a"].fill_between(dates, temps-2*data[:,4], temps+2*data[:,4],label="associated 95% uncertainty of Yt", color="grey",alpha=0.2,zorder=5,lw=0)
     #plt.fill_between(dates, xhh1s-std, xhh1s+std, color=(171./255, 245./255, 206./255))
     #ax_dict["a"].legend(fontsize="10.5")
     handles, labels = plt.gca().get_legend_handles_labels()
@@ -695,7 +695,7 @@ if (__name__ == "__main__") and True:
     #ax1.hist(qqy[:,0], density=True,bins=nbins,color=colorekf)
     ax1.plot(xnorm,qqyker[0,:], color=colorekf)
     ax1.plot(xnorm,ynorm, color=pcolor)
-    ax1.set_xlabel("Forecast Std Dev $\sqrt{\hat{s}^T_t}$",labelpad=-3)
+    ax1.set_xlabel("Forecast Std Dev T_t",labelpad=-3)
     ax1.set_ylabel("Probability Density")
     ax1.set_xlim([-3,3])
   #  plt.rcParams['figure.figsize'] = (10, 8)
@@ -729,13 +729,13 @@ if (__name__ == "__main__") and True:
     #plt.plot(dates,xhatminus,'b-',label='a priori EBM-KF estimate', linewidth=3.0)
     ax_dict["a"].set_title('Estimated Ocean Total Heat State with EBM-KF-uf')
     ax_dict["a"].set_ylabel('Heat (ZJ)')
-    ax_dict["a"].plot(dates,xh0d*zJ_from_W,'-',label='posterior OHCA EBM-KF-uf state estimate $\^{H }_{t}$', color=colorekf)
+    ax_dict["a"].plot(dates,xh0d*zJ_from_W,'-',label='posterior OHCA EBM-KF-uf state estimate Ht', color=colorekf)
   #  plt.plot(dates,xh0s, 'k.')
-    ax_dict["a"].fill_between(dates, (xh0d-2*stdSd)*zJ_from_W, (xh0d+2*stdSd)*zJ_from_W,label="95% CI ($\pm 2\sqrt{\hat{s}^H_t}$) of forecast OHCA $\^{H }_{t|t-1}$", color=coloruncert)
+    ax_dict["a"].fill_between(dates, (xh0d-2*stdSd)*zJ_from_W, (xh0d+2*stdSd)*zJ_from_W,label="95% CI forecast OHCA ", color=coloruncert)
     ##plt.fill_between(dates, xh1s-stdS, xh1s+stdS, color=(62./255, 140./255, 210./255))
-    ax_dict["a"].fill_between(dates, (xh1d-2*stdPd)*zJ_from_W, (xh1d+2*stdPd)*zJ_from_W,label="95% CI ($\pm 2\sqrt{\hat{p}^H_t}$) of OHCA state $\^{H }_{t}$", color=colorstate)
-    ax_dict["a"].plot(dates,ocean_heat_measured,'o',label='Zanna (2019) measurements $\Psi_{t}$',markersize=2,color=colorgrey)
-    ax_dict["a"].fill_between(dates, ocean_heat_measured-2*comb_ohca_uncer2, ocean_heat_measured+2*comb_ohca_uncer2,label="associated 95% uncertainty of $\Psi_{t}$", color="grey",zorder=5,alpha=0.2,lw=0)
+    ax_dict["a"].fill_between(dates, (xh1d-2*stdPd)*zJ_from_W, (xh1d+2*stdPd)*zJ_from_W,label="95% CI of OHCA state ", color=colorstate)
+    ax_dict["a"].plot(dates,ocean_heat_measured,'o',label='Zanna (2019) measurements Psi_t',markersize=2,color=colorgrey)
+    ax_dict["a"].fill_between(dates, ocean_heat_measured-2*comb_ohca_uncer2, ocean_heat_measured+2*comb_ohca_uncer2,label="associated 95% uncertainty of Psi_t", color="grey",zorder=5,alpha=0.2,lw=0)
     #plt.fill_between(dates, xhh1s-std, xhh1s+std, color=(171./255, 245./255, 206./255))
     #ax_dict["a"].legend(fontsize="10.5")
     handles, labels = plt.gca().get_legend_handles_labels()
@@ -763,7 +763,7 @@ if (__name__ == "__main__") and True:
     #ax1.hist(qqy[:,1], density=True,bins=nbins,color=colorekf)
     ax1.plot(xnorm,qqyker[1,:], color=colorekf)
     ax1.plot(xnorm,ynorm, color=pcolor)
-    ax1.set_xlabel("Forecast Std Dev $\sqrt{\hat{s}^H_t}$",labelpad=-3)
+    ax1.set_xlabel("Forecast Std Dev H_t",labelpad=-3)
     ax1.set_ylabel("Probability Density")
     ax1.set_xlim([-3,3])
   #  plt.rcParams['figure.figsize'] = (10, 8)
@@ -783,14 +783,14 @@ if (__name__ == "__main__") and True:
     plt.figure()
     
     plt.title('Slight Changes with RT Smoother')
-    plt.plot(dates,xhathat[:,0],'-',label='RTS smoothed GMST estimate $ \^{\^{T }}_{t}$',color=colorrts)
-    plt.plot(dates,xhat[:,0],'-',label='posterior GMST EBM-KF state estimate $\^{T }_{t}$',color=colorekf)
+    plt.plot(dates,xhathat[:,0],'-',label='RTS smoothed GMST estimate ',color=colorrts)
+    plt.plot(dates,xhat[:,0],'-',label='posterior GMST EBM-KF state estimate ',color=colorekf)
 
 
-    plt.fill_between(dates[4:], xhh1s[4:]-2*stdPh[4:], xhh1s[4:]+2*stdPh[4:],label="95% CI $(\pm 2\sqrt{\hat{\hat {p}}^T_t})$ of RTS GMST state $\^{\^{T }}_{t}$", color='goldenrod', alpha=0.5)
-    plt.fill_between(dates[4:], xh1s[4:]-2*stdP[4:], xh1s[4:]+2*stdP[4:],label="95% CI $( \pm 2 \sqrt{\hat{p}^T_t})$ of EBM-KF GMST state $\^{T }_{t}$", color=colorstate, alpha=0.5)
+    plt.fill_between(dates[4:], xhh1s[4:]-2*stdPh[4:], xhh1s[4:]+2*stdPh[4:],label="95% CI  RTS GMST state ", color='goldenrod', alpha=0.5)
+    plt.fill_between(dates[4:], xh1s[4:]-2*stdP[4:], xh1s[4:]+2*stdP[4:],label="95% CI EBM-KF GMST state ", color=colorstate, alpha=0.5)
 
-    plt.plot(dates,temps,'o',label='GMST HadCRUT5 measurements $Y_{t}$',markersize=2,color=colorgrey)
+    plt.plot(dates,temps,'o',label='GMST HadCRUT5 measurements Y_t',markersize=2,color=colorgrey)
     
 
     #tvar_xhat=ekf_run(temps,n_iters,True)
@@ -868,14 +868,14 @@ if (__name__ == "__main__") and True:
     xh1TOA=this_xhat[30:,2].T[0]
     stdPtoa=np.sqrt(np.abs(P))[30:,2,2]
     stdStoa=np.sqrt(np.abs(S))[30:,2,2]
-    plt.plot(dates[30:],xh1TOA,'-',label='posterior OHCA EBM-KF-uf state estimate $\^{H }_{t}$', color=colorekf)
-    plt.fill_between(dates[30:], (xh1TOA-2*stdStoa), (xh1TOA+2*stdStoa),label="95% CI ($\pm 2\sqrt{\hat{s}^H_t}$) of forecast OHCA $\^{H }_{t|t-1}$", color=coloruncert)
-    plt.fill_between(dates[30:], (xh1TOA-2*stdPtoa), (xh1TOA+2*stdPtoa),label="95% CI ($\pm 2\sqrt{\hat{p}^H_t}$) of OHCA state $\^{H }_{t}$", color=colorstate)
+    plt.plot(dates[30:],xh1TOA,'-',label='posterior OHCA EBM-KF-uf state estimate Ht', color=colorekf)
+    plt.fill_between(dates[30:], (xh1TOA-2*stdStoa), (xh1TOA+2*stdStoa),label="95% CI  forecast TOA ", color=coloruncert)
+    plt.fill_between(dates[30:], (xh1TOA-2*stdPtoa), (xh1TOA+2*stdPtoa),label="95% CI of TOA state ", color=colorstate)
     #TOA_meas_artif=z[30:,2].T[0]
     plt.plot(dates, TOA_meas_artif,'o',markersize=2,color=colorgrey)
     plt.plot(dates, TOA_swout2,'--',color='darkgoldenrod')
             #plt.plot(dates, TOA_swout,'o',markersize=2,color='red')
-    plt.fill_between(dates, TOA_meas_artif-2*np.sqrt(TOA_meas_artif_var), TOA_meas_artif+2*np.sqrt(TOA_meas_artif_var),label="associated 95% uncertainty of $\Psi_{t}$", color="grey",zorder=5,alpha=0.2,lw=0)
+    plt.fill_between(dates, TOA_meas_artif-2*np.sqrt(TOA_meas_artif_var), TOA_meas_artif+2*np.sqrt(TOA_meas_artif_var),label="associated 95% uncertainty of Psi_t", color="grey",zorder=5,alpha=0.2,lw=0)
 
     
 

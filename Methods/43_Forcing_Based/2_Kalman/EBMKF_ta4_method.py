@@ -51,6 +51,7 @@ if not hasattr(ekf, "_orig_state_saved"):
     ekf._orig_R_tvar = ekf.R_tvar.copy()
     ekf._orig_Roc_tvar = ekf.Roc_tvar.copy()
     ekf._orig_TOA_meas_artif_var = ekf.TOA_meas_artif_var.copy()
+    ekf._orig_TOA_meas_artif = ekf.TOA_meas_artif.copy() 
     ekf._orig_lCo2 = ekf.lCo2.copy()
     ekf._orig_anthro_clouds = ekf.anthro_clouds.copy()
     # Scalars
@@ -64,6 +65,7 @@ def restore_baselines():
     ekf.tsi = ekf._orig_tsi.copy()
     ekf.R_tvar = ekf._orig_R_tvar.copy()
     ekf.Roc_tvar = ekf._orig_Roc_tvar.copy()
+    ekf.TOA_meas_artif = ekf._orig_TOA_meas_artif.copy()
     ekf.TOA_meas_artif_var = ekf._orig_TOA_meas_artif_var.copy()
     ekf.lCo2 = ekf._orig_lCo2.copy()
     ekf.anthro_clouds = ekf._orig_anthro_clouds.copy()
@@ -162,7 +164,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
         erf_data_solar = erf_data['solar'].to_numpy()[(1850-1750):]
         solar_full = erf_data_solar[:ekf.n_iters]+ 340.4099428 - 0.108214
         tot_volc_erf = (- solar_full*frac_blocked + 151.22)
-        contrails = erf_data['contrails'][(1850-1750):(2024-1750)].values
+        contrails = erf_data['contrails'][(1850-1750):(new_iter+100)].values
         TOA_correction = (tot_volc_erf - np.mean(tot_volc_erf[90:100])+ contrails)
         TOA_correction[np.where(TOA_correction> -0.25)] = 0
         #clamp down some of the uncertainties so that the KF pays most attention to the temperatures
@@ -184,8 +186,13 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
         cur_path = os.path.dirname(os.path.realpath(__file__))
         #also reading this from a FaIR file
         TOA_meas_artif_all = np.load(cur_path + "/heads_tails_forcing/all-headstails_current_TOA_ensemble.npy")
-        TOA_meas_artif = TOA_meas_artif_all[model_run,0,0:ekf.n_iters] #.to_numpy() if pandas array
-        TOA_meas_artif1 =  TOA_meas_artif - TOA_correction *.75 #(tot_volc_erf ) * .4 #again removing the volcanic signal for the ta run
+        TOA_meas_artif0 = TOA_meas_artif_all[model_run,0,0:ekf.n_iters] #.to_numpy() if pandas array
+        TOA_meas_artif = TOA_meas_artif0 - np.mean(TOA_meas_artif0[0:70])/2 + (np.mean(ekf.TOA_meas_artif[2001-1850:2023-1850]) -np.mean( TOA_meas_artif0[2001-1850:2023-1850]))/2
+        surf_heat = (temps[-1]-np.mean(temps[0:50]))*(ekf.heatCp-ekf.Cs)
+        TOA_error = (np.sum(TOA_meas_artif)-ohca_meas[-1]/ekf.zJ_from_W - surf_heat)/np.sum(TOA_meas_artif)
+
+        #this should be balanced at the start originally, and also match recent observations and match the ocean observations
+        TOA_meas_artif1 =  TOA_meas_artif* (1-TOA_error) - TOA_correction *.75 #(tot_volc_erf ) * .4 #again removing the volcanic signal for the ta run
         
         data3 =  np.genfromtxt(open(config.CLIMATE_DATA_PATH+"/SSP_inputdata/KF6projectionSSP.csv", "rb"),dtype=float, delimiter=',')
         #ekf.anthro_clouds = np.append(ekf.anthro_clouds,[data3[2024-2015,6+2]+1])
@@ -224,12 +231,10 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
         ekf.lsml=0
         ekf.y=np.zeros((new_iter,3,1))
         ekf.qqy=np.zeros((new_iter,3))
-
-        ekf.R_tvar =np.zeros(ekf.n_iters)
-        ekf.Roc_tvar = np.zeros(ekf.n_iters)
-        ekf.TOA_meas_artif_var = np.zeros(ekf.n_iters)
-        means[0:ekf.n_iters], ses[0:ekf.n_iters],means2[0:ekf.n_iters],ses2[0:ekf.n_iters] = ekf.ekf_run(new_observ,ekf.n_iters,retPs=3)
         
+        ekf.R_tvar =np.append(ekf.R_tvar, (len(years)-174)*[np.average(ekf.R_tvar[-10:])])
+        ekf.TOA_meas_artif_var = np.append(ekf.TOA_meas_artif_var, (len(years)-174)*[np.average(ekf.TOA_meas_artif_var[-10:])])
+        means[0:ekf.n_iters], ses[0:ekf.n_iters],means2[0:ekf.n_iters],ses2[0:ekf.n_iters] = ekf.ekf_run(new_observ,ekf.n_iters,retPs=3)
         #import matplotlib.pyplot as plt
         #breakpoint()
         #plt.plot(years,means +given_preind_base - ekf.offset-preind_base - offset_satcal)

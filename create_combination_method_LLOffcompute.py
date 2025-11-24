@@ -7,6 +7,7 @@ from custom_stack_utils import predict_non_nan, infill_log_likelihoods, fit_stac
 import pdb;
 import sys
 
+
 if __name__ == '__main__':
     comparison_type = 'ff'
 
@@ -17,7 +18,8 @@ if __name__ == '__main__':
 #this part specified as sys argument
     nsamples=1000
     nnodes = 100
-        
+    rmse_df = pd.read_csv("current_methods_statistics_251123True.csv")
+    fut_methods_df = pd.read_csv('averaged_runs126.csv')
     if comparison_type[0]=='h':
         outputfilename = 'historical'
         df_results = pd.read_csv(f'Results2/{outputfilename}_names_var_scale.csv', index_col=0)
@@ -34,7 +36,7 @@ if __name__ == '__main__':
     if comparison_type[1]=='f':
         scenarios=["fut_ESM1-2-LR_SSP126_constVolc","fut_ESM1-2-LR_SSP245_constVolc","fut_ESM1-2-LR_SSP370_constVolc",
                    "fut_NorESM_RCP45_Volc","fut_NorESM_RCP45_VolcConst"]
-        nmethods=55
+        nmethods=len(fut_methods_df)
         nyears=250
         const_shape = (5,60,nmethods)
         tseries_shape = (5,60,nmethods,250)
@@ -88,13 +90,14 @@ if __name__ == '__main__':
         #big outer loop
         mask_a=[]
         avail_methods_list = []
-        if nnmethods ==10 or nnmethods == 8:
+        if nnmethods ==10 :
             # --- a) Subset to just the 8 selected methods --- embkfta2
             avail_methods_list = [ "CGWL10y_for_halfU","EBMKF_ta4","GAM_AR1",
                  "lowess1dt36wnc","Kal_flexLin","FaIR_comb_unB","GWI_tot_CGWL","GWI_tot_SR15","CGWL10y_sfUKCP"]
             mask_a = all_methods.isin(avail_methods_list).values
             avail_methods = all_methods[mask_a]
             #df_cropped = df[mask_a].reset_index(drop=True)
+
         if nnmethods == 7:
             # --- a) Subset to just the 8 selected methods --- embkfta2
             avail_methods_list = [ "EBMKF_ta4","GAM_AR1",
@@ -104,7 +107,6 @@ if __name__ == '__main__':
 
             
         elif nnmethods ==30:
-            rmse_df = pd.read_csv("current_methods_statistics_250818True.csv")
             bad_rmse_methods = rmse_df.loc[rmse_df['RMS'] > 0.06, 'method_name']
             #manual_exclude = ['CGWL10y_forec', 'some_other_method']  # replace with actual names
             manual_exclude = ['']
@@ -114,7 +116,6 @@ if __name__ == '__main__':
 
 
         elif nnmethods ==16:
-            rmse_df = pd.read_csv("current_methods_statistics_250818True.csv")
             bad_rmse_methods = rmse_df.loc[rmse_df['RMS'] > 0.06, 'method_name']
             #manual_exclude = ['CGWL10y_forec', 'some_other_method']  # replace with actual names
             manual_exclude = ['']
