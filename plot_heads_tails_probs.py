@@ -1,12 +1,12 @@
 from __future__ import annotations
 import numpy as np
 import matplotlib.pyplot as plt
-
+import sys
 #only does realized warming for the moment
 
 from hist_heads_tails_evaluation_script import evalmins, evalmaxs, relthresh, sel_methods_list_real, sel_methods_list_anthro
 
-goal="anthro"
+goal=sys.argv[1]
 
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -164,7 +164,7 @@ def load_and_average_pdfs(npy_files: List[Path], delete_slices = []) -> np.ndarr
 
     pdf = cdf_to_pdf(mean_cdf, axis=1)  # diff along fine-time axis
     
-    return pdf
+    return pdf,mean_cdf
 
 
 
@@ -195,7 +195,7 @@ def combine_histens_data(
         del method_names[index]
     
     crossing_years = collect_crossing_years(csvs, method_names)
-    mean_pdf = load_and_average_pdfs(npys, delete_slices=indices_to_delete)
+    mean_pdf,mean_cdf = load_and_average_pdfs(npys, delete_slices=indices_to_delete)
 
     if method_names:
         print(f"[{experiment_type}] methods: {len(method_names)}")
@@ -208,13 +208,14 @@ def combine_histens_data(
     for t in THRESH_COLS:
         total_entries = sum(sum(np.array(lst)<2050) for lst in crossing_years[t].values())
         print(f"[{experiment_type}] collected {total_entries} entries for {t}")
-    return method_names, mean_pdf, crossing_years, indices_to_delete
+    return method_names, mean_pdf,mean_cdf, crossing_years, indices_to_delete
 
 
-method_names_rpi, mean_pdf_rpi, crossing_rpi, del_idx = combine_histens_data("histens_rpi_"+goal, results_dir="Results")
-method_names_sat, mean_pdf_sat, crossing_sat, del_idx = combine_histens_data("histens_satcal_"+goal, results_dir="Results")
+method_names_rpi, mean_pdf_rpi,mean_cdf_rpi, crossing_rpi, del_idx = combine_histens_data("histens_rpi_"+goal, results_dir="Results")
+method_names_sat, mean_pdf_sat,mean_cdf_sat, crossing_sat, del_idx = combine_histens_data("histens_satcal_"+goal, results_dir="Results")
 method_names = method_names_rpi
 mean_pdfs= [mean_pdf_rpi,  mean_pdf_sat]
+mean_cdfs= [mean_cdf_rpi,  mean_cdf_sat]
 hist_data = [crossing_rpi,crossing_sat]
 # Plot (reuse earlier PANEL_INFO)
 PANEL_INFO = [
@@ -244,6 +245,10 @@ for index in del_idx:
     del last_parts[index]
     del parts[index]
 
+if goal=="anthro": last_parts.append('FaIR_anthro_unB_retro')
+
+last_parts.append('equal_weight_comb'); last_parts.append('PIVW_comb')
+print(method_names_rpi)
 assert last_parts == method_names_rpi, "Method name mismatch!"
 
 # build color keys: use "dir2/dir3" if present, otherwise just "dir2"
@@ -254,11 +259,12 @@ from hist_evaluation_script import gen_color
 
 sel_methods_colors = [gen_color(k) for k in combined_keys]
 
+if goal=="anthro": sel_methods_colors.append('#341539')
+
 ylims=[0.4,0.4,0.4]
 evalmins2=evalmins.copy()
 evalmins2[1]=1995
 import matplotlib.ticker as ticker
-
 inum = 1 #adding 12 subdivisions didn't do anything since we linearly interpolated then took a diff
 for j, info in enumerate(PANEL_INFO):
     row = j // 3; col = j % 3
@@ -266,19 +272,42 @@ for j, info in enumerate(PANEL_INFO):
     ax.xaxis.set_major_locator(ticker.MultipleLocator(5))
     ax.set_xlim([evalmins2[col], evalmaxs[col]])
     ax.set_ylim([0,ylims[col]])
-    row_key = info["row_key"]; t_idx = info["threshold_idx"]
+    row_key = info["row_key"]
+    t_idx = info["threshold_idx"]
     ax.set_title(info["title"], fontsize=10)
     # PDFs (stacked)
     pdf = mean_pdfs[row_key]
+    cdf = mean_cdfs[row_key]
     n_methods = pdf.shape[0]; n_yrs = pdf.shape[1]
     years = make_time_axis(evalmins[t_idx], n_yrs, inum=inum)
     y = np.nan_to_num(pdf[:,:,t_idx], nan=0.0, posinf=0.0, neginf=0.0)
+    yc=cdf[:,:,t_idx]
+        # ---- write panel CSV ----
+    calibration = "anthro" if row else "rpi"
+    outname = f"rates_histens/{calibration}_{goal}_thresh{(col*5):02d}.csv"
+
+    # Build header: "method_name, years[0], years[1], ..."
+    header = ["method_name"] + years.tolist()
+
+    # Build rows: each is [method_name[m], yc[m,0], yc[m,1], ...]
+    rows = [
+        [method_names[m], *yc[m]]
+        for m in range(n_methods)
+    ]
+
+    df_out = pd.DataFrame(rows, columns=header)
+    df_out.to_csv(outname, index=False)
     #ax.stackplot(years, *y, labels=method_names[row_key], alpha=0.35, linewidth=0.0)
     for m in range(n_methods):
         #pdf_year_smooth = gaussian_filter1d(y[m], sigma=1.0, mode="nearest")
         tfine,pdffine = refine_pdf_repeat_gaussian(y[m], evalmins[col], L=12, sigma_years=1.0)
         #ax.plot(years,y[m] , linewidth=1.0, color= sel_methods_colors[m], label=method_names[m])
-        ax.plot(tfine,pdffine , linewidth=1.0, color= sel_methods_colors[m], label=method_names[m])
+        if col==2:
+            print(method_names[m])
+            ind_latest=np.where(years==2024)[0]
+            print(f"{(yc[m][ind_latest][0]):.2%} 1.5C crossing chance" )
+        if(not method_names[m].endswith("comb")):
+            ax.plot(tfine,pdffine , linewidth=1.0, color= sel_methods_colors[m], label=method_names[m])
     # Histograms when applicable
     if info["histogram"]:
         all_years = []
@@ -290,7 +319,8 @@ for j, info in enumerate(PANEL_INFO):
         data_list = [np.asarray(this_hist_data.get(m, []), dtype=float) for m in method_names]
 
         # Drop empty series to avoid blank legend entries (optional)
-        keep = [i for i, arr in enumerate(data_list) if arr.size > 0]
+        #keep = [i for i, arr in enumerate(data_list) if arr.size > 0]
+        keep = [i for i, method in enumerate(method_names) if not method.endswith("comb")]
         if keep:
             data_list = [data_list[i] for i in keep]
             colors    = [sel_methods_colors[i] for i in keep]

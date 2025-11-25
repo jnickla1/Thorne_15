@@ -28,7 +28,7 @@ def gen_orig_number(new_member_number,sz_ens):
 
 regen = 1 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
 evalmins = np.array([1970,1990, 2005])
-evalmaxs = np.array([2000,2024,2024])
+evalmaxs = np.array([2000,2025,2025])
 
 data = pd.read_csv("./Common_Data/HadCRUT5.csv")
 temps_obs = data.loc[:,"Anomaly"].to_numpy()
@@ -103,9 +103,10 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
 
     if exp_attr[2]=="real":
         this_sel_methods_list=sel_methods_list_real
+        from plot_fut_results import sel_methods as sel_methods2
     elif exp_attr[2]=="anthro":
         this_sel_methods_list=sel_methods_list_anthro
-
+        from plot_fut_results import sel_methodsA as sel_methods2
     print("starting computation for "+experiment_type)
     print("max_runs" + str(max_runs))
 
@@ -238,9 +239,14 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                                            '100log-l','100RMS','75RMS','100bias',
                                            'bias50', 'xyear0.5' , 'xyear1.0', 'xyear1.5'
                                            ])
+        
+        
+
         i=0
         lhund=-100
-        ncm = 0 #number of current methods
+        ncm = 1*(exp_attr[2]=="anthro")+2 #number of current methods
+        comb_centers = []; iv_weights=[]
+        df_histvar = pd.read_csv(f'Results2/historical_names_var_scale.csv', index_col=0)
         for method_name, method_data in results.items():
             for k in range(2):
                 result = method_data['LT_trend']
@@ -256,11 +262,22 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     labelcurr_or_retro = retIDlabels[k]
                 if(labelcurr_or_retro=="c"):
                     ncm=ncm+1
+                    if method_name in sel_methods2:
+                        comb_centers.append(central_est)
+                        iv_weights.append( 1/ df_histvar[df_histvar['method_name']==method_name]['err_var100'].to_numpy())
         print(ncm)
 
+        #add results for iv weight and for basic combination method
+        comb_centers=np.array(comb_centers)
+        ivweights=np.array(iv_weights)
+        ivcenter = np.nansum(comb_centers * ivweights[:],axis=0) / np.nansum( ~np.isnan(comb_centers) * ivweights[:],axis=0)
+        cccenter = np.nanmean(comb_centers,axis=0)
+        nanfill = np.full(np.shape(years),np.nan)
+        scales_precomp = np.load("Results2/comb_"+exp_attr[2]+"_scales.npy")
+        results["equal_weight_comb"]={'method_class': 'combination','LT_trend': (cccenter,np.full(np.shape(years),scales_precomp[0]),nanfill,nanfill)}
+        results["PIVW_comb"]={'method_class': 'combination','LT_trend': (ivcenter,np.full(np.shape(years),scales_precomp[1]),nanfill,nanfill)}
         maxllen = np.max((evalmaxs-evalmins)) #*inum)
         pcrossmatrix = np.full((ncm+1,maxllen, 3), np.nan)  #method, fineyear, [0.5, 1.0, or 1.5 threshold]
-        
         for method_name, method_data in results.items():
             #print(f"Results from {method_name} (Method Class: {method_data['method_class']}):")
             result = method_data['LT_trend']
@@ -287,7 +304,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     llikelihood = stats.norm.logpdf(standard,loc=central_est,scale=se)
 
 
-                if ((sum(~np.isnan(central_est))>0 and k==0) or (method_name=='cent20y' and k==1)):    #isinstance(result, tuple):
+                if ((sum(~np.isnan(central_est))>0 and k==0) or (method_name in ['cent20y','FaIR_anthro_unB'] and k==1)):    #isinstance(result, tuple):
                     
                     # Central estimate and SE, implying gaussian distn
                     labelcurr_or_retro = retIDlabels[k]
@@ -302,10 +319,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     avg_uncert = np.nanmean(se)
                     #print(qvals_count_yrs ,qvals_smallest, qvals_smallest5 )
 
-
-                    
-
-                    if(labelcurr_or_retro=="c"):
+                    if(labelcurr_or_retro=="c" or method_name == 'FaIR_anthro_unB'):
                         #calculate at intermediary 0.?°C
 
                             
@@ -358,8 +372,11 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                         evalyrs = np.arange(evalmin,evalmax)
                         fineevalyrs = np.arange(evalyrs[0],evalyrs[-1]+1/inum,1/inum) 
                         this_method_p_steps = np.full(np.shape(evalyrs),np.nan)
-
-                        if method_name == "cent20y":
+                        
+                        if method_name == "FaIR_anthro_unB":
+                            print(central_est[2020-1850:])
+                            breakpoint()
+                        if method_name == "cent20y" or method_name.endswith("comb"):
                             best_alter_scale =1
                         else:
                             best_alter_scale = scalvar[scalvar["method_name"]==method_name]["best_alter_scale"].to_numpy()[0]
@@ -386,6 +403,8 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                         
                     short_method_class = method_data['method_class'][0:2] +"/"+method_data['method_class'].split('/')[-1]
                     #plt.plot(years,central_est,label=method_name)
+                    if (method_name=='FaIR_anthro_unB' and k==1):
+                        method_name = 'FaIR_anthro_unB_retro' #relabel so we have unique rows
                     candidate_row= [ method_name,short_method_class,labelcurr_or_retro,smooth_est/smooth_std,avg_uncert,
                                      qvals_count_yrs05,qvals_count_yrs01,  qvals_smallest,qvals_smallest5, np.nanmean(llikelihood), np.sqrt(np.nanmean((central_est-standard)**2)),
                                        np.nanmean(central_est-standard) , np.nansum(llikelihood),

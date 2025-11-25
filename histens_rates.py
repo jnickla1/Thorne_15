@@ -39,8 +39,6 @@ spaglines = []
 retIDlabels = ['c','r']
 
 alt_colors = ['black', 'white']
-sel_methods = [ "CGWL10y_for_halfU","FaIR_nonat","EBMKF_ta2"] #"EBMKF_ta4" "min_month_proj" "OLS_refit_CO2forc", "CGWL10y_for_halfU","TheilSen_h7075" ,"FaIR_anthroA",,"EBMKF_ta2"  ] #"EBMKF_ta",
-#sel_methods2 = [ "EBMKF_ta4","GAM_AR1",
 #                 "lowess1dg36wnc","Kal_flexLin","FaIR_comb_unB","FaIR_nonat_unB","GWI_anthro_CGWL","CGWL10y_sfUKCP"]
 
 
@@ -99,7 +97,8 @@ if __name__ == '__main__':
         
         results_path = f'Results/results{experiment_type}{model_run}.pickle'
         years = np.arange(1850,2025)
-    #To read it back:
+
+    #To read it back, only the ones we're actually using here:
 
         if exp_attr[2]=="real":
             from plot_fut_results import sel_methods as sel_methods2
@@ -134,6 +133,7 @@ if __name__ == '__main__':
         if exp_attr[2]=='real':
             standard = results['cent20y']['LT_trend'][2] #retrospective
         else:
+            #easy enough to recreate this, also saved within the results pickle
             standardmethod_module = importlib.import_module("Methods.43_Forcing_Based.1_ERF_FaIR.FaIR_anthro_unB_method", package = "Thorne_15_codefigurestats")
             result = standardmethod_module.run_method(years, simall,(temps_CIl_hist,temps_CIu_hist),model_run, experiment_type)
             standard = result['mean'](years,1)#retrospective
@@ -281,7 +281,7 @@ if __name__ == '__main__':
         slope05, se_slope05 = local_linear_slope_and_se(y05, t05)  # per year
         # Convert slope SE to per decade and use 1.96 for ~95% CI
         rate05a = slope05 *10
-        uncert05a = 1.96 * se_slope05 * 10.0
+        uncert05a = 1 * se_slope05 * 10.0
 
         start10 = max(0, closest_ind10 - idx10_offset)
         end10   = min(len(std_intp10) - 1, closest_ind10 + idx10_offset)
@@ -289,10 +289,10 @@ if __name__ == '__main__':
         t10 = fineyrs[start10:end10 + 1:inum]
 
         slope10, se_slope10 = local_linear_slope_and_se(y10, t10)  # per year
-        uncert10a = 1.96 * se_slope10 * 10.0
+        uncert10a = 1 * se_slope10 * 10.0
         # Convert slope SE to per decade and use 1.96 for ~95% CI
         rate05a = slope05 *10
-        uncert05a = 1.96 * se_slope05 * 10.0
+        uncert05a = 1 * se_slope05 * 10.0
         
 
         #print(f'Decadal rate in {(closest_year05):.1f}  at 0.5°C: {(rate05a):.4f} ± {(uncert05a):.4f}')
@@ -344,7 +344,7 @@ if __name__ == '__main__':
         
         slope_combined = np.mean(slopes) *10
         # Uncertainty of the combined slope (standard error)
-        slope_combined_std = np.sqrt(np.mean(vars_)+np.var(slopes)) *10 *1.96
+        slope_combined_std = np.sqrt(np.mean(vars_)+np.var(slopes)) *10 
         #print(f"Decadal rate in 2024: {slope_combined:.4f} ± {slope_combined_std:.4f}")
         
         #df_results.to_csv('method_statistics_results.csv', index=False)
@@ -389,7 +389,7 @@ if __name__ == '__main__':
                 "method": name,
                 "year_cross": sel3data[mm,-1],
                 "rate": float(slopes[mm]*10),
-                "rate_uncert": np.sqrt(vars_[mm])*10*1.96,
+                "rate_uncert": np.sqrt(vars_[mm])*10*1,
                 "rate_window": -15
             }
             method_rows.append(row)
@@ -425,14 +425,22 @@ if __name__ == '__main__':
         #node_lls = np.load(f'Results2/{outputfilename}_hermguass_lls.npy')
         #newsamples = np.load(f'Results2/{outputfilename}_newsamples.npy')
         #nyears = central_est.shape[1]
-        mask_a = all_methods.isin(sel2names).values
-        vars100 = err_vars100[mask_a]
+        # Filter and reorder according to sel2names
+        ordered_idx = all_methods.reset_index(drop=True).map(
+            {name: i for i, name in enumerate(sel2names)})       
+
+        # Keep only those in sel2names
+        mask = ordered_idx.notna()
+
+        # Reorder
+        vars100 = err_vars100[mask.to_numpy()][np.argsort(ordered_idx[mask].to_numpy())]
+
         ivweights = 1/vars100
         ivcenter = np.nansum(sel3data[:,-1] * ivweights[:],axis=0) / np.nansum( ~np.isnan(sel3data[:,-1]) * ivweights[:],axis=0)
         ivslope_combined = np.nansum(slopes * ivweights[:],axis=0) / np.nansum( ~np.isnan(slopes) * ivweights[:],axis=0)*10
         # Uncertainty of the combined slope (standard error)
         ivslope_combined_std = np.sqrt( np.nansum(vars_ * ivweights[:],axis=0) / np.nansum( ~np.isnan(vars_) * ivweights[:],axis=0)
-                                      +np.nansum(((slopes-ivslope_combined/10)**2 * ivweights),axis=0) / np.nansum( ~np.isnan(slopes) * ivweights[:],axis=0)) *10 *1.96    
+                                      +np.nansum(((slopes-ivslope_combined/10)**2 * ivweights),axis=0) / np.nansum( ~np.isnan(slopes) * ivweights[:],axis=0)) *10     
 
         
              
@@ -515,7 +523,7 @@ if __name__ == '__main__':
 
     # Combined rate uncertainty:
     # sqrt( average(rate_uncert^2) + variance(rate) )
-    agg["rate_uncert"] = np.sqrt(agg["rate_uncert_var_mean"] + agg["rate_sd"]**2)
+    agg["rate_uncert_1sd"] = np.sqrt(agg["rate_uncert_var_mean"] + agg["rate_sd"]**2)
 
     # Drop intermediate helper columns
     agg = agg.drop(
@@ -535,14 +543,14 @@ if __name__ == '__main__':
     # Reorder columns to your desired schema
     df_combined = df_combined[
         ["level", "method", "year_cross", "year_cross_sd",
-         "rate", "rate_sd", "rate_uncert", "rate_window"]
+         "rate", "rate_sd", "rate_uncert_1sd", "rate_window"]
     ]
 
     # Print and save
     print("\nCombined frontend dataframe across 100 ensemble members:")
     print(df_combined)
 
-    outname = f"Results2/rates_histens_{experiment_type}.csv"
+    outname = f"rates_histens/rates_histens_{experiment_type}.csv"
     df_combined.to_csv(outname, index=False)
     print(f"\nSaved combined dataframe to {outname}")
     

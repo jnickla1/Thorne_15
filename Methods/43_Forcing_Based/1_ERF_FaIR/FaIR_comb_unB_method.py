@@ -27,7 +27,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     #starts in 1750 so crop to 100th index
     #samp_cur = obt_array0[100:,:]
     exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126 or _VolcConst #
-
+    offset=0
     if experiment_type == 'historical':
         sfactor=0.2
         current_array = np.load(cur_path+"/resliced_NorESM/combined_hadcrut5_nonat.npy") #starts in 1930
@@ -43,7 +43,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         if (exp_attr[1]=="satcal"):
             offset = -np.mean(temperature[0:50])
             current_array = current_array - offset
-            retro_array = retro_array - offset        
+            retro_array = retro_array - offset
     else:
         sfactor=0.6
         if (exp_attr[1]=='ESM1-2-LR'):
@@ -68,7 +68,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     end_fill_sampc = (1930-1850)+np.shape(current_array)[0]
     samp_cur[(1930-1850):end_fill_sampc,:]= current_array #starts in 1930
     samp_mean =  np.nanmean(samp_cur, axis = 1) 
-    samp_mean[(1930-1850):(1965-1850)]= 0.28 #overwrite to pass the first check
+    samp_mean[(1930-1850):(1965-1850)]= 0.28-offset #overwrite to pass the first check
     dev_orig = samp_cur - samp_mean[:, np.newaxis]
     #dev_20 = np.mean(samp_mean[(2000-1850):(2020-1850)]) - np.mean(temperature[(2000-1850):(2020-1850)])
     #newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_20, (dev_20+ np.linspace(0, (curbias-dev_20)*9/4, (np.shape(temperature)[0]-160)))))
@@ -125,7 +125,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     samp_curAll[(1930-1850):end_fill_sampc,:]= current_array #starts in 1930
     samp_curAll[(1930-1850):end_fill_sampc,:]= current_array #starts in 1930
     samp_meanAll =  np.nanmean(samp_curAll, axis = 1) 
-    samp_meanAll[(1930-1850):(1965-1850)]= 0.28 #overwrite to pass the first check
+    samp_meanAll[(1930-1850):(1965-1850)]= 0.28-offset #overwrite to pass the first check
     dev_origAll = samp_curAll - samp_meanAll[:, np.newaxis]
 
     

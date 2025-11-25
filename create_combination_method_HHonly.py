@@ -76,20 +76,29 @@ if __name__ == '__main__':
 #subset the read-in tables to set list of methods
 #            only 8 vs ~16 vs ~30 methods
 #            do this in a big outer loop
-    nmethods_list = [10] #8 16 later 30
+    nmethods_list = [7,2] #8 16 later 30
 
     for nmethods in nmethods_list:
         #big outer loop
         mask_a=[]
         avail_methods_list = []
         if nmethods ==10:
-            # --- a) Subset to just the 8 selected methods ---
             avail_methods_list = [ "CGWL10y_for_halfU","EBMKF_ta2","EBMKF_ta4","GAM_AR1",
                  "lowess1dg20wnc","Kal_flexLin","FaIR_comb_unB","FaIR_nonat_unB","GWI_anthro_SR15","CGWL10y_sfUKCP"]
             mask_a = all_methods.isin(avail_methods_list).values
             avail_methods = all_methods[mask_a]
             #df_cropped = df[mask_a].reset_index(drop=True)
-            
+        
+        if nmethods ==7:
+            avail_methods_list = [ "EBMKF_ta4","GAM_AR1",
+                 "lowess1dt36wnc","Kal_flexLin","FaIR_comb_unB","GWI_tot_CGWL","CGWL10y_sfUKCP"]
+            mask_a = all_methods.isin(avail_methods_list).values
+            avail_methods = all_methods[mask_a]
+
+        if nmethods ==2:
+            avail_methods_list = [ "FaIR_nonat_unB","GWI_anthro_CGWL"]
+            mask_a = all_methods.isin(avail_methods_list).values
+            avail_methods = all_methods[mask_a]
 
             
         elif nmethods ==30:
@@ -123,7 +132,13 @@ if __name__ == '__main__':
         if comparison_type[0]=='h':
             centralsh = central_est[mask_a]
             samplesh = newsamples[mask_a]
-
+            st1850=0
+            if nmethods==2:
+                st1850=80
+                nyears = central_est.shape[1] - 80
+                years = np.arange(1850+80,1850+80+nyears)
+                centralsh = centralsh[:,80:]
+                samplesh=samplesh[:,80:,:]
         if comparison_type[1]=='f':
             centralsf = central_estfut[:,:,mask_a,:]
             samplesf = newsamplesfut[:,:,mask_a,:,:]
@@ -142,6 +157,7 @@ if __name__ == '__main__':
         if comparison_type[0]=='h':
             ivcenters = np.nansum(centralsh * ivweights[:,None],axis=0) / np.nansum( ~np.isnan(centralsh) * ivweights[:,None],axis=0)
             blended = predict_non_nan(stack_weights, samplesh)
+            cwcenters = np.nansum(centralsh,axis=0) / np.nansum( ~np.isnan(centralsh) ,axis=0)
 
         if comparison_type[0]=='f':
             ivcenters = np.nansum(centralsf * ivweights[None,None,:,None],axis=2) / np.nansum( ~np.isnan(centralsf) * ivweights[None,None,:,None],axis=2)
@@ -161,12 +177,28 @@ if __name__ == '__main__':
             #def rescale_log_likelihood(scale_alt):
             #    log_lik=stats.norm.logpdf(standard[-100:],loc=ivcenters[-100:],scale=scale_alt)
             #    return -np.nansum(log_lik)
+            if nmethods==2:
+                lhund=0
+                standard = standard[80:]
+                standard_se=standard_se[80:]
+            else:
+                lhund=-100
+
             def rescale_KL(scalearr):
-                scale=scalearr[0]
-                yearKL = np.log(scale/standard_se[-100:-10]) + (standard_se[-100:-10]**2 + (standard[-100:-10]-ivcenters[-100:-10])**2 )/2/(scale)**2 - 0.5
+                scale=scalearr
+                yearKL = np.log(scale/standard_se[lhund:-10]) + (standard_se[lhund:-10]**2 + (standard[lhund:-10]-ivcenters[lhund:-10])**2 )/2/(scale)**2 - 0.5
                 return np.nansum(yearKL)
             best_scale_iv = minimize(rescale_KL, x0=0.04, bounds=[(0.001, 1)]).x[0] #gets a constant uncertainty
             best_iv_KL = rescale_KL(best_scale_iv)
+            
+            def rescale_KL_cw(scalearr):
+                scale=scalearr
+                yearKL = np.log(scale/standard_se[lhund:-10]) + (standard_se[lhund:-10]**2 + (standard[lhund:-10]-cwcenters[lhund:-10])**2 )/2/(scale)**2 - 0.5
+                return np.nansum(yearKL)
+
+            best_scale_cw = minimize(rescale_KL_cw, x0=0.04, bounds=[(0.001, 1)]).x[0]
+            targettype = "anthro" if nmethods==2 else "real"
+            np.save("Results2/comb_"+targettype+"_scales.npy",np.array([best_scale_cw, best_scale_iv]))
 
             def sharpen_samples(blended_in: np.ndarray, nsharp: float, seed: int ) -> np.ndarray:
                 """Resample-with-replacement means (with fractional last draw) per year."""
@@ -223,8 +255,9 @@ if __name__ == '__main__':
     std_intp = std_intp0[~np.isnan(std_intp0)]
     fineyrs_c0 = fineyrs_all[~np.isnan(std_intp0)]
     fineyrs_c = fineyrs_c0[1:]
-    thrshs= np.arange(0.5,np.nanmax(standard) ,.1) #thresholds #CHANGE FOR NONHISTORICAL
-    print(f"evaluating {len(thrshs)} of 0.1°C thresholds, starting at 0.5°C")
+    minfound=  np.ceil(std_intp[0] * 10) / 10
+    thrshs= np.arange(minfound,np.nanmax(standard) ,.1) #thresholds #CHANGE FOR NONHISTORICAL
+    print(f"evaluating {len(thrshs)} of 0.1°C thresholds, starting at {minfound}°C")
     closest_years = [-1/inum/2+fineyrs_c[np.logical_and(std_intp[0:-1]<i, std_intp[1:]>=i)][0] for i in thrshs]
                    #will have a variable number of steps, at least including 0.5
     closest_yrs_rnd = np.round(closest_years)
@@ -247,10 +280,10 @@ if __name__ == '__main__':
                 #this_method_p_steps = result['pvalue'](evalyrs, np.full(np.shape(evalyrs),thrshs[j]),k, two_sided=False)
                 this_method_p_steps=np.zeros(np.shape(evalyrs))
                 for i,e in enumerate(evalyrs):
-                    kde = gaussian_kde(sharpened_blended[e-1850])                  
+                    kde = gaussian_kde(sharpened_blended[e-1850-st1850])                  
                     this_method_p_steps[i] = kde.integrate_box_1d(thrshs[j],15) #integrate probability above threshold
             else:
-                this_method_p_steps = norm.cdf(((ivcenters[evalyrs-1850]-thrshs[j])/ best_scale_iv))
+                this_method_p_steps = norm.cdf(((ivcenters[evalyrs-1850-st1850]-thrshs[j])/ best_scale_iv))
 
             first_non_nan = np.argmax(~np.isnan(this_method_p_steps))
             this_method_p_steps[:first_non_nan] = 0
