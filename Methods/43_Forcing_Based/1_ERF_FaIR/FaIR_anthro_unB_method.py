@@ -31,12 +31,12 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     if experiment_type == 'historical':
         sfactor=0.23
         current_array = np.load(cur_path+"/resliced_NorESM/combined_hadcrut5_anthro.npy") #starts in 1930
-        retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2022_temp_anthro.npy") #starts in 1750
-        curbias= -0.015
+        retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2024_temp_anthro.npy") #starts in 1750
+        curbias= -0.005
 
     elif (exp_attr[0]=="histens"):
         sfactor=0.23
-        curbias=-0.015 #assuming this matches
+        curbias=-0.005 #assuming this matches
         #retro array doesn't matter
         retro_array = np.load(cur_path+"/retrospective/all-headstails_currentr"+str(model_run+1)+"cut2023_temp_anthro.npy") #starts in 1750
         current_array = np.load(cur_path+"/resliced_headstails/combined_all-headstails_currentr"+str(model_run+1)+"_anthro.npy")
@@ -48,37 +48,37 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         sfactor=0.75
         if (exp_attr[1]=='ESM1-2-LR'):
             #combined_all_current_MPIESM370r50_anthro.npy
-            current_array = np.load(cur_path+"/resliced_MPIESM/combined_all_current_MPIESM"+exp_attr[2][3:6]+"r"+str(model_run+1)+"_anthro.npy") #starts in 1930
+            current_array = np.load(cur_path+"/resliced_MPIESM/combined_all_current_MPIESM"+exp_attr[2][3:6]+"r"+str(model_run+1)+"_anthro.npy")
             #all_current_MPIESM370r19cut2099_temp_anthro.npy
             retro_array = np.load(cur_path+"/retrospective/all_current_MPIESM"+exp_attr[2][3:6]+"r"+str(model_run+1)+"cut2099_temp_anthro.npy") #starts in 1750
             if exp_attr[2][3:6]=="126":
-                curbias= 0.01533
+                curbias= -0.0118/2+.0267/2
             elif exp_attr[2][3:6]=="245":
-                curbias= -0.001573
+                curbias= -0.0096/2+0.0178/2
             elif exp_attr[2][3:6]=="370":
-                curbias= -0.03824
+                curbias= -0.046/2-0.0098/2
        
         elif (exp_attr[1]=='NorESM'):
             #combined_all_current_NorESMVolcConstr1_anthro.npy
             current_array = np.load(cur_path+"/resliced_NorESM/combined_all_current_NorESM"+exp_attr[3]+"r"+str(model_run+1)+"_anthro.npy") #starts in 1930
             retro_array = np.load(cur_path+"/retrospective/all_current_NorESM"+exp_attr[3]+"r"+str(model_run+1)+"cut2099_temp_anthro.npy") #starts in 1750
-            curbias= -.1060
+            curbias= -.1181/2 - 0.094/2
             
     samp_cur = np.full((len(years),np.shape(current_array)[1]),np.nan)
-    end_fill_sampc = (1930-1850)+np.shape(current_array)[0]
+    end_fill_sampc=(1930-1850)+np.shape(current_array)[0]
     samp_cur[(1930-1850):end_fill_sampc,:]= current_array #starts in 1930
     samp_mean =  np.nanmean(samp_cur, axis = 1) 
     samp_mean[(1930-1850):(1965-1850)]= 0.28-offset #overwrite to pass the first check
     dev_orig = samp_cur - samp_mean[:, np.newaxis]
 
-    if (experiment_type == 'historical' or exp_attr[0]=="histens"):
+    if (True): #experiment_type == 'historical' or exp_attr[0]=="histens"):
         samp_cur = samp_mean[:, np.newaxis] + np.sqrt( dev_orig**2)*sfactor *np.sign(dev_orig)- curbias #newcorrecton[:, np.newaxis]                    
         samp_ret = retro_array[100:,:] - curbias #starts in 1750 so crop to 100th index
     else:
         dev_20 = np.mean(samp_mean[(2000-1850):(2020-1850)]) - np.mean(temperature[(2000-1850):(2020-1850)])
-        newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_20, (dev_20+ np.linspace(0, (curbias-dev_20)*9/4, (np.shape(temperature)[0]-160)))))
+        newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_20, (dev_20+ np.linspace(0, (curbias-dev_20)*9/4*9/8, (np.shape(temperature)[0]-160)))))
         samp_cur = samp_mean[:, np.newaxis] + np.sqrt( dev_orig**2)*sfactor *np.sign(dev_orig)- newcorrecton[:, np.newaxis]                    
-        samp_ret = retro_array[100:,:] - newcorrecton[:, np.newaxis]   #starts in 1750 so crop to 100th index
+        samp_ret = retro_array[100:(np.shape(temperature)[0]+100),:] - newcorrecton[:, np.newaxis]   #starts in 1750 so crop to 100th index
     
     for i in range(len(years)):
         samp_ret[i,:] =samp_ret[i,:]+ np.random.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)), size=np.shape(samp_ret)[1])

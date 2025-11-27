@@ -30,14 +30,14 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     if experiment_type == 'historical':
         sfactor=0.23
         current_array = np.load(cur_path+"/resliced_NorESM/combined_hadcrut5_anthro.npy") #starts in 1930
-        retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2022_temp_anthro.npy") #starts in 1750
+        retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2024_temp_anthro.npy") #starts in 1750
         
     else:
         exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126 or _VolcConst #
         sfactor=0.75
         if (exp_attr[1]=='ESM1-2-LR'):
             #combined_all_current_MPIESM370r50_anthro.npy
-            current_array = np.load(cur_path+"/resliced_MPIESM/combined_all_current_MPIESM"+exp_attr[2][3:6]+"r"+str(model_run+1)+"_anthro.npy") #starts in 1930
+            current_array = np.load(cur_path+"/resliced_MPIESM/combined_all_current_MPIESM"+exp_attr[2][3:6]+"r"+str(model_run+1)+"_anthro.npy")
             #all_current_MPIESM370r19cut2099_temp_anthro.npy
             retro_array = np.load(cur_path+"/retrospective/all_current_MPIESM"+exp_attr[2][3:6]+"r"+str(model_run+1)+"cut2099_temp_anthro.npy") #starts in 1750
        
@@ -48,7 +48,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
             
     samp_cur = np.full((len(years),np.shape(current_array)[1]),np.nan)
-    end_fill_sampc = (1930-1850)+np.shape(current_array)[0]
+    end_fill_sampc=(1930-1850)+np.shape(current_array)[0]
     samp_cur[(1930-1850):end_fill_sampc,:]= current_array #starts in 1930
     samp_mean =  np.nanmean(samp_cur, axis = 1)
     samp_mean[(1930-1850):(1965-1850)]= 0.28 #overwrite to pass the first check
