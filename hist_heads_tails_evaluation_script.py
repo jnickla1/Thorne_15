@@ -373,9 +373,6 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                         fineevalyrs = np.arange(evalyrs[0],evalyrs[-1]+1/inum,1/inum) 
                         this_method_p_steps = np.full(np.shape(evalyrs),np.nan)
                         
-                        if method_name == "FaIR_anthro_unB":
-                            print(central_est[2020-1850:])
-                            breakpoint()
                         if method_name == "cent20y" or method_name.endswith("comb"):
                             best_alter_scale =1
                         else:

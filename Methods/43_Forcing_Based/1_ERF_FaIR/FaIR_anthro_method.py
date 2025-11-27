@@ -57,11 +57,15 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                         #shrinks their distribution down
     
     samp_ret = retro_array[100:,:]#starts in 1750 so crop to 100th index
-    
+    model_run = model_run if isinstance(model_run, np.number) else 0    
+    base_seed = 12345
+    rng = np.random.default_rng(base_seed + int(model_run))
     for i in range(len(years)):
-        samp_ret[i,:] =samp_ret[i,:]+ np.random.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)), size=np.shape(samp_ret)[1])
-        samp_cur[i,:] =samp_cur[i,:]+ np.random.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)), size=np.shape(samp_cur)[1])
-    
+        samp_ret[i,:] =samp_ret[i,:]+ rng.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)), size=np.shape(samp_ret)[1])
+        samp_cur[i,:] =samp_cur[i,:]+ rng.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)), size=np.shape(samp_cur)[1])
+    #extremely small std error at some points in early 1850s, try to correct this
+
+
     def empirical_mean(year_idx,k):
         if (k==0):
             return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)

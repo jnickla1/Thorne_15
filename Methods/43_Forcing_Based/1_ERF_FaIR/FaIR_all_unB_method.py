@@ -38,7 +38,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         sfactor=0.4
         curbias=0.022 #assuming this matches
         #retro array doesn't matter
-        retro_array = np.load(cur_path+"/retrospective/all-headstails_currentr"+str(model_run+1)+"cut2023_temp_all.npy") #starts in 1750
+        retro_array = np.load(cur_path+"/retrospective/all-headstails_currentr"+str(model_run+1)+"cut2024_temp_all.npy") #starts in 1750
         current_array = np.load(cur_path+"/resliced_headstails/combined_all-headstails_currentr"+str(model_run+1)+"_all.npy")
         if (exp_attr[1]=="satcal"):
             offset = -np.mean(temperature[0:50])
@@ -80,11 +80,16 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_20, (dev_20+ np.linspace(0, (curbias-dev_20)*9/4*9/8, (np.shape(temperature)[0]-160)))))
         samp_cur = samp_mean[:, np.newaxis] + np.sqrt( dev_orig**2)*sfactor *np.sign(dev_orig)- newcorrecton[:, np.newaxis]                    
         samp_ret = retro_array[100:(np.shape(temperature)[0]+100),:] - newcorrecton[:, np.newaxis]   #starts in 1750 so crop to 100th index
-    
+    model_run = model_run if isinstance(model_run, np.number) else 0
+    base_seed = 12345
+    rng = np.random.default_rng(base_seed + int(model_run))
+    reduce_uncert = 10 if (exp_attr[0]=="histens") else 1
     for i in range(len(years)):
-        samp_ret[i,:] =samp_ret[i,:]+ np.random.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)), size=np.shape(samp_ret)[1])
-        samp_cur[i,:] =samp_cur[i,:]+ np.random.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)), size=np.shape(samp_cur)[1])    #extremely small std error at some points in early 1850s, try to correct this
-    
+        samp_ret[i,:] =samp_ret[i,:]+ rng.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)/reduce_uncert), size=np.shape(samp_ret)[1])
+        samp_cur[i,:] =samp_cur[i,:]+ rng.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)/reduce_uncert), size=np.shape(samp_cur)[1])
+    #extremely small std error at some points in early 1850s, try to correct this
+
+
     def empirical_mean(year_idx,k):
         if (k==0):
             return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
