@@ -18,7 +18,7 @@ if __name__ == '__main__':
 #this part specified as sys argument
     nsamples=1000
     nnodes = 100
-    rmse_df = pd.read_csv("current_methods_statistics_251123True.csv")
+    rmse_df = pd.read_csv("current_methods_statistics_251126True.csv")
     fut_methods_df = pd.read_csv('averaged_runs126.csv')
     if comparison_type[0]=='h':
         outputfilename = 'historical'

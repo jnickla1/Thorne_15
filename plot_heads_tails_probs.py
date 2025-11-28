@@ -283,7 +283,7 @@ for j, info in enumerate(PANEL_INFO):
     y = np.nan_to_num(pdf[:,:,t_idx], nan=0.0, posinf=0.0, neginf=0.0)
     yc=cdf[:,:,t_idx]
         # ---- write panel CSV ----
-    calibration = "anthro" if row else "rpi"
+    calibration = "satcal" if row else "rpi"
     outname = f"rates_histens/{calibration}_{goal}_thresh{(col*5):02d}.csv"
 
     # Build header: "method_name, years[0], years[1], ..."
