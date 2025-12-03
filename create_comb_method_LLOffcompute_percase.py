@@ -154,22 +154,22 @@ if __name__ == '__main__':
                     lhund=-100
                 if(experiment_type[0:8]=="fut_ESM1" and model_run>=50):
                     continue
-                err_vars100a=err_vars100[:,:,mask_a].copy()
-                err_vars100a[exp_index,model_run,:]=np.nan #masking out this run's err_vars
+                err_vars100a=err_vars100[exp_index:(exp_index+1),:,mask_a].copy()
+                err_vars100a[0,model_run,:]=np.nan #masking out this run's err_vars
                 vars100 = np.nanmean(err_vars100a,axis=(0,1))
                 #combine all to one variance estimate
                 #scales =  best_scales[:,:,mask_a] #DONT NEED to combine the scales
                 print("setting up lls")
-                lls0 = node_lls[:,:,mask_a,lhund:-10,:].copy() 
-                lls0[exp_index,model_run,:,:]=np.nan
-                lls_wnan = lls0.transpose(2, 0, 1, 3, 4).reshape(nmethods, (-10-lhund)* 5 * 60, nnodes)
+                lls0 = node_lls[exp_index:(exp_index+1),:,mask_a,lhund:-10,:].copy() 
+                lls0[0,model_run,:,:]=np.nan
+                lls_wnan = lls0.transpose(2, 0, 1, 3, 4).reshape(nmethods, (-10-lhund)* 1 * 60, nnodes)
                 finite = np.isfinite(lls_wnan)                           # (K, T, M)
                 valid_T = np.all(finite, axis=(0, 2))               # keep timepoints with no NaNs across models & nodes
                 lls = lls_wnan[:, valid_T, :]                      # (K, T_keep, M)
                 #TODO - for ff drop the particular one we are leaving out here
-                central_estfuta=central_estfut[:,:,mask_a,lhund:-10].copy()
-                central_estfuta[exp_index,model_run,:]=np.nan
-                centralsf0 = central_estfuta.transpose(2, 0, 1, 3).reshape(nmethods, (-10-lhund) * 5 * 60)
+                central_estfuta=central_estfut[exp_index:(exp_index+1),:,mask_a,lhund:-10].copy()
+                central_estfuta[0,model_run,:]=np.nan
+                centralsf0 = central_estfuta.transpose(2, 0, 1, 3).reshape(nmethods, (-10-lhund) * 1 * 60)
                 centralsf = centralsf0[:, valid_T] 
                 print("created lls") 
         #generate weights/distributions for each: IVW and stacking
@@ -364,7 +364,7 @@ if __name__ == '__main__':
                #     rmse_array[exp_index,model_run,:]= [ivarw_rmse, stack_rmse]
                #     kl_array[exp_index,model_run,:]= [best_iv_KL, best_stack_KL]
                 
-                np.savez_compressed(f"Results3/nmes{nnmethods}run_exp{exp_index}_r{model_run}.npz",
+                np.savez_compressed(f"Results3/nmes{nnmethods*10+1}run_exp{exp_index}_r{model_run}.npz",
                     firstcross15_diff=faedyrs[:,crit_j],
                     ncrosses=ncrosses,
                     rmse=[ivarw_rmse, stack_rmse],

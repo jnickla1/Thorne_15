@@ -17,5 +17,5 @@ for scenario in `seq 0 4`; do
     #for i in `seq 0 10 40`; do
     echo $scenario
     echo $i
-    python3 create_combination_method_LLOffcompute.py 30 "$scenario" "$i"
+    python3 create_combination_method_LLOffcompute.py 32 "$scenario" "$i"
 done
