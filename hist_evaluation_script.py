@@ -18,7 +18,7 @@ from datetime import datetime
 current_date = datetime.now()
 formatted_date = current_date.strftime("%y%m%d")
 
-historical_regen=True #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
+historical_regen=False #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
 adjusted_vars = True #must run the hist_fitprob.py script first if this is true to generate correction for the variance
 # ================================
 # Define Method Full Names, Colors, Location on Violin plots
@@ -138,7 +138,7 @@ import mplcursors
 spaglines = []
 
 alt_colors = ['black', 'white']
-sel_methods = [ "GWI_tot_CGWL","EBMKF_ta4"]  #"CGWL10y_sfUKCP","FaIR_comb_unB"
+sel_methods = [ "GWI_tot_CGWL","EBMKF_ta4","FaIR_comb_unB"]  #"CGWL10y_sfUKCP",
 ##try:
 ##    index_mapping_new = pd.read_csv('all_methods_statistics_251110True.csv)
 ##    def rank2(method_name_in):
