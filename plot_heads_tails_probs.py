@@ -21,7 +21,13 @@ from scipy.ndimage import gaussian_filter1d
 def refine_pdf_repeat_gaussian(pdf_year, start_year, L=12, sigma_years=1.0):
     # pdf_year: 1D array over whole years, sum ≈ 1
     pdf_year = np.clip(np.asarray(pdf_year, float), 0, None)
-    #pdf_year /= pdf_year.sum()  # DONT normalize just in case
+
+        # ---- NEW: trim trailing zeros on the right ----
+    nz = np.nonzero(pdf_year > 0)[0]
+    if nz.size > 0:
+        last = nz[-1]
+        pdf_year = pdf_year[:last + 1]
+    # If all zeros, leave as-is
 
     # Upsample: split each year into L bins; divide by L so mass per year is preserved
     pdf_fine = np.repeat(pdf_year / L, L)
@@ -34,7 +40,11 @@ def refine_pdf_repeat_gaussian(pdf_year, start_year, L=12, sigma_years=1.0):
 
     # Fine-grid time axis at bin centers
     dt = 1.0 / L
+    
     t_fine = np.arange(start_year, start_year + len(pdf_year), dt) + 0.5 * dt
+
+    pdf_fine = pdf_fine[:-int(L/2)]
+    t_fine = t_fine[:-int(L/2)]
 
     return t_fine, pdf_fine
 
@@ -259,13 +269,21 @@ from hist_evaluation_script import gen_color
 
 sel_methods_colors = [gen_color(k) for k in combined_keys]
 
-if goal=="anthro": sel_methods_colors.append('#341539')
+#if goal=="anthro": sel_methods_colors.append('#341539')
+
+#if goal=="real":
+#    sel_methods_colors.append('#F527E7')
+#    sel_methods_colors.append('#27F546')
+
 
 ylims=[0.4,0.4,0.4]
 evalmins2=evalmins.copy()
 evalmins2[1]=1995
 import matplotlib.ticker as ticker
 inum = 1 #adding 12 subdivisions didn't do anything since we linearly interpolated then took a diff
+
+keep = [i for i, method in enumerate(method_names) if not (method.endswith("comb") or method.startswith("FaIR_anthro"))]
+
 for j, info in enumerate(PANEL_INFO):
     row = j // 3; col = j % 3
     ax = axes[row, col]
@@ -280,7 +298,8 @@ for j, info in enumerate(PANEL_INFO):
     cdf = mean_cdfs[row_key]
     n_methods = pdf.shape[0]; n_yrs = pdf.shape[1]
     years = make_time_axis(evalmins[t_idx], n_yrs, inum=inum)
-    y = np.nan_to_num(pdf[:,:,t_idx], nan=0.0, posinf=0.0, neginf=0.0)
+    #y = np.nan_to_num(pdf[:,:,t_idx], nan=0.0, posinf=0.0, neginf=0.0)
+    y = pdf[:,:,t_idx]
     yc=cdf[:,:,t_idx]
         # ---- write panel CSV ----
     calibration = "satcal" if row else "rpi"
@@ -306,7 +325,7 @@ for j, info in enumerate(PANEL_INFO):
             print(method_names[m])
             ind_latest=np.where(years==2024)[0]
             print(f"{(yc[m][ind_latest][0]):.2%} 1.5C crossing chance" )
-        if(not method_names[m].endswith("comb")):
+        if(not (method_names[m].endswith("comb") or method_names[m].startswith("FaIR_anthro"))):
             ax.plot(tfine,pdffine , linewidth=1.0, color= sel_methods_colors[m], label=method_names[m])
     # Histograms when applicable
     if info["histogram"]:
@@ -320,7 +339,7 @@ for j, info in enumerate(PANEL_INFO):
 
         # Drop empty series to avoid blank legend entries (optional)
         #keep = [i for i, arr in enumerate(data_list) if arr.size > 0]
-        keep = [i for i, method in enumerate(method_names) if not method.endswith("comb")]
+        
         if keep:
             data_list = [data_list[i] for i in keep]
             colors    = [sel_methods_colors[i] for i in keep]
@@ -333,14 +352,18 @@ for j, info in enumerate(PANEL_INFO):
         ax.set_xlabel("Year")
     if col == 0:
         ax.set_ylabel("Probability density / year")
+
+    if row==1 and col == 2 and goal=="anthro":
+        ax.text(2015,0.2, 'No Detection', fontsize=18,ha='center',va='center')
+        
     ax.grid(True, alpha=0.2, linewidth=0.5)
 
-legend_labels = method_names
+legend_labels = [method_names[i] for i in keep]
 handles = [plt.Line2D([0],[0]) for _ in legend_labels]
 fig.legend(legend_labels, loc="upper center", ncol=min(len(legend_labels), 6), frameon=False)
 
 fig.tight_layout(rect=[0,0,1,0.93])
-#plt.show()
+plt.show()
 outpath = goal+"_heads_tails_probplot.png"
 fig.savefig(outpath, dpi=600)
 print(f"Saved figure: {outpath}")
