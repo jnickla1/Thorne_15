@@ -1,0 +1,506 @@
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+starting computation for fut_NorESM_RCP45_VolcConst
+max_runs44
+Model number:
+43
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+starting computation for fut_NorESM_RCP45_Volc
+max_runs44
+Model number:
+43
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 660, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 163, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                          (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                          model_run, experiment_type, methods_folder)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 116, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py", line 82, in run_method
+    samp_ret = retro_array[100:351,:] - newcorrecton[:, np.newaxis]   #starts in 1750 so crop to 100th index
+               ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ValueError: operands could not be broadcast together with shapes (251,264) (250,1) 
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 660, in <module>
+    run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_script.py", line 163, in run_one_single_ens_member
+    results = run_methods(years, simall,
+                          (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                          model_run, experiment_type, methods_folder)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_evaluation_script.py", line 116, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py", line 82, in run_method
+    samp_ret = retro_array[100:351,:] - newcorrecton[:, np.newaxis]   #starts in 1750 so crop to 100th index
+               ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ValueError: operands could not be broadcast together with shapes (251,221) (250,1) 
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:127: RuntimeWarning: Mean of empty slice
+  samp_meanAll =  np.nanmean(samp_curAll, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:127: RuntimeWarning: Mean of empty slice
+  samp_meanAll =  np.nanmean(samp_curAll, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:127: RuntimeWarning: Mean of empty slice
+  samp_meanAll =  np.nanmean(samp_curAll, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:72: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:90: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:72: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:89: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:153: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:72: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:92: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:90: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:89: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:90: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:89: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:92: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:153: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:89: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:153: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:90: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:153: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:92: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:92: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:89: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:92: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:89: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:92: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:90: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:153: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:90: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:153: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:89: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:117: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:89: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:117: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:89: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:117: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:92: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:120: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:92: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:120: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:90: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:118: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:92: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:120: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:153: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:181: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:90: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:118: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+starting computation for fut_ESM1-2-LR_SSP126_constVolc
+max_runs44
+Model number:
+43
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py
+evaluating 6 of 0.1°C thresholds, starting at 1.1°C
+11
+FaIR_anthro sampled, d llike: 0.043758169243996003
+FaIR_anthro sampled, d llike: -0.24723291094026006
+FaIR_anthro_unB sampled, d llike: 0.03309057874876997
+FaIR_anthro_unB sampled, d llike: -0.2573834200379522
+FaIR_nonat sampled, d llike: -0.024805486382121877
+FaIR_nonat sampled, d llike: -0.0509752575605833
+FaIR_nonat_unB sampled, d llike: -0.02466858385061066
+FaIR_nonat_unB sampled, d llike: -0.04298740624189179
+FaIR_all sampled, d llike: -2293.178964873295
+FaIR_all sampled, d llike: -0.05859908892410903
+FaIR_all_unB sampled, d llike: -0.028817846795891944
+FaIR_all_unB sampled, d llike: -0.04625682321977487
+FaIR_comb_unB sampled, d llike: -0.03036254225073831
+FaIR_comb_unB sampled, d llike: 0.13203882990753457
+        method_name    method_class c/r  smooth_r  avg_unc.(1se)  #q<0.5  #q<0.1   log-likeli       RMS      bias         tlog-l       100log-l    100RMS     75RMS   100bias        l15  l20    bias50   Edyrs15  Edyrs20    Mdyrs15  Mdyrs20    Fdyrs15  Fdyrs20    EdyrsA   RMSyrsA  ncEdyrs      e100log-l   e100RMS    e75RMS  e100bias       el15  el20   ebias50   eEdyrs15  eEdyrs20   eMdyrs15  eMdyrs20   eFdyrs15  eFdyrs20   eEdyrsA  eRMSyrsA  nceEdyrs
+21    FaIR_comb_unB   43/1_ERF_FaIR   c     2.251       0.072497       0       0     1.451409  0.048504 -0.017914     227.871173     137.219385  0.043339  0.042600  0.000409   4.704342  0.0 -0.023194 -2.916667       -1  -2.916667       -1  -2.916667       -1 -1.034722  3.909605      7.0     134.253587  0.051558  0.049831  0.034172   4.864636   0.0  0.017790  -4.833333        -1  -4.833333        -1  -4.833333        -1 -3.506944  3.506944       7.0
+15   FaIR_nonat_unB   43/1_ERF_FaIR   c     2.173       0.082339       0       0     1.324540  0.055865 -0.017675     213.250974     127.171475  0.047971  0.046535  0.005903   4.193170  0.0 -0.023243 -3.416667       -1  -3.416667       -1  -3.416667       -1 -1.840278  4.650922      7.0     123.360370  0.057817  0.054294  0.039666   4.297526   0.0  0.017741  -5.333333        -1  -5.333333        -1  -5.333333        -1 -4.312500  4.312500       7.0
+19     FaIR_all_unB   43/1_ERF_FaIR   c     3.451       0.085066       0       0     1.275679  0.059336 -0.006528     205.384388     125.741554  0.046611  0.043359  0.003112   4.081199  0.0 -0.021943  0.583333       -1   4.083333       -1  -2.916667       -1 -0.520833  3.761902      9.2     123.305021  0.055913  0.050542  0.036875   4.428758   0.0  0.019041  -1.333333        -1  -4.833333        -1  -4.833333        -1 -2.993056  2.993056       9.2
+11  FaIR_anthro_unB   43/1_ERF_FaIR   c     1.821       0.084034      37       0     0.927670  0.082393 -0.039851     149.354915     123.036034  0.049422  0.049286  0.003261   3.765800  0.0 -0.030183 -2.916667       -1  -2.916667       -1  -2.916667       -1 -1.152778  5.110922      6.0     121.735770  0.057231  0.054154  0.037024   4.042333   0.0  0.010801  -4.833333        -1  -4.833333        -1  -4.833333        -1 -3.625000  3.625000       6.0
+9       FaIR_anthro   43/1_ERF_FaIR   c     1.779       0.083995      43       0     0.911415  0.085576 -0.030106     146.737878     120.508245  0.058383  0.056767  0.020442   3.774313  0.0 -0.023277 -5.333333       -1  -5.333333       -1  -5.333333       -1 -2.923611  5.147506      7.0     111.554432  0.072866  0.066129  0.054205   3.886604   0.0  0.017707  -7.250000        -1  -7.250000        -1  -7.250000        -1 -5.395833  5.395833       7.0
+13       FaIR_nonat   43/1_ERF_FaIR   c     2.185       0.102805       0       0     1.138937  0.064080 -0.011862     183.368809     108.472015  0.059150  0.056276  0.019957   3.334627  0.0 -0.024893 -5.916667       -1  -5.916667       -1  -5.916667       -1 -3.476852  5.075827      8.0     103.131949  0.073134  0.064299  0.053720   3.346430   0.0  0.016091  -7.833333        -1  -7.833333        -1  -7.833333        -1 -4.458333  4.458333      10.0
+0            lag10y  42/1_Run_Means   c     2.741       0.038223      96       9     1.328052  0.053843 -0.030804     306.780081     101.045964  0.057750  0.043118 -0.037015  11.875093  0.0  0.002448  5.750000       -1   5.750000       -1   5.750000       -1  3.993056  4.346967      7.0     104.785876  0.051077  0.049270 -0.003252  13.978513   0.0  0.043432   3.833333        -1   3.833333        -1   3.833333        -1  1.520833  1.520833       7.0
+2             raw1y  42/1_Run_Means   c    26.742       0.128125       0       0     0.698433  0.119370  0.000914     161.338025      68.037537  0.114192  0.109817  0.002681   3.257677  0.0  0.003372  0.190476       -1 -16.333333       -1 -16.333333       -1 -0.715476  2.703654     27.7      66.826936  0.115899  0.111748  0.036444   3.115292   0.0  0.044356  -1.726190        -1 -18.250000        -1 -18.250000        -1 -2.683069  2.683069      26.7
+1             lag5y  42/1_Run_Means   c     5.520       0.047143      98      27     0.729125  0.067299 -0.012915     168.427901      24.835639  0.061929  0.053734 -0.011910   9.616764  0.0  0.007508  4.500000       -1   6.916667       -1   0.833333       -1  2.046296  2.729994     13.3      13.567309  0.064457  0.060795  0.021853   8.171063   0.0  0.048492   2.583333        -1   5.000000        -1  -1.083333        -1 -0.425926  0.425926      13.3
+8         offset11y  42/1_Run_Means   c     2.349       0.036957     188     125    -1.270787  0.088154  0.075736    -293.551732    -156.645360  0.082357  0.094707  0.067732   0.443328  0.0  0.110929 -3.083333       -1  -3.083333       -1  -3.083333       -1 -3.555556  4.643544      7.0    -486.359044  0.114520  0.128829  0.101495   0.002253   0.0  0.151913  -5.000000        -1  -5.000000        -1  -5.000000        -1 -6.027778  6.027778       7.0
+17         FaIR_all   43/1_ERF_FaIR   c     2.982       0.005562     148     127 -2498.563883  0.082298  0.019503 -402268.785156 -288776.764927  0.088244  0.072243  0.056649   0.000000  0.0 -0.003867 -9.500000       -1  -9.500000       -1  -9.500000       -1 -7.055556  7.342955      6.0 -464701.173399  0.109714  0.088007  0.090412   0.000000   0.0  0.037117 -11.416667        -1 -11.416667        -1 -11.416667        -1 -9.527778  9.527778       6.0
+4.304984501
+finished this run
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:153: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:181: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:90: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:118: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+starting computation for fut_ESM1-2-LR_SSP245_constVolc
+max_runs44
+Model number:
+43
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py
+evaluating 14 of 0.1°C thresholds, starting at 1.1°C
+11
+FaIR_anthro sampled, d llike: 0.03243203121672056
+FaIR_anthro sampled, d llike: -0.9259188386412389
+FaIR_anthro_unB sampled, d llike: 0.03734897527427816
+FaIR_anthro_unB sampled, d llike: -1.1202897451976859
+FaIR_nonat sampled, d llike: -0.04480026352630162
+FaIR_nonat sampled, d llike: -0.03117414015901354
+FaIR_nonat_unB sampled, d llike: -0.041447619296864024
+FaIR_nonat_unB sampled, d llike: -0.03091955408111402
+FaIR_all sampled, d llike: -2190.045024574598
+FaIR_all sampled, d llike: -0.035109114166175015
+FaIR_all_unB sampled, d llike: -0.04087286199782181
+FaIR_all_unB sampled, d llike: -0.03164405896062905
+FaIR_comb_unB sampled, d llike: -0.027904281198562586
+FaIR_comb_unB sampled, d llike: -0.038672411730877376
+        method_name    method_class c/r  smooth_r  avg_unc.(1se)  #q<0.5  #q<0.1   log-likeli       RMS      bias         tlog-l       100log-l    100RMS     75RMS   100bias       l15           l20    bias50   Edyrs15   Edyrs20   Mdyrs15   Mdyrs20   Fdyrs15   Fdyrs20    EdyrsA   RMSyrsA  ncEdyrs      e100log-l   e100RMS    e75RMS  e100bias           el15          el20   ebias50  eEdyrs15      eEdyrs20  eMdyrs15      eMdyrs20  eFdyrs15      eFdyrs20   eEdyrsA  eRMSyrsA  nceEdyrs
+8         offset11y  42/1_Run_Means   c     2.638       0.037988     160      82     0.042062  0.075924  0.057041       9.716413     146.622786  0.041095  0.038755  0.020277  9.465030  6.550219e+00  0.032439  1.083333  0.416667  1.083333  0.416667  1.083333  0.416667 -1.089286  2.288363     14.0       6.463046  0.072702  0.077392  0.038040   3.222132e+00  2.012087e+00  0.081921  3.166667 -2.166667e+00  3.166667 -2.166667e+00  3.166667 -2.166667e+00 -2.095238  2.095238      14.0
+21    FaIR_comb_unB   43/1_ERF_FaIR   c     2.244       0.074039       0       0     1.399148  0.052672 -0.018031     219.666176     128.814924  0.051050  0.050700 -0.000246  5.395946  4.270288e+00 -0.030208 -1.500000  3.083333 -1.500000  3.083333 -1.500000  3.083333 -0.023810  3.042686     14.0     133.552348  0.042441  0.038031  0.017518   4.844290e+00  4.569142e+00  0.019274  0.583333  5.000000e-01  0.583333  5.000000e-01  0.583333  5.000000e-01 -1.029762  1.029762      14.0
+15   FaIR_nonat_unB   43/1_ERF_FaIR   c     1.982       0.084021       0       0     1.267367  0.058625 -0.014641     204.046014     119.515714  0.053003  0.049986  0.010790  4.678865  4.334315e+00 -0.020937 -2.000000  2.416667 -2.000000  2.416667 -2.000000  2.416667 -0.851190  3.003057     14.0     121.538377  0.046462  0.039058  0.028553   4.620420e+00  3.982012e+00  0.028545  0.083333 -1.666667e-01  0.083333 -1.666667e-01  0.083333 -1.666667e-01 -1.857143  1.857143      14.0
+19     FaIR_all_unB   43/1_ERF_FaIR   c     3.501       0.086860       0       0     1.228164  0.061380 -0.004071     197.734458     118.911116  0.050893  0.046990  0.007157  4.621409  4.203839e+00 -0.019761 -1.750000  2.583333 -1.750000  2.583333 -1.750000  2.583333 -0.559524  2.820524     15.0     118.032896  0.049114  0.042627  0.024921   4.342039e+00  3.860647e+00  0.029721  0.333333  1.673470e-10  0.333333  1.673470e-10  0.333333  1.673470e-10 -1.565476  1.565476      15.0
+11  FaIR_anthro_unB   43/1_ERF_FaIR   c     1.507       0.086376      36       0     0.879289  0.085549 -0.036798     141.565480     114.054843  0.057375  0.055302  0.008874  4.317852  3.410992e+00 -0.029720 -2.250000  2.250000 -2.250000  2.250000 -2.250000  2.250000 -0.535714  3.271449     15.0     116.984032  0.045291  0.036129  0.026637   3.993203e+00  4.003600e+00  0.019762 -0.166667 -3.333333e-01 -0.166667 -3.333333e-01 -0.166667 -3.333333e-01 -1.541667  1.541667      15.0
+9       FaIR_anthro   43/1_ERF_FaIR   c     1.526       0.086396      44       0     0.851706  0.087980 -0.036582     137.124650     110.800759  0.063525  0.061018  0.009258  4.288295  3.371907e+00 -0.040524 -2.750000  3.000000 -2.750000  3.000000 -2.750000  3.000000 -0.357143  3.653792     14.0     115.500440  0.048725  0.033721  0.027022   3.985411e+00  4.124477e+00  0.008958 -0.666667  4.166667e-01 -0.666667  4.166667e-01 -0.666667  4.166667e-01 -1.363095  1.363095      14.0
+13       FaIR_nonat   43/1_ERF_FaIR   c     2.082       0.104882       0       0     1.093175  0.065400 -0.016179     176.001247     101.869104  0.061134  0.056851  0.011865  3.768193  3.602267e+00 -0.035343 -2.250000  2.750000 -2.250000  2.750000 -2.250000  2.750000 -0.523810  3.496597     14.0     104.752192  0.050221  0.033529  0.029629   3.650059e+00  3.209910e+00  0.014139 -0.166667  1.666667e-01 -0.166667  1.666667e-01 -0.166667  1.666667e-01 -1.529762  1.529762      14.0
+2             raw1y  42/1_Run_Means   c    28.700       0.127516       0       0     0.705699  0.118533  0.000587     163.016363      69.661131  0.111957  0.111984  0.001849  2.354019  2.423037e+00  0.010997 -1.388889 -0.527778 -4.750000 -5.083333 -4.750000 -5.083333  0.455258  2.099125     50.3      62.721596  0.121445  0.124234  0.019613   8.791733e-01  2.026693e+00  0.060479  0.694444 -3.111111e+00  3.250000 -7.666667e+00 -2.666667 -7.666667e+00 -0.550694  0.550694      50.3
+1             lag5y  42/1_Run_Means   c     5.574       0.048414     104      16     0.894997  0.067761 -0.021266     206.744387      63.152126  0.063195  0.058805 -0.033110  0.429681  4.395804e+00 -0.021580  2.416667  1.583333  2.416667  1.583333  2.416667  1.583333  1.264881  2.468125     18.0       7.824639  0.073739  0.074243 -0.015347   7.802337e-01  4.379738e-01  0.027901  4.500000 -1.000000e+00  4.500000 -1.000000e+00  4.500000 -1.000000e+00  0.258929  0.258929      18.0
+0            lag10y  42/1_Run_Means   c     2.881       0.039168     138      48     0.617124  0.067936 -0.047768     142.555530     -63.178586  0.087703  0.090074 -0.080079  0.024717  8.018153e-01 -0.068302  3.750000  2.666667  3.750000  2.666667  3.750000  2.666667  4.297619  4.665923     14.0    -104.567284  0.088183  0.095716 -0.062316   3.211701e-03  6.869292e+00 -0.018820  5.833333  8.333333e-02  5.833333  8.333333e-02  5.833333  8.333333e-02  3.291667  3.291667      14.0
+17         FaIR_all   43/1_ERF_FaIR   c     3.064       0.005561     153     134 -2391.246257  0.080879  0.015368 -384990.647430 -265432.800155  0.085870  0.065484  0.048666  0.000000  4.528855e-26 -0.012640 -5.000000  0.833333 -5.000000  0.833333 -5.000000  0.833333 -2.702381  4.900397     14.0 -271960.913082  0.085659  0.052008  0.066430  3.326134e-232  3.511138e-09  0.036842 -2.916667 -1.750000e+00 -2.916667 -1.750000e+00 -2.916667 -1.750000e+00 -3.708333  3.708333      14.0
+4.944132594
+finished this run
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:153: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:181: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+starting computation for fut_ESM1-2-LR_SSP370_constVolc
+max_runs44
+Model number:
+43
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py
+evaluating 24 of 0.1°C thresholds, starting at 1.1°C
+11
+FaIR_anthro sampled, d llike: 0.01989280942337779
+FaIR_anthro sampled, d llike: -0.8798870643466977
+FaIR_anthro_unB sampled, d llike: 0.036494469712165745
+FaIR_anthro_unB sampled, d llike: -0.9025682714664869
+FaIR_nonat sampled, d llike: -0.03889769876116711
+FaIR_nonat sampled, d llike: -0.0006292224968398319
+FaIR_nonat_unB sampled, d llike: -0.03335074938984506
+FaIR_nonat_unB sampled, d llike: -0.00624279295220731
+FaIR_all sampled, d llike: -1699.827169300875
+FaIR_all sampled, d llike: -0.015389298785288608
+FaIR_all_unB sampled, d llike: -0.039448001121820564
+FaIR_all_unB sampled, d llike: -0.01898103811335572
+FaIR_comb_unB sampled, d llike: -0.037243920962106936
+FaIR_comb_unB sampled, d llike: -1.344855847511651
+        method_name    method_class c/r  smooth_r  avg_unc.(1se)  #q<0.5  #q<0.1   log-likeli       RMS      bias         tlog-l       100log-l    100RMS     75RMS   100bias       l15        l20    bias50   Edyrs15       Edyrs20   Mdyrs15       Mdyrs20   Fdyrs15       Fdyrs20    EdyrsA   RMSyrsA  ncEdyrs      e100log-l   e100RMS    e75RMS  e100bias      el15       el20   ebias50  eEdyrs15      eEdyrs20  eMdyrs15      eMdyrs20  eFdyrs15      eFdyrs20   eEdyrsA  eRMSyrsA  nceEdyrs
+21    FaIR_comb_unB   43/1_ERF_FaIR   c     2.215       0.073236       0       0     1.457916  0.046277 -0.013743     228.892740     138.405912  0.038909  0.037143  0.007621  4.603153   5.536453  0.004071 -3.583333  1.591616e-10 -3.583333  1.591616e-10 -3.583333  1.591616e-10 -0.315972  1.448079     24.0     126.468551  0.056031  0.046916  0.023474  4.647662   5.849604 -0.007703 -3.583333  5.833333e-01 -3.583333  5.833333e-01 -3.583333  5.833333e-01 -0.681159  0.681159      23.0
+15   FaIR_nonat_unB   43/1_ERF_FaIR   c     2.135       0.083218       0       0     1.318706  0.054792 -0.007408     212.311727     126.293198  0.045787  0.044339  0.024029  3.733416   4.824026  0.023329 -6.416667 -9.166667e-01 -6.416667 -9.166667e-01 -6.416667 -9.166667e-01 -1.062500  1.942161     24.0     115.280615  0.063857  0.052365  0.039882  3.780140   5.066257  0.011555 -6.416667 -3.333333e-01 -6.416667 -3.333333e-01 -6.416667 -3.333333e-01 -1.438406  1.438406      23.0
+11  FaIR_anthro_unB   43/1_ERF_FaIR   c     1.888       0.085887      37       0     0.939536  0.080575 -0.029529     151.265288     123.739342  0.043975  0.042833  0.021472  3.292036   4.742395  0.016119 -6.333333 -4.166667e-01 -6.333333 -4.166667e-01 -6.333333 -4.166667e-01 -0.909722  1.856077     24.0     114.145318  0.063206  0.052637  0.037325  3.326784   4.829382  0.004345 -6.333333  1.666667e-01 -6.333333  1.666667e-01 -6.333333  1.666667e-01 -1.289855  1.289855      23.0
+19     FaIR_all_unB   43/1_ERF_FaIR   c     3.533       0.086208       0       0     1.257142  0.059419  0.003695     202.399875     122.977444  0.046845  0.044777  0.021213  4.101671   4.722014  0.024207 -4.500000 -5.833333e-01 -6.166667 -5.833333e-01 -6.166667 -5.833333e-01 -0.826389  1.806944     25.2     114.644396  0.063000  0.050763  0.037066  4.114525   4.977905  0.012432 -4.500000  1.591616e-10 -6.166667  1.591616e-10 -6.166667  1.591616e-10 -1.181159  1.181159      24.2
+8         offset11y  42/1_Run_Means   c     2.686       0.041244     163      84    -0.080419  0.078717  0.036449     -18.576827     118.329546  0.052776  0.059165 -0.031995  7.080281   6.011547 -0.066266  0.916667  6.666667e-01  0.916667  6.666667e-01  0.916667  6.666667e-01  1.236111  1.905918     24.0      31.588443  0.070136  0.067574 -0.016142  7.021925   6.046642 -0.078041  0.916667  1.250000e+00  0.916667  1.250000e+00  0.916667  1.250000e+00  0.771739  0.771739      23.0
+9       FaIR_anthro   43/1_ERF_FaIR   c     1.890       0.085874      38       0     0.894739  0.083488 -0.047849     144.053058     118.213168  0.052842  0.055032 -0.010985  3.744109   4.238453 -0.049257 -5.291667  9.166667e-01 -6.166667  9.166667e-01 -6.166667  9.166667e-01  0.512153  2.099882     25.2     105.421992  0.074258  0.067302  0.004868  3.780282   3.928492 -0.061032 -5.291667  1.500000e+00 -6.166667  1.500000e+00 -6.166667  1.500000e+00  0.067029  0.067029      24.2
+13       FaIR_nonat   43/1_ERF_FaIR   c     2.203       0.103919       0       0     1.138674  0.060468 -0.027115     183.326504     108.709791  0.052032  0.052173 -0.007061  3.476045   3.920927 -0.043763 -6.250000  7.500000e-01 -6.250000  7.500000e-01 -6.250000  7.500000e-01  0.305556  2.216181     24.0      98.561133  0.074502  0.064184  0.008792  3.481441   3.965855 -0.055538 -6.250000  1.333333e+00 -6.250000  1.333333e+00 -6.250000  1.333333e+00 -0.137681  0.137681      23.0
+2             raw1y  42/1_Run_Means   c    28.695       0.131290       1       0     0.669913  0.122640 -0.002188     154.749814      61.816871  0.122674  0.122737 -0.005194  2.683555   1.653942 -0.014746 -3.277778 -2.500000e-01 -6.500000 -5.333333e+00 -6.500000 -5.333333e+00  0.203704  2.375873     56.3      59.339409  0.126061  0.122846  0.010659  2.698941   1.457467 -0.026521 -3.277778  3.333333e-01 -6.500000 -4.750000e+00 -6.500000 -4.750000e+00 -0.198671  0.198671      54.3
+1             lag5y  42/1_Run_Means   c     5.731       0.048962     129      38     0.125112  0.076965 -0.031689      28.900766    -114.691495  0.085877  0.090776 -0.059567  2.538350   5.776756 -0.082832  1.166667  5.833333e-01  1.166667  4.166667e+00  1.166667 -3.000000e+00  2.043403  2.468479     31.0    -103.788059  0.086770  0.092181 -0.043714  2.483261   4.088260 -0.094607  1.166667  1.166667e+00  1.166667  4.750000e+00  1.166667 -2.416667e+00  1.625000  1.625000      30.0
+0            lag10y  42/1_Run_Means   c     3.009       0.042178     156      86    -0.519209  0.093492 -0.066798    -119.937354    -325.671470  0.134773  0.147277 -0.128387  0.749644   1.465026 -0.159658  5.000000  3.083333e+00  5.000000  3.083333e+00  5.000000  3.083333e+00  4.503472  4.609113     24.0    -270.538317  0.131059  0.150437 -0.112534  0.717269   1.443677 -0.171433  5.000000  3.666667e+00  5.000000  3.666667e+00  5.000000  3.666667e+00  4.108696  4.108696      23.0
+17         FaIR_all   43/1_ERF_FaIR   c     3.051       0.005582     154     135 -1856.057958  0.073024  0.006175 -298825.331208 -184557.559899  0.072395  0.055338  0.033060  0.000000  24.317210 -0.017493 -8.416667 -9.166667e-01 -8.416667 -9.166667e-01 -8.416667 -9.166667e-01 -0.961806  2.717027     24.0 -390973.503577  0.100703  0.067933  0.048913  0.000000  34.042804 -0.029268 -8.416667 -3.333333e-01 -8.416667 -3.333333e-01 -8.416667 -3.333333e-01 -1.405797  1.405797      23.0
+6.101675831
+finished this run
+All processes completed.

@@ -76,7 +76,7 @@ if __name__ == '__main__':
 #subset the read-in tables to set list of methods
 #            only 8 vs ~16 vs ~30 methods
 #            do this in a big outer loop
-    nmethods_list = [7,2] #8 16 later 30
+    nmethods_list = [7] #2 8 16 later 30
 
     for nmethods in nmethods_list:
         #big outer loop
@@ -314,8 +314,8 @@ if __name__ == '__main__':
     print("\nMethods: ")
     print(avail_methods)
     print("\nWeights: ")
-    print(f"ivarw: {np.round(ivweights/np.sum(ivweights),decimals=2)}")
-    print(f"stack: {np.round(stack_weights,decimals=2)}")
+    print(f"ivarw: {np.round(ivweights/np.sum(ivweights),decimals=5)}")
+    print(f"stack: {np.round(stack_weights,decimals=5)}")
     print("All threshold RMSE in years:"+ str(np.sqrt(np.square(aedyrs).mean(axis=1))))
     print(f"0.5°C threshold error years:{faedyrs[:,0]}")
     print(f"1.0°C threshold error years:{faedyrs[:,5]}")

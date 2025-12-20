@@ -1,0 +1,577 @@
+## SLURM PROLOG ###############################################################
+##    Job ID : 14446512
+##  Job Name : all_crossing_eval
+##  Nodelist : node2333
+##      CPUs : 1
+##   Mem/CPU : 5120 MB
+## Directory : /oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats
+##   Job Started : Sun Nov 23 11:54:14 AM EST 2025
+###############################################################################
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py:49: RuntimeWarning: divide by zero encountered in scalar divide
+  sigma = np.sqrt(np.sum((model - temps[sp:ep]) ** 2) / (len(model) - 2))  # regression std error
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py:49: RuntimeWarning: invalid value encountered in scalar divide
+  sigma = np.sqrt(np.sum((model - temps[sp:ep]) ** 2) / (len(model) - 2))  # regression std error
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py:51: RuntimeWarning: invalid value encountered in scalar divide
+  g = np.dot(-(model[:-1] - temps[sp:ep-1]), -(model[1:] - temps[sp+1:ep])) / np.sum((model - temps[sp:ep]) ** 2)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:69: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+starting computation for fut_NorESM_RCP45_Volc
+Model number:
+0
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt26wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt36wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+11
+29
+45
+55
+61
+111
+117
+122
+125
+129
+139
+142
+144
+147
+150
+154
+159
+164
+170
+174
+178
+181
+184
+187
+189
+192
+194
+196
+198
+201
+206
+211
+216
+225
+239
+241
+244
+246
+248
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_TAS_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+0
+Minimum MSE: 4.587441355316061e-10
+Minimum MSE Index: 9
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.010252556574509648 -2.8876602286201845
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_fitprob.py", line 230, in <module>
+    results = run_methods(years, simall,
+                          (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                          model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_fitprob.py", line 64, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py", line 81, in run_method
+    samp_ret = retro_array[100:,:] - newcorrecton[:, np.newaxis]   #starts in 1750 so crop to 100th index
+               ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ValueError: operands could not be broadcast together with shapes (252,212) (250,1) 
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:69: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+starting computation for fut_NorESM_RCP45_VolcConst
+Model number:
+0
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt26wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt36wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+11
+29
+45
+55
+61
+111
+117
+122
+125
+129
+139
+143
+147
+150
+153
+157
+160
+163
+166
+169
+173
+179
+183
+186
+189
+192
+198
+203
+208
+212
+216
+220
+223
+226
+231
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_TAS_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+0
+Minimum MSE: 5.215852826323993e-10
+Minimum MSE Index: 9
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.010483591671767992 -2.9619229378851015
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_fitprob.py", line 230, in <module>
+    results = run_methods(years, simall,
+                          (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                          model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_fitprob.py", line 64, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py", line 81, in run_method
+    samp_ret = retro_array[100:,:] - newcorrecton[:, np.newaxis]   #starts in 1750 so crop to 100th index
+               ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ValueError: operands could not be broadcast together with shapes (252,230) (250,1) 
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py:49: RuntimeWarning: divide by zero encountered in scalar divide
+  sigma = np.sqrt(np.sum((model - temps[sp:ep]) ** 2) / (len(model) - 2))  # regression std error
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:69: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+starting computation for fut_ESM1-2-LR_SSP370_constVolc
+Model number:
+0
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt26wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt36wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+0
+50
+61
+81
+98
+104
+109
+122
+128
+135
+139
+142
+144
+149
+171
+176
+181
+184
+187
+191
+195
+199
+202
+205
+208
+211
+214
+218
+221
+225
+229
+233
+237
+241
+243
+246
+249
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_TAS_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+Minimum MSE: 3.359276234959907e-08
+Minimum MSE Index: 9
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.006979606365161091 -1.881251319953023
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_fitprob.py", line 230, in <module>
+    results = run_methods(years, simall,
+                          (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                          model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_fitprob.py", line 64, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py", line 81, in run_method
+    samp_ret = retro_array[100:,:] - newcorrecton[:, np.newaxis]   #starts in 1750 so crop to 100th index
+               ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ValueError: operands could not be broadcast together with shapes (252,206) (251,1) 
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:69: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+starting computation for fut_ESM1-2-LR_SSP245_constVolc
+Model number:
+0
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt26wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt36wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+0
+50
+61
+81
+98
+104
+109
+122
+128
+135
+139
+142
+144
+149
+149
+155
+166
+169
+171
+175
+179
+183
+187
+190
+193
+196
+200
+204
+208
+213
+221
+225
+229
+236
+243
+247
+249
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_TAS_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+Minimum MSE: 2.103510432505118e-08
+Minimum MSE Index: 9
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.007946743022692536 -2.21042836006627
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_fitprob.py", line 230, in <module>
+    results = run_methods(years, simall,
+                          (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                          model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_fitprob.py", line 64, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py", line 81, in run_method
+    samp_ret = retro_array[100:,:] - newcorrecton[:, np.newaxis]   #starts in 1750 so crop to 100th index
+               ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ValueError: operands could not be broadcast together with shapes (252,179) (251,1) 
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:69: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+starting computation for fut_ESM1-2-LR_SSP126_constVolc
+Model number:
+0
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt26wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt36wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+0
+50
+61
+81
+98
+104
+109
+122
+128
+135
+139
+142
+144
+149
+175
+182
+188
+195
+210
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_TAS_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+Minimum MSE: 1.2821522510364503e-08
+Minimum MSE Index: 9
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.009127032205783684 -2.590197924162207
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Traceback (most recent call last):
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_fitprob.py", line 230, in <module>
+    results = run_methods(years, simall,
+                          (np.concatenate((temps_CIl_hist,futCIl)), np.concatenate((temps_CIu_hist,futCIu)) ),
+                          model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/hist_fitprob.py", line 64, in run_methods
+    result = method_module.run_method(years, avg_temperatures, temp_uncert,model_run, experiment_type)
+  File "/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py", line 81, in run_method
+    samp_ret = retro_array[100:,:] - newcorrecton[:, np.newaxis]   #starts in 1750 so crop to 100th index
+               ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ValueError: operands could not be broadcast together with shapes (252,652) (251,1) 
+All processes completed.

@@ -1,0 +1,1583 @@
+## SLURM PROLOG ###############################################################
+##    Job ID : 14419632
+##  Job Name : all_crossing_eval
+##  Nodelist : node2348
+##      CPUs : 1
+##   Mem/CPU : 5120 MB
+## Directory : /oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats
+##   Job Started : Sat Nov 22 05:31:34 PM EST 2025
+###############################################################################
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/fut_evaluation_gen_ensemble.py:20: RuntimeWarning: Mean of empty slice
+  return np.nanmean(standards_np,axis=0)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py:49: RuntimeWarning: divide by zero encountered in scalar divide
+  sigma = np.sqrt(np.sum((model - temps[sp:ep]) ** 2) / (len(model) - 2))  # regression std error
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:69: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py:49: RuntimeWarning: divide by zero encountered in scalar divide
+  sigma = np.sqrt(np.sum((model - temps[sp:ep]) ** 2) / (len(model) - 2))  # regression std error
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:68: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:120: RuntimeWarning: Mean of empty slice
+  samp_meanAll =  np.nanmean(samp_curAll, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:71: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:69: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:68: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:120: RuntimeWarning: Mean of empty slice
+  samp_meanAll =  np.nanmean(samp_curAll, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:69: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:71: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:68: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:120: RuntimeWarning: Mean of empty slice
+  samp_meanAll =  np.nanmean(samp_curAll, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:71: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:69: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:68: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:120: RuntimeWarning: Mean of empty slice
+  samp_meanAll =  np.nanmean(samp_curAll, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:71: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:69: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:68: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:70: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:120: RuntimeWarning: Mean of empty slice
+  samp_meanAll =  np.nanmean(samp_curAll, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:53: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:71: RuntimeWarning: Mean of empty slice
+  samp_mean =  np.nanmean(samp_cur, axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:84: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:87: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:85: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:138: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:84: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:87: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:85: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:138: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:84: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:112: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:84: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:112: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:87: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:115: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:87: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:115: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:84: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:87: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:85: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:138: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:84: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:87: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:85: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:138: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:84: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:112: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:85: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:85: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:138: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:166: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:84: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:112: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:138: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:166: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:84: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:87: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:85: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:138: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:87: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:115: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:67: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py:95: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:87: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:115: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:84: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py:112: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:85: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:138: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:166: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:87: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py:115: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:68: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py:96: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:85: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:138: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:166: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:85: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py:113: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:138: RuntimeWarning: Mean of empty slice
+  return np.nanmean(samp_cur[year_idx-1850, :], axis = 1)
+/users/jnickla1/.conda/envs/cleanpy/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py:166: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py:93: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py:93: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py:97: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py:97: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py:141: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py:141: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+starting computation for fut_ESM1-2-LR_SSP126_constVolc
+Model number:
+36
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt26wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt36wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+10
+16
+20
+25
+25
+41
+60
+71
+96
+106
+115
+122
+172
+180
+185
+193
+200
+206
+221
+236
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_TAS_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+Minimum MSE: 1.7122951945225395e-08
+Minimum MSE Index: 42
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.008817777748505593 -2.508285729089592
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta2_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_method.py
+Loading ensemble arrays...
+287.6294503832469
+1.58975662096708
+inbndf = 2338.7066717616
+B1B0 = 306.90863324568875
+rad1850 = 240.63168812158963
+B1 = 6598.556391002941
+B0 = 0.04651148146042296
+outbndf = 0.0003741645415954308
+CONSISTENCY CHECK
+OHCA + surf = 109.62809949439985
+sum TOA = 133.96458508419238
+Error:
+0.18166357604510058
+OHCA_scale:
+1.240024061145911
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_all_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_human_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_tot_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_for_halfU_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_forec_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL_10y_IPCC_method.py
+60
+Results from lag10y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from lag5y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from raw1y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent10y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent20y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent21y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent30y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from offset11y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from OLS_AR5all (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_AR5split (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from TheilSen_h7075 (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from quartic (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from butterworth (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_hinge75 (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from hinge75meet (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from Bayes_seq_CP (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_refit (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from lowess1dg20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt10wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wAR (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wARMA (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt26wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt30wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt36wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess2dt20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess2dt30wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend30y_3CS (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend30y (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from opt_clim_norm (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend15y (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from min_month_proj (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from cubic_spline (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from GAM_AR1 (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from GAM_AR0 (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from Kal_flexLin_ocn (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kal_flexLin (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kalman_RW (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kalman_RW_ocn (Method Class: 42_Temp_Alone/5_Kalman):
+Results from lfca_SST (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from lfca_TAS (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_volc_cons (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_cons (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeGreensfx (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_volc_refit (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from OLS_refit_CO2forc (Method Class: 43_Forcing_Based/0_Linear):
+Results from cons_hArrh_CO2forc (Method Class: 43_Forcing_Based/0_Linear):
+Results from FaIR_anthro (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_anthro sampled, d llike: 0.012270081375300057
+Results from FaIR_anthro_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_anthro_unB sampled, d llike: 0.015430310113280221
+Results from FaIR_nonat (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_nonat sampled, d llike: -0.030767330364762424
+Results from FaIR_nonat_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_nonat_unB sampled, d llike: -0.014830422195630133
+Results from FaIR_all (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_all sampled, d llike: -1713.3801735829718
+Results from FaIR_all_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_all_unB sampled, d llike: -0.02280409473592715
+Results from FaIR_comb_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_comb_unB sampled, d llike: -0.014788234869620887
+Results from EBMKF_ta4 (Method Class: 43_Forcing_Based/2_Kalman):
+Results from EBMKF_ta2 (Method Class: 43_Forcing_Based/2_Kalman):
+Results from EBMKF_ta (Method Class: 43_Forcing_Based/2_Kalman):
+Results from eROF_anthro (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from KCC_human (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_anthro (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro sampled, d llike: 0.051661829983700835
+Results from GWI_anthro_orig (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_anthro_CGWL (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_CGWL sampled, d llike: 0.07502326437265516
+Results from GWI_anthro_SR15 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_SR15 sampled, d llike: 0.03990417605894736
+Results from GWI_anthro_AR6 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_AR6 sampled, d llike: -0.003488064628087484
+Results from eROF_tot (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from KCC_all (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_tot (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot sampled, d llike: -0.11075162120279103
+Results from GWI_tot_orig (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_tot_CGWL (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_CGWL sampled, d llike: 0.02363079408354296
+Results from GWI_tot_SR15 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_SR15 sampled, d llike: -0.10099351183507888
+Results from GWI_tot_AR6 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_AR6 sampled, d llike: -0.07502770883764942
+Results from CGWL10y_forec (Method Class: 44_EarthModel_CGWL):
+Results from CGWL10y_for_halfU (Method Class: 44_EarthModel_CGWL):
+Results from CGWL10y_pUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_pUKCP sampled, d llike: -0.015439049057651033
+Results from CGWL10y_sUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_sUKCP sampled, d llike: -0.03316343480625106
+Results from CGWL10y_sfUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_sfUKCP sampled, d llike: -0.01802744087489372
+Results from CGWL_10y_IPCC (Method Class: 44_EarthModel_CGWL):
+394.283970355
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py:93: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+starting computation for fut_NorESM_RCP45_VolcConst
+Model number:
+36
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt26wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt36wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+17
+27
+53
+59
+67
+87
+100
+100
+119
+137
+139
+141
+143
+145
+147
+150
+154
+159
+162
+165
+169
+172
+176
+180
+183
+186
+190
+195
+201
+205
+211
+217
+224
+229
+233
+238
+245
+248
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_TAS_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+36
+Minimum MSE: 5.354665988388518e-10
+Minimum MSE Index: 42
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.01062717094202047 -2.953786660817556
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta2_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_method.py
+Loading ensemble arrays...
+287.3714426172757
+2.1112461344401936
+inbndf = 2338.7066717616
+B1B0 = 307.56625111752004
+rad1850 = 240.65147841367835
+B1 = 6601.551945383233
+B0 = 0.046589991817396086
+outbndf = 0.00037433440151101084
+CONSISTENCY CHECK
+OHCA + surf = 164.6152506029802
+sum TOA = 165.94644537737426
+Error:
+0.00802183361847149
+OHCA_scale:
+1.0087208796868108
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_all_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_human_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_tot_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_for_halfU_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_forec_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL_10y_IPCC_method.py
+60
+Results from lag10y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from lag5y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from raw1y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent10y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent20y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent21y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent30y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from offset11y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from OLS_AR5all (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_AR5split (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from TheilSen_h7075 (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from quartic (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from butterworth (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_hinge75 (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from hinge75meet (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from Bayes_seq_CP (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_refit (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from lowess1dg20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt10wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wAR (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wARMA (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt26wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt30wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt36wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess2dt20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess2dt30wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend30y_3CS (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend30y (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from opt_clim_norm (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend15y (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from min_month_proj (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from cubic_spline (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from GAM_AR1 (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from GAM_AR0 (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from Kal_flexLin_ocn (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kal_flexLin (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kalman_RW (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kalman_RW_ocn (Method Class: 42_Temp_Alone/5_Kalman):
+Results from lfca_SST (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from lfca_TAS (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_volc_cons (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_cons (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeGreensfx (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_volc_refit (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from OLS_refit_CO2forc (Method Class: 43_Forcing_Based/0_Linear):
+Results from cons_hArrh_CO2forc (Method Class: 43_Forcing_Based/0_Linear):
+Results from FaIR_anthro (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_anthro sampled, d llike: -2.004694074825243
+Results from FaIR_anthro_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_anthro_unB sampled, d llike: -1.8557298829826436
+Results from FaIR_nonat (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_nonat sampled, d llike: -0.020310893207065472
+Results from FaIR_nonat_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_nonat_unB sampled, d llike: -0.22761950109430684
+Results from FaIR_all (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_all sampled, d llike: -18948.88010408958
+Results from FaIR_all_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_all_unB sampled, d llike: -0.8088799447499945
+Results from FaIR_comb_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_comb_unB sampled, d llike: -0.7655516363214656
+Results from EBMKF_ta4 (Method Class: 43_Forcing_Based/2_Kalman):
+Results from EBMKF_ta2 (Method Class: 43_Forcing_Based/2_Kalman):
+Results from EBMKF_ta (Method Class: 43_Forcing_Based/2_Kalman):
+Results from eROF_anthro (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from KCC_human (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_anthro (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro sampled, d llike: 0.024392691600128913
+Results from GWI_anthro_orig (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_anthro_CGWL (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_CGWL sampled, d llike: 0.023428310600892566
+Results from GWI_anthro_SR15 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_SR15 sampled, d llike: 0.044841745953780876
+Results from GWI_anthro_AR6 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_AR6 sampled, d llike: -0.006453643145589716
+Results from eROF_tot (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from KCC_all (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_tot (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot sampled, d llike: 0.06538515910574505
+Results from GWI_tot_orig (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_tot_CGWL (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_CGWL sampled, d llike: 0.07581417910916066
+Results from GWI_tot_SR15 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_SR15 sampled, d llike: 0.07563338846528378
+Results from GWI_tot_AR6 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_AR6 sampled, d llike: -0.1054355316351101
+Results from CGWL10y_forec (Method Class: 44_EarthModel_CGWL):
+Results from CGWL10y_for_halfU (Method Class: 44_EarthModel_CGWL):
+Results from CGWL10y_pUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_pUKCP sampled, d llike: -0.03560678739703749
+Results from CGWL10y_sUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_sUKCP sampled, d llike: -0.34076185366373646
+Results from CGWL10y_sfUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_sfUKCP sampled, d llike: -0.3148251157759274
+Results from CGWL_10y_IPCC (Method Class: 44_EarthModel_CGWL):
+394.30536937200003
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py:97: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py:141: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py:93: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+starting computation for fut_ESM1-2-LR_SSP370_constVolc
+Model number:
+36
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt26wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt36wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+10
+16
+20
+25
+25
+41
+60
+71
+96
+106
+115
+122
+172
+176
+180
+184
+188
+192
+195
+199
+202
+204
+206
+209
+212
+215
+218
+223
+226
+229
+233
+236
+240
+242
+244
+247
+249
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_TAS_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+Minimum MSE: 4.7507697331639065e-08
+Minimum MSE Index: 42
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.007052270544741838 -1.922988287641315
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta2_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_method.py
+Loading ensemble arrays...
+287.6294503832469
+3.2266401658889095
+inbndf = 2338.7066717616
+B1B0 = 306.90863324568875
+rad1850 = 240.63168812158963
+B1 = 6598.556391002941
+B0 = 0.04651148146042296
+outbndf = 0.0003741645415954308
+CONSISTENCY CHECK
+OHCA + surf = 177.0188648720546
+sum TOA = 189.5791345056437
+Error:
+0.06625343905246707
+OHCA_scale:
+1.0795839875985573
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_all_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_human_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_tot_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_for_halfU_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_forec_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL_10y_IPCC_method.py
+60
+Results from lag10y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from lag5y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from raw1y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent10y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent20y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent21y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent30y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from offset11y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from OLS_AR5all (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_AR5split (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from TheilSen_h7075 (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from quartic (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from butterworth (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_hinge75 (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from hinge75meet (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from Bayes_seq_CP (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_refit (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from lowess1dg20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt10wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wAR (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wARMA (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt26wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt30wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt36wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess2dt20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess2dt30wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend30y_3CS (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend30y (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from opt_clim_norm (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend15y (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from min_month_proj (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from cubic_spline (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from GAM_AR1 (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from GAM_AR0 (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from Kal_flexLin_ocn (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kal_flexLin (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kalman_RW (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kalman_RW_ocn (Method Class: 42_Temp_Alone/5_Kalman):
+Results from lfca_SST (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from lfca_TAS (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_volc_cons (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_cons (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeGreensfx (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_volc_refit (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from OLS_refit_CO2forc (Method Class: 43_Forcing_Based/0_Linear):
+Results from cons_hArrh_CO2forc (Method Class: 43_Forcing_Based/0_Linear):
+Results from FaIR_anthro (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_anthro sampled, d llike: -0.004282609812956029
+Results from FaIR_anthro_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_anthro_unB sampled, d llike: -0.010153354635380474
+Results from FaIR_nonat (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_nonat sampled, d llike: -0.03503921300409618
+Results from FaIR_nonat_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_nonat_unB sampled, d llike: -0.03986352201272192
+Results from FaIR_all (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_all sampled, d llike: -1371.3651543370768
+Results from FaIR_all_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_all_unB sampled, d llike: -0.04060785972985648
+Results from FaIR_comb_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_comb_unB sampled, d llike: -0.04015603849608573
+Results from EBMKF_ta4 (Method Class: 43_Forcing_Based/2_Kalman):
+Results from EBMKF_ta2 (Method Class: 43_Forcing_Based/2_Kalman):
+Results from EBMKF_ta (Method Class: 43_Forcing_Based/2_Kalman):
+Results from eROF_anthro (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from KCC_human (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_anthro (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro sampled, d llike: 0.07017650670269315
+Results from GWI_anthro_orig (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_anthro_CGWL (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_CGWL sampled, d llike: 0.09206196501940234
+Results from GWI_anthro_SR15 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_SR15 sampled, d llike: 0.07138609268990947
+Results from GWI_anthro_AR6 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_AR6 sampled, d llike: -0.6249858905092925
+Results from eROF_tot (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from KCC_all (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_tot (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot sampled, d llike: -0.05307169135685852
+Results from GWI_tot_orig (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_tot_CGWL (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_CGWL sampled, d llike: -0.019794271810638087
+Results from GWI_tot_SR15 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_SR15 sampled, d llike: -0.01312540703387155
+Results from GWI_tot_AR6 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_AR6 sampled, d llike: -0.7464937463441583
+Results from CGWL10y_forec (Method Class: 44_EarthModel_CGWL):
+Results from CGWL10y_for_halfU (Method Class: 44_EarthModel_CGWL):
+Results from CGWL10y_pUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_pUKCP sampled, d llike: -0.03812484316040554
+Results from CGWL10y_sUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_sUKCP sampled, d llike: -0.05463546094740179
+Results from CGWL10y_sfUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_sfUKCP sampled, d llike: -0.03190523382941879
+Results from CGWL_10y_IPCC (Method Class: 44_EarthModel_CGWL):
+399.63613342900004
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py:93: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py:97: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py:141: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+starting computation for fut_ESM1-2-LR_SSP245_constVolc
+Model number:
+36
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt26wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt36wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+10
+16
+20
+25
+25
+41
+60
+71
+96
+106
+115
+122
+172
+177
+181
+185
+189
+193
+197
+201
+206
+213
+222
+239
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_TAS_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+Minimum MSE: 2.9583993921278307e-08
+Minimum MSE Index: 42
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.00797350828343163 -2.229620414795658
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta2_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_method.py
+Loading ensemble arrays...
+287.6294503832469
+2.3327223192092674
+inbndf = 2338.7066717616
+B1B0 = 306.90863324568875
+rad1850 = 240.63168812158963
+B1 = 6598.556391002941
+B0 = 0.04651148146042296
+outbndf = 0.0003741645415954308
+CONSISTENCY CHECK
+OHCA + surf = 139.9375686002518
+sum TOA = 161.9252496179484
+Error:
+0.13578908212014512
+OHCA_scale:
+1.1717551418338605
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_all_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_human_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_tot_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_for_halfU_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_forec_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL_10y_IPCC_method.py
+60
+Results from lag10y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from lag5y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from raw1y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent10y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent20y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent21y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent30y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from offset11y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from OLS_AR5all (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_AR5split (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from TheilSen_h7075 (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from quartic (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from butterworth (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_hinge75 (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from hinge75meet (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from Bayes_seq_CP (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_refit (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from lowess1dg20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt10wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wAR (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wARMA (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt26wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt30wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt36wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess2dt20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess2dt30wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend30y_3CS (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend30y (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from opt_clim_norm (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend15y (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from min_month_proj (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from cubic_spline (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from GAM_AR1 (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from GAM_AR0 (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from Kal_flexLin_ocn (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kal_flexLin (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kalman_RW (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kalman_RW_ocn (Method Class: 42_Temp_Alone/5_Kalman):
+Results from lfca_SST (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from lfca_TAS (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_volc_cons (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_cons (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeGreensfx (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_volc_refit (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from OLS_refit_CO2forc (Method Class: 43_Forcing_Based/0_Linear):
+Results from cons_hArrh_CO2forc (Method Class: 43_Forcing_Based/0_Linear):
+Results from FaIR_anthro (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_anthro sampled, d llike: -0.0052797547777976295
+Results from FaIR_anthro_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_anthro_unB sampled, d llike: -0.012449962144973847
+Results from FaIR_nonat (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_nonat sampled, d llike: -0.035808498042807946
+Results from FaIR_nonat_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_nonat_unB sampled, d llike: -0.03280848069883402
+Results from FaIR_all (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_all sampled, d llike: -927.1716772788038
+Results from FaIR_all_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_all_unB sampled, d llike: -0.041631883213675724
+Results from FaIR_comb_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_comb_unB sampled, d llike: -0.04012477171360773
+Results from EBMKF_ta4 (Method Class: 43_Forcing_Based/2_Kalman):
+Results from EBMKF_ta2 (Method Class: 43_Forcing_Based/2_Kalman):
+Results from EBMKF_ta (Method Class: 43_Forcing_Based/2_Kalman):
+Results from eROF_anthro (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from KCC_human (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_anthro (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro sampled, d llike: -0.0031102672390617148
+Results from GWI_anthro_orig (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_anthro_CGWL (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_CGWL sampled, d llike: 0.02044624095975678
+Results from GWI_anthro_SR15 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_SR15 sampled, d llike: -0.012095306628522318
+Results from GWI_anthro_AR6 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_AR6 sampled, d llike: -0.02090506310291884
+Results from eROF_tot (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from KCC_all (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_tot (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot sampled, d llike: -0.10108089061851122
+Results from GWI_tot_orig (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_tot_CGWL (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_CGWL sampled, d llike: -0.0005232250834588115
+Results from GWI_tot_SR15 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_SR15 sampled, d llike: -0.16138297493501974
+Results from GWI_tot_AR6 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_AR6 sampled, d llike: -0.06711356816050018
+Results from CGWL10y_forec (Method Class: 44_EarthModel_CGWL):
+Results from CGWL10y_for_halfU (Method Class: 44_EarthModel_CGWL):
+Results from CGWL10y_pUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_pUKCP sampled, d llike: -0.011157530177416275
+Results from CGWL10y_sUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_sUKCP sampled, d llike: -0.015342467601100918
+Results from CGWL10y_sfUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_sfUKCP sampled, d llike: -0.008702467652576651
+Results from CGWL_10y_IPCC (Method Class: 44_EarthModel_CGWL):
+404.047559969
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py:97: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+/oscar/data/deeps/private/bfoxkemp/jnickla1/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py:141: RuntimeWarning: Mean of empty slice
+  cdist = np.nanmean(dist)
+starting computation for fut_NorESM_RCP45_Volc
+Model number:
+36
+
+
+
+
+Methods/42_Temp_Alone/1_Run_Means/cent10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent20y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent21y_method.py
+Methods/42_Temp_Alone/1_Run_Means/cent30y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag10y_method.py
+Methods/42_Temp_Alone/1_Run_Means/lag5y_method.py
+Methods/42_Temp_Alone/1_Run_Means/offset11y_method.py
+Methods/42_Temp_Alone/1_Run_Means/raw1y_method.py
+Methods/42_Temp_Alone/2_LT_Fits/Bayes_seq_CP_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5all_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_AR5split_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_hinge75_method.py
+Methods/42_Temp_Alone/2_LT_Fits/OLS_refit_method.py
+Methods/42_Temp_Alone/2_LT_Fits/TheilSen_h7075_method.py
+Methods/42_Temp_Alone/2_LT_Fits/butterworth_method.py
+Methods/42_Temp_Alone/2_LT_Fits/hinge75meet_method.py
+Methods/42_Temp_Alone/2_LT_Fits/quartic_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend15y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_3CS_method.py
+Methods/42_Temp_Alone/3_ST_Fits/etrend30y_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dg20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt10wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wARMA_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wAR_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt26wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess1dt36wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt20wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/lowess2dt30wnc_method.py
+Methods/42_Temp_Alone/3_ST_Fits/min_month_proj_method.py
+Methods/42_Temp_Alone/3_ST_Fits/opt_clim_norm_method.py
+0
+17
+27
+53
+59
+67
+87
+100
+100
+119
+137
+139
+141
+143
+145
+147
+149
+152
+156
+162
+170
+172
+174
+176
+180
+184
+189
+193
+199
+204
+207
+210
+213
+217
+223
+229
+236
+245
+247
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR0_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py
+Methods/42_Temp_Alone/4_GAM_AR1/cubic_spline_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py
+Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_ocn_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_method.py
+Methods/42_Temp_Alone/5_Kalman/Kalman_RW_ocn_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_SST_method.py
+Methods/42_Temp_Alone/6_Remove_IV/lfca_TAS_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeGreensfx_method.py
+36
+Minimum MSE: 5.143400538809572e-10
+Minimum MSE Index: 42
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_cons_method.py
+Methods/42_Temp_Alone/6_Remove_IV/removeMEI_volc_refit_method.py
+Methods/43_Forcing_Based/0_Linear/OLS_refit_CO2forc_method.py
+Fitted line
+0.010662336271652442 -2.9647505039658184
+Methods/43_Forcing_Based/0_Linear/cons_hArrh_CO2forc_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_anthro_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_method.py
+Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta2_method.py
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_method.py
+Loading ensemble arrays...
+287.3714426172757
+2.116291707356879
+inbndf = 2338.7066717616
+B1B0 = 307.56625111752004
+rad1850 = 240.65147841367835
+B1 = 6601.551945383233
+B0 = 0.046589991817396086
+outbndf = 0.00037433440151101084
+CONSISTENCY CHECK
+OHCA + surf = 164.91712011621786
+sum TOA = 165.638160829009
+Error:
+0.004353107455325339
+OHCA_scale:
+1.0047175442893086
+Methods/43_Forcing_Based/2_Kalman/EBMKF_ta_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_AR6_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_SR15_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_method.py
+Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_orig_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_all_method.py
+Methods/43_Forcing_Based/3_Human_Induced/KCC_human_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_anthro_method.py
+Methods/43_Forcing_Based/3_Human_Induced/eROF_tot_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_for_halfU_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_forec_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_pUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py
+Methods/44_EarthModel_CGWL/CGWL_10y_IPCC_method.py
+60
+Results from lag10y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from lag5y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from raw1y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent10y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent20y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent21y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from cent30y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from offset11y (Method Class: 42_Temp_Alone/1_Run_Means):
+Results from OLS_AR5all (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_AR5split (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from TheilSen_h7075 (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from quartic (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from butterworth (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_hinge75 (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from hinge75meet (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from Bayes_seq_CP (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from OLS_refit (Method Class: 42_Temp_Alone/2_LT_Fits):
+Results from lowess1dg20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt10wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wAR (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wARMA (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt26wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt30wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess1dt36wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess2dt20wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from lowess2dt30wnc (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend30y_3CS (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend30y (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from opt_clim_norm (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from etrend15y (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from min_month_proj (Method Class: 42_Temp_Alone/3_ST_Fits):
+Results from cubic_spline (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from GAM_AR1 (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from GAM_AR0 (Method Class: 42_Temp_Alone/4_GAM_AR1):
+Results from Kal_flexLin_ocn (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kal_flexLin (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kalman_RW (Method Class: 42_Temp_Alone/5_Kalman):
+Results from Kalman_RW_ocn (Method Class: 42_Temp_Alone/5_Kalman):
+Results from lfca_SST (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from lfca_TAS (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_volc_cons (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_cons (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeGreensfx (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from removeMEI_volc_refit (Method Class: 42_Temp_Alone/6_Remove_IV):
+Results from OLS_refit_CO2forc (Method Class: 43_Forcing_Based/0_Linear):
+Results from cons_hArrh_CO2forc (Method Class: 43_Forcing_Based/0_Linear):
+Results from FaIR_anthro (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_anthro sampled, d llike: -1.2185936896408975
+Results from FaIR_anthro_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_anthro_unB sampled, d llike: -1.2698231280980647
+Results from FaIR_nonat (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_nonat sampled, d llike: 0.03161950033787142
+Results from FaIR_nonat_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_nonat_unB sampled, d llike: -0.25210592082577965
+Results from FaIR_all (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_all sampled, d llike: -16404.917551706036
+Results from FaIR_all_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_all_unB sampled, d llike: -0.9732438173633217
+Results from FaIR_comb_unB (Method Class: 43_Forcing_Based/1_ERF_FaIR):
+FaIR_comb_unB sampled, d llike: -0.5646910416064657
+Results from EBMKF_ta4 (Method Class: 43_Forcing_Based/2_Kalman):
+Results from EBMKF_ta2 (Method Class: 43_Forcing_Based/2_Kalman):
+Results from EBMKF_ta (Method Class: 43_Forcing_Based/2_Kalman):
+Results from eROF_anthro (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from KCC_human (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_anthro (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro sampled, d llike: -0.012660434902799826
+Results from GWI_anthro_orig (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_anthro_CGWL (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_CGWL sampled, d llike: -0.029278822022615364
+Results from GWI_anthro_SR15 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_SR15 sampled, d llike: 0.00840378293711827
+Results from GWI_anthro_AR6 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_anthro_AR6 sampled, d llike: -0.056383844168009414
+Results from eROF_tot (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from KCC_all (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_tot (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot sampled, d llike: -0.03542947640580685
+Results from GWI_tot_orig (Method Class: 43_Forcing_Based/3_Human_Induced):
+Results from GWI_tot_CGWL (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_CGWL sampled, d llike: -0.017082740968694776
+Results from GWI_tot_SR15 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_SR15 sampled, d llike: -0.01711265364401049
+Results from GWI_tot_AR6 (Method Class: 43_Forcing_Based/3_Human_Induced):
+GWI_tot_AR6 sampled, d llike: -0.27200061172944556
+Results from CGWL10y_forec (Method Class: 44_EarthModel_CGWL):
+Results from CGWL10y_for_halfU (Method Class: 44_EarthModel_CGWL):
+Results from CGWL10y_pUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_pUKCP sampled, d llike: -0.03794372849515637
+Results from CGWL10y_sUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_sUKCP sampled, d llike: -0.3199246141650647
+Results from CGWL10y_sfUKCP (Method Class: 44_EarthModel_CGWL):
+CGWL10y_sfUKCP sampled, d llike: -0.2989540370914887
+Results from CGWL_10y_IPCC (Method Class: 44_EarthModel_CGWL):
+406.98834683900003
+All processes completed.

@@ -1,5 +1,7 @@
 import numpy as np, pandas as pd, glob
 from scipy.stats import gaussian_kde
+import os
+import datetime
 import sys
 
 scenarios = ["fut_ESM1-2-LR_SSP126_constVolc","fut_ESM1-2-LR_SSP245_constVolc","fut_ESM1-2-LR_SSP370_constVolc",
@@ -26,6 +28,27 @@ for exp_index, exp in enumerate(scenarios):
     ncrosses_stack = []; rmse_stack = []; fc_diffs = []; kl_stack=[]
     rmse75_stack=[]; kl75_stack=[]
     print(exp+" "+str(len(files)))
+    mtimes = []
+    dated_files = []
+    for fp in files:
+        mtime = os.path.getmtime(fp)
+        dt = datetime.datetime.fromtimestamp(mtime)
+        mtimes.append(dt)
+        dated_files.append((fp, dt))
+
+# --- always report the oldest file ---
+    oldest_dt = min(mtimes)
+    print(f"Oldest file modification time: {oldest_dt:%Y-%m-%d %H:%M:%S}")
+
+# --- check for files outside Nov/Dec 2025 ---
+    bad = [(fp, dt) for fp, dt in dated_files
+           if not (dt.year == 2025 and dt.month==12)] # in (11, 12))]
+
+    if bad:
+        print("\nFound files NOT last modified in Nov/Dec 2025 (printing and exiting):")
+        for fp, dt in sorted(bad, key=lambda x: x[1]):
+            print(f"  {dt:%Y-%m-%d %H:%M:%S}  {fp}")
+        sys.exit(1)
     for f in files:
         z = np.load(f)
         ncrosses_stack.append(z["ncrosses"])            # (2,)
