@@ -134,12 +134,12 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         print(max_runs-1)
         plotting_figs= False
     
-    methods_folder=('Methods/42_Temp_Alone/','Methods/43_Forcing_Based/','Methods/44_EarthModel_CGWL')
+    methods_folder=('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/2_Kalman')
+    #('Methods/42_Temp_Alone/','Methods/43_Forcing_Based/','Methods/44_EarthModel_CGWL')
         #'Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/2_Kalman','Methods/44_EarthModel_CGWL')
 
 
     print("starting computation for "+experiment_type)
-
     ens_standard = eval_standard(experiment_type)
 
     (sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist) = collect_data(exp_attr)
@@ -147,6 +147,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
     for model_run in range(start_run,max_runs): #new indices start at 0
         print("Model number:")
         print(model_run)
+        
         print("\n\n\n")
         
 
@@ -614,8 +615,8 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         dfres2 = df_res_cur2.sort_values('100log-l',ascending=False) #do not need to sort saved output results - we will have to read and reference anyway
         dfres2.to_csv('Results/current_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
         df_results.to_csv('Results/all_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
-        
-        return closest_years, closest_yearsE #pass stuff back so we can draw more, thresholds at 1.1 1.2 ....
+        if(ax1 != None):
+            return closest_years, closest_yearsE #pass stuff back so we can draw more, thresholds at 1.1 1.2 ....
         
 def colorgen(c,step,const):
     y=(((c+1)%3-1)*step[0], ((c//3+1)%3-1)*step[1], ((c//9+1)%3-1)*step[2])
@@ -646,7 +647,7 @@ if __name__ == '__main__':
         
     if exp_attr[0]=="fut":
         run_one_single_ens_member(plotting_figs, experiment_type, start_run, None, None)
-        plt.show()
+        #plt.show()
         
     elif exp_attr[0]=="futplotcomb" and exp_attr[1]=="ESM1-2-LR": #11
         fig1, (axens, ax1a,ax1b)= plt.subplots(3, 1, figsize=(10,10), gridspec_kw={ "height_ratios" :[.6,1,1],"hspace": 0.35})

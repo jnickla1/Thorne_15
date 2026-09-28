@@ -24,10 +24,16 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #
 
     if experiment_type == 'historical':
-        gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/SR15_ESM1-2-LR/"+
+        if len(years)==175:
+            gwi_levels_curr0 = pd.read_csv(cur_path+"/Thorne2025_GWI_Results/SR15_ESM1-2-LR/"+
                 "GWI_results_SR15_HISTORICAL-ONLY_SCENARIO--observed-SSP245_ENSEMBLE-MEMBER-"+
                                        "-all_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2024.csv", header=[0, 1])
-        curbias = -0.0001
+            curbias = -0.0001
+        elif len(years)<=176:
+            gwi_levels_curr0 = pd.read_csv(cur_path+"/heads_tails/individual_members25/"+
+                    "GWI_results_SR15_HISTORICAL-ONLY_SCENARIO--observed-2025-SSP245"+
+                "_ENSEMBLE-MEMBER--GMT-all_ERF-all_VARIABLES--GHG-Nat-OHF_REGRESSED-YEARS--1850-1950_to_1850-2025.csv", header=[0, 1])    
+            curbias = -0.0001-0.0124
 
     elif (exp_attr[0]=="histens"):
         curbias =  -0.0001 #assuming this matches

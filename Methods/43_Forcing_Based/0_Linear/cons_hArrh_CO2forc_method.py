@@ -10,10 +10,11 @@ def confidence_interval(x, y_pred, x_mean, s_e, t_crit,n, factor=1):
 def run_method(years, temperature, uncert, model_run, experiment_type):
     
     data = np.genfromtxt(open("./Common_Data/co2_mlo_icedome.csv", "rb"),dtype=float, delimiter=',')
-    datesmlo=data[:,0]
-    co2mlo=data[:,1]
     datesicedome=data[:,2]
     co2icedome=data[:,3]
+    last_idx = np.where(~np.isnan(datesicedome))[0][-1]
+    datesmlo=data[:int(len(years) - datesicedome[last_idx]+1850-1),0]
+    co2mlo=data[:int(len(years) - datesicedome[last_idx]+1850-1),1]
     #create full record Jarvis 2024 paper
     Co2=np.full(np.shape(years),np.nan)
     Co2[int(datesmlo[0]-1850):int(datesmlo[-1]-1850+1)]=co2mlo

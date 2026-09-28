@@ -30,16 +30,21 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     offset=0 
     if experiment_type == 'historical':
         sfactor=0.2
-        current_array = np.load(cur_path+"/resliced_NorESM/combined_hadcrut5_nonat.npy") #starts in 1930
-        retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2024_temp_nonat.npy") #starts in 1750
-        curbias= 0
+        if len(years)<=175:
+            current_array = np.load(cur_path+"/resliced_NorESM/combined_hadcrut5_nonat.npy") #starts in 1930
+            retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2024_temp_nonat.npy") #starts in 1750
+            curbias= 0
+        elif len(years)==176:
+            retro_array = np.load(cur_path+"/resliced_headstails25/retrospective/all-headstails25r0cut2025_temp_nonat.npy") #starts in 1930
+            current_array = np.load(cur_path+"/resliced_headstails25/combined_all-headstails25r0_nonat.npy") #starts in 1750
+            curbias = -0.0043
 
     elif (exp_attr[0]=="histens"):
         sfactor=0.2
         curbias= 0 #assuming this matches
         #retro array doesn't matter
         retro_array = np.load(cur_path+"/retrospective/all-headstails_currentr"+str(model_run+1)+"cut2024_temp_nonat.npy") #starts in 1750
-        current_array = np.load(cur_path+"/resliced_headstails/combined_all-headstails_currentr"+str(model_run+1)+"_nonat.npy")
+        current_array = np.load(cur_path+"/resliced_headstails24/combined_all-headstails_currentr"+str(model_run+1)+"_nonat.npy")
         if (exp_attr[1]=="satcal"):
             offset = -np.mean(temperature[0:50])
             current_array = current_array - offset

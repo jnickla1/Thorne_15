@@ -42,7 +42,7 @@ y=np.zeros(sz)
 qqy=np.zeros(sz)
 
 
-zJ_from_W = 5.1006447*3.154*0.71
+zJ_from_W = 5.1006447*3.154 #*0.71
 zJtomm=0.121
 pcolor='deeppink'
 colorrts='goldenrod'

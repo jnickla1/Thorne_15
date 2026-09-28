@@ -1,6 +1,7 @@
 import numpy as np
 import sys
-
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parents[3]))
 import matplotlib.pyplot as plt
 import matplotlib        as mpl
 import scipy.stats as stats
@@ -13,7 +14,8 @@ import pdb
 
 #from os.path import expanduser
 import config
-#import os
+import os as _os
+
 #class configclass:
 #    def __init__(self):
 #        self.CODEBASE_PATH = os.path.expanduser('~/')+"Downloads/Thorne_15_codefigurestats"
@@ -26,8 +28,6 @@ colorstate=(62./255, 207./255, 117./255)
 coloruncert=(52./255, 235./255, 235./255)
 colorgrey=(0.5,0.5,0.5)
 
-n_iters = 174 
-
 zJ_from_W = 5.1006447*3.154 #*0.71 #CHANGE NOV25
 zJtomm=0.121
 pcolor='deeppink'
@@ -37,6 +37,7 @@ sdate=1850
 data = np.genfromtxt(open(common_dataprefix+"toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',') #run as main
 #data = np.genfromtxt(open("../Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',') #run from other file
 dates=data[:,0]
+n_iters = len(dates)
 dates[0]=sdate
 
 
@@ -346,6 +347,21 @@ TOA_meas_artif_var[2001-1850:2023-1850] = TOA_crop_var/9
 
 def ekf_run(z,n_iter,retPs=False):
     global gad
+    global moving_aves
+    global ocean_aves
+    global std_aves
+    moving_aves=np.empty(n_iter)
+    moving_aves[:] = np.nan
+    ocean_aves=np.empty(len(temps))
+    ocean_aves[:] = np.nan
+    std_aves=np.empty(len(temps))
+    std_aves[:] = np.nan
+    for i in range((fN),(n_iter-cN+1)):
+        lasta=i+cN;firsta=i-fN
+        moving_aves[i] = np.mean(z[firsta:lasta,0])
+        ocean_aves[i] = np.mean(z[firsta:lasta,1])
+        std_aves[i] = np.std(z[firsta:lasta,0])
+    
     xblind2=np.zeros((n_iter,3,1))
     xblind2[0,0:3,0]= np.array([Teq1850,oc_meas[0],0])
     for k in range(1,n_iter):
@@ -516,6 +532,8 @@ def ekf_run(z,n_iter,retPs=False):
             
             #plt.plot(dates, TOA_swout,'o',markersize=2,color='red')
             #plt.fill_between(dates, TOA_meas_artif-2*np.sqrt(TOA_meas_artif_var[30:]), TOA_meas_artif+2*np.sqrt(TOA_meas_artif_var[30:]), color="grey",zorder=5,alpha=0.2,lw=0)
+        
+        plotting_stuff('ta4', z,xhat,True)
         return xhat[0:n_iter,0,0], P[0:n_iter,0,0],xhathat[0:n_iter,0,0], Phat[0:n_iter,0,0]
     elif (retPs==4):
         return xhat[0:n_iter,0,0], P[0:n_iter,0,0],xblind[0:n_iter,0,0], Phat[0:n_iter,0,0]
@@ -523,30 +541,6 @@ def ekf_run(z,n_iter,retPs=False):
         return xhat[0:n_iter]
 
 
-observ = np.array([[temps,oc_meas,TOA_meas_artif]]).T
-#print(observ)
-this_xhat=ekf_run(observ,n_iters)
-xh1s=this_xhat[:,0].T[0]
-xh0s=xhatminus[:,0].T[0]
-stdS=np.sqrt(np.abs(S))[:,0,0]
-stdP=np.sqrt(np.abs(P))[:,0,0]
-Plastretain=np.abs(P)[-1,:,:]
-xhh1s=xhathat[:,0].T[0]
-xlastretain=this_xhat[-1,:]
-stdPh=np.sqrt(np.abs(Phat))[:,0,0]
-stdSh=np.sqrt(np.abs(Shat))[:,0,0]
-
-xh1d=this_xhat[:,1].T[0]
-xh0d=xhatminus[:,1].T[0]
-stdSd=np.sqrt(np.abs(S))[:,1,1]
-stdPd=np.sqrt(np.abs(P))[:,1,1]
-
-#print(1-stats.norm.cdf(1.5+pindavg,xh1s[-1],stdP[-1]))
-#print(1-stats.norm.cdf(1.5+pindavg,xh1s[-1],stdS[-1]))
-#print(temps[-1]-pindavg)
-
-Rtvara=np.mean(R_tvar[-11:-1])+30*Q[0,0]
-Roctvara=np.mean(Roc_tvar[-11:-1])+30*Q[1,1]
 
 def plot_boilerplate(ax=plt.gca()):
     ax.set_ylim(286.1,288.3)
@@ -557,13 +551,42 @@ def plot_boilerplate(ax=plt.gca()):
     ax.set_ylabel('Temperature (K)')
     ax.tick_params( direction = 'in',bottom=True, top=True, left=True, right=True )
 
-if (__name__ == "__main__") and True:
-    r2 = r2_score(observ[:,0], xblind[:,0])
-    print('r2 score for GMST to blind is', r2)
-    r2 = r2_score(observ[:,1], xblind[:,1])
-    print('r2 score for OCHA to blind is', r2)
+if  (__name__ == "__main__"):
+    observ = np.array([[temps,oc_meas,TOA_meas_artif]]).T
+    #print(observ)
+    this_xhat=ekf_run(observ,n_iters)
+    plotting_stuff("-uf4", observ,this_xhat)
 
-    r2 = r2_score(moving_aves[int(np.floor(N/2)):int(-(np.floor(N/2)+1))], xh1s[int(np.floor(N/2)):int(-(np.floor(N/2)+1))]) #
+def plotting_stuff(modelID,observ, this_xhat, plotting_lots):
+    dates = np.arange(1850,1850+np.shape(observ)[0])
+    xh1s=this_xhat[:,0].T[0]
+    xh0s=xhatminus[:,0].T[0]
+    stdS=np.sqrt(np.abs(S))[:,0,0]
+    stdP=np.sqrt(np.abs(P))[:,0,0]
+    Plastretain=np.abs(P)[-1,:,:]
+    xhh1s=xhathat[:,0].T[0]
+    xlastretain=this_xhat[-1,:]
+    stdPh=np.sqrt(np.abs(Phat))[:,0,0]
+    stdSh=np.sqrt(np.abs(Shat))[:,0,0]
+
+    xh1d=this_xhat[:,1].T[0]
+    xh0d=xhatminus[:,1].T[0]
+    stdSd=np.sqrt(np.abs(S))[:,1,1]
+    stdPd=np.sqrt(np.abs(P))[:,1,1]
+
+    #print(1-stats.norm.cdf(1.5+pindavg,xh1s[-1],stdP[-1]))
+    #print(1-stats.norm.cdf(1.5+pindavg,xh1s[-1],stdS[-1]))
+    #print(temps[-1]-pindavg)
+
+    Rtvara=np.mean(R_tvar[-11:-1])+30*Q[0,0]
+    Roctvara=np.mean(Roc_tvar[-11:-1])+30*Q[1,1]
+
+    r2 = r2_score(observ[:n_iters,0], xblind[:n_iters,0])
+    print('r2 score for GMST to blind is', r2)
+    r2 = r2_score(observ[:n_iters,1], xblind[:n_iters,1])
+    print('r2 score for OCHA to blind is', r2)
+    lendiff = n_iters - len(xh1s)
+    r2 = r2_score(moving_aves[int(np.floor(N/2)):int(-(np.floor(N/2)+1))], xh1s[int(np.floor(N/2)):int(-(np.floor(N/2)+1-lendiff))]) #
     print('r2 score for 30-mean GMST to EBM-KF is', r2)
     r2 = r2_score(ocean_aves[int(np.floor(N/2)):int(-(np.floor(N/2)+1))], xh1d[int(np.floor(N/2)):int(-(np.floor(N/2)+1))])
     print('r2 score for 30-mean OCHA to EBM-KF is', r2)
@@ -571,284 +594,309 @@ if (__name__ == "__main__") and True:
     #plt.rcParams['figure.figsize'] = (7, 6)
 
    # plt.figure(1)
-    fig, (ax1,ax4)= plt.subplots(2, 1, figsize=(7,10), gridspec_kw={ "hspace": 0.3})
-    plot_boilerplate(ax1)
-    plot_boilerplate(ax4)
-    ax1.plot(dates,temps,'o',label='noisy HadCRUT5 GMST measurements $Y_{t}$',markersize=2,color=colorgrey)
-    ax1.fill_between(dates, temps-2*data[:,4], temps+2*data[:,4],label="associated 95% uncertainty of $Y_{t}$", color="lightgrey")
-   # ax1.plot(dates,this_xhat[:,0],'-',label='posterior GMST EBM-KF-uf state estimate $\^{T }_{t}}$', color=colorekf)
-    ax1.plot(dates,xblind[:,0],'--',label='blind model',color='darkgoldenrod')
-    #ax1.legend(loc="upper left", fontsize="10.5")
-    handles, labels = ax1.get_legend_handles_labels()
-    order = [1,0,2]#[1,2,0,3]
-    ax1.legend([handles[idx] for idx in order],[labels[idx] for idx in order],loc="upper left",prop={'size': 10.5})
-    #fig.suptitle('Kalman Filter is a "weighted average" between Model Projections and Noisy Data')
-    ax1.set_title('Global Mean Surface Temperature State')
-    ax1.set_xlabel('Year')
-    ax1.set_ylabel('Temperature (K)')
-    ax1.set_ylim(286.1,288.3)
-    ax1.set_yticks(np.arange(286.2,288.3,0.2))
-    ax1.set_xlim(1850,2025)
-    ax1b = ax1.twinx()
-    mn, mx = ax1.get_ylim()
-    ax1b.set_ylim(mn-273.15, mx-273.15)
-    ax1b.set_yticks(np.arange(13,15.2,0.2))
-    ax1b.set_ylabel('Temperature (°C)')
-    #plt.savefig("Figure_1rev.pdf", format="pdf") #dpi=300,format="png")
+    if plotting_lots:
+        fig, (ax1,ax4)= plt.subplots(2, 1, figsize=(7,10), gridspec_kw={ "hspace": 0.3})
+        plot_boilerplate(ax1)
+        plot_boilerplate(ax4)
+        ax1.plot(dates,observ[:,0],'o',label='noisy HadCRUT5 GMST measurements $Y_{t}$',markersize=2,color=colorgrey)
+        if np.shape(observ)[0]==174:
+            ax1.fill_between(data[:,0], temps-2*data[:,4], temps+2*data[:,4],label="associated 95% uncertainty of $Y_{t}$", color="lightgrey")
+            order = [1,0,2]
+        else:
+            order = [1,0]
+       # ax1.plot(dates,this_xhat[:,0],'-',label='posterior GMST EBM-KF-uf state estimate $\^{T }_{t}}$', color=colorekf)
+        ax1.plot(dates,xblind[:n_iters,0],'--',label='blind model',color='darkgoldenrod')
+        #ax1.legend(loc="upper left", fontsize="10.5")
+        handles, labels = ax1.get_legend_handles_labels()
+        #[1,2,0,3]
+        ax1.legend([handles[idx] for idx in order],[labels[idx] for idx in order],loc="upper left",prop={'size': 10.5})
+        #fig.suptitle('Kalman Filter is a "weighted average" between Model Projections and Noisy Data')
+        ax1.set_title('Global Mean Surface Temperature State')
+        ax1.set_xlabel('Year')
+        ax1.set_ylabel('Temperature (K)')
+        ax1.set_ylim(286.1,288.3)
+        ax1.set_yticks(np.arange(286.2,288.3,0.2))
+        ax1.set_xlim(1850,2025)
+        ax1b = ax1.twinx()
+        mn, mx = ax1.get_ylim()
+        ax1b.set_ylim(mn-273.15, mx-273.15)
+        ax1b.set_yticks(np.arange(13,15.2,0.2))
+        ax1b.set_ylabel('Temperature (°C)')
+        #plt.savefig("Figure_1rev.pdf", format="pdf") #dpi=300,format="png")
 
 
-    #plt.rcParams['figure.figsize'] = (7, 6)
-    #plt.figure(2)
-    plot_boilerplate(ax4)
-    ax4.plot(dates,ocean_heat_measured,'o',label='noisy Zanna (2019) measurements Psi_t',markersize=2,color=colorgrey)
-    ax4.fill_between(dates, ocean_heat_measured-2*comb_ohca_uncer2, ocean_heat_measured+2*comb_ohca_uncer2,label="associated 95% uncertainty of Psi_t", color="lightgrey")
-    #ax4.plot(dates,this_xhat[:,1]*zJ_from_W,'-',label='posterior OHCA EBM-KF-uf state estimate $\^{H }_{t}}$', color=colorekf)
-    ax4.plot(dates,xblind[:,1]*zJ_from_W,'--',label='blind model ',color='darkgoldenrod')
-    #ax4.legend(loc="upper left", fontsize="10.5")
-    handles, labels = ax4.get_legend_handles_labels()
-   # order = [1,2,0,3]
-    ax4.legend([handles[idx] for idx in order],[labels[idx] for idx in order],loc="upper left",prop={'size': 10.5})
-    ax4.set_title('Ocean Total Heat State')
-    ax4.set_xlabel('Year')
-    ax4.set_ylabel('Heat (ZJ)')
-    ax4.set_ylim([-150,600])
-    #ax4b = ax4.twinx()
-    #mn, mx = ax4.get_ylim()
-    #ax4b.set_yticks(np.arange(-1,8,1))
-    #ax4b.set_ylim(mn*zJtomm/10, mx*zJtomm/10)
-    
-    #ax4b.set_ylabel('Thermosteric Sea Level Rise (cm)')
+        #plt.rcParams['figure.figsize'] = (7, 6)
+        #plt.figure(2)
+        plot_boilerplate(ax4)
+        ax4.plot(dates,observ[:,1],'o',label='noisy Zanna (2019) measurements Psi_t',markersize=2,color=colorgrey)
 
-    axes=(ax1,ax4)
-    axlabels=['a)','b)','c)','d)']
-    for i in range(2):
-        ax=axes[i]
-        label=axlabels[i]
-          # label physical distance to the left and up:
-        trans = mtransforms.ScaledTranslation(-(40)/72, 15/72, fig.dpi_scale_trans) #-20/72, 7/72
-        ax.text(0.0, 1.0, label, transform=ax.transAxes + trans, fontsize='large', va='bottom')
+        ax4.fill_between(dates, (observ[:n_iters,1].T-2*np.sqrt(Roc_tvar)[:n_iters]).flatten(), (observ[:n_iters,1].T+2*np.sqrt(Roc_tvar)[:n_iters]).flatten(),label="associated 95% uncertainty of Psi_t", color="lightgrey")
+        #ax4.plot(dates,this_xhat[:,1]*zJ_from_W,'-',label='posterior OHCA EBM-KF-uf state estimate $\^{H }_{t}}$', color=colorekf)
+        ax4.plot(dates,xblind[:n_iters,1]*zJ_from_W,'--',label='blind model ',color='darkgoldenrod')
+        #ax4.legend(loc="upper left", fontsize="10.5")
+        handles, labels = ax4.get_legend_handles_labels()
+       # order = [1,2,0,3]
+        ax4.legend([handles[idx] for idx in order],[labels[idx] for idx in order],loc="upper left",prop={'size': 10.5})
+        ax4.set_title('Ocean Total Heat State')
+        ax4.set_xlabel('Year')
+        ax4.set_ylabel('Heat (ZJ)')
+        ax4.set_ylim([-150,600])
+        #ax4b = ax4.twinx()
+        #mn, mx = ax4.get_ylim()
+        #ax4b.set_yticks(np.arange(-1,8,1))
+        #ax4b.set_ylim(mn*zJtomm/10, mx*zJtomm/10)
+        
+        #ax4b.set_ylabel('Thermosteric Sea Level Rise (cm)')
 
-    #fig.savefig("weighted_average_pres.pdf",format="pdf")
-    #fig.savefig("weighted_average_pres.png", dpi=400,format="png")
+        axes=(ax1,ax4)
+        axlabels=['a)','b)','c)','d)']
+        for i in range(2):
+            ax=axes[i]
+            label=axlabels[i]
+              # label physical distance to the left and up:
+            trans = mtransforms.ScaledTranslation(-(40)/72, 15/72, fig.dpi_scale_trans) #-20/72, 7/72
+            ax.text(0.0, 1.0, label, transform=ax.transAxes + trans, fontsize='large', va='bottom')
 
-
-    fig = plt.figure(figsize=(8.25,6))
-    #(H - Cs*(x-Teq1850))/Cd+oc1850
-    plt.plot(dates,(oc_meas - heatCp*(temps-Teq1850))/Cd+oc1850,'o',markersize=2,label='inferred from both Zanna and HADCRUT5 measurements',color=colorgrey)
-    plt.plot(dates,(this_xhat[:,1]- heatCp*(this_xhat[:,0]-Teq1850))/Cd+oc1850,'-', label="posterior ocean cons. temp. EBM-KF state estimate theta",color=colorekf)
-                                                                                                                
-    plt.plot(dates,(xblind[:,1]- heatCp*(xblind[:,0]-Teq1850))/Cd+oc1850,'--',label='blind model prediction theta',color='darkgoldenrod')
-    plt.legend()
-    ax=plt.gca()
-    ax.set_ylabel('Temperature (K)')
-    mn, mx = ax.get_ylim()
-    ax1b = ax.twinx()
-    ax1b.set_ylim(mn-273.15, mx-273.15)
-    ax1b.set_ylabel('Temperature (°C)')
-    ax.set_title("Deep Ocean Conservative Temperature $\\theta$")
-    fig.savefig("DOPT.pdf",format="pdf")
-    fig.savefig("DOPT.png", dpi=400,format="png")   
-
-    fig = plt.figure(figsize=(8.25,6))
-    ax_dict = fig.subplot_mosaic(
-    """
-    ab
-    ac
-    """,
-    gridspec_kw={
-        "width_ratios": [7, 1.25], "wspace": 0.4, "hspace": 0.3, "left":0.1, "right":0.96
-    },)
-    plt.sca(ax_dict["a"])
-    plot_boilerplate(ax_dict["a"])
-    plt.yticks(np.arange(286.2,288.3,0.2))
-    #plt.plot(dates,xhatminus,'b-',label='a priori EBM-KF estimate', linewidth=3.0)
-    ax_dict["a"].set_title('Estimated Climate State with Extended Kalman Filter (unfiltered)')
-    ax_dict["a"].plot(dates,this_xhat[:,0],'-',label='posterior EBM-KF-uf state estimate Tt', color=colorekf)
-  #  plt.plot(dates,xh0s, 'k.')
-    ax_dict["a"].fill_between(dates, xh0s-2*stdS, xh0s+2*stdS,label="95% CI forecast GMST ", color=coloruncert)
-    ##plt.fill_between(dates, xh1s-stdS, xh1s+stdS, color=(62./255, 140./255, 210./255))
-    ax_dict["a"].fill_between(dates, xh1s-2*stdP, xh1s+2*stdP,label="95% CI  GMST state ", color=colorstate)
-    ax_dict["a"].plot(dates,temps,'o',label='HadCRUT5 GMST measurements Yt',markersize=2,color=colorgrey)
-    ax_dict["a"].fill_between(dates, temps-2*data[:,4], temps+2*data[:,4],label="associated 95% uncertainty of Yt", color="grey",alpha=0.2,zorder=5,lw=0)
-    #plt.fill_between(dates, xhh1s-std, xhh1s+std, color=(171./255, 245./255, 206./255))
-    #ax_dict["a"].legend(fontsize="10.5")
-    handles, labels = plt.gca().get_legend_handles_labels()
-    order = [0,3,2,1,4]
-    plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order],prop={'size': 10.5})
-    ##plt.savefig("Figure_2.pdf", format = "pdf") #dpi=300,format="png")
-    ax1b = ax_dict["a"].twinx()
-    mn, mx = ax_dict["a"].get_ylim()
-    ax1b.set_ylim(mn-273.15, mx-273.15)
-    ax1b.set_yticks(np.arange(13,15.2,0.2))
-    ax1b.set_ylabel('Temperature (°C)')
-    #plt.rcParams['figure.figsize'] = (5, 4)
-    ax1 = ax_dict["b"]
-    ax2 = ax_dict["c"]
-    #plt.subplots_adjust(wspace=0.4)
-    stats.probplot(qqy[:,0], dist="norm", plot=ax2)
-    ax1.set_title("Innovations")
-    ax2.get_lines()[0].set_markerfacecolor(colorekf)
-    ax2.get_lines()[0].set_markeredgewidth(0)
-    ax2.get_lines()[1].set_color(pcolor)
-    ax2.set_xlabel("Theoretical Quantiles",labelpad=0)
-    ax2.set_title("")
-    #ax1.hist(qqy[:,0], density=True,bins=nbins,color=colorekf)
-    ax1.plot(xnorm,qqyker[0,:], color=colorekf)
-    ax1.plot(xnorm,ynorm, color=pcolor)
-    ax1.set_xlabel("Forecast Std Dev T_t",labelpad=-3)
-    ax1.set_ylabel("Probability Density")
-    ax1.set_xlim([-3,3])
-  #  plt.rcParams['figure.figsize'] = (10, 8)
-    axlabels=['a)','b)','c)']
-    axs=(ax_dict["a"],ax1,ax2)
-    for i in range(len(axs)):
-        ax=axs[i]
-        label=axlabels[i]
-    # label physical distance to the left and up:
-        trans = mtransforms.ScaledTranslation(-40/72, 1/72, fig.dpi_scale_trans) #-20/72, 7/72
-        ax.text(0.0, 1.0, label, transform=ax.transAxes + trans,
-            fontsize='large', va='bottom') #, fontfamily='serif')
-    plt.savefig("mainGMST.pdf", format = "pdf")
-    plt.savefig("mainGMST.png", dpi=400,format="png")
+        #fig.savefig("weighted_average_pres.pdf",format="pdf")
+        #fig.savefig("weighted_average_pres.png", dpi=400,format="png")
 
 
+        fig = plt.figure(figsize=(8.25,6))
+        #(H - Cs*(x-Teq1850))/Cd+oc1850
+        plt.plot(dates,(observ[:,1] - heatCp*(observ[:,0] -Teq1850))/Cd+oc1850,'o',markersize=2,label='inferred from both Zanna and HADCRUT5 measurements',color=colorgrey)
+        plt.plot(dates,(this_xhat[:n_iters,1]- heatCp*(this_xhat[:n_iters,0]-Teq1850))/Cd+oc1850,'-', label="posterior ocean cons. temp. EBM-KF state estimate theta",color=colorekf)
+                                                                                                                    
+        plt.plot(dates,(xblind[:n_iters,1]- heatCp*(xblind[:n_iters,0]-Teq1850))/Cd+oc1850,'--',label='blind model prediction theta',color='darkgoldenrod')
+        plt.legend()
+        ax=plt.gca()
+        ax.set_ylabel('Temperature (K)')
+        mn, mx = ax.get_ylim()
+        ax1b = ax.twinx()
+        ax1b.set_ylim(mn-273.15, mx-273.15)
+        ax1b.set_ylabel('Temperature (°C)')
+        ax.set_title("Deep Ocean Conservative Temperature $\\theta$")
+        fig.savefig("DOPT.pdf",format="pdf")
+        fig.savefig("DOPT.png", dpi=400,format="png")   
 
+        fig = plt.figure(figsize=(8.25,6))
+        ax_dict = fig.subplot_mosaic(
+        """
+        ab
+        ac
+        """,
+        gridspec_kw={
+            "width_ratios": [7, 1.25], "wspace": 0.4, "hspace": 0.3, "left":0.1, "right":0.96
+        },)
+        plt.sca(ax_dict["a"])
+        plot_boilerplate(ax_dict["a"])
+        plt.yticks(np.arange(286.2,288.3,0.2))
+        #plt.plot(dates,xhatminus,'b-',label='a priori EBM-KF estimate', linewidth=3.0)
+        ax_dict["a"].set_title('Estimated Climate State with Extended Kalman Filter (unfiltered)')
+        ax_dict["a"].plot(dates,this_xhat[:n_iters,0],'-',label='posterior EBM-KF-uf state estimate Tt', color=colorekf)
+      #  plt.plot(dates,xh0s, 'k.')
+        ax_dict["a"].fill_between(dates, xh0s[:n_iters]-2*stdS[:n_iters], xh0s[:n_iters]+2*stdS[:n_iters],label="95% CI forecast GMST ", color=coloruncert)
+        ##plt.fill_between(dates, xh1s-stdS, xh1s+stdS, color=(62./255, 140./255, 210./255))
+        ax_dict["a"].fill_between(dates, xh1s[:n_iters]-2*stdP[:n_iters], xh1s[:n_iters]+2*stdP[:n_iters],label="95% CI  GMST state ", color=colorstate)
+        ax_dict["a"].plot(dates,temps[:n_iters],'o',label='HadCRUT5 GMST measurements Yt',markersize=2,color=colorgrey)
+        if np.shape(observ)[0]==174:
+            ax_dict["a"].fill_between(data[:,0], temps-2*data[:,4], temps+2*data[:,4],label="associated 95% uncertainty of Yt", color="grey",alpha=0.2,zorder=5,lw=0)
+            order = [0,3,2,1,4]
+        else:
+            order = [0,3,2,1]
+        #plt.fill_between(dates, xhh1s-std, xhh1s+std, color=(171./255, 245./255, 206./255))
+        #ax_dict["a"].legend(fontsize="10.5")
+        handles, labels = plt.gca().get_legend_handles_labels()
 
-    fig = plt.figure(figsize=(8.25,6))
-    ax_dict = fig.subplot_mosaic(
-    """
-    ab
-    ac
-    """,
-    gridspec_kw={
-        "width_ratios": [7, 1.25], "wspace": 0.4, "hspace": 0.3, "left":0.1, "right":0.96
-    },)
-    plt.sca(ax_dict["a"])
-    plot_boilerplate(ax_dict["a"])
-    
-    #plt.plot(dates,xhatminus,'b-',label='a priori EBM-KF estimate', linewidth=3.0)
-    ax_dict["a"].set_title('Estimated Ocean Total Heat State with EBM-KF-uf')
-    ax_dict["a"].set_ylabel('Heat (ZJ)')
-    ax_dict["a"].plot(dates,xh0d*zJ_from_W,'-',label='posterior OHCA EBM-KF-uf state estimate Ht', color=colorekf)
-  #  plt.plot(dates,xh0s, 'k.')
-    ax_dict["a"].fill_between(dates, (xh0d-2*stdSd)*zJ_from_W, (xh0d+2*stdSd)*zJ_from_W,label="95% CI forecast OHCA ", color=coloruncert)
-    ##plt.fill_between(dates, xh1s-stdS, xh1s+stdS, color=(62./255, 140./255, 210./255))
-    ax_dict["a"].fill_between(dates, (xh1d-2*stdPd)*zJ_from_W, (xh1d+2*stdPd)*zJ_from_W,label="95% CI of OHCA state ", color=colorstate)
-    ax_dict["a"].plot(dates,ocean_heat_measured,'o',label='Zanna (2019) measurements Psi_t',markersize=2,color=colorgrey)
-    ax_dict["a"].fill_between(dates, ocean_heat_measured-2*comb_ohca_uncer2, ocean_heat_measured+2*comb_ohca_uncer2,label="associated 95% uncertainty of Psi_t", color="grey",zorder=5,alpha=0.2,lw=0)
-    #plt.fill_between(dates, xhh1s-std, xhh1s+std, color=(171./255, 245./255, 206./255))
-    #ax_dict["a"].legend(fontsize="10.5")
-    handles, labels = plt.gca().get_legend_handles_labels()
-    order = [0,3,2,1,4]
-    plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order],prop={'size': 10.5})
-    ##plt.savefig("Figure_2.pdf", format = "pdf") #dpi=300,format="png")
-    ax_dict["a"].set_ylim([-150,600])
-    #ax4b = ax_dict["a"].twinx()
-    #mn, mx = ax_dict["a"].get_ylim()
-    #ax4b.set_ylim(mn*zJtomm/10, mx*zJtomm/10)
-    #ax4b.set_yticks(np.arange(-1,8,1))
-    #ax4b.set_ylabel('Thermosteric Sea Level Rise (cm)')
-
-    #plt.rcParams['figure.figsize'] = (5, 4)
-    ax1 = ax_dict["b"]
-    ax2 = ax_dict["c"]
-    #plt.subplots_adjust(wspace=0.4)
-    stats.probplot(qqy[:,1], dist="norm", plot=ax2)
-    ax1.set_title("Innovations")
-    ax2.get_lines()[0].set_markerfacecolor(colorekf)
-    ax2.get_lines()[0].set_markeredgewidth(0)
-    ax2.get_lines()[1].set_color(pcolor)
-    ax2.set_xlabel("Theoretical Quantiles",labelpad=0)
-    ax2.set_title("")
-    #ax1.hist(qqy[:,1], density=True,bins=nbins,color=colorekf)
-    ax1.plot(xnorm,qqyker[1,:], color=colorekf)
-    ax1.plot(xnorm,ynorm, color=pcolor)
-    ax1.set_xlabel("Forecast Std Dev H_t",labelpad=-3)
-    ax1.set_ylabel("Probability Density")
-    ax1.set_xlim([-3,3])
-  #  plt.rcParams['figure.figsize'] = (10, 8)
-    axlabels=['a)','b)','c)']
-    axs=(ax_dict["a"],ax1,ax2)
-    for i in range(len(axs)):
-        ax=axs[i]
-        label=axlabels[i]
-    # label physical distance to the left and up:
-        trans = mtransforms.ScaledTranslation(-40/72, 1/72, fig.dpi_scale_trans) #-20/72, 7/72
-        ax.text(0.0, 1.0, label, transform=ax.transAxes + trans,
-            fontsize='large', va='bottom') #, fontfamily='serif')
+        plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order],prop={'size': 10.5})
+        ##plt.savefig("Figure_2.pdf", format = "pdf") #dpi=300,format="png")
+        ax1b = ax_dict["a"].twinx()
+        mn, mx = ax_dict["a"].get_ylim()
+        ax1b.set_ylim(mn-273.15, mx-273.15)
+        ax1b.set_yticks(np.arange(13,15.2,0.2))
+        ax1b.set_ylabel('Temperature (°C)')
+        #plt.rcParams['figure.figsize'] = (5, 4)
+        ax1 = ax_dict["b"]
+        ax2 = ax_dict["c"]
+        #plt.subplots_adjust(wspace=0.4)
+        stats.probplot(qqy[:,0], dist="norm", plot=ax2)
+        ax1.set_title("Innovations")
+        ax2.get_lines()[0].set_markerfacecolor(colorekf)
+        ax2.get_lines()[0].set_markeredgewidth(0)
+        ax2.get_lines()[1].set_color(pcolor)
+        ax2.set_xlabel("Theoretical Quantiles",labelpad=0)
+        ax2.set_title("")
+        #ax1.hist(qqy[:,0], density=True,bins=nbins,color=colorekf)
+        ax1.plot(xnorm,qqyker[0,:], color=colorekf)
+        ax1.plot(xnorm,ynorm, color=pcolor)
+        ax1.set_xlabel("Forecast Std Dev T_t",labelpad=-3)
+        ax1.set_ylabel("Probability Density")
+        ax1.set_xlim([-3,3])
+      #  plt.rcParams['figure.figsize'] = (10, 8)
+        axlabels=['a)','b)','c)']
+        axs=(ax_dict["a"],ax1,ax2)
+        for i in range(len(axs)):
+            ax=axs[i]
+            label=axlabels[i]
+        # label physical distance to the left and up:
+            trans = mtransforms.ScaledTranslation(-40/72, 1/72, fig.dpi_scale_trans) #-20/72, 7/72
+            ax.text(0.0, 1.0, label, transform=ax.transAxes + trans,
+                fontsize='large', va='bottom') #, fontfamily='serif')
+        plt.savefig("mainGMST.pdf", format = "pdf")
+        plt.savefig("mainGMST.png", dpi=400,format="png")
 
 
 
-    plt.rcParams['figure.figsize'] = (7, 6)
-    plt.figure()
-    
-    plt.title('Slight Changes with RT Smoother')
-    plt.plot(dates,xhathat[:,0],'-',label='RTS smoothed GMST estimate ',color=colorrts)
-    plt.plot(dates,xhat[:,0],'-',label='posterior GMST EBM-KF state estimate ',color=colorekf)
+
+        fig = plt.figure(figsize=(8.25,6))
+        ax_dict = fig.subplot_mosaic(
+        """
+        ab
+        ac
+        """,
+        gridspec_kw={
+            "width_ratios": [7, 1.25], "wspace": 0.4, "hspace": 0.3, "left":0.1, "right":0.96
+        },)
+        plt.sca(ax_dict["a"])
+        plot_boilerplate(ax_dict["a"])
+        
+        #plt.plot(dates,xhatminus,'b-',label='a priori EBM-KF estimate', linewidth=3.0)
+        ax_dict["a"].set_title('Estimated Ocean Total Heat State with EBM-KF-uf')
+        ax_dict["a"].set_ylabel('Heat (ZJ)')
+        ax_dict["a"].plot(dates,xh0d[:n_iters]*zJ_from_W,'-',label='posterior OHCA EBM-KF-uf state estimate Ht', color=colorekf)
+      #  plt.plot(dates,xh0s, 'k.')
+        ax_dict["a"].fill_between(dates, (xh0d[:n_iters]-2*stdSd[:n_iters])*zJ_from_W, (xh0d[:n_iters]+2*stdSd[:n_iters])*zJ_from_W,label="95% CI forecast OHCA ", color=coloruncert)
+        ##plt.fill_between(dates, xh1s-stdS, xh1s+stdS, color=(62./255, 140./255, 210./255))
+        ax_dict["a"].fill_between(dates, (xh1d[:n_iters]-2*stdPd[:n_iters])*zJ_from_W, (xh1d[:n_iters]+2*stdPd[:n_iters])*zJ_from_W,label="95% CI of OHCA state ", color=colorstate)
+        ax_dict["a"].plot(dates,observ[:,1],'o',label='Zanna (2019) measurements Psi_t',markersize=2,color=colorgrey)
+        if np.shape(observ)[0]==174:
+            ax_dict["a"].fill_between(dates, ocean_heat_measured-2*comb_ohca_uncer2, ocean_heat_measured+2*comb_ohca_uncer2,label="associated 95% uncertainty of Psi_t", color="grey",zorder=5,alpha=0.2,lw=0)
+            order = [0,3,2,1,4]
+        else:
+            order = [0,3,2,1]
+        #plt.fill_between(dates, xhh1s-std, xhh1s+std, color=(171./255, 245./255, 206./255))
+        #ax_dict["a"].legend(fontsize="10.5")
+        handles, labels = plt.gca().get_legend_handles_labels()
+        
+        plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order],prop={'size': 10.5})
+        ##plt.savefig("Figure_2.pdf", format = "pdf") #dpi=300,format="png")
+        ax_dict["a"].set_ylim([-150,600])
+        #ax4b = ax_dict["a"].twinx()
+        #mn, mx = ax_dict["a"].get_ylim()
+        #ax4b.set_ylim(mn*zJtomm/10, mx*zJtomm/10)
+        #ax4b.set_yticks(np.arange(-1,8,1))
+        #ax4b.set_ylabel('Thermosteric Sea Level Rise (cm)')
+
+        #plt.rcParams['figure.figsize'] = (5, 4)
+        ax1 = ax_dict["b"]
+        ax2 = ax_dict["c"]
+        #plt.subplots_adjust(wspace=0.4)
+        stats.probplot(qqy[:,1], dist="norm", plot=ax2)
+        ax1.set_title("Innovations")
+        ax2.get_lines()[0].set_markerfacecolor(colorekf)
+        ax2.get_lines()[0].set_markeredgewidth(0)
+        ax2.get_lines()[1].set_color(pcolor)
+        ax2.set_xlabel("Theoretical Quantiles",labelpad=0)
+        ax2.set_title("")
+        #ax1.hist(qqy[:,1], density=True,bins=nbins,color=colorekf)
+        ax1.plot(xnorm,qqyker[1,:], color=colorekf)
+        ax1.plot(xnorm,ynorm, color=pcolor)
+        ax1.set_xlabel("Forecast Std Dev H_t",labelpad=-3)
+        ax1.set_ylabel("Probability Density")
+        ax1.set_xlim([-3,3])
+      #  plt.rcParams['figure.figsize'] = (10, 8)
+        axlabels=['a)','b)','c)']
+        axs=(ax_dict["a"],ax1,ax2)
+        for i in range(len(axs)):
+            ax=axs[i]
+            label=axlabels[i]
+        # label physical distance to the left and up:
+            trans = mtransforms.ScaledTranslation(-40/72, 1/72, fig.dpi_scale_trans) #-20/72, 7/72
+            ax.text(0.0, 1.0, label, transform=ax.transAxes + trans,
+                fontsize='large', va='bottom') #, fontfamily='serif')
 
 
-    plt.fill_between(dates[4:], xhh1s[4:]-2*stdPh[4:], xhh1s[4:]+2*stdPh[4:],label="95% CI  RTS GMST state ", color='goldenrod', alpha=0.5)
-    plt.fill_between(dates[4:], xh1s[4:]-2*stdP[4:], xh1s[4:]+2*stdP[4:],label="95% CI EBM-KF GMST state ", color=colorstate, alpha=0.5)
 
-    plt.plot(dates,temps,'o',label='GMST HadCRUT5 measurements Y_t',markersize=2,color=colorgrey)
-    
-
-    #tvar_xhat=ekf_run(temps,n_iters,True)
-    #xh1stv=tvar_xhat[:,0]
-   # stdPtv=np.sqrt(np.abs(P))[:,0]
-   # plt.plot(dates,xh1stv,'-',label='EBM-KF-TVR estimate $ \\breve {T }_{n}}$',color="darkgreen")
-   # plt.fill_between(dates, xh1stv-stdPtv, xh1stv+stdPtv,label="68% CI of EBM-KF-TVR state $\sqrt{ \\breve {P}_{n}}$", color="skyblue", alpha=0.5)
-    
-    ax=plt.gca()
-    ax.set_ylabel('Temperature (K)')
-    ax.set_xlabel('Year')
-    ax.set_yticks(np.arange(286.4,288.2,0.2))
-    plot_boilerplate(ax)
-    handles, labels = plt.gca().get_legend_handles_labels()
-    order = [1,0,4,3,2]
-    plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order],prop={'size': 10.5})
-    axb = ax.twinx()
-    mn, mx = ax.get_ylim()
-    axb.set_yticks(np.arange(13.2,15,0.2))
-    axb.set_ylim(mn- 273.15, mx- 273.15)
-    axb.set_ylabel('Temperature (°C)')
-    
-##    ax1.plot(xnorm,ynorm, color=pcolor)
-##    ax1.set_xlabel("Model Predictive Standard Deviations")
-##    ax1.set_ylabel("Probability Density")
-  #  plt.savefig("RTS_smoother_changes.pdf", format = "pdf")
-  #  plt.savefig("RTS_smoother_changes.png", dpi=400,format="png")
-
-    
+        plt.rcParams['figure.figsize'] = (7, 6)
+        plt.figure()
+        
+        plt.title('Slight Changes with RT Smoother')
+        plt.plot(dates,xhathat[:n_iters,0],'-',label='RTS smoothed GMST estimate ',color=colorrts)
+        plt.plot(dates,xhat[:n_iters,0],'-',label='posterior GMST EBM-KF state estimate ',color=colorekf)
 
 
+        plt.fill_between(dates[4:], xhh1s[4:n_iters]-2*stdPh[4:n_iters], xhh1s[4:n_iters]+2*stdPh[4:n_iters],label="95% CI  RTS GMST state ", color='goldenrod', alpha=0.5)
+        plt.fill_between(dates[4:], xh1s[4:n_iters]-2*stdP[4:n_iters], xh1s[4:n_iters]+2*stdP[4:n_iters],label="95% CI EBM-KF GMST state ", color=colorstate, alpha=0.5)
 
-    def statsnp(seq):
-        return [np.mean(seq), np.std(seq), np.min(seq), np.max(seq)]
-
-    
-    if(True):
-        adjust = xh1s[5:]-xh0s[5:]
-        print("Adjust"+str(statsnp(adjust)))
-        blind_change=xblind[1:,0]-xblind[:-1,0]
-        print("Blind_Change"+str(statsnp(blind_change)))
-        cum_change=xh1s-xblind[:,0]
-        print("Accumulated_Change"+str(statsnp(cum_change)))
-
-        adjust = xh1d[5:]-xh0d[5:]
-        print("Adjust D"+str(statsnp(adjust*zJ_from_W)))
-        blind_change=xblind[1:,1]-xblind[:-1,1]
-        print("Blind_Change D"+str(statsnp(blind_change*zJ_from_W)))
-        cum_change=xh1d-xblind[:,1]
-        print("Accumulated_Change D"+str(statsnp(cum_change*zJ_from_W)))
-        print(np.argmax(cum_change[5:])+1850)
+        plt.plot(dates,temps[:n_iters],'o',label='GMST HadCRUT5 measurements Y_t',markersize=2,color=colorgrey)
         
 
-    fig = plt.figure()
-    xh1fdbk=(this_xhat[:,3].T[0] - 1)*  (sw_in*a_refl*g_refl)
-    plt.plot(dates[30:],xh1fdbk[30:])
-    stdPfdbk=np.sqrt(np.abs(P))[:,3,3]*  (sw_in*a_refl*g_refl)
-    plt.fill_between(dates[30:],xh1fdbk[30:] + 2*stdPfdbk[30:], xh1fdbk[30:] - 2*stdPfdbk[30:], color = 'red')
+        #tvar_xhat=ekf_run(temps,n_iters,True)
+        #xh1stv=tvar_xhat[:,0]
+       # stdPtv=np.sqrt(np.abs(P))[:,0]
+       # plt.plot(dates,xh1stv,'-',label='EBM-KF-TVR estimate $ \\breve {T }_{n}}$',color="darkgreen")
+       # plt.fill_between(dates, xh1stv-stdPtv, xh1stv+stdPtv,label="68% CI of EBM-KF-TVR state $\sqrt{ \\breve {P}_{n}}$", color="skyblue", alpha=0.5)
+        
+        ax=plt.gca()
+        ax.set_ylabel('Temperature (K)')
+        ax.set_xlabel('Year')
+        ax.set_yticks(np.arange(286.4,288.2,0.2))
+        plot_boilerplate(ax)
+        handles, labels = plt.gca().get_legend_handles_labels()
+        order = [1,0,4,3,2]
+        plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order],prop={'size': 10.5})
+        axb = ax.twinx()
+        mn, mx = ax.get_ylim()
+        axb.set_yticks(np.arange(13.2,15,0.2))
+        axb.set_ylim(mn- 273.15, mx- 273.15)
+        axb.set_ylabel('Temperature (°C)')
+        
+    ##    ax1.plot(xnorm,ynorm, color=pcolor)
+    ##    ax1.set_xlabel("Model Predictive Standard Deviations")
+    ##    ax1.set_ylabel("Probability Density")
+      #  plt.savefig("RTS_smoother_changes.pdf", format = "pdf")
+      #  plt.savefig("RTS_smoother_changes.png", dpi=400,format="png")
+
+        
+
+
+
+        def statsnp(seq):
+            return [np.mean(seq), np.std(seq), np.min(seq), np.max(seq)]
+
+        
+        if(True):
+            adjust = xh1s[5:]-xh0s[5:]
+            print("Adjust"+str(statsnp(adjust)))
+            blind_change=xblind[1:,0]-xblind[:-1,0]
+            print("Blind_Change"+str(statsnp(blind_change)))
+            cum_change=xh1s-xblind[:,0]
+            print("Accumulated_Change"+str(statsnp(cum_change)))
+
+            adjust = xh1d[5:]-xh0d[5:]
+            print("Adjust D"+str(statsnp(adjust*zJ_from_W)))
+            blind_change=xblind[1:,1]-xblind[:-1,1]
+            print("Blind_Change D"+str(statsnp(blind_change*zJ_from_W)))
+            cum_change=xh1d-xblind[:,1]
+            print("Accumulated_Change D"+str(statsnp(cum_change*zJ_from_W)))
+            print(np.argmax(cum_change[5:])+1850)
+        
+
+    fig , ax3 = plt.subplots(figsize=(8,3.5))  #5)) #
+    plt.subplots_adjust(bottom=0.15) ############
+    
+    xh1fdbk=(this_xhat[:,3].T[0] - 1)*  (sw_in*a_refl*g_refl)*0.9317
+    plt.plot(dates[0:],xh1fdbk[0:n_iters])
+    stdPfdbk=np.sqrt(np.abs(P))[:n_iters,3,3]*  (sw_in*a_refl*g_refl)*0.9317
+    plt.fill_between(dates[30:],xh1fdbk[30:n_iters] + 2*stdPfdbk[30:], xh1fdbk[30:n_iters] - 2*stdPfdbk[30:], color = 'red')
+    ax3.set_ylabel('SW Radiative Flux (W/m2)') #'Fraction Converted to
+    ax3.set_xlabel('Year')
+    ax3.set_title( "Volc SW Correction (member #10)") #"SSP370")             #f"Hidden SW Radiative Flux Adjustment for EBMKF-{modelID}")
+    extras_dir = _os.path.join(_os.path.dirname(__file__), "extras")
+    ymina, ymaxa = plt.ylim()
+    #plt.plot([2015,2015],[-2,2], color='k', linestyle=':')
+    ax3.set_ylim(ymina, ymaxa)   #########
+    plt.savefig(extras_dir+f"/EBMKFta4-NorESM-epsilon.png",dpi=300,format="png")
+    #plt.savefig(extras_dir+f"/EBMKF{modelID}-epsilon-SSP370.png",dpi=300,format="png")
 
 ##    xh1gad=this_xhat[:,4].T[0] 
 ##    plt.plot(dates[30:],xh1gad[30:],color='purple')
@@ -864,25 +912,28 @@ if (__name__ == "__main__") and True:
 
     #show the modified OHCA stuff
     #ax4.plot(dates,)
-    plt.figure()
-    xh1TOA=this_xhat[30:,2].T[0]
-    stdPtoa=np.sqrt(np.abs(P))[30:,2,2]
-    stdStoa=np.sqrt(np.abs(S))[30:,2,2]
-    plt.plot(dates[30:],xh1TOA,'-',label='posterior OHCA EBM-KF-uf state estimate Ht', color=colorekf)
-    plt.fill_between(dates[30:], (xh1TOA-2*stdStoa), (xh1TOA+2*stdStoa),label="95% CI  forecast TOA ", color=coloruncert)
-    plt.fill_between(dates[30:], (xh1TOA-2*stdPtoa), (xh1TOA+2*stdPtoa),label="95% CI of TOA state ", color=colorstate)
+    fig4, ax4 = plt.subplots(figsize=(8,5))
+    xh1TOA=this_xhat[30:n_iters,2].T[0]
+    stdPtoa=np.sqrt(np.abs(P))[30:n_iters,2,2]
+    stdStoa=np.sqrt(np.abs(S))[30:n_iters,2,2]
+    plt.plot(dates[30:],xh1TOA,'-',label=f"posterior RT EBM-KF-{modelID} state estimate", color=colorekf)
+    plt.fill_between(dates[30:], (xh1TOA-2*stdStoa), (xh1TOA+2*stdStoa),label="95% CI  forecast RT", color=coloruncert)
+    plt.fill_between(dates[30:], (xh1TOA-2*stdPtoa), (xh1TOA+2*stdPtoa),label="95% CI of RT state", color=colorstate)
     #TOA_meas_artif=z[30:,2].T[0]
-    plt.plot(dates, TOA_meas_artif,'o',markersize=2,color=colorgrey)
-    plt.plot(dates, TOA_swout2,'--',color='darkgoldenrod')
+    plt.plot(dates, observ[:n_iters,2],'o',markersize=2,color=colorgrey,label="Given RT \'obs\'",)
+    #plt.plot(dates, TOA_swout2,'--',color='darkgoldenrod')
             #plt.plot(dates, TOA_swout,'o',markersize=2,color='red')
-    plt.fill_between(dates, TOA_meas_artif-2*np.sqrt(TOA_meas_artif_var), TOA_meas_artif+2*np.sqrt(TOA_meas_artif_var),label="associated 95% uncertainty of Psi_t", color="grey",zorder=5,alpha=0.2,lw=0)
-
+    plt.fill_between(dates, np.array(observ[:n_iters,2]).flatten()-3*2*np.sqrt(TOA_meas_artif_var[:n_iters]), np.array(observ[:n_iters,2]).flatten()+3*2*np.sqrt(TOA_meas_artif_var[:n_iters]),label="associated 95% uncertainty of \'obs\'", color="grey",zorder=5,alpha=0.2,lw=0)
+    ax4.set_ylabel('TOA Net Radiative Imbalance (W/m2)')
+    ax4.set_xlabel('Year')
+    ax4.set_title(f"TOA Net Radiation: Adjusted Obs. for member #10\n with most of volcanic climate signal removed")
+    ax4.legend()
+    plt.savefig(extras_dir+f"/EBMKFta4-NorESM-RT.png",dpi=300,format="png")
+    #plt.savefig(extras_dir+f"/EBMKF{modelID}-RT.png",dpi=300,format="png")
     
 
 
 
-    
-   # plt.show()
 
 
 

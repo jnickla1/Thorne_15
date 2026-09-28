@@ -13,7 +13,13 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         return empser, empser, empser, empser
     
     samp_cur = np.full((len(years),Nres),np.nan)
-    data_orig = pd.read_csv("./Common_Data/HadCRUT5.csv")
+    if len(years)<=175:
+        data_orig = pd.read_csv("./Common_Data/HadCRUT5.csv")
+        tagnum="24"
+    elif len(years)==176:
+        data_orig = pd.read_csv("./Common_Data/HadCRUT.5.1.csv")
+        tagnum="25"
+
     temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
     preind_base = np.mean(temps_obs[0:50])
 
@@ -21,7 +27,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     cur_path = os.path.dirname(os.path.realpath(__file__))
 
     def obtain_file(year):
-        df = pd.read_csv(cur_path+"/KCC/kcc_notebook/kcc_"+experiment_type+"_all_"+str(year)+".csv", sep=',') #has header
+        df = pd.read_csv(cur_path+"/KCC/kcc_notebook"+tagnum+"/kcc_"+experiment_type+"_all_"+str(year)+".csv", sep=',') #has header
         return df.drop(df.columns[0], axis=1).to_numpy() #remove first column
 
 

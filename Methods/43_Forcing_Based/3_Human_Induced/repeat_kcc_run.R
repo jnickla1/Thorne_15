@@ -13,7 +13,7 @@ set.seed(1)
 # Sample size to derive normal distributions
 Nres = 1000
 sample_str = c("be", paste0("nres",1:Nres))
-setwd(paste0(cur_loc,"/KCC/kcc_notebook/"))
+setwd(paste0(cur_loc,"/KCC/kcc_notebook25/"))
 year = 1850:2100
 ny = length(year)
 
@@ -63,9 +63,10 @@ if (dec_glo == T) {
   X_fit_glo = loadRData("X_fit_GMST_CMIP6_histssp585_ann.Rdata")
 }
 
-year_obsNew = 1850:2024
+year_obsNew = 1850:2025
 year_obsO = 1850:2019
-Xo_glo_full = read.csv("HadCRUT.5.0.2.0.analysis.ensemble_series.global.annual.csv",row.names = 1,)
+#Xo_glo_full = read.csv("HadCRUT.5.0.2.0.analysis.ensemble_series.global.annual.csv",row.names = 1,)
+Xo_glo_full = read.csv("../../../../../Common_Data/HadCRUT.5.1.0.0.analysis.ensemble_series.global.annual.csv",row.names = 1,)
 Xo_gloNew = Xo_glo_full[-c(1,2)]
 colnames(Xo_gloNew)=1:200
 

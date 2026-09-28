@@ -237,3 +237,12 @@ if __name__ == "__main__":
                        'ensemble_sampled.png',changes=False)
 
     print("\nDone! Check ensemble_sampled.png")
+
+    summary_df = pd.DataFrame({
+        'year': YEARS,
+        'combined': ohca_sampled.mean(axis=0),
+        'stdev': ohca_sampled.std(axis=0)
+    })
+    summary_df.to_csv('longOHCA_headstails.csv', index=False)
+    print("Saved longOHCA_headstails.csv")
+

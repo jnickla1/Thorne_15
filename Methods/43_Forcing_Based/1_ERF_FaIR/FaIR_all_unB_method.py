@@ -30,9 +30,14 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     offset=0
     if experiment_type == 'historical':
         sfactor=0.4
-        current_array = np.load(cur_path+"/resliced_NorESM/combined_hadcrut5_all.npy") #starts in 1930
-        retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2024_temp_all.npy") #starts in 1750
-        curbias=0.022
+        if len(years)<=175:
+            current_array = np.load(cur_path+"/resliced_NorESM/combined_hadcrut5_all.npy") #starts in 1930
+            retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2024_temp_all.npy") #starts in 1750
+            curbias=0.022
+        elif len(years)==176:
+            retro_array = np.load(cur_path+"/resliced_headstails25/retrospective/all-headstails25r0cut2025_temp_all.npy") #starts in 1930
+            current_array = np.load(cur_path+"/resliced_headstails25/combined_all-headstails25r0_all.npy") #starts in 1750
+            curbias=0.020
 
     elif (exp_attr[0]=="histens"):
         sfactor=0.4

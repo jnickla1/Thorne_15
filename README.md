@@ -64,7 +64,7 @@ Once you have that installed, the main files are run from the code root director
 ```
 ### Run Order (so everything is created correctly), assume you have a slurm parallel computing cluster.
 ```
-python3 hist_fitprob.py -historical
+python3 hist_fitprob.py historical
 python3 hist_evaluation_script.py
 sbatch run_parBATCH_future.sh
 python3 plot_fut_results.py

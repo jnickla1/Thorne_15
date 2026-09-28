@@ -21,7 +21,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     lfcs_path = dir_path+"/lfca/ERSST_firstLFCA_s1940.npy"
 
-    data_monthly = pd.read_csv(dir_path+"/../../../Common_Data/HadCRUT.5.0.2.0.analysis.summary_series.global.monthly.csv")
+    data_monthly = pd.read_csv(dir_path+"/../../../Common_Data/HadCRUT.5.1.0.0.analysis.summary_series.global.monthly.csv")
     temps_obs_monthly = data_monthly.loc[:,"Anomaly (deg C)"].to_numpy()
     preind_base = np.mean(temps_obs_monthly[0:50*12])
     
@@ -44,5 +44,5 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
     means_r[(1900-1850):(2016-1850)] = predicted_temps.reshape(-1, 12).mean(axis=1)/2 -preind_base/2 + temperature[(1900-1850):(2016-1850)]/2 
     ses_r[(1900-1850):(2016-1850)] = residual_std_dev/np.sqrt(3)
-
+    #still only goes to 2017
     return means_c ,ses_c, means_r, ses_r

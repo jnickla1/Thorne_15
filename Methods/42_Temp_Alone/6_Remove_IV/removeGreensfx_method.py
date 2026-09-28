@@ -46,11 +46,18 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
     #try: #unclear why I'm using a try..except here
     if experiment_type=="historical":
-        filein = netCDF4.Dataset(cur_path+"/filterAna_obs_HadCRUT5_"+experiment_type+".nc",'r')
+        if years[-1]<=2024:
+            filein = netCDF4.Dataset(cur_path+"/filterAna_obs_HadCRUT5_"+experiment_type+".nc",'r')
         #preind_base = np.mean(temps_obs[0:50])
-        comput_temps = np.array(filein.variables['tas_fbr_aa'])
-        comput_temps2 = empser.copy()
-        comput_temps2[0:174] = comput_temps
+            comput_temps = np.array(filein.variables['tas_fbr_aa'])
+            comput_temps2 = empser.copy()
+            comput_temps2[0:min(174,len(years)-1)] = comput_temps
+        elif years[-1]==2025:
+            filein = netCDF4.Dataset(cur_path+"/filterAna_obs_HadCRUT5_1850_2025_v5.nc",'r')
+        #preind_base = np.mean(temps_obs[0:50])
+            comput_temps2 = np.array(filein.variables['tas_fbr_aa'])
+        else:
+            raise Exception("Need to add new Greens Function output for that end year")
     
     elif exp_attr[1]=="ESM1-2-LR": #ordering is mixed up
         filein = netCDF4.Dataset(cur_path+"/filterAna_results_MPI"+exp_attr[2][3:]+"_1850_2100_v1.nc",'r')

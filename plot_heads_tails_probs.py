@@ -2,11 +2,15 @@ from __future__ import annotations
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
-#only does realized warming for the moment
+import matplotlib.patches as mpatches
+from matplotlib.lines import Line2D
+from matplotlib.legend_handler import HandlerTuple
+
+
 
 from hist_heads_tails_evaluation_script import evalmins, evalmaxs, relthresh, sel_methods_list_real, sel_methods_list_anthro
 
-goal=sys.argv[1]
+goals = ["real", "anthro"]
 
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -179,7 +183,7 @@ def load_and_average_pdfs(npy_files: List[Path], delete_slices = []) -> np.ndarr
 
 
     
-def combine_histens_data(
+def combine_histens_data(goal:str,
     experiment_type: str,
     results_dir: str | Path = "Results"
 ) -> Tuple[List[str], np.ndarray | None, Dict[str, Dict[str, List[float]]]]:
@@ -216,154 +220,303 @@ def combine_histens_data(
 
     # quick sanity on the crossing-year lists
     for t in THRESH_COLS:
-        total_entries = sum(sum(np.array(lst)<2050) for lst in crossing_years[t].values())
+        allvals=crossing_years[t].values()
+        allvalsarr = np.array([lst for lst in allvals])
+        total_entries = sum(sum(lst<2050) for lst in allvalsarr[:-2])
         print(f"[{experiment_type}] collected {total_entries} entries for {t}")
+        print(f"{method_names[-1]} collected {sum(allvalsarr[-1]<2050)} entries for {t}")
     return method_names, mean_pdf,mean_cdf, crossing_years, indices_to_delete
 
 
-method_names_rpi, mean_pdf_rpi,mean_cdf_rpi, crossing_rpi, del_idx = combine_histens_data("histens_rpi_"+goal, results_dir="Results")
-method_names_sat, mean_pdf_sat,mean_cdf_sat, crossing_sat, del_idx = combine_histens_data("histens_satcal_"+goal, results_dir="Results")
-method_names = method_names_rpi
-mean_pdfs= [mean_pdf_rpi,  mean_pdf_sat]
-mean_cdfs= [mean_cdf_rpi,  mean_cdf_sat]
-hist_data = [crossing_rpi,crossing_sat]
+
+def load_goal(goal: str):
+    method_names_rpi, mean_pdf_rpi, mean_cdf_rpi, crossing_rpi, del_idx = combine_histens_data(goal,
+        "histens_rpi_" + goal, results_dir="Results"
+    )
+    method_names_sat, mean_pdf_sat, mean_cdf_sat, crossing_sat, del_idx2 = combine_histens_data(goal,
+        "histens_satcal_" + goal, results_dir="Results"
+    )
+
+    # sanity: deletion indices should match; if not, keep the stricter intersection
+    # (keeping simple here and trusting your existing pipeline)
+    method_names = method_names_rpi
+    mean_pdfs = [mean_pdf_rpi, mean_pdf_sat]   # row_key: 0=rpi, 1=satcal
+    mean_cdfs = [mean_cdf_rpi, mean_cdf_sat]
+    hist_data = [crossing_rpi, crossing_sat]
+
+    return dict(
+        goal=goal,
+        method_names=method_names,
+        mean_pdfs=mean_pdfs,
+        mean_cdfs=mean_cdfs,
+        hist_data=hist_data,
+        del_idx=del_idx
+    )
+
+data_by_goal = {g: load_goal(g) for g in goals}
+
 # Plot (reuse earlier PANEL_INFO)
-PANEL_INFO = [
-    {"row_key":0, "threshold_idx":0, "title":"1850–1900 baseline: 0.5°C crossing (~1985)", "histogram":True},
-    {"row_key":0, "threshold_idx":1, "title":"1850–1900 baseline: 1.0°C crossing (~2010)", "histogram":True},
-    {"row_key":0, "threshold_idx":2, "title":"1850–1900 baseline: 1.5°C crossing ", "histogram":True},
-    {"row_key":1, "threshold_idx":0, "title":f"1981–2010 baseline: {0.5+relthresh :.1f}°C crossing (~1985)", "histogram":True},
-    {"row_key":1, "threshold_idx":1, "title":f"1981–2010 baseline: {1.0+relthresh :.1f}°C crossing (~2010)", "histogram":True},
-    {"row_key":1, "threshold_idx":2, "title":f"1981–2010 baseline: {1.5+relthresh :.1f}°C crossing ", "histogram":True},
-]
+##PANEL_INFO = [
+##    {"row_key":0, "threshold_idx":0, "title":"1850–1900 baseline: 0.5°C crossing (~1985)", "histogram":True},
+##    {"row_key":0, "threshold_idx":1, "title":"1850–1900 baseline: 1.0°C crossing (~2010)", "histogram":True},
+##    {"row_key":0, "threshold_idx":2, "title":"1850–1900 baseline: 1.5°C crossing ", "histogram":True},
+##    {"row_key":1, "threshold_idx":0, "title":f"1981–2010 baseline: {0.5+relthresh :.1f}°C crossing (~1985)", "histogram":True},
+##    {"row_key":1, "threshold_idx":1, "title":f"1981–2010 baseline: {1.0+relthresh :.1f}°C crossing (~2010)", "histogram":True},
+##    {"row_key":1, "threshold_idx":2, "title":f"1981–2010 baseline: {1.5+relthresh :.1f}°C crossing ", "histogram":True},
+##]
 
 csv_threshold_names = ['xyear0.5','xyear1.0','xyear1.5']
 fig, axes = plt.subplots(2, 3, figsize=(14, 7), sharex="col", sharey=False)
 
-if goal=="real":
-    sel_methods_list_sel = sel_methods_list_real
-else:
-    sel_methods_list_sel = sel_methods_list_anthro
-    
-
-parts = [p.split("/") for p in sel_methods_list_sel]
-
-# verify last segment matches method_names_rpi (strip "_method.py")
-last_parts = [seg[-1].replace("_method.py", "") for seg in parts]
-
-for index in del_idx:
-    del last_parts[index]
-    del parts[index]
-
-if goal=="anthro": last_parts.append('FaIR_anthro_unB_retro')
-
-last_parts.append('equal_weight_comb'); last_parts.append('PIVW_comb')
-print(method_names_rpi)
-assert last_parts == method_names_rpi, "Method name mismatch!"
-
-# build color keys: use "dir2/dir3" if present, otherwise just "dir2"
-combined_keys = [("/".join(seg[1:3]) if len(seg) >= 4 else seg[1]) for seg in parts]
-
-# combine 2nd and 3rd segments and get colors
 from hist_evaluation_script import gen_color
 
-sel_methods_colors = [gen_color(k) for k in combined_keys]
+def build_method_colors_for_goal(goal: str, method_names: list[str], del_idx: list[int]) -> dict[str, str]:
+    if goal == "real":
+        sel_methods_list_sel = sel_methods_list_real
+    else:
+        sel_methods_list_sel = sel_methods_list_anthro
 
-#if goal=="anthro": sel_methods_colors.append('#341539')
+    parts = [p.split("/") for p in sel_methods_list_sel]
+    last_parts = [seg[-1].replace("_method.py", "") for seg in parts]
 
-#if goal=="real":
-#    sel_methods_colors.append('#F527E7')
-#    sel_methods_colors.append('#27F546')
+    # apply same deletions as you do to method_names
+    for index in sorted(del_idx, reverse=True):
+        del last_parts[index]
+        del parts[index]
+
+    if goal == "anthro":
+        last_parts.append('FaIR_anthro_unB_retro')
+
+    last_parts.append('equal_weight_comb')
+    last_parts.append('PIVW_comb')
+
+    assert last_parts == method_names, "Method name mismatch!"
+
+    combined_keys = [("/".join(seg[1:3]) if len(seg) >= 4 else seg[1]) for seg in parts]
+    sel_methods_colors = [gen_color(k) for k in combined_keys]
+
+    # NOTE: for the appended methods, pick explicit colors:
+    # equal_weight_comb / PIVW_comb you can set as desired.
+    # We'll only need PIVW here; equal_weight_comb is not plotted as a line in your current code.
+    color_map = {m: c for m, c in zip(method_names, sel_methods_colors)}
+    # If appended methods weren't in sel_methods_colors list, set fallbacks:
+    color_map.setdefault("equal_weight_comb", "#777777")
+    color_map.setdefault("PIVW_comb", "#444444")
+    if goal == "anthro":
+        color_map.setdefault("FaIR_anthro_unB_retro", "#555555")
+
+    return color_map
 
 
-ylims=[0.4,0.4,0.4]
-evalmins2=evalmins.copy()
-evalmins2[1]=1995
+color_maps = {
+    g: build_method_colors_for_goal(g, data_by_goal[g]["method_names"], data_by_goal[g]["del_idx"])
+    for g in goals
+}
+
+
 import matplotlib.ticker as ticker
-inum = 1 #adding 12 subdivisions didn't do anything since we linearly interpolated then took a diff
 
-keep = [i for i, method in enumerate(method_names) if not (method.endswith("comb") or method.startswith("FaIR_anthro"))]
+csv_threshold_names = ['xyear0.5', 'xyear1.0', 'xyear1.5']
+evalmins2 = evalmins.copy()
+evalmins2[1] = 1995
+ylims = [0.4, 0.4, 0.4]
+inum = 1
+bins = np.arange(1960, 2051, 1)
 
-for j, info in enumerate(PANEL_INFO):
-    row = j // 3; col = j % 3
-    ax = axes[row, col]
-    ax.xaxis.set_major_locator(ticker.MultipleLocator(5))
-    ax.set_xlim([evalmins2[col], evalmaxs[col]])
-    ax.set_ylim([0,ylims[col]])
-    row_key = info["row_key"]
-    t_idx = info["threshold_idx"]
-    ax.set_title(info["title"], fontsize=10)
-    # PDFs (stacked)
-    pdf = mean_pdfs[row_key]
-    cdf = mean_cdfs[row_key]
-    n_methods = pdf.shape[0]; n_yrs = pdf.shape[1]
-    years = make_time_axis(evalmins[t_idx], n_yrs, inum=inum)
-    #y = np.nan_to_num(pdf[:,:,t_idx], nan=0.0, posinf=0.0, neginf=0.0)
-    y = pdf[:,:,t_idx]
-    yc=cdf[:,:,t_idx]
-        # ---- write panel CSV ----
-    calibration = "satcal" if row else "rpi"
-    outname = f"rates_histens/{calibration}_{goal}_thresh{(col*5):02d}.csv"
+def methods_for_main_stack(method_names: list[str]) -> list[int]:
+    # mimic your existing logic
+    return [i for i, m in enumerate(method_names) if not (m.endswith("comb") or m.startswith("FaIR_anthro"))]
 
-    # Build header: "method_name, years[0], years[1], ..."
-    header = ["method_name"] + years.tolist()
+def plot_baseline_row(ax_row, goal: str, baseline_row_key: int, suprow_label: str):
+    """
+    ax_row: list/array of 3 axes
+    goal: "real" or "anthro"
+    baseline_row_key: 0=rpi (1850–1900), 1=satcal (1981–2010)
+    suprow_label: used only for any conditional annotations if needed
+    """
+    d = data_by_goal[goal]
+    method_names = d["method_names"]
+    pdf = d["mean_pdfs"][baseline_row_key]
+    cdf = d["mean_cdfs"][baseline_row_key]
+    hist_data = d["hist_data"][baseline_row_key]
+    cmap = color_maps[goal]
 
-    # Build rows: each is [method_name[m], yc[m,0], yc[m,1], ...]
-    rows = [
-        [method_names[m], *yc[m]]
-        for m in range(n_methods)
-    ]
+    keep_idx = methods_for_main_stack(method_names)
 
-    df_out = pd.DataFrame(rows, columns=header)
-    df_out.to_csv(outname, index=False)
-    #ax.stackplot(years, *y, labels=method_names[row_key], alpha=0.35, linewidth=0.0)
-    for m in range(n_methods):
-        #pdf_year_smooth = gaussian_filter1d(y[m], sigma=1.0, mode="nearest")
-        tfine,pdffine = refine_pdf_repeat_gaussian(y[m], evalmins[col], L=12, sigma_years=1.0)
-        #ax.plot(years,y[m] , linewidth=1.0, color= sel_methods_colors[m], label=method_names[m])
-        if col==2:
-            print(method_names[m])
-            ind_latest=np.where(years==2024)[0]
-            print(f"{(yc[m][ind_latest][0]):.2%} 1.5C crossing chance" )
-        if(not (method_names[m].endswith("comb") or method_names[m].startswith("FaIR_anthro"))):
-            ax.plot(tfine,pdffine , linewidth=1.0, color= sel_methods_colors[m], label=method_names[m])
-    # Histograms when applicable
-    if info["histogram"]:
-        all_years = []
-        this_hist_data= hist_data[row_key][csv_threshold_names[t_idx]]
-        bins = np.arange(1960, 2051, 1)
-        #for m in range(n_methods):
-        #   ax.hist(this_hist_data[method_names[m]], bins=bins, density=True, color = sel_methods_colors[m], alpha=0.25, edgecolor="none")
-         # Build data in the same order as method_names (so colors line up)
-        data_list = [np.asarray(this_hist_data.get(m, []), dtype=float) for m in method_names]
+    for col in range(3):
+        ax = ax_row[col]
+        ax.xaxis.set_major_locator(ticker.MultipleLocator(5))
+        ax.set_xlim([evalmins2[col], evalmaxs[col]])
+        ax.set_ylim([0, ylims[col]])
+        ax.grid(True, alpha=0.2, linewidth=0.5)
 
-        # Drop empty series to avoid blank legend entries (optional)
-        #keep = [i for i, arr in enumerate(data_list) if arr.size > 0]
-        
-        if keep:
-            data_list = [data_list[i] for i in keep]
-            colors    = [sel_methods_colors[i] for i in keep]
-            labels    = [method_names[i] for i in keep]
+        t_idx = col
+        n_methods = pdf.shape[0]
+        years = make_time_axis(evalmins[t_idx], pdf.shape[1], inum=inum)
 
-            ax.hist(data_list,bins=bins,density=True,stacked=True,
-                color=colors,alpha=0.5,edgecolor="none",label=labels           # if you want a legend from the hist
+        # ---- lines (main set) ----
+        for m in range(n_methods):
+            name = method_names[m]
+            tfine, pdffine = refine_pdf_repeat_gaussian(pdf[m, :, t_idx], evalmins[col], L=12, sigma_years=1.0)
+
+            if name == "PIVW_comb":
+                # special: thick black line
+                ax.plot(tfine, pdffine, linewidth=3.0, color="k", label=name, zorder=5)
+            elif not (name.endswith("comb") or name.startswith("FaIR_anthro")):
+                ax.plot(tfine, pdffine, linewidth=1.0, color=cmap[name], label=name, zorder=4)
+
+        # ---- stacked histogram (main set only; no legend labels here) ----
+        this_hist = hist_data[csv_threshold_names[t_idx]]
+        data_list = [np.asarray(this_hist.get(method_names[i], []), dtype=float) for i in keep_idx]
+        colors = [cmap[method_names[i]] for i in keep_idx]
+
+        if len(data_list) > 0:
+            ax.hist(
+                data_list,
+                bins=bins,
+                density=True,
+                stacked=True,
+                color=colors,
+                alpha=0.5,
+                edgecolor="none",
+                zorder=1
             )
-    if row == 1:
-        ax.set_xlabel("Year")
-    if col == 0:
-        ax.set_ylabel("Probability density / year")
 
-    if row==1 and col == 2 and goal=="anthro":
-        ax.text(2015,0.2, 'No Detection', fontsize=18,ha='center',va='center')
-        
-    ax.grid(True, alpha=0.2, linewidth=0.5)
+        # ---- PIVW histogram overlay (gappy dark gray, so colors show behind) ----
+        if "PIVW_comb" in method_names:
+            pivw_years = np.asarray(this_hist.get("PIVW_comb", []), dtype=float)
+            if pivw_years.size > 0:
+                ax.hist(
+                    pivw_years,
+                    bins=bins,
+                    density=True,
+                    histtype="bar",
+                    color="#444444",
+                    alpha=0.6,
+                    rwidth=0.4,      # <-- gaps
+                    edgecolor="none",
+                    zorder=3
+                )
 
-legend_labels = [method_names[i] for i in keep]
-handles = [plt.Line2D([0],[0]) for _ in legend_labels]
-fig.legend(legend_labels, loc="upper center", ncol=min(len(legend_labels), 6), frameon=False)
 
-fig.tight_layout(rect=[0,0,1,0.93])
+def make_figure_for_baseline(baseline_row_key: int, suptitle: str, outpath: str):
+    fig, axes = plt.subplots(2, 3, figsize=(14, 8.5), sharex="col", sharey=False)
+
+    # top = real, bottom = anthro
+    plot_baseline_row(axes[0, :], goal="real",   baseline_row_key=baseline_row_key, suprow_label="real")
+    plot_baseline_row(axes[1, :], goal="anthro", baseline_row_key=baseline_row_key, suprow_label="anthro")
+
+    # per-panel titles (now baseline-specific)
+    #
+    if baseline_row_key==0:
+        titles = [
+            "0.5°C crossing (~1985)",
+            "Realized warming: 1.0°C crossing (~2010)",
+            "Realized warming: 1.5°C crossing",
+        ]
+    else:
+        titles = [
+            f"{0.5+relthresh :.1f}°C crossing (~1985)",
+            f"{1.0+relthresh :.1f}°C crossing (~2010)",
+            f"{1.5+relthresh :.1f}°C crossing",
+        ]
+
+    for c in range(3):
+        axes[0, c].set_title("Realized warming: "+titles[c], fontsize=10)
+        axes[1, c].set_title("Anthropogenic warming: " + titles[c], fontsize=10)
+
+    for r in range(2):
+        for c in range(3):
+            if r == 1:
+                axes[r, c].set_xlabel("Year")
+            if c == 0:
+                axes[r, c].set_ylabel("Probability density / year")
+
+    # your "No Detection" annotation (anthro only; 1981–2010 baseline only)
+    if baseline_row_key == 1:
+        axes[1, 2].text(2015, 0.2, "No Detection", fontsize=18, ha="center", va="center")
+
+    fig.suptitle(suptitle, y=0.98)
+
+    # legend: create composite (hist patch + line) entries
+    # We'll use REAL’s main methods for ordering, and include PIVW at the end if present.
+    real_names = data_by_goal["real"]["method_names"]
+    keep_real = methods_for_main_stack(real_names)
+    legend_names = [real_names[i] for i in keep_real if real_names[i] != "PIVW_comb"]
+    if "PIVW_comb" in real_names:
+        legend_names.append("PIVW_comb")
+
+    handles = []
+    for name in legend_names:
+        if name == "PIVW_comb":
+            patch = mpatches.Patch(facecolor="#444444", alpha=0.6, edgecolor="none")
+            line = Line2D([0], [0], color="k", lw=3.0)
+        else:
+            col = color_maps["real"].get(name, "#333333")
+            patch = mpatches.Patch(facecolor=col, alpha=0.5, edgecolor="none")
+            line = Line2D([0], [0], color=col, lw=1.5)
+        handles.append((patch, line))
+
+    # --- TOP LEGEND (nudged down from suptitle) ---
+    top_legend = fig.legend(
+        handles,
+        legend_names,
+        handler_map={tuple: HandlerTuple(ndivide=None)},
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.93),   # <-- push below suptitle
+        ncol=min(len(legend_names), 6),
+        frameon=False
+    )
+
+    anthro_names = data_by_goal["anthro"]["method_names"]
+    keep_anthro = methods_for_main_stack(anthro_names)
+    legend_names_anthro = [anthro_names[i] for i in keep_anthro if anthro_names[i] != "PIVW_comb"]
+    if "PIVW_comb" in anthro_names:
+        legend_names_anthro.append("PIVW_comb")
+
+    handles = []
+    for name in legend_names_anthro:
+        if name == "PIVW_comb":
+            patch = mpatches.Patch(facecolor="#444444", alpha=0.6, edgecolor="none")
+            line = Line2D([0], [0], color="k", lw=3.0)
+        else:
+            col = color_maps["anthro"].get(name, "#333333")
+            patch = mpatches.Patch(facecolor=col, alpha=0.5, edgecolor="none")
+            line = Line2D([0], [0], color=col, lw=1.5)
+        handles.append((patch, line))
+
+
+    # --- BOTTOM LEGEND (below bottom row) ---
+    bottom_legend = fig.legend(
+        handles,
+        legend_names_anthro,
+        handler_map={tuple: HandlerTuple(ndivide=None)},
+        loc="lower center",
+        bbox_to_anchor=(0.5, 0.02),   # <-- below panels
+        ncol=min(len(legend_names), 6),
+        frameon=False
+    )
+    for ax in axes.flat:
+        ax.tick_params(axis="x", labelbottom=True)
+    fig.tight_layout(rect=[0, 0.06, 1, 0.88])
+    fig.savefig(outpath, dpi=600)
+    print(f"Saved figure: {outpath}")
+    return fig
+
+make_figure_for_baseline(
+    baseline_row_key=0,
+    suptitle="1850–1900 Baseline",
+    outpath="baseline_1850-1900_heads_tails_probplot.png"
+)
+
+make_figure_for_baseline(
+    baseline_row_key=1,
+    suptitle="1981–2010 Baseline",
+    outpath="baseline_1981-2010_heads_tails_probplot.png"
+)
+
 plt.show()
-outpath = goal+"_heads_tails_probplot.png"
-fig.savefig(outpath, dpi=600)
-print(f"Saved figure: {outpath}")
+
+#outpath = goal+"_heads_tails_probplot.png"
+#fig.savefig(outpath, dpi=600)
+#print(f"Saved figure: {outpath}")

@@ -18,7 +18,7 @@ from datetime import datetime
 current_date = datetime.now()
 formatted_date = current_date.strftime("%y%m%d")
 
-historical_regen=False #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
+historical_regen=True #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
 adjusted_vars = True #must run the hist_fitprob.py script first if this is true to generate correction for the variance
 # ================================
 # Define Method Full Names, Colors, Location on Violin plots
@@ -58,9 +58,13 @@ def gen_color(ci, dark=False):
 
 
 #running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/3_ST_Fits') #Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )#still working on debugging lfca
-#running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/1_ERF_FaIR')
-running_subset = ('Methods/42_Temp_Alone/','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
+#running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/2_Kalman')
+running_subset = ('Methods/42_Temp_Alone','Methods/43_Forcing_Based/','Methods/44_EarthModel_CGWL')     #'Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
 
+
+ #'Methods/42_Temp_Alone/2_LT_Fits','Methods/42_Temp_Alone/3_ST_Fits',
+  #                'Methods/42_Temp_Alone/4_GAM_AR1','Methods/42_Temp_Alone/5_Kalman',
+                  
                 #'Methods/42_Temp_Alone,'Methods/43_Forcing_Based/1_ERF_FaIR','Methods/43_Forcing_Based/3_Human_Induced',
                  # ,'Methods/43_Forcing_Based/0_Linear','Methods/44_EarthModel_CGWL')
 #running_subset = ('Methods/42_Temp_Alone/1_Run_Means', 'Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL') #methods we now want to run, smaller subset for debugging
@@ -159,17 +163,17 @@ select_hist=True #plot additional smaller histograms within error
 if select_hist:
     avail_methods_list_7 = [ "CGWL10y_for_halfU","EBMKF_ta4","GAM_AR1",
              "lowess1dt36wnc","Kal_flexLin","FaIR_comb_unB","GWI_tot_CGWL",] #"GWI_tot_SR15","CGWL10y_sfUKCP"
-    rmse_df = pd.read_csv("current_methods_statistics_251119True.csv")
+    rmse_df = pd.read_csv("current_methods_statistics_251126True.csv")
     avail_methods_list_30 = list(rmse_df.loc[rmse_df['RMS'] <= 0.06, 'method_name'])
   
-hist_option='median'#'first'
+hist_option='first'#'median'#'first'
 
 
 if __name__ == '__main__':
     regen=historical_regen #False #whether to execute all of the methods directly (True) or read from a pickle file to rapidly redraw the figures (False).
 
     # First evaluation
-    data = pd.read_csv("./Common_Data/HadCRUT5.csv")
+    data = pd.read_csv("./Common_Data/HadCRUT.5.1.csv")
     temps_obs = data.loc[:,"Anomaly"].to_numpy()
     preind_base = np.mean(temps_obs[0:50]) #preindustrial baseline 1850-1899
     temps_obs = temps_obs - preind_base #remove this baseline
@@ -201,6 +205,7 @@ if __name__ == '__main__':
     else:
         with open ('hist_results.pickle', 'rb') as fp:
             results = pickle.load(fp)
+            breakpoint()
     
 
     #heights0=np.arange(.2,4.2,0.05) #heights to test at thresholds: 0.05°C increments
@@ -229,7 +234,7 @@ if __name__ == '__main__':
     closest_years = [fineyrs[np.argmin(np.abs(std_intp - i))] for i in np.arange(0.5,1.05,.1)]
 
     eval10min=1995
-    eval10max=2024
+    eval10max=years[-1]
     eval10yrs = np.arange(eval10min,eval10max)
     
     eval05 = {}
@@ -530,7 +535,7 @@ if __name__ == '__main__':
                     thrshs= np.arange(0.5,1.05,.1)
                     for j in np.arange(1,len(closest_years)-1):
                         evalmin=int(closest_years[j])-15
-                        evalmax=min(int(closest_years[j])+15,2024)
+                        evalmax=min(int(closest_years[j])+15,years[-1])
                         evalyrs = np.arange(evalmin,evalmax)
                         fineevalyrs = np.arange(evalyrs[0],evalyrs[-1]+1/inum,1/inum) 
                         this_method_p_steps = np.full(np.shape(evalyrs),np.nan)
@@ -665,7 +670,7 @@ if __name__ == '__main__':
     ax1.set_xticks(np.arange(1850,2026,25))
     ax1.set_xlim([xmin, xmax])
     line_20yr = ax4.hlines(y=0,xmin=years[np.argmax(~np.isnan(standard))],
-            xmax=years[-np.argmax(~np.isnan(np.flip(standard)))],  color='k', linestyle='-', lw=3)
+            xmax=years[-np.argmax(~np.isnan(np.flip(standard)))-1],  color='k', linestyle='-', lw=3)
     patch_20yr=ax4.fill_between(years,-results['cent20y']['LT_trend'][3],results['cent20y']['LT_trend'][3],facecolor='lightgray',edgecolor='black',alpha=0.35)
     ax4_handles.insert(0,(patch_20yr,line_20yr))
     ax4_labels.insert(0,"20-yr centred running \n    mean (HadCRUT5)")
@@ -679,7 +684,7 @@ if __name__ == '__main__':
 
 
 
-    hai = [2000,2025]
+    hai = [2000,years[-1]]
 
     for i,ax in enumerate([ax05,ax10]):
         ax.spines['right'].set_visible(False)
@@ -808,10 +813,10 @@ if __name__ == '__main__':
     #sorted_df[['index']].to_csv('to_index_mapping.csv', index=False)
 
 
-    fig.savefig('spaggheti_plot_v6.png', dpi=500, bbox_inches='tight')
-    fig2.savefig('05_threshold_v6.png', dpi=500, bbox_inches='tight')
-    fig2b.savefig(f'crossing_pile_v6_{hist_option}.png', dpi=500, bbox_inches='tight')
-    fig3.savefig('10_threshold_v6.png', dpi=500, bbox_inches='tight')
+    fig.savefig('spaggheti_plot_v2025.png', dpi=500, bbox_inches='tight')
+    fig2.savefig('05_threshold_v2025.png', dpi=500, bbox_inches='tight')
+    fig2b.savefig(f'crossing_pile_v2025_{hist_option}.png', dpi=500, bbox_inches='tight')
+    fig3.savefig('10_threshold_v2025.png', dpi=500, bbox_inches='tight')
     print(sum((crossing_yrs05_30 -closest_year05)<=0.5  ) / len(crossing_yrs05_30))
     print(sum((crossing_yrs05_30 -closest_year05)<=1  ) / len(crossing_yrs05_30))
     print(sum((crossing_yrs05_30 -closest_year05)<=2  ) / len(crossing_yrs05_30))
@@ -821,6 +826,17 @@ if __name__ == '__main__':
     print(sum((crossing_yrs10_30 -closest_year10)<=2  ) / len(crossing_yrs10_30))
     
 
+    export_arr = np.full((2, len(years), len(df_results)), np.nan)
+    for ii, row in df_results.reset_index(drop=True).iterrows():
+        result = results2[row["method_name"]]["LT_trend"]
+        k = 0 if row["c/r"] == "c" else 1
+        export_arr[0, :, ii] = result[k * 2]
+        export_arr[1, :, ii] = result[k * 2 + 1]
+    df_results_manifest = df_results.reset_index(drop=True).reset_index(names="export_index")
+    df_results_manifest["mean_2010"] = export_arr[0, 160, :]
+
+    np.save(f"hist_results_export_2x{nyrs}x125.npy", export_arr)
+    df_results_manifest.to_csv("hist_results_manifest.csv", index=False)
 
         ##Process along time marginal for each temp rather than along the temperature marginal for each date
 ##    #make this monotonically increasing so we are not assessing back and forth thresholds

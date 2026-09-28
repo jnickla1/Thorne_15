@@ -22,7 +22,7 @@ n_iters = 174
 sz = (n_iters,2) # size of array
 sz2d=(n_iters,2,2)
 
-zJ_from_W = 5.1006447*3.154*0.71
+zJ_from_W = 5.1006447*3.154
 zJtomm=0.121
 pcolor='deeppink'
 colorrts='goldenrod'
@@ -76,7 +76,7 @@ shaldepth=86
 deepdepth = 1141
 
 fdbkS = 0.35 #23 # from 35
-fdbkA = 0.42 - 0.12 
+fdbkA = 0.42 + 0.03
 fdbkW = 1.3
 
 def precompute_coeffs(printThem):

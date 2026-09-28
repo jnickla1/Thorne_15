@@ -18,6 +18,7 @@ years0=data[:,0]
 years0[0]=1850
 temperature = data[:, 1]
 n_iter=len(temperature) #174
+
 data_ocn = pd.read_csv(dir_path+'/../../../Common_Data/HadSST.4.0.1.0_annual_GLOBE.csv', sep=',')
 OceanRec = data_ocn['anomaly'].values
 OceanRec_sc =  OceanRec *0.9/0.7
@@ -79,6 +80,13 @@ def run_method(yrs, temps, uncert, model_run, experiment_type):
     temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
     preind_base = np.mean(temps_obs[0:50])
     global OceanRec_sc
+    if experiment_type == "historical" and yrs[-1]!=2024:
+        if yrs[-1]==2025:
+            data_ocn = pd.read_csv(dir_path+'/../../../Common_Data/HadSST.4.2.0.0_annual_GLOBE.csv', sep=',')
+            OceanRec = data_ocn['anomaly'].values
+            OceanRec_sc =  OceanRec *0.9/0.7
+        else:
+            raise Exception("Need to add new HadSST version for that end year")
 
     if experiment_type != "historical":
         exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #

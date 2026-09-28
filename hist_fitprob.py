@@ -97,7 +97,7 @@ if __name__ == '__main__':
     regen=historical_regen #False #whether to execute all of the methods directly (True) or read from a pickle file to rapidly redraw the figures (False).
 
     # First evaluation
-    data = pd.read_csv("./Common_Data/HadCRUT5.csv")
+    data = pd.read_csv("./Common_Data/HadCRUT.5.1.csv")
     temps_obs = data.loc[:,"Anomaly"].to_numpy()
     preind_base = np.mean(temps_obs[0:50]) #preindustrial baseline 1850-1899
     temps_obs = temps_obs - preind_base #remove this baseline
@@ -108,6 +108,7 @@ if __name__ == '__main__':
     model_run = ''
     experiment_type = sys.argv[1] #'fut_ESM1-2-LR_SSP126_constVolc' #fut_NorESM_RCP45_Volc
     exp_attr = experiment_type.split("_")
+    print(experiment_type)
     if (experiment_type =='historical'):
         outputfilename = experiment_type
         # Run all the methods

@@ -32,8 +32,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         start_shift = 1
         s_yr = 21 # could use this with NaN from file, +1 to account for month shift to start in August/Sept
         start_yr = start_shift+s_yr  #22 start in 1871
-        end_yr = 174 #others are left as NaN
-
+        #end_yr = 176 #others are left as NaN
+        end_yr = min(len(ensoA)+start_yr-1,len(years)) #should be whole dataset
 
 
     else:
@@ -86,10 +86,16 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 #here we're just fitting a linear line
     st_idx0 = 1979- 1850-start_yr #107
 
+    #print(len(ensoA[(start_shift+st_idx0):(end_yr-start_yr+start_shift)]))
+    #print(len(AODdata[(start_yr+st_idx0):end_yr]))
+    #print(len(TSIdata[(start_yr+st_idx0):end_yr]))
+    #print(len(cos_2yr[(start_yr+st_idx0):end_yr]))
+    #print(len(years[(start_yr+st_idx0):end_yr]))
+    
     X = pd.DataFrame({
-        'MEI': ensoA[start_shift+st_idx0:], #1871 , start in 1979
-        'AOD': AODdata[start_yr+st_idx0:],
-        'TSI': TSIdata[start_yr+st_idx0:],
+        'MEI': ensoA[(start_shift+st_idx0):(end_yr-start_yr+start_shift)], #1871 , start in 1979
+        'AOD': AODdata[(start_yr+st_idx0):end_yr],
+        'TSI': TSIdata[(start_yr+st_idx0):end_yr],
         'cos2': cos_2yr[(start_yr+st_idx0):end_yr],
         'time': years[(start_yr+st_idx0):end_yr]-1979, #time fit doesnt really matter
     })
@@ -100,10 +106,17 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     
     model = sm.OLS(y, X).fit()
     st_idx = 1971- 1850-start_yr #100
+    
+    #print(len(ensoA[start_shift+st_idx:end_yr]))
+    #print(len(AODdata[start_yr+st_idx:end_yr]))
+    #print(len(TSIdata[start_yr+st_idx:end_yr]))
+    #print(len(cos_2yr[start_yr+st_idx:end_yr]))
+    #print(len(np.zeros(end_yr- (start_yr+st_idx))))
+
     X2 = pd.DataFrame({
-        'MEI': ensoA[start_shift+st_idx:],
-        'AOD': AODdata[start_yr+st_idx:],
-        'TSI': TSIdata[start_yr+st_idx:],
+        'MEI': ensoA[start_shift+st_idx:(end_yr-start_yr+start_shift)],
+        'AOD': AODdata[start_yr+st_idx:end_yr],
+        'TSI': TSIdata[start_yr+st_idx:end_yr],
         'cos2': cos_2yr[start_yr+st_idx:end_yr],
         'time': np.zeros(end_yr- (start_yr+st_idx)),
     })

@@ -5,6 +5,7 @@ from sys import path
 #import os
 from netCDF4 import Dataset
 import config
+#import pdb
 
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""
@@ -22,7 +23,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         ensoA = enso_mei['AVG'][start_shift:]
         s_yr = 21 # could use this with NaN from file, +1 to account for month shift to start in August/Sept
         start_yr = start_shift+s_yr 
-        end_yr = len(ensoA)+start_yr #others are left as NaN
+        end_yr =  min(len(ensoA)+start_yr,len(years))#others are left as NaN
+        print(end_yr)
 
     else:
         exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #
@@ -81,8 +83,10 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
     coefMEI= 0.1 #from Foster Rahmstorf 2011 http://dx.doi.org/10.1088/1748-9326/6/4/044022
     uncertMEI = 0.25 #also from above paper
-    means[start_yr:end_yr]= temperature[start_yr:end_yr]-ensoA*coefMEI
-    ses[start_yr:end_yr] = np.sqrt( temps_1std[start_yr:end_yr]**2 + (ensoA*coefMEI)**2)
+    #breakpoint()
+    
+    means[start_yr:end_yr]= temperature[start_yr:end_yr]-ensoA[:end_yr-start_yr]*coefMEI
+    ses[start_yr:end_yr] = np.sqrt( temps_1std[start_yr:end_yr]**2 + (ensoA[:end_yr-start_yr]*coefMEI)**2)
     
     return means, ses, empser.copy(), empser.copy()
 

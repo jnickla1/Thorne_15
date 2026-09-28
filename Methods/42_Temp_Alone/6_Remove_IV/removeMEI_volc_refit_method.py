@@ -35,9 +35,10 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         start_shift = 1
         s_yr = 21 # could use this with NaN from file, +1 to account for month shift to start in August/Sept
         start_yr = start_shift+s_yr  #22 start in 1871
-        end_yr = 174 #others are left as NaN
-        endidx=130
-        
+        #end_yr = 174 #others are left as NaN
+        end_yr = len(ensoA)+start_yr-1 #should be whole dataset
+        endidx=130 ##not sure what this does, didn't update
+
 
     else:
         exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #fut_NorESM_RCP45_Volc
@@ -127,21 +128,24 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 ##            'TSI': data[MEI_shift:endi, 8],
 ##            'cos2': cos_2yr[MEI_shift:endi],
 ##        })
+
+        
         X2 = pd.DataFrame({
-            'MEI': ensoA[start_shift+st_idx:(endi+start_shift-start_yr)],
-            'AOD': AODdata[start_yr+st_idx:(endi)],
-            'TSI': TSIdata[start_yr+st_idx:(endi)],
-            'cos2': cos_2yr[start_yr+st_idx:(endi)],
-            'time': np.zeros(endi- (start_yr+st_idx)),
+            'MEI': ensoA[start_shift+st_idx:(endi+start_shift-start_yr+1)],
+            'AOD': AODdata[start_yr+st_idx:(endi+1)],
+            'TSI': TSIdata[start_yr+st_idx:(endi+1)],
+            'cos2': cos_2yr[start_yr+st_idx:(endi+1)],
+            'time': np.zeros(endi- (start_yr+st_idx)+1),
         })
 
 
         X2 = sm.add_constant(X2)
         pred2=model.get_prediction(X2)
 
-        means[endi]= temperature[endi]- pred2.predicted_mean[endi-(start_yr+st_idx) -1 ] 
-        ses[endi] = np.sqrt( temps_1std[endi]**2 + (pred2.se[endi-(start_yr+st_idx) -1])**2+ constV)
-    #print(pred2.predicted_mean)
+        means[endi]= temperature[endi]- pred2.predicted_mean[endi-(start_yr+st_idx) ] 
+        ses[endi] = np.sqrt( temps_1std[endi]**2 + (pred2.se[endi-(start_yr+st_idx) ])**2+ constV)
+    #print(len(pred2.predicted_mean))
+    #breakpoint()
     means2[start_yr+st_idx:end_yr]= temperature[start_yr+st_idx:end_yr] - pred2.predicted_mean
     ses2[start_yr+st_idx:end_yr] = np.sqrt( temps_1std[start_yr+st_idx:end_yr]**2 + (pred2.se)**2 + constV/4)
 

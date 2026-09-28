@@ -24,7 +24,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     samp_cur = np.full((np.shape(years)[0],nsamps) ,np.nan)
         
     
-    for i in range(110, len(years) - avg_len_u):
+    for i in range(110, len(years)):
         chunk=temperature[i-avg_len_l:i+avg_len_u]
         chunk_uncert=temps_1std[i-avg_len_l:i+avg_len_u]
         forec_curyear = forec[forec['start_year']==(i+1850+1)].to_numpy()

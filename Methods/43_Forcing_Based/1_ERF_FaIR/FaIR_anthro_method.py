@@ -29,9 +29,12 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
     if experiment_type == 'historical':
         sfactor=0.23
-        current_array = np.load(cur_path+"/resliced_NorESM/combined_hadcrut5_anthro.npy") #starts in 1930
-        retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2024_temp_anthro.npy") #starts in 1750
-        
+        if len(years)<=175:
+            current_array = np.load(cur_path+"/resliced_NorESM/combined_hadcrut5_anthro.npy") #starts in 1930
+            retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2024_temp_anthro.npy") #starts in 1750
+        elif len(years)==176:
+            retro_array = np.load(cur_path+"/resliced_headstails25/retrospective/all-headstails25r0cut2025_temp_anthro.npy") #starts in 1930
+            current_array = np.load(cur_path+"/resliced_headstails25/combined_all-headstails25r0_anthro.npy") #starts in 1750
     else:
         exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126 or _VolcConst #
         sfactor=0.75

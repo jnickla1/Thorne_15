@@ -14,7 +14,7 @@ RECORDS = [
 
 EN4_SUBTYPES = ['c14', 'c14', 'c14', 'c13', 'c13', 'c13', 'g10', 'g10', 'l09', 'l09']
 
-YEARS = np.arange(1850, 2025)  # 175 years
+YEARS = np.arange(1850, 2026)  # 176 years
 N_ENSEMBLE = 100
 N_COPIES_PER_RECORD = 10
 
@@ -747,6 +747,8 @@ def plot_ensemble_stems(ohca: np.ndarray, coverage_string: np.ndarray,
 
     ax.axvline(START_YEAR, color='red', linestyle='--', alpha=0.5, label='Anchor year')
     ax.set_xlabel('Year')
+    ax.set_xlim([1850,2025])
+    ax.set_xticks(np.arange(1850,2026,25))
     ax.set_ylabel('Cumulative OHCA (J)')
     ax.set_title(title)
     ax.grid(True, alpha=0.3)
@@ -783,7 +785,7 @@ if __name__ == "__main__":
                         "ensemble_stems")
     
     print("\nSaved arrays:")
-    print("  - ohca_change_ensemble.npy (100 x 175)")
-    print("  - ohca_uncertainty_ensemble.npy (100 x 175)")
-    print("  - coverage_string_ensemble.npy (100 x 175)")
-    print("  - years.npy (175,)")
+    print(f"  - ohca_change_ensemble.npy ({np.shape(ohca_change)})")
+    print(f"  - ohca_uncertainty_ensemble.npy {np.shape(ohca_uncertainty)}")
+    print(f"  - coverage_string_ensemble.npy {np.shape(coverage_string)}")
+    print(f"  - years.npy {np.shape(YEARS)}")

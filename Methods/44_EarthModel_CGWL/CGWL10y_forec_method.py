@@ -3,6 +3,7 @@ import pandas as pd
 import scipy.stats as stats
 import os
 import matplotlib.pyplot as plt
+#import pdb
 
 
 def run_method(years, temperature, uncert, model_run, experiment_type):
@@ -26,7 +27,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     samp_cur = np.full((np.shape(years)[0],nsamps) ,np.nan)
         
     
-    for i in range(110, len(years) - avg_len_u):
+    for i in range(110, len(years)):
         chunk=temperature[i-avg_len_l:i+avg_len_u]
         chunk_uncert=temps_1std[i-avg_len_l:i+avg_len_u]
         forec_curyear = forec[forec['start_year']==(i+1850+1)].to_numpy()
@@ -46,6 +47,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             #np.random.normal(loc=0, scale=np.sqrt(np.mean(chunk_uncert**2)/2/len(chunk)), size=nsamps) )
 
 
+        
     def empirical_mean(year_idx,k):
         if (k==0):
             return means[year_idx-1850]

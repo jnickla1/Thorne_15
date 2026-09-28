@@ -5,6 +5,7 @@ import config
 from netCDF4 import Dataset
 import pdb
 import xarray as xr
+import os as _os
 
 def average_every_n(lst, n):
     """Calculates the average of every n elements in a list."""
@@ -100,7 +101,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
     
     if experiment_type == "historical":
         restore_baselines()
-        ekf.n_iters = 174
+        ekf.n_iters = len(years)
         unf_new_opt_depth = ekf.data[:,3]*0.001
         ekf.opt_depth=ta_smooth(unf_new_opt_depth,(1/(unf_new_opt_depth[20]+9.7279)))
         given_preind_base = np.mean(temperature[0:50])
@@ -109,8 +110,8 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
         erf_data= pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")
         erf_data_solar = erf_data['solar'].to_numpy()[(1850-1750):]
         solar_full = erf_data_solar[:ekf.n_iters]+ 340.4099428 - 0.108214
-        tot_volc_erf = (- solar_full*frac_blocked + 151.22)
-        contrails = erf_data['contrails'][(1850-1750):(2024-1750)].values
+        tot_volc_erf = (- solar_full*frac_blocked[:ekf.n_iters] + 151.22)
+        contrails = erf_data['contrails'][(1850-1750):(1850+ekf.n_iters-1750)].values
         TOA_correction = (tot_volc_erf - np.mean(tot_volc_erf[90:100])+ contrails)
         #TOA_correction = TOA_correction #- np.mean(TOA_correction)*2/3
         #TOA_correction[0:75] = TOA_correction[0:75] + 0.2
@@ -136,8 +137,8 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
         temps[9:ekf.n_iters] = temps[9:ekf.n_iters] - erf_trapez[:-7]/(ekf.heatCp - ekf.Cs)/2 #surface temp of 20 yr mean still depressed
         ohca_meas[9:ekf.n_iters] = ohca_meas[9:ekf.n_iters] - (erf_trapez[:-7]/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*50/2
         
-        TOA_meas_artif1 =  ekf.TOA_meas_artif - TOA_correction * .75
-        new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
+        TOA_meas_artif1 =  ekf.TOA_meas_artif[:ekf.n_iters] - TOA_correction * .75
+        new_observ = np.array([[temps[:ekf.n_iters],ohca_meas[:ekf.n_iters]/ekf.zJ_from_W ,TOA_meas_artif1]]).T
         #temps = temperature-given_preind_base+preind_base + ekf.offset
         #new_observ = np.array([[temps[:ekf.n_iters],ekf.oc_meas,ekf.TOA_meas_artif]]).T
         ekf.dfrA_float_var = ekf.dfrA_float_var/40
@@ -196,6 +197,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
         
         data3 =  np.genfromtxt(open(config.CLIMATE_DATA_PATH+"/SSP_inputdata/KF6projectionSSP.csv", "rb"),dtype=float, delimiter=',')
         #ekf.anthro_clouds = np.append(ekf.anthro_clouds,[data3[2024-2015,6+2]+1])
+        breakpoint() #figure out why we're appending and if we neded to append more to anthro_clouds, tsi, lCo2
         ekf.anthro_clouds = np.append(ekf.anthro_clouds,[2024*4.482E-5 -.018479 ])
         new_tsi = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp119_1750-2500.csv")['solar'][100:(100+ekf.n_iters+1)].values
         
@@ -427,7 +429,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
             #same as in historical - shouldn't affect much, just smooths out this input
             ekf.tsi = 2* ta_smooth(ekf.tsi,ekf.sw_in,optical=False,N=34) - ekf.sw_in  #np.full(np.shape(ekf.tsi),np.mean(ekf.tsi))
             #makes centered mean
-            ekf.tsi[16:] = 2*ekf.tsi[16:]-ekf.tsi[:-16]
+            ekf.tsi[16:] = 2*ekf.tsi[16:]-ekf.tsi[:-16] #perhaps try with only 8 years, as that brings right to present - TODO LATER
 
             ekf.R_tvar = new_R_tvar  #/10 SR15 try
             ekf.Roc_tvar=new_Roc_tvar
@@ -441,7 +443,12 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
             
             #TOA_meas_artif0 =  new_rtTOA - (erf_natvolc - erf_data_solar[:len(new_rtTOA )]) * .75  #+ np.mean(erf_volc)  to be removing this year's volcanism
             TOA_meas_artif0 =  new_rtTOA.astype(np.float64) #TOA_meas_artif1*TOA_scale
-            TOA_meas_artif = TOA_meas_artif0 - np.mean(TOA_meas_artif0[0:70])/2 + (np.mean(ekf.TOA_meas_artif[2001-1850:2023-1850]) -np.mean( TOA_meas_artif0[2001-1850:2023-1850]))/2
+            print(np.mean(TOA_meas_artif0[0:70]))
+            ceres_offset = (np.mean(ekf.TOA_meas_artif[2001-1850:2023-1850]) -np.mean( TOA_meas_artif0[2001-1850:2023-1850])) 
+            print(ceres_offset)
+
+            
+            TOA_meas_artif = TOA_meas_artif0 - np.mean(TOA_meas_artif0[0:70]) #+ (np.mean(ekf.TOA_meas_artif[2001-1850:2023-1850]) -np.mean( TOA_meas_artif0[2001-1850:2023-1850]))/2
                       #this should be balanced at the start originally, and also match recent observations
             #TOA_scale = np.mean(ekf.TOA_crop)/np.mean(TOA_meas_artif1[2001-1850:2023-1850]) 
 
@@ -457,12 +464,29 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
             surf_heat = (temps[-1]-np.mean(temps[0:50]))*(ekf.heatCp-ekf.Cs)
             print(f"OHCA + surf = {ohca_meas[-1]/ekf.zJ_from_W + surf_heat}")
             print(f"sum TOA = {np.sum(TOA_meas_artif)}")
+            ohcafull = ohca_meas[-1]
+            difference = np.sum(TOA_meas_artif) * ekf.zJ_from_W - ohcafull
+
+            extras_dir = _os.path.join(_os.path.dirname(__file__), "extras")
+            _os.makedirs(extras_dir, exist_ok=True)
+            out_file = _os.path.join(extras_dir, f"{exp_attr[2].lower()}.csv")
+            with open(out_file, "a") as f:
+                f.write(f"{model_run},{ohcafull},{difference}\n")
+
+            out_file2 = _os.path.join(extras_dir, f"RT{exp_attr[2].lower()}.csv")
+            print("Baseline TOA characteristics")
+            print(np.mean(ekf.TOA_meas_artif[2001-1850:2023-1850]))
+            print(np.std(ekf.TOA_meas_artif[2001-1850:2023-1850]))
+            with open(out_file2, "a") as f:
+                f.write(f"{model_run},{np.mean(TOA_meas_artif0[0:70])},{ceres_offset},{np.std(TOA_meas_artif0[2001-1850:2023-1850])}\n")
+
             print("Error:")
             TOA_error = (np.sum(TOA_meas_artif)-ohca_meas[-1]/ekf.zJ_from_W - surf_heat)/np.sum(TOA_meas_artif)
             print(TOA_error)
             
             ohca_scale = (np.sum(TOA_meas_artif)- surf_heat)/ohca_meas[-1]*ekf.zJ_from_W
             print("OHCA_scale:")
+
             print(ohca_scale)
 
             #now fix the deep ocean depth / gad which means fitting values for blind model
@@ -515,7 +539,19 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
         #breakpoint()
 
         means , ses ,means2 ,ses2 = ekf.ekf_run(new_observ,new_iter,retPs=3)
-
+        import matplotlib.pyplot as plt
+        fig , axVolc = plt.subplots(figsize=(8,3.5))  #5)) #
+        plt.subplots_adjust(bottom=0.15) ############
+        
+        plt.plot(years,unf_new_opt_depth, color='maroon')
+        axVolc.set_ylabel('AOD (unitless)') #'Fraction Converted to
+        axVolc.set_xlabel('Year')
+        axVolc.set_title( "Corrected, Pre-Filtered Volcanic Signal (member #10)") #"SSP370")             #f"Hidden SW Radiative Flux Adjustment for EBMKF-{modelID}")
+        extras_dir = _os.path.join(_os.path.dirname(__file__), "extras")
+        plt.savefig(extras_dir+f"/EBMKFta4-NorESM-AODcorr1.png",dpi=300,format="png")
+    
+        
+       #plt.show()
         
         return means - ekf.offset-preind_base + given_preind_base , np.sqrt(np.abs(ses))*2,means2 -ekf.offset-preind_base + given_preind_base,np.sqrt(np.abs(ses2))*2
 

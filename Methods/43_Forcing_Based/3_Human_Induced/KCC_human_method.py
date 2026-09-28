@@ -14,12 +14,16 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         return empser, empser, empser, empser
     
     samp_cur= np.full((len(years),Nres),np.nan)
-    
+    if len(years)<=175:
+        tagnum="24"
+    elif len(years)==176:
+        tagnum="25"
+
     cur_path = os.path.dirname(os.path.realpath(__file__))
 
     def obtain_file(year):
-        df = pd.read_csv(cur_path+"/KCC/kcc_notebook/kcc_"+experiment_type+"_all_"+str(year)+".csv", sep=',') #has header
-        dfnat = pd.read_csv(cur_path+"/KCC/kcc_notebook/kcc_"+experiment_type+"_nat_"+str(year)+".csv", sep=',') #has header
+        df = pd.read_csv(cur_path+"/KCC/kcc_notebook"+tagnum+"/kcc_"+experiment_type+"_all_"+str(year)+".csv", sep=',') #has header
+        dfnat = pd.read_csv(cur_path+"/KCC/kcc_notebook"+tagnum+"/kcc_"+experiment_type+"_nat_"+str(year)+".csv", sep=',') #has header
         human_samp =  df.drop(df.columns[0], axis=1).to_numpy() - dfnat.drop(dfnat.columns[0], axis=1).to_numpy() 
         return human_samp #remove first column
 

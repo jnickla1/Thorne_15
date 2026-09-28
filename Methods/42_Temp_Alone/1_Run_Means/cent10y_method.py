@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
+from .cent20y_method import load_hadcrut_uncertainty
 
 def run_method(years, temperature,uncert, model_run, experiment_type):
     avg_len_l=5
@@ -12,8 +13,7 @@ def run_method(years, temperature,uncert, model_run, experiment_type):
     temps_1std = (temps_CIu - temps_CIl) / 4 #pm2 stdevs
     if experiment_type == 'historical':
         cur_path = os.path.dirname(os.path.realpath(__file__))
-        hadcrutUncertFile = pd.read_csv(cur_path+"/../../../Common_Data/HadCRUT.5.0.2.0_10_yr_run_mean.csv") 
-        hadcrutUncert = hadcrutUncertFile["Total_uncert_(1sigma)"]
+        hadcrutUncert = load_hadcrut_uncertainty(years, cur_path, 10)
 
     for i in range(avg_len_l, len(years) - avg_len_u):
         chunka=temperature[i-avg_len_l:i+avg_len_u]
