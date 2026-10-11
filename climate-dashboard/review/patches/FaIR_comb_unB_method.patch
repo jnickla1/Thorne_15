@@ -1,0 +1,142 @@
+--- a/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
++++ b/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py
+@@ -28,6 +28,12 @@
+     #samp_cur = obt_array0[100:,:]
+     exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126 or _VolcConst #
+     offset=0
++    # The 2025 heads/tails exports use the boundary following each annual
++    # observation, matching the Oscar GMST constraint and current slicer.
++    # Older/future exports retain their existing boundary convention.
++    retro_start = 101 if (len(years) == 176 and
++                         (experiment_type == 'historical' or exp_attr[0] == 'histens')) else 100
++    retro_stop = retro_start + len(years)
+     if experiment_type == 'historical':
+         sfactor=0.2
+         if len(years)<=175:
+@@ -35,8 +41,8 @@
+             retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2024_temp_nonat.npy") #starts in 1750
+             curbias=-0.01
+         elif len(years)==176:
+-            retro_array = np.load(cur_path+"/resliced_headstails25/retrospective/all-headstails25r0cut2025_temp_nonat.npy") #starts in 1930
+-            current_array = np.load(cur_path+"/resliced_headstails25/combined_all-headstails25r0_nonat.npy") #starts in 1750
++            retro_array = np.load(cur_path+"/resliced_headstails25/retrospective/all-headstails25r0cut2025_temp_nonat.npy") # boundaries start in 1750
++            current_array = np.load(cur_path+"/resliced_headstails25/combined_all-headstails25r0_nonat.npy") # annual labels start in 1930
+             curbias=-0.017
+ 
+     elif (exp_attr[0]=="histens"):
+@@ -47,8 +53,8 @@
+             retro_array = np.load(cur_path+"/retrospective/all-headstails_currentr"+str(model_run+1)+"cut2024_temp_nonat.npy") #starts in 1750
+             current_array = np.load(cur_path+"/resliced_headstails24/combined_all-headstails_currentr"+str(model_run+1)+"_nonat.npy")
+         elif len(years)==176:
+-            retro_array = np.load(cur_path+"/resliced_headstails25/retrospective/all-headstails25r"+str(model_run+1)+"cut2025_temp_nonat.npy") #starts in 1930
+-            current_array = np.load(cur_path+"/resliced_headstails25/combined_all-headstails25r"+str(model_run+1)+"_nonat.npy") #starts in 1750
++            retro_array = np.load(cur_path+"/resliced_headstails25/retrospective/all-headstails25r"+str(model_run+1)+"cut2025_temp_nonat.npy") # boundaries start in 1750
++            current_array = np.load(cur_path+"/resliced_headstails25/combined_all-headstails25r"+str(model_run+1)+"_nonat.npy") # annual labels start in 1930
+             curbias= -0.017
+ 
+         if (exp_attr[1]=="satcal"):
+@@ -85,15 +91,11 @@
+     #newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_20, (dev_20+ np.linspace(0, (curbias-dev_20)*9/4, (np.shape(temperature)[0]-160)))))
+     if (True): #experiment_type == 'historical' or exp_attr[0]=="histens"):
+         samp_cur = samp_mean[:, np.newaxis] + np.sqrt( dev_orig**2)*sfactor *np.sign(dev_orig)- curbias #newcorrecton[:, np.newaxis]                    
+-        samp_ret = retro_array[100:,:] - curbias #starts in 1750 so crop to 100th index
+-    else:
+-        dev_20 = np.mean(samp_mean[(2000-1850):(2020-1850)]) - np.mean(temperature[(2000-1850):(2020-1850)])
+-        newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_20, (dev_20+ np.linspace(0, (curbias-dev_20)*9/4*9/8, (np.shape(temperature)[0]-160)))))
+-        samp_cur = samp_mean[:, np.newaxis] + np.sqrt( dev_orig**2)*sfactor *np.sign(dev_orig)- newcorrecton[:, np.newaxis]                    
+-        samp_ret = retro_array[100:(np.shape(temperature)[0]+100),:] - newcorrecton[:, np.newaxis]   #starts in 1750 so crop to 100th index
+-    
+-
+-#Add in 1/3 of the stuff from ALL to get volcanoes
++        samp_ret = retro_array[retro_start:retro_stop, :] - curbias # aligned annual labels
++    
++
++# Add the all-forcing component and, for 2025, its earlier-cutoff history.
++    retro_lag4_path = None
+     if experiment_type == 'historical':
+         sfactor=0.4
+         if len(years)<=175:
+@@ -101,8 +103,10 @@
+             retro_array = np.load(cur_path+"/retrospective/all-2022_hadcrut5_currentcut2024_temp_all.npy") #starts in 1750
+             curbias = 0.022
+         elif len(years)==176:
+-            retro_array = np.load(cur_path+"/resliced_headstails25/retrospective/all-headstails25r0cut2025_temp_all.npy") #starts in 1930
+-            current_array = np.load(cur_path+"/resliced_headstails25/combined_all-headstails25r0_all.npy") #starts in 1750
++            retro_array = np.load(cur_path+"/resliced_headstails25/retrospective/all-headstails25r0cut2025_temp_all.npy") # boundaries start in 1750
++            retro_lag4_path = os.path.join(cur_path, "resliced_headstails25", "retrospective",
++                                          "all-headstails25r0cut2021_temp_all.npy")
++            current_array = np.load(cur_path+"/resliced_headstails25/combined_all-headstails25r0_all.npy") # annual labels start in 1930
+             curbias = 0.02
+ 
+     elif (exp_attr[0]=="histens"):
+@@ -113,8 +117,10 @@
+             retro_array = np.load(cur_path+"/retrospective/all-headstails_currentr"+str(model_run+1)+"cut2024_temp_all.npy") #starts in 1750
+             current_array = np.load(cur_path+"/resliced_headstails/combined_all-headstails_currentr"+str(model_run+1)+"_all.npy")
+         elif len(years)==176:
+-            retro_array = np.load(cur_path+"/resliced_headstails25/retrospective/all-headstails25r"+str(model_run+1)+"cut2025_temp_all.npy") #starts in 1930
+-            current_array = np.load(cur_path+"/resliced_headstails25/combined_all-headstails25r"+str(model_run+1)+"_all.npy") #starts in 1750
++            retro_array = np.load(cur_path+"/resliced_headstails25/retrospective/all-headstails25r"+str(model_run+1)+"cut2025_temp_all.npy") # boundaries start in 1750
++            retro_lag4_path = os.path.join(cur_path, "resliced_headstails25", "retrospective",
++                                          "all-headstails25r"+str(model_run+1)+"cut2021_temp_all.npy")
++            current_array = np.load(cur_path+"/resliced_headstails25/combined_all-headstails25r"+str(model_run+1)+"_all.npy") # annual labels start in 1930
+             curbias=0.020
+ 
+         if (exp_attr[1]=="satcal"):
+@@ -142,6 +148,37 @@
+             current_array = np.load(cur_path+"/resliced_NorESM/combined_all_current_NorESM"+exp_attr[3]+"r"+str(model_run+1)+"_all.npy") #starts in 1930
+             retro_array = np.load(cur_path+"/retrospective/all_current_NorESM"+exp_attr[3]+"r"+str(model_run+1)+"cut2099_temp_all.npy") #starts in 1750
+             curbias= -0.196116/2-0.1727/2    
++    if retro_lag4_path is None:
++        # Older/future exports keep their existing retrospective input.
++        retro_array_lag4 = retro_array
++    else:
++        # The 2025 retrospective lag uses the full fit constrained through
++        # 2021, matching the cutoff of the current pathway's 2021 row.
++        try:
++            retro_array_lag4 = np.load(retro_lag4_path, allow_pickle=False)
++        except FileNotFoundError as exc:
++            raise FileNotFoundError(
++                "Missing 2021 FaIR lag trajectory: " + retro_lag4_path +
++                ". Copy all-headstails25r*cut2021_temp_all.npy from Oscar "
++                "into resliced_headstails25/retrospective before running this method."
++            ) from exc
++        if (retro_array_lag4.ndim != 2 or
++                retro_array_lag4.shape[0] < retro_stop - 4 or
++                not 0 < retro_array_lag4.shape[1] <= current_array.shape[1]):
++            raise ValueError("Unexpected lag trajectory shape " + str(retro_array_lag4.shape) +
++                             " in " + retro_lag4_path)
++        # Match the available column prefix used by the current mixture.
++        # Cutoff fits can have different sample counts; preserve the final
++        # retrospective width so the subsequent random draw sizes are unchanged.
++        if retro_array_lag4.shape[1] != retro_array.shape[1]:
++            padded_lag4 = np.full((retro_array_lag4.shape[0], retro_array.shape[1]), np.nan)
++            shared_cols = min(retro_array_lag4.shape[1], retro_array.shape[1])
++            padded_lag4[:, :shared_cols] = retro_array_lag4[:, :shared_cols]
++            retro_array_lag4 = padded_lag4
++        # Apply the satellite-calibration shift exactly once, as for the
++        # contemporary retrospective array. The bias is applied below.
++        retro_array_lag4 = retro_array_lag4 - offset
++
+     samp_curAll = np.full((len(years),np.shape(current_array)[1]),np.nan)
+     samp_curAll[(1930-1850):end_fill_sampc,:]= current_array #starts in 1930
+     samp_curAll[(1930-1850):end_fill_sampc,:]= current_array #starts in 1930
+@@ -152,12 +189,13 @@
+     
+     if (True): #experiment_type == 'historical' or exp_attr[0]=="histens"):
+         samp_cur_all = samp_meanAll[:, np.newaxis] + np.sqrt( dev_origAll**2)*sfactor *np.sign(dev_origAll)- curbias                    
+-        samp_ret =  2/3*samp_ret + 1/3 * retro_array[100:,:] + 1/6 * retro_array[95:-5,:] - curbias 
+-    else:
+-        dev_20All = np.mean(samp_meanAll[(2000-1850):(2020-1850)]) - np.mean(temperature[(2000-1850):(2020-1850)])
+-        newcorrectonAll = np.concatenate((np.zeros(150), np.ones(10)*dev_20All, (dev_20All+ np.linspace(0, (curbias-dev_20All)*9/4*9/8, (np.shape(temperature)[0]-160)))))
+-        samp_cur_all = samp_meanAll[:, np.newaxis] + np.sqrt( dev_origAll**2)*sfactor *np.sign(dev_origAll)- newcorrectonAll[:, np.newaxis]                    
+-        samp_ret = 2/3*samp_ret + 1/3 * retro_array[100:(np.shape(temperature)[0]+100),:] + 1/6 * retro_array[95:(np.shape(temperature)[0]+95),:]  - newcorrectonAll[:, np.newaxis]   #starts in 1750 so crop to 100th index
++        # Correct each retrospective component before combining, just as
++        # for current outputs. Retain full retrospective sample spread.
++        samp_ret_all = retro_array[retro_start:retro_stop, :] - curbias
++        samp_ret_all_lag4 = retro_array_lag4[retro_start-4:retro_stop-4, :] - curbias
++        # Mirror the current mixing recipe: weights sum to one; lag is 4 years.
++        samp_ret = (2.45/4 * samp_ret + 1/4 * samp_ret_all
++                    + .55/4 * samp_ret_all_lag4) 
+         
+     samp_cur[0:4] = 3.3/4*samp_cur[0:4] + .7/4*(samp_cur_all[0:4])
+     samp_cur[4:] = 2.45/4*samp_cur[4:] + 1/4*(samp_cur_all[4:]) + .55/4 *samp_cur_all[:-4]

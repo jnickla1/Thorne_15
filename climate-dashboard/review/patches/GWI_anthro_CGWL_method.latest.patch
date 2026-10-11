@@ -1,0 +1,58 @@
+--- Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py.original
++++ Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py
+@@ -28,7 +28,9 @@
+ 
+ 
+ def run_method(years, temperature, uncert, model_run, experiment_type):
+-    #ONLY DEFINED NOW FOR CURRENT WARMING LEVEL, so k must be 0 or will return just NANs
++    # No full-window retrospective series is supplied by this reader.
++    # Temporarily expose the current series for k=1 as an explicit proxy.
++    # This preserves all k=0 estimates and distributions.
+     syear = 1950
+     exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #
+     if experiment_type == 'historical':
+@@ -98,7 +100,7 @@
+         for yr in year_idx:
+             if (yr >=lyear or yr <1850):
+                 means[yr - 1850] =  np.nan
+-            elif (k==0):
++            elif (k in (0, 1)):
+                 if (yr >=syear):
+                     means[yr - 1850] = cdists[yr-syear].mean
+                 else:
+@@ -111,7 +113,7 @@
+         for yr in year_idx:
+             if (yr >=lyear or yr <1850):
+                 ses[yr - 1850] =  np.nan
+-            elif (k==0):
++            elif (k in (0, 1)):
+                 if (yr >=syear):
+                     ses[yr - 1850] = cdists[yr-syear].std
+                 else:
+@@ -131,7 +133,7 @@
+             #i = yr-1850
+             if (yr >=lyear or yr <1850):
+                 empirical_p[i] =  np.nan
+-            elif (k==0):
++            elif (k in (0, 1)):
+                 if (yr >=syear):
+                     
+                     cdfpt = cdists[yr-syear].cdfn0(point[i])
+@@ -155,7 +157,7 @@
+             #i = yr-1850
+             if (yr >=lyear or yr <1850):
+                 empirical_l[i] =  np.nan
+-            elif (k==0):
++            elif (k in (0, 1)):
+                 if (yr >=syear):
+                     empirical_l[i] = (cdists[yr-syear].pdfn0(point[i]))   
+         return np.log(empirical_l )
+@@ -166,7 +168,7 @@
+         for i, yr in enumerate(year_idx):
+             if (yr >=lyear or yr <1850):
+                 resamps[i] =  np.nan
+-            elif (k==0):
++            elif (k in (0, 1)):
+                 if (yr >=syear):
+                     uniform_samples = np.random.uniform(0, 1, size=n_samples)
+                     resamps[i] = (cdists[yr-syear].ppf(uniform_samples))

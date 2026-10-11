@@ -19,7 +19,9 @@ ord_ind = [0,1,4,2,3]
 min_fact = 4
 
 def run_method(years, temperature, uncert, model_run, experiment_type):
-    #ONLY DEFINED NOW FOR CURRENT WARMING LEVEL, so k must be 0 or will return just NANs
+    # No full-window retrospective series is supplied by this reader.
+    # Temporarily expose the current series for k=1 as an explicit proxy.
+    # This preserves all k=0 estimates and distributions.
     syear = 1950
     exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #
 
@@ -90,7 +92,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         for yr in year_idx:
             if (yr >=lyear or yr <1850):
                 means[yr - 1850] =  np.nan
-            elif (k==0):
+            elif (k in (0, 1)):
                 if (yr >=syear):
                     means[yr - 1850] = cdists[yr-syear].mean
                 else:
@@ -103,7 +105,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         for yr in year_idx:
             if (yr >=lyear or yr <1850):
                 ses[yr - 1850] =  np.nan
-            elif (k==0):
+            elif (k in (0, 1)):
                 if (yr >=syear):
                     ses[yr - 1850] = cdists[yr-syear].std
                 else:
@@ -123,7 +125,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             #i = yr-1850
             if (yr >=lyear or yr <1850):
                 empirical_p[i] =  np.nan
-            elif (k==0):
+            elif (k in (0, 1)):
                 if (yr >=syear):
                     
                     cdfpt = cdists[yr-syear].cdfn0(point[i])
@@ -147,7 +149,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             #i = yr-1850
             if (yr >=lyear or yr <1850):
                 empirical_l[i] =  np.nan
-            elif (k==0):
+            elif (k in (0, 1)):
                 if (yr >=syear):
                     empirical_l[i] = (cdists[yr-syear].pdfn0(point[i]))   
         return np.log(empirical_l )
@@ -158,7 +160,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         for i, yr in enumerate(year_idx):
             if (yr >=lyear or yr <1850):
                 resamps[i] =  np.nan
-            elif (k==0):
+            elif (k in (0, 1)):
                 if (yr >=syear):
                     uniform_samples = np.random.uniform(0, 1, size=n_samples)
                     resamps[i] = (cdists[yr-syear].ppf(uniform_samples))

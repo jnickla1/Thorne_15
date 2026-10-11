@@ -1,0 +1,370 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-10-11",
+  "preprint": {
+    "label": "Thorne et al., 2026",
+    "title": "How well can we quantify when 1.5 \u00b0C of global warming has been exceeded?",
+    "url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+    "doi": "10.5194/essd-2025-825",
+    "verified_url": "https://essd.copernicus.org/preprints/essd-2025-825/"
+  },
+  "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+  "methods": {
+    "CGWL10y_sfUKCP": {
+      "label": "Current Global Warming Level (CGWL)",
+      "full_name": "Current Global Warming Level using selected UKCP18 probabilistic projections",
+      "warming_type": "realized",
+      "primary_url": "https://doi.org/10.1038/d41586-023-03775-z",
+      "references": [
+        {
+          "label": "Betts et al., 2023",
+          "title": "Approaching 1.5 \u00b0C: how will we know we\u2019ve reached this crucial warming mark?",
+          "url": "https://doi.org/10.1038/d41586-023-03775-z",
+          "doi": "10.1038/d41586-023-03775-z",
+          "verified_url": "https://www.nature.com/articles/d41586-023-03775-z"
+        },
+        {
+          "label": "UKCP18 guidance and reports",
+          "title": "UK Climate Projections (UKCP18) guidance and reports",
+          "url": "https://www.metoffice.gov.uk/research/approach/collaboration/ukcp/guidance-reports",
+          "doi": null,
+          "verified_url": "https://www.metoffice.gov.uk/research/approach/collaboration/ukcp/guidance-reports"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "local_implementation_path": "/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_sfUKCP_method.py",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "4.5; Figure 17; Table 4",
+      "evidence": "Local reader combines the previous 10 observations with 10 projected years from selected UKCP18 ensemble members.",
+      "notes": []
+    },
+    "EBMKF_ta4": {
+      "label": "Energy balance model\u2013Kalman filter (EBM\u2013KF)",
+      "full_name": "Energy balance model\u2013Kalman filter, ta4 variant",
+      "warming_type": "realized",
+      "primary_url": "https://doi.org/10.1175/JCLI-D-23-0580.1",
+      "references": [
+        {
+          "label": "Nicklas, Fox-Kemper & Lawrence, 2025",
+          "title": "Efficient Estimation of Climate State and Its Uncertainty Using Kalman Filtering with Application to Policy Thresholds and Volcanism",
+          "url": "https://doi.org/10.1175/JCLI-D-23-0580.1",
+          "doi": "10.1175/JCLI-D-23-0580.1",
+          "verified_url": "https://journals.ametsoc.org/view/journals/clim/38/5/JCLI-D-23-0580.1.xml"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "local_implementation_path": "/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_method.py",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "4.4.2; Table 4",
+      "evidence": "Local implementation imports EBMKF_Nicklas4 and assimilates temperature and ocean heat content.",
+      "notes": [
+        "The published EBM\u2013KF paper describes the method family; the exact ta4 variant is documented in this project."
+      ]
+    },
+    "FaIR_comb_unB": {
+      "label": "FaIR combined estimate",
+      "full_name": "FaIR combined estimate with bias correction",
+      "warming_type": "realized",
+      "primary_url": "https://doi.org/10.5194/gmd-14-3007-2021",
+      "references": [
+        {
+          "label": "Leach et al., 2021",
+          "title": "FaIRv2.0.0: a generalized impulse response model for climate uncertainty and future scenario exploration",
+          "url": "https://doi.org/10.5194/gmd-14-3007-2021",
+          "doi": "10.5194/gmd-14-3007-2021",
+          "verified_url": "https://gmd.copernicus.org/articles/14/3007/2021/"
+        },
+        {
+          "label": "Smith et al., 2024",
+          "title": "fair-calibrate v1.4.1: calibration, constraining, and validation of the FaIR simple climate model for reliable future climate projections",
+          "url": "https://doi.org/10.5194/gmd-17-8569-2024",
+          "doi": "10.5194/gmd-17-8569-2024",
+          "verified_url": "https://gmd.copernicus.org/articles/17/8569/2024/"
+        },
+        {
+          "label": "FaIR model code",
+          "title": "Finite-amplitude Impulse Response simple climate model",
+          "url": "https://github.com/OMS-NetZero/FAIR",
+          "doi": null,
+          "verified_url": "https://github.com/OMS-NetZero/FAIR"
+        },
+        {
+          "label": "FaIR calibration code",
+          "title": "Calibration package for FaIR",
+          "url": "https://github.com/chrisroadmap/fair-calibrate",
+          "doi": null,
+          "verified_url": "https://github.com/chrisroadmap/fair-calibrate"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "local_implementation_path": "/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_comb_unB_method.py",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "4.4.3; Table 4",
+      "evidence": "Local implementation blends constrained FaIR all-forcing and no-natural-forcing samples.",
+      "notes": [
+        "The exact combined recipe and bias correction are project-specific."
+      ]
+    },
+    "GAM_AR1": {
+      "label": "Smoothing spline (GAM with AR1 residuals)",
+      "full_name": "Generalized additive model with autoregressive order-one residuals",
+      "warming_type": "realized",
+      "primary_url": "https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/gam.html",
+      "references": [
+        {
+          "label": "GAM implementation documentation",
+          "title": "Generalized additive models with integrated smoothness estimation",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/gam.html",
+          "doi": null,
+          "verified_url": "https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/gam.html"
+        },
+        {
+          "label": "Visser et al., 2018",
+          "title": "Signal detection in global mean temperatures after \u201cParis\u201d: an uncertainty and sensitivity analysis",
+          "url": "https://doi.org/10.5194/cp-14-139-2018",
+          "doi": "10.5194/cp-14-139-2018",
+          "verified_url": "https://cp.copernicus.org/articles/14/139/2018/"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "local_implementation_path": "/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR1_method.py",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "4.3.4; Table 4",
+      "evidence": "Local R script uses mgcv::gam and Simon Wood\u2019s AR1 error adjustment.",
+      "notes": [
+        "Visser et al. is a cited related spline application; it is not the exact GAM_AR1 implementation."
+      ]
+    },
+    "GWI_tot_CGWL": {
+      "label": "Global Warming Index (total warming)",
+      "full_name": "Global Warming Index total-forced warming with CGWL time averaging",
+      "warming_type": "realized",
+      "primary_url": "https://doi.org/10.1038/s41598-017-14828-5",
+      "references": [
+        {
+          "label": "Haustein et al., 2017",
+          "title": "A real-time Global Warming Index",
+          "url": "https://doi.org/10.1038/s41598-017-14828-5",
+          "doi": "10.1038/s41598-017-14828-5",
+          "verified_url": "https://ora.ox.ac.uk/objects/uuid%3Aa990e2fe-a63f-4685-88f8-71107643d4a4"
+        },
+        {
+          "label": "Global Warming Index code",
+          "title": "Global Warming Index",
+          "url": "https://github.com/tristramwalsh/global-warming-index",
+          "doi": null,
+          "verified_url": "https://github.com/tristramwalsh/global-warming-index"
+        },
+        {
+          "label": "Betts et al., 2023",
+          "title": "Approaching 1.5 \u00b0C: how will we know we\u2019ve reached this crucial warming mark?",
+          "url": "https://doi.org/10.1038/d41586-023-03775-z",
+          "doi": "10.1038/d41586-023-03775-z",
+          "verified_url": "https://www.nature.com/articles/d41586-023-03775-z"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "local_implementation_path": "/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_tot_CGWL_method.py",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "4.4.4.1; Table 4",
+      "evidence": "Local reader selects the Tot component from GWI CGWL outputs. GWI repository documents CGWL averaging and Tot = GHG + OHF + Nat.",
+      "notes": [
+        "Use publisher/institutional metadata for Haustein et al.: the preprint bibliography\u2019s author list differs from the published paper."
+      ]
+    },
+    "Kal_flexLin": {
+      "label": "Flexible linear trend (Kalman filter)",
+      "full_name": "Local linear state-space trend estimated with a Kalman filter and smoother",
+      "warming_type": "realized",
+      "primary_url": "https://doi.org/10.1007/978-3-319-52452-8",
+      "references": [
+        {
+          "label": "Shumway & Stoffer, 2017 (4th edition)",
+          "title": "Time Series Analysis and Its Applications: With R Examples",
+          "url": "https://doi.org/10.1007/978-3-319-52452-8",
+          "doi": "10.1007/978-3-319-52452-8",
+          "verified_url": "https://link.springer.com/book/10.1007/978-3-319-52452-8"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "local_implementation_path": "/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Methods/42_Temp_Alone/5_Kalman/Kal_flexLin_method.py",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "4.3.5; Table 4",
+      "evidence": "Source header cites Shumway and Stoffer\u2019s EM/Kalman example; state contains level and slope.",
+      "notes": [
+        "The preprint text cites 2016 and its bibliography cites a 2024 fifth edition. The verified stable publisher link here is the 2017 fourth edition, which predates this implementation."
+      ]
+    },
+    "lowess1dt36wnc": {
+      "label": "Local regression (LOWESS)",
+      "full_name": "Locally weighted linear regression",
+      "warming_type": "realized",
+      "primary_url": "https://doi.org/10.1029/2020EA001082",
+      "references": [
+        {
+          "label": "Clarke & Richardson, 2021",
+          "title": "The Benefits of Continuous Local Regression for Quantifying Global Warming",
+          "url": "https://doi.org/10.1029/2020EA001082",
+          "doi": "10.1029/2020EA001082",
+          "verified_url": "https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2020EA001082"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "local_implementation_path": "/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Methods/42_Temp_Alone/3_ST_Fits/lowess1dt36wnc_method.py",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "4.3.3; Table 4",
+      "evidence": "Exact local call is lowess(..., xwidth=36, degree=1, kernel=\"tricube\").",
+      "notes": [
+        "Do not label this exact variant a 20-year Gaussian smoother: that wording in preprint section 4.7 conflicts with the local implementation. Clarke & Richardson describes the method family, not this exact parameterization."
+      ]
+    },
+    "FaIR_nonat_unB": {
+      "label": "FaIR anthropogenic estimate",
+      "full_name": "FaIR estimate excluding natural forcing with bias correction",
+      "warming_type": "anthropogenic",
+      "primary_url": "https://doi.org/10.5194/gmd-14-3007-2021",
+      "references": [
+        {
+          "label": "Leach et al., 2021",
+          "title": "FaIRv2.0.0: a generalized impulse response model for climate uncertainty and future scenario exploration",
+          "url": "https://doi.org/10.5194/gmd-14-3007-2021",
+          "doi": "10.5194/gmd-14-3007-2021",
+          "verified_url": "https://gmd.copernicus.org/articles/14/3007/2021/"
+        },
+        {
+          "label": "Smith et al., 2024",
+          "title": "fair-calibrate v1.4.1: calibration, constraining, and validation of the FaIR simple climate model for reliable future climate projections",
+          "url": "https://doi.org/10.5194/gmd-17-8569-2024",
+          "doi": "10.5194/gmd-17-8569-2024",
+          "verified_url": "https://gmd.copernicus.org/articles/17/8569/2024/"
+        },
+        {
+          "label": "FaIR model code",
+          "title": "Finite-amplitude Impulse Response simple climate model",
+          "url": "https://github.com/OMS-NetZero/FAIR",
+          "doi": null,
+          "verified_url": "https://github.com/OMS-NetZero/FAIR"
+        },
+        {
+          "label": "FaIR calibration code",
+          "title": "Calibration package for FaIR",
+          "url": "https://github.com/chrisroadmap/fair-calibrate",
+          "doi": null,
+          "verified_url": "https://github.com/chrisroadmap/fair-calibrate"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "local_implementation_path": "/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_nonat_unB_method.py",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "4.4.3; Table 4",
+      "evidence": "Local implementation reads constrained FaIR nonat temperature samples.",
+      "notes": [
+        "Exact bias correction and variance adjustments are project-specific."
+      ]
+    },
+    "GWI_anthro_CGWL": {
+      "label": "Global Warming Index (anthropogenic warming)",
+      "full_name": "Global Warming Index anthropogenic warming with CGWL time averaging",
+      "warming_type": "anthropogenic",
+      "primary_url": "https://doi.org/10.1038/s41598-017-14828-5",
+      "references": [
+        {
+          "label": "Haustein et al., 2017",
+          "title": "A real-time Global Warming Index",
+          "url": "https://doi.org/10.1038/s41598-017-14828-5",
+          "doi": "10.1038/s41598-017-14828-5",
+          "verified_url": "https://ora.ox.ac.uk/objects/uuid%3Aa990e2fe-a63f-4685-88f8-71107643d4a4"
+        },
+        {
+          "label": "Global Warming Index code",
+          "title": "Global Warming Index",
+          "url": "https://github.com/tristramwalsh/global-warming-index",
+          "doi": null,
+          "verified_url": "https://github.com/tristramwalsh/global-warming-index"
+        },
+        {
+          "label": "Betts et al., 2023",
+          "title": "Approaching 1.5 \u00b0C: how will we know we\u2019ve reached this crucial warming mark?",
+          "url": "https://doi.org/10.1038/d41586-023-03775-z",
+          "doi": "10.1038/d41586-023-03775-z",
+          "verified_url": "https://www.nature.com/articles/d41586-023-03775-z"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "local_implementation_path": "/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Methods/43_Forcing_Based/3_Human_Induced/GWI_anthro_CGWL_method.py",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "4.4.4.1; Table 4",
+      "evidence": "Local reader selects Ant. GWI repository defines Ant = GHG + OHF and CGWL averaging.",
+      "notes": []
+    },
+    "PIVW_comb": {
+      "label": "PIVW combination",
+      "full_name": "Pointwise inverse-variance weighting",
+      "warming_type": [
+        "realized",
+        "anthropogenic"
+      ],
+      "primary_url": "https://doi.org/10.5808/GI.2016.14.4.173",
+      "references": [
+        {
+          "label": "Cochran, 1954",
+          "title": "The Combination of Estimates from Different Experiments",
+          "url": "https://doi.org/10.2307/3001666",
+          "doi": "10.2307/3001666",
+          "verified_url": "https://www.jstor.org/stable/3001666"
+        },
+        {
+          "label": "Lee et al., 2016",
+          "title": "Comparison of Two Meta-Analysis Methods: Inverse-Variance-Weighted Average and Weighted Sum of Z-Scores",
+          "url": "https://doi.org/10.5808/GI.2016.14.4.173",
+          "doi": "10.5808/GI.2016.14.4.173",
+          "verified_url": "https://genominfo.org/journal/view.php?doi=10.5808/GI.2016.14.4.173"
+        },
+        {
+          "label": "Thorne et al., 2026",
+          "title": "How well can we quantify when 1.5 \u00b0C of global warming has been exceeded?",
+          "url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+          "doi": "10.5194/essd-2025-825",
+          "verified_url": "https://essd.copernicus.org/preprints/essd-2025-825/"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "4.6.3; 5.2",
+      "evidence": "Preprint section 4.6.3 explicitly names PIVW and cites Cochran (1954) and Lee et al. (2016).",
+      "notes": [
+        "Keep the exact inverse-error-variance definition from this project; generic meta-analysis citations explain the weighting family."
+      ]
+    },
+    "equal_weight_comb": {
+      "label": "Equal-weight combination",
+      "full_name": "Equal weighting of the selected methods",
+      "warming_type": [
+        "realized",
+        "anthropogenic"
+      ],
+      "primary_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "references": [
+        {
+          "label": "Thorne et al., 2026",
+          "title": "How well can we quantify when 1.5 \u00b0C of global warming has been exceeded?",
+          "url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+          "doi": "10.5194/essd-2025-825",
+          "verified_url": "https://essd.copernicus.org/preprints/essd-2025-825/"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "5.2; Figure 26",
+      "evidence": "Figure 26 discusses equal method weighting alongside PIVW.",
+      "notes": [
+        "This is the project\u2019s comparison option, not a separately named published estimator."
+      ]
+    }
+  },
+  "verification_notes": [
+    "All external references were checked against publisher, institutional archive, official documentation, or author repository pages using browsing.",
+    "Some DOI redirects and individual GitHub file pages were unavailable to the browsing tool; verified canonical publisher pages or repository landing pages are supplied instead.",
+    "Source files were read only. No scientific code, data, or deployment was changed."
+  ]
+}

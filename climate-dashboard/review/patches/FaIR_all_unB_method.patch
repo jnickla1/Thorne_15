@@ -1,0 +1,24 @@
+--- a/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
++++ b/Methods/43_Forcing_Based/1_ERF_FaIR/FaIR_all_unB_method.py
+@@ -28,6 +28,12 @@
+     #samp_cur = obt_array0[100:,:]
+     exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126 or _VolcConst #
+     offset=0
++    # The 2025 heads/tails exports use the boundary following each annual
++    # observation, matching the Oscar GMST constraint and current slicer.
++    # Older/future exports retain their existing boundary convention.
++    retro_start = 101 if (len(years) == 176 and
++                         (experiment_type == 'historical' or exp_attr[0] == 'histens')) else 100
++    retro_stop = retro_start + len(years)
+     if experiment_type == 'historical':
+         sfactor=0.4
+         if len(years)<=175:
+@@ -84,7 +90,7 @@
+     #newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_20, (dev_20+ np.linspace(0, (curbias-dev_20)*9/4, (np.shape(temperature)[0]-160)))))
+     if (True): #experiment_type == 'historical' or exp_attr[0]=="histens"):
+         samp_cur = samp_mean[:, np.newaxis] + np.sqrt( dev_orig**2)*sfactor *np.sign(dev_orig)- curbias #newcorrecton[:, np.newaxis]                    
+-        samp_ret = retro_array[100:,:] - curbias #starts in 1750 so crop to 100th index
++        samp_ret = retro_array[retro_start:retro_stop, :] - curbias # aligned annual labels
+     else:
+         dev_20 = np.mean(samp_mean[(2000-1850):(2020-1850)]) - np.mean(temperature[(2000-1850):(2020-1850)])
+         newcorrecton = np.concatenate((np.zeros(150), np.ones(10)*dev_20, (dev_20+ np.linspace(0, (curbias-dev_20)*9/4*9/8, (np.shape(temperature)[0]-160)))))
