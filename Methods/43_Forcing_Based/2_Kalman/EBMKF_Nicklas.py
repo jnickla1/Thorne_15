@@ -16,7 +16,7 @@ coloruncert=(52./255, 235./255, 235./255)
 colorgrey=(0.5,0.5,0.5)
 
 
-n_iters = 174 
+n_iters = 176 #174
 sz = (n_iters,2) # size of array
 sz2d=(n_iters,2,2)
 
@@ -48,7 +48,7 @@ pcolor='deeppink'
 colorrts='goldenrod'
 nbins=24
 sdate=1850
-data = np.genfromtxt(open("./Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
+data = np.genfromtxt(open("Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',') #../../../
 dates=data[:,0]
 dates[0]=sdate
 
@@ -88,7 +88,12 @@ sw_in=340.2
 
 
 T02=temps[2002-1850] #~287.55 #in 2002 #(JMN rev 2024)
-Teq1850=np.mean(temps[0:25])
+Teq1850=np.mean(temps[0:25]) -0.1
+print("Preindustrial Avg Adjust")
+print(Teq1850)
+Teq1850=np.mean(temps[35:60])
+print("Preindustrial Avg lowest 25yr")
+print(Teq1850)
 pindavg=Teq1850 #286.7 #preindustrial avg
 #print("Teq1850",Teq1850)
 
@@ -289,12 +294,12 @@ def ekf_run(z,n_iter,retPs=False):
         P[k] = np.matmul((np.eye(2)- K[k] ),Pminus[k])
         stdevS=np.sqrt(np.abs(np.diag(S[k])))
         qqy[k]=y[k]/stdevS
-        #gmstpdf=stats.norm.pdf(xnorm,loc = qqy[k,0], scale = data[k,4]/stdevS[0])
-        #ohcapdf=stats.norm.pdf(xnorm,loc = qqy[k,1], scale = data[k,6]/zJ_from_W/stdevS[1])
-        #qqykerall.append([gmstpdf,ohcapdf])
-        #if k>1:
-        #    qqyker[0] += gmstpdf/(n_iters-1)
-        #    qqyker[1] += ohcapdf/(n_iters-1)
+        gmstpdf=stats.norm.pdf(xnorm,loc = qqy[k,0], scale = data[k,4]/stdevS[0])
+        ohcapdf=stats.norm.pdf(xnorm,loc = qqy[k,1], scale = data[k,6]/zJ_from_W/stdevS[1])
+        qqykerall.append([gmstpdf,ohcapdf])
+        if k>1:
+            qqyker[0] += gmstpdf/(n_iters-1)
+            qqyker[1] += ohcapdf/(n_iters-1)
         #lml[k]= -0.5* (np.transpose(y[k])/S[k]*y[k] + np.log(S[k]) + np.log(2*np.pi)) #need to sort this out later
         
 

@@ -6,6 +6,7 @@ crossing_figs=False
 
 from netCDF4 import Dataset
 import sys
+import pdb
 #making all paths relative to ~/
 from os.path import expanduser
 cdataprefix = config.CLIMATE_DATA_PATH+'/'
@@ -28,9 +29,9 @@ def gen_orig_number(new_member_number,sz_ens):
 
 regen = 1 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
 evalmins = np.array([1970,1990, 2005])
-evalmaxs = np.array([2000,2025,2025])
+evalmaxs = np.array([2006,2026,2026])
 
-data = pd.read_csv("./Common_Data/HadCRUT5.csv")
+data = pd.read_csv("./Common_Data/HadCRUT.5.1.csv")
 temps_obs = data.loc[:,"Anomaly"].to_numpy()
 preind_base = np.mean(temps_obs[0:50]) #preindustrial baseline 1850-1899
 temps_obs_past = temps_obs - preind_base #remove this baseline
@@ -43,10 +44,10 @@ def add_dash_dot(sspstr):
 
 def collect_data(exp_attr ):
     if (exp_attr[1]=='rpi'):
-        st_array = np.loadtxt('Hist_heads_tails/sst_pseudo_rpi.csv', delimiter=',')
+        st_array = np.loadtxt('Hist_heads_tails/sst_pseudo.csv', delimiter=',')
         
     elif (exp_attr[1]=='satcal'):
-        st_array = np.loadtxt('Hist_heads_tails/sst_pseudo_satcal.csv', delimiter=',')
+        st_array = np.loadtxt('Hist_heads_tails/sst_pseudo_1981-2010.csv', delimiter=',')
         
     else:
         print("Error: unknown model to this eval script "+ exp_attr)
@@ -123,7 +124,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         years = stimes.astype(int)
 
         #internally provided uncertainty from HadCRUT - not relevant to most
-        data = pd.read_csv("./Common_Data/HadCRUT5.csv")
+        data = pd.read_csv("./Common_Data/HadCRUT.5.1.csv")
         temps_obs = data.loc[:,"Anomaly"].to_numpy()
         temps_CIu =data.loc[:,"Upper"].to_numpy() #Lower confidence limit (2.5%)	Upper confidence limit (97.5%)
         temps_CIl =data.loc[:,"Lower"].to_numpy()
@@ -367,6 +368,8 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                     thrshs= np.array([0,0.5,1.0])+sthresh
 
                     for j in range(3):
+                       # if (method_name == "GAM_AR1"):
+                       #     breakpoint()
                         evalmin=evalmins[j]
                         evalmax=evalmaxs[j]-maxcut
                         evalyrs = np.arange(evalmin,evalmax)
@@ -390,7 +393,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
 
                         first_non_nan = np.argmax(~np.isnan(this_method_p_steps))
                         this_method_p_steps[:first_non_nan] = 0
-                        # Replace NaNs at the end with 1s if they exist
+                        # DO NOT replace NaNs at the end with 1s - could cause other issues
                         last_non_nan = len(this_method_p_steps) - np.argmax(~np.isnan(this_method_p_steps)[::-1]) - 1
                         try:
                             #psteps_intp = np.interp(fineevalyrs,evalyrs,this_method_p_steps)
@@ -417,7 +420,8 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
        
         print(df_results)
         df_results.to_csv('Results/headstails_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
-        np.save('Results/headstails_method_fineprobs_'+experiment_type+str(model_run)+'.npy', pcrossmatrix) 
+        np.save('Results/headstails_method_fineprobs_'+experiment_type+str(model_run)+'.npy', pcrossmatrix)
+        
         
         print(time.process_time() - start)
         

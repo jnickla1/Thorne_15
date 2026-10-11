@@ -68,7 +68,7 @@ sw_in=340.2
 
 
 T02=temps[2002-1850] #~287.55 #in 2002 #(JMN rev 2024)
-Teq1850=np.mean(temps[0:25])
+Teq1850=np.mean(temps[35:60]) #0:25])
 pindavg=Teq1850 #286.7 #preindustrial avg
 #print("Teq1850",Teq1850)
 

@@ -43,7 +43,8 @@ dates[0]=sdate
 
 #temps=data[:, 1]+287
 lCo2=np.log10(data[:,2]) 
-opt_depth=data[:,3]*0.001 #*0.053) #/1000?0.000100025
+opt_depth=data[:,3]*0.001  #*0.053) #/1000?0.000100025
+
 anthro_clouds=(data[:,7]+1) #ONLY FOR HISTORICAL RUN
 
 sys.path.append(config.CODEBASE_PATH+"/OHC_ensemble/")
@@ -92,7 +93,7 @@ fdbkW = 1.3
 def precompute_coeffs(printThem):
     global dfaS, dfaA, powp1, inbndf, rad1850, B1, B0, B1B0, outbndf, Cs, Cd, T02, Teq1850
     T02=np.mean(temps[(2000-1850):(2005-1850)])  #~287.55 #in 2002 #(JMN rev 2024)
-    Teq1850=np.mean(temps[0:50]) #CHANGE NOV25 to 286.75 np.mean(temps[1:6])
+    Teq1850=np.mean(temps[0:50]) #CHANGE NOV25 to 286.75 np.mean(temps[1:6])  # - didn't fix things
     #pindavg=Teq1850 #286.7 #preindustrial avg
     dfaS=fdbkS/(sw_in*a_refl*g_refl)
     dfaA=fdbkA/(sw_in*a_refl*g_refl)
@@ -333,8 +334,10 @@ for k in range(1,n_iters):
     TOA_swout_low[k] = compute_update_hidden(
         np.array([[xblind[k-1,0,0],xblind[k-1,1,0],0,1 - fdbkA_sigma/(sw_in*a_refl*g_refl)]]).T,k)[2,0]
 
+
 #recombining
 TOA_meas_artif = np.copy(TOA_swout)
+
 TOA_swout2 = np.copy(TOA_swout)
 TOA_meas_artif_var = (TOA_swout_low - TOA_swout_high)**2/16
 TOA_meas_artif_var[125:]=TOA_meas_artif_var[125]
@@ -343,7 +346,9 @@ TOA_meas_artif_var[2001-1850:2023-1850] = TOA_crop_var/9
 #plt.plot(, TOA_crop)
 #plt.title("TOA radiative imbalance")
 
-
+##TESTING
+#TOA_meas_artif[:75] = np.minimum(TOA_meas_artif[:75],0)
+#TOA_meas_artif[1:] = np.diff(temps)*(heatCp -Cs)+np.diff(oc_meas)
 
 def ekf_run(z,n_iter,retPs=False):
     global gad
@@ -551,11 +556,7 @@ def plot_boilerplate(ax=plt.gca()):
     ax.set_ylabel('Temperature (K)')
     ax.tick_params( direction = 'in',bottom=True, top=True, left=True, right=True )
 
-if  (__name__ == "__main__"):
-    observ = np.array([[temps,oc_meas,TOA_meas_artif]]).T
-    #print(observ)
-    this_xhat=ekf_run(observ,n_iters)
-    plotting_stuff("-uf4", observ,this_xhat)
+
 
 def plotting_stuff(modelID,observ, this_xhat, plotting_lots):
     dates = np.arange(1850,1850+np.shape(observ)[0])
@@ -588,6 +589,8 @@ def plotting_stuff(modelID,observ, this_xhat, plotting_lots):
     lendiff = n_iters - len(xh1s)
     r2 = r2_score(moving_aves[int(np.floor(N/2)):int(-(np.floor(N/2)+1))], xh1s[int(np.floor(N/2)):int(-(np.floor(N/2)+1-lendiff))]) #
     print('r2 score for 30-mean GMST to EBM-KF is', r2)
+    rmse  = np.sqrt(np.mean((moving_aves[int(np.floor(N/2)):int(-(np.floor(N/2)+1))]- xh1s[int(np.floor(N/2)):int(-(np.floor(N/2)+1-lendiff))])**2))
+    print('rmse 30-mean GMST to EBM-KF is', rmse)
     r2 = r2_score(ocean_aves[int(np.floor(N/2)):int(-(np.floor(N/2)+1))], xh1d[int(np.floor(N/2)):int(-(np.floor(N/2)+1))])
     print('r2 score for 30-mean OCHA to EBM-KF is', r2)
 
@@ -628,9 +631,9 @@ def plotting_stuff(modelID,observ, this_xhat, plotting_lots):
         #plt.rcParams['figure.figsize'] = (7, 6)
         #plt.figure(2)
         plot_boilerplate(ax4)
-        ax4.plot(dates,observ[:,1],'o',label='noisy Zanna (2019) measurements Psi_t',markersize=2,color=colorgrey)
+        ax4.plot(dates,observ[:,1]*zJ_from_W,'o',label='noisy Zanna (2019) measurements Psi_t',markersize=2,color=colorgrey)
 
-        ax4.fill_between(dates, (observ[:n_iters,1].T-2*np.sqrt(Roc_tvar)[:n_iters]).flatten(), (observ[:n_iters,1].T+2*np.sqrt(Roc_tvar)[:n_iters]).flatten(),label="associated 95% uncertainty of Psi_t", color="lightgrey")
+        ax4.fill_between(dates, (observ[:n_iters,1].T-2*np.sqrt(Roc_tvar)[:n_iters]).flatten()*zJ_from_W, (observ[:n_iters,1].T+2*np.sqrt(Roc_tvar)[:n_iters]).flatten()*zJ_from_W,label="associated 95% uncertainty of Psi_t", color="lightgrey")
         #ax4.plot(dates,this_xhat[:,1]*zJ_from_W,'-',label='posterior OHCA EBM-KF-uf state estimate $\^{H }_{t}}$', color=colorekf)
         ax4.plot(dates,xblind[:n_iters,1]*zJ_from_W,'--',label='blind model ',color='darkgoldenrod')
         #ax4.legend(loc="upper left", fontsize="10.5")
@@ -767,7 +770,7 @@ def plotting_stuff(modelID,observ, this_xhat, plotting_lots):
         ax_dict["a"].fill_between(dates, (xh0d[:n_iters]-2*stdSd[:n_iters])*zJ_from_W, (xh0d[:n_iters]+2*stdSd[:n_iters])*zJ_from_W,label="95% CI forecast OHCA ", color=coloruncert)
         ##plt.fill_between(dates, xh1s-stdS, xh1s+stdS, color=(62./255, 140./255, 210./255))
         ax_dict["a"].fill_between(dates, (xh1d[:n_iters]-2*stdPd[:n_iters])*zJ_from_W, (xh1d[:n_iters]+2*stdPd[:n_iters])*zJ_from_W,label="95% CI of OHCA state ", color=colorstate)
-        ax_dict["a"].plot(dates,observ[:,1],'o',label='Zanna (2019) measurements Psi_t',markersize=2,color=colorgrey)
+        ax_dict["a"].plot(dates,observ[:,1]*zJ_from_W,'o',label='Zanna (2019) measurements Psi_t',markersize=2,color=colorgrey)
         if np.shape(observ)[0]==174:
             ax_dict["a"].fill_between(dates, ocean_heat_measured-2*comb_ohca_uncer2, ocean_heat_measured+2*comb_ohca_uncer2,label="associated 95% uncertainty of Psi_t", color="grey",zorder=5,alpha=0.2,lw=0)
             order = [0,3,2,1,4]
@@ -934,6 +937,10 @@ def plotting_stuff(modelID,observ, this_xhat, plotting_lots):
 
 
 
-
+if  (__name__ == "__main__"):
+    observ = np.array([[temps,oc_meas,TOA_meas_artif]]).T
+    #print(observ)
+    this_xhat=ekf_run(observ,n_iters)
+    plotting_stuff("-uf4", observ,this_xhat,True)
 
 

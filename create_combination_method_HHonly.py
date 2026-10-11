@@ -76,7 +76,7 @@ if __name__ == '__main__':
 #subset the read-in tables to set list of methods
 #            only 8 vs ~16 vs ~30 methods
 #            do this in a big outer loop
-    nmethods_list = [7] #2 8 16 later 30
+    nmethods_list = [7] #2 8 16 later 30 ####7
 
     for nmethods in nmethods_list:
         #big outer loop

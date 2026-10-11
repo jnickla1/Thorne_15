@@ -24,7 +24,7 @@ def ta_smooth(orig_opt_depths,fill_value):
 def run_method(years, temperature, uncert, model_run, experiment_type):
     from . import EBMKF_Nicklas as ekf
     #temperature has 2024, dont have all forcings for this yet - must update ekf.n_iters
-    data_orig = pd.read_csv("./Common_Data/HadCRUT5.csv")
+    data_orig = pd.read_csv("./Common_Data/HadCRUT.5.1.csv")
     temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
     preind_base = np.mean(temps_obs[0:50])
     
@@ -41,7 +41,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     means2 = empser.copy()
     ses2 = empser.copy()
 
-    ekf.n_iters = 174 
+    ekf.n_iters = len(years)
     if experiment_type == "historical":
         ekf.opt_depth=ta_smooth(ekf.data[:,3]*0.001,ekf.involcavg)
         means[0:ekf.n_iters], ses[0:ekf.n_iters],means2[0:ekf.n_iters],ses2[0:ekf.n_iters] = ekf.ekf_run(ekf.observ,ekf.n_iters,retPs=3)

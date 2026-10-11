@@ -170,6 +170,20 @@ def load_and_average_pdfs(npy_files: List[Path], delete_slices = []) -> np.ndarr
     # First pass: read and convert CDF → PDF, track shapes
     arr0 = np.stack([np.load(p, allow_pickle=False) for p in npy_files], axis=0)
     arr = np.delete(arr0, delete_slices, axis=1)
+    nan_n = np.isnan(arr).sum(axis=0)
+
+    print("partially missing cells by threshold:",
+          [np.sum((nan_n[:,:,j] > 0) & (nan_n[:,:,j] < arr.shape[0]))
+           for j in range(3)])
+
+    for j, name in enumerate(THRESH_COLS):
+        print(name, "all-NaN indices (method, year-index):",
+              np.argwhere(nan_n[:,:,j] == arr.shape[0]).tolist())
+    
+    allnan = np.all(np.isnan(arr), axis=0)
+    print("all-NaN cells by threshold:", allnan.sum(axis=(0,1)))
+    print("overall NaN fraction by threshold:", np.isnan(arr).mean(axis=(0,1,2)))
+    
     mean_cdf = np.nanmean(arr, axis=0)
     
     if mean_cdf.ndim != 3 or mean_cdf.shape[2] != 3:
@@ -323,6 +337,26 @@ ylims = [0.4, 0.4, 0.4]
 inum = 1
 bins = np.arange(1960, 2051, 1)
 
+from plot_fut_results import sel_methods, sel_methodsA
+
+dfw = pd.read_csv("Results2/historical_names_var_scale.csv")
+
+for label, methods in [("Realized", sel_methods), ("Anthropogenic", sel_methodsA)]:
+    x = dfw[dfw["method_name"].isin(methods)].copy()
+    x["weight"] = 1 / x["err_var100"]
+    x["percent"] = 100 * x["weight"] / x["weight"].sum()
+
+    print(f"\nPIVW weights — {label}:")
+    for name, pct in zip(x["method_name"], x["percent"]):
+        print(f"  {name}: {pct:.2f}%")
+
+for goal, methods in [("real", sel_methods), ("anthro", sel_methodsA)]:
+    d = data_by_goal[goal]["hist_data"][0]["xyear1.5"]  # 1850–1900 baseline
+    vals = np.concatenate([np.asarray(d[m]) for m in methods])
+    print(goal, np.sum(vals < 2050), "/", len(vals))
+
+    
+
 def methods_for_main_stack(method_names: list[str]) -> list[int]:
     # mimic your existing logic
     return [i for i, m in enumerate(method_names) if not (m.endswith("comb") or m.startswith("FaIR_anthro"))]
@@ -382,7 +416,7 @@ def plot_baseline_row(ax_row, goal: str, baseline_row_key: int, suprow_label: st
                 zorder=1
             )
 
-        # ---- PIVW histogram overlay (gappy dark gray, so colors show behind) ----
+        # ---- PIVW histogram overlay (gap-filled dark gray, so colors show behind) ----
         if "PIVW_comb" in method_names:
             pivw_years = np.asarray(this_hist.get("PIVW_comb", []), dtype=float)
             if pivw_years.size > 0:
@@ -411,8 +445,8 @@ def make_figure_for_baseline(baseline_row_key: int, suptitle: str, outpath: str)
     if baseline_row_key==0:
         titles = [
             "0.5°C crossing (~1985)",
-            "Realized warming: 1.0°C crossing (~2010)",
-            "Realized warming: 1.5°C crossing",
+            "1.0°C crossing (~2010)",
+            "1.5°C crossing",
         ]
     else:
         titles = [

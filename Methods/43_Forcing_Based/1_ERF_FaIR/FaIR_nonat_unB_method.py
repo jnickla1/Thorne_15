@@ -41,10 +41,16 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
     elif (exp_attr[0]=="histens"):
         sfactor=0.2
-        curbias= 0 #assuming this matches
-        #retro array doesn't matter
-        retro_array = np.load(cur_path+"/retrospective/all-headstails_currentr"+str(model_run+1)+"cut2024_temp_nonat.npy") #starts in 1750
-        current_array = np.load(cur_path+"/resliced_headstails24/combined_all-headstails_currentr"+str(model_run+1)+"_nonat.npy")
+        if len(years)<=175:
+            curbias= 0 #assuming this matches
+            #retro array doesn't matter
+            retro_array = np.load(cur_path+"/retrospective/all-headstails_currentr"+str(model_run+1)+"cut2024_temp_nonat.npy") #starts in 1750
+            current_array = np.load(cur_path+"/resliced_headstails24/combined_all-headstails_currentr"+str(model_run+1)+"_nonat.npy")
+        elif len(years)==176:
+            retro_array = np.load(cur_path+"/resliced_headstails25/retrospective/all-headstails25r"+str(model_run+1)+"cut2025_temp_nonat.npy") #starts in 1930
+            current_array = np.load(cur_path+"/resliced_headstails25/combined_all-headstails25r"+str(model_run+1)+"_nonat.npy") #starts in 1750
+            curbias= -0.0043
+
         if (exp_attr[1]=="satcal"):
             offset = -np.mean(temperature[0:50])
             current_array = current_array - offset

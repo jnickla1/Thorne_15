@@ -27,7 +27,7 @@ historical_regen=False #whether we are regenerating data (some from saved interm
 def closest(lst, yrs, K):
     return yrs[np.nanargmin(abs(lst-K))]
 
-
+last_year = 2025
 
 from hist_heads_tails_evaluation_script import collect_data, relthresh
 import scipy.stats as stats
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     for model_run in range(100):
         
         results_path = f'Results/results{experiment_type}{model_run}.pickle'
-        years = np.arange(1850,2025)
+        years = np.arange(1850,last_year+1)
 
     #To read it back, only the ones we're actually using here:
 
@@ -122,7 +122,7 @@ if __name__ == '__main__':
         (sims_tas, stimes) = collect_data(exp_attr)
         simall = sims_tas[:,model_run]
         years = stimes.astype(int)
-        data = pd.read_csv("./Common_Data/HadCRUT5.csv")
+        data = pd.read_csv("./Common_Data/HadCRUT.5.1.csv")
         temps_obs = data.loc[:,"Anomaly"].to_numpy()
         temps_CIu =data.loc[:,"Upper"].to_numpy() #Lower confidence limit (2.5%)	Upper confidence limit (97.5%)
         temps_CIl =data.loc[:,"Lower"].to_numpy()
@@ -382,10 +382,10 @@ if __name__ == '__main__':
         method_rows = []
         sel3data=np.array(sel2data)
         for mm, name in enumerate(sel2names):
-            # Reported warming level in 2024 for this method
+            # Reported warming level in last year for this method
 
             row = {
-                "level": "2024",
+                "level": last_year,
                 "method": name,
                 "year_cross": sel3data[mm,-1],
                 "rate": float(slopes[mm]*10),
@@ -400,7 +400,7 @@ if __name__ == '__main__':
         warm_2024_comb = np.nanmean(sel3data[:,-1])
 
         comb_row = {
-            "level": "2024",
+            "level": last_year,
             "method": "equal_weight_comb",
             "year_cross": warm_2024_comb,
             "rate": slope_combined ,
@@ -450,7 +450,7 @@ if __name__ == '__main__':
     ##    
     ##
         ivcomb_row = {
-            "level": "2024",
+            "level": last_year,
             "method": "PIVW_comb",
             "year_cross": ivcenter,
             "rate": ivslope_combined ,

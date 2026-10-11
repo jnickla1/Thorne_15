@@ -18,7 +18,7 @@ from datetime import datetime
 current_date = datetime.now()
 formatted_date = current_date.strftime("%y%m%d")
 
-historical_regen=True #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle.
+historical_regen=True #different variable name, whether we are regenerating data (some from saved intermediates or just reading from pickle).
 adjusted_vars = True #must run the hist_fitprob.py script first if this is true to generate correction for the variance
 # ================================
 # Define Method Full Names, Colors, Location on Violin plots
@@ -59,8 +59,8 @@ def gen_color(ci, dark=False):
 
 #running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/3_ST_Fits') #Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )#still working on debugging lfca
 #running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/2_Kalman')
-running_subset = ('Methods/42_Temp_Alone','Methods/43_Forcing_Based/','Methods/44_EarthModel_CGWL')     #'Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
-
+running_subset = ('Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )
+#,'Methods/44_EarthModel_CGWL'
 
  #'Methods/42_Temp_Alone/2_LT_Fits','Methods/42_Temp_Alone/3_ST_Fits',
   #                'Methods/42_Temp_Alone/4_GAM_AR1','Methods/42_Temp_Alone/5_Kalman',
@@ -205,7 +205,7 @@ if __name__ == '__main__':
     else:
         with open ('hist_results.pickle', 'rb') as fp:
             results = pickle.load(fp)
-            breakpoint()
+            #breakpoint()
     
 
     #heights0=np.arange(.2,4.2,0.05) #heights to test at thresholds: 0.05°C increments
@@ -398,7 +398,7 @@ if __name__ == '__main__':
                 cross05v=0
                 cross10v=0
                 #breakpoint()
-                non_decreasing = np.sum([x>y for x, y in zip(central_est[125:-1], central_est[126:])])<= 10
+                non_decreasing = np.sum([ (x-y)*(x>y) for x, y in zip(central_est[125:-1], central_est[126:])])<= .2
                 if(labelcurr_or_retro=="c"):
                     #first compute the p-vals but one-sided
                     this_method_p_steps = np.full(np.shape(eval05yrs),np.nan)
@@ -726,15 +726,20 @@ if __name__ == '__main__':
             xytext=(2018, .7), textcoords='data',color=curcolor,
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
-    curcolor =  gen_color('42_Temp_Alone/3_ST_Fits')
     ax1.annotate('11y_offset',
             xy=(1887,0.17), xycoords='data',
             xytext=(1890, .35), textcoords='data',color=curcolor,
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
+    curcolor =  gen_color('42_Temp_Alone/3_ST_Fits')
     ax1.annotate('min_month_proj',
-            xy=(1878,0.3), xycoords='data',
-            xytext=(1878, .5), textcoords='data',color=curcolor,
+            xy=(1878,0.35), xycoords='data',
+            xytext=(1878, .55), textcoords='data',color=curcolor,
+            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
+            horizontalalignment='center', verticalalignment='bottom')
+    ax1.annotate('opt_clim_norm',
+            xy=(2000,0.41), xycoords='data',
+            xytext=(2005, .15), textcoords='data',color=curcolor,
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('43_Forcing_Based/3_Human_Induced')
@@ -745,7 +750,7 @@ if __name__ == '__main__':
             horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('43_Forcing_Based/0_Linear')
     ax1.annotate('cons_cArrh_CO2forc',
-            xy=(1925,.22), xycoords='data',
+            xy=(1924,.21), xycoords='data',
             xytext=(1927, .52), textcoords='data',color=curcolor,
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
@@ -762,12 +767,7 @@ if __name__ == '__main__':
 ##            horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('42_Temp_Alone/6_Remove_IV')
     ax1.annotate('remove_MEI\nvolc_refit',
-            xy=(2022.4,1.585), xycoords='data',
-            xytext=(1990,1.13), textcoords='data',
-            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color="white",
-            horizontalalignment='center', verticalalignment='bottom')
-    ax1.annotate('remove_MEI\nvolc_refit',
-            xy=(1990,.855), xycoords='data',
+            xy=(1990,.755), xycoords='data',
             xytext=(1990,1.13), textcoords='data',color=curcolor,
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
@@ -825,18 +825,18 @@ if __name__ == '__main__':
     print(sum((crossing_yrs10_30 -closest_year10)<=1  ) / len(crossing_yrs10_30))
     print(sum((crossing_yrs10_30 -closest_year10)<=2  ) / len(crossing_yrs10_30))
     
+    if(regen):
+        export_arr = np.full((2, len(years), len(df_results)), np.nan)
+        for ii, row in df_results.reset_index(drop=True).iterrows():
+            result = results2[row["method_name"]]["LT_trend"]
+            k = 0 if row["c/r"] == "c" else 1
+            export_arr[0, :, ii] = result[k * 2]
+            export_arr[1, :, ii] = result[k * 2 + 1]
+        df_results_manifest = df_results.reset_index(drop=True).reset_index(names="export_index")
+        df_results_manifest["mean_2010"] = export_arr[0, 160, :]
 
-    export_arr = np.full((2, len(years), len(df_results)), np.nan)
-    for ii, row in df_results.reset_index(drop=True).iterrows():
-        result = results2[row["method_name"]]["LT_trend"]
-        k = 0 if row["c/r"] == "c" else 1
-        export_arr[0, :, ii] = result[k * 2]
-        export_arr[1, :, ii] = result[k * 2 + 1]
-    df_results_manifest = df_results.reset_index(drop=True).reset_index(names="export_index")
-    df_results_manifest["mean_2010"] = export_arr[0, 160, :]
-
-    np.save(f"hist_results_export_2x{nyrs}x125.npy", export_arr)
-    df_results_manifest.to_csv("hist_results_manifest.csv", index=False)
+        np.save(f"hist_results_export_2x{nyrs}x125.npy", export_arr)
+        df_results_manifest.to_csv("hist_results_manifest.csv", index=False)
 
         ##Process along time marginal for each temp rather than along the temperature marginal for each date
 ##    #make this monotonically increasing so we are not assessing back and forth thresholds

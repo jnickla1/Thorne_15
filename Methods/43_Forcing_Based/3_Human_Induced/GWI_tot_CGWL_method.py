@@ -36,10 +36,17 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             curbias = 0.0574 -0.0052
 
     elif (exp_attr[0]=="histens"):
-        curbias = 0.0574 #assuming this matches
-        gwi_levels_curr0 = pd.read_csv(cur_path+"/heads_tails/individual_members/"+
+        if len(years)<=175:
+            curbias = 0.0574 #assuming this matches
+            gwi_levels_curr0 = pd.read_csv(cur_path+"/heads_tails/individual_members/"+
                 "GWI_results_CGWL_HISTORICAL-ONLY_SCENARIO--observed_JK-2024-SSP245_ENSEMBLE-MEMBER--"+str(model_run)+
                                        "_VARIABLES--GHG-Nat-OHF___REGRESSED-YEARS--1850-1950_to_1850-2024.csv", header=[0, 1])
+        elif len(years)==176:
+            curbias = 0.0574 -0.0052
+            gwi_levels_curr0 = pd.read_csv(cur_path+"/heads_tails/individual_members25/"+
+                    "GWI_results_CGWL_HISTORICAL-ONLY_SCENARIO--observed_JK-2025-SSP245"+
+                    "_ENSEMBLE-MEMBER--GMT-"+str(model_run+1)+"_ERF-all_VARIABLES--GHG-Nat-OHF_REGRESSED-YEARS--1850-1950_to_1850-2025.csv", header=[0, 1])
+            
         if (exp_attr[1]=="satcal"):
             offset = -np.mean(temperature[0:50])
             curbias = curbias + offset

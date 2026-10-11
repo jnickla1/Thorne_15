@@ -20,7 +20,7 @@ formatted_date = current_date.strftime("%y%m%d")
 
 historical_regen=False #whether we are regenerating data (some from saved intermediates or just reading from pickle.
 #set to true if you cant read a pickle
-plotting=False
+plotting=True
 # ================================
 # Define Method Full Names, Colors, Location on Violin plots
 # ================================
@@ -143,7 +143,7 @@ if __name__ == '__main__':
     regen=historical_regen #False #whether to execute all of the methods directly (True) or read from a pickle file to rapidly redraw the figures (False).
 
     # First evaluation
-    data = pd.read_csv("./Common_Data/HadCRUT5.csv")
+    data = pd.read_csv("./Common_Data/HadCRUT.5.1.csv")
     temps_obs = data.loc[:,"Anomaly"].to_numpy()
     preind_base = np.mean(temps_obs[0:50]) #preindustrial baseline 1850-1899
     temps_obs = temps_obs - preind_base #remove this baseline
@@ -193,7 +193,7 @@ if __name__ == '__main__':
     fig3, ax10   = plt.subplots(1, 1, figsize=(7,10),gridspec_kw={'left':0.28 , 'right':0.85 , 'top':0.92, 'bottom':0.08}) #, sharex=True)
 
     eval05min=1970
-    eval05max=2015
+    eval05max=2020
     eval05yrs = np.arange(eval05min,eval05max)
     fineyrs = np.arange(eval05min,eval05max+1/inum,1/inum) 
     std_intp0 = np.interp(fineyrs,years,standard)
@@ -591,7 +591,7 @@ if __name__ == '__main__':
     slope_combined = np.mean(slopes) *10
     # Uncertainty of the combined slope (standard error)
     slope_combined_std = np.sqrt(np.mean(vars_)+np.var(slopes)) *10 *1.96
-    print(f"Decadal rate in 2024: {slope_combined:.4f} ± {slope_combined_std:.4f}")
+    print(f"Decadal rate in {years[-1]}: {slope_combined:.4f} ± {slope_combined_std:.4f}")
     
     #df_results.to_csv('method_statistics_results.csv', index=False)
     #ax1.legend(fontsize=6.5,ncol=4)
@@ -624,7 +624,7 @@ if __name__ == '__main__':
                 xmax=years[-np.argmax(~np.isnan(np.flip(standard)))],  color='k', linestyle='-', lw=3)
         patch_20yr=ax4.fill_between(years,-results['cent20y']['LT_trend'][3],results['cent20y']['LT_trend'][3],facecolor='lightgray',edgecolor='black',alpha=0.35)
         ax4_handles.insert(0,(patch_20yr,line_20yr))
-        ax4_labels.insert(0,"20-yr centred running \n    mean (HadCRUT5)")
+        ax4_labels.insert(0,"20-yr centred running \n    mean (HadCRUT5.1)")
         ax4.legend(ax4_handles,ax4_labels,loc='lower left')
         ax1.set_xlabel("Year")
         ax1.set_title("Evaluated Methods to find Current Long-Term Temperature", pad=10)

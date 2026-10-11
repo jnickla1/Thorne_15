@@ -23,7 +23,7 @@ def ta_smooth(orig_opt_depths,fill_value):
 
 def run_method(years, temperature, uncert, model_run, experiment_type):
     #temperature has 2024, dont have all forcings for this yet - must update ekf.n_iters
-    data_orig = pd.read_csv("./Common_Data/HadCRUT5.csv")
+    data_orig = pd.read_csv("./Common_Data/HadCRUT.5.1.csv")
     temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
     preind_base = np.mean(temps_obs[0:50])
     
