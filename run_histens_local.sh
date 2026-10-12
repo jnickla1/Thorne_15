@@ -41,7 +41,7 @@ scenarios=(
 for scenario in "${scenarios[@]}"; do
     echo $scenario
     echo $i
-    python3 hist_heads_tails_evaluation_script.py "$scenario" "$i"
+    python3 evaluate_heads_tails_ensemble.py "$scenario" "$i"
 done
 
 #done

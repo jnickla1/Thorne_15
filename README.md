@@ -14,6 +14,27 @@ The current observational update runs through **2025**, using **HadCRUT5.1**. Th
 - [Future simulations and combination experiments](#future-simulations-and-combination-experiments)
 - [Interpretation, caches, and troubleshooting](#interpretation-caches-and-troubleshooting)
 
+## Script names and workflow order
+
+The entry-point scripts were renamed on 12 October 2026 to make their roles clearer. Update saved commands, notebooks, and job submissions using the table below. Repository imports and batch wrappers use the new names; the old entry-point filenames are no longer provided. Method identifiers, input files, result filenames, and calculations are unchanged.
+
+| Previous script | Current script |
+|---|---|
+| `hist_fitprob.py` | `calibrate_method_uncertainty.py` |
+| `create_combination_method_HHonly.py` | `calibrate_historical_combinations.py` |
+| `hist_evaluation_script.py` | `evaluate_historical_observations.py` |
+| `hist_heads_tails_evaluation_script.py` | `evaluate_heads_tails_ensemble.py` |
+| `histens_rates.py` | `export_heads_tails_rate_summary.py` |
+| `plot_heads_tails_probs.py` | `plot_heads_tails_paper_probabilities.py` |
+| `climate-dashboard/source/histens_rates_dashboard.py` | `climate-dashboard/source/export_dashboard_climate_metrics.py` |
+| `climate-dashboard/source/plot_heads_tails_probs_dashboard.py` | `climate-dashboard/source/render_dashboard_figures.py` |
+| `climate-dashboard/source/prepare_website.py` | `climate-dashboard/source/assemble_dashboard_site.py` |
+| `climate-dashboard/source/rebuild_corrected_retrospectives.py` | `climate-dashboard/source/audit_and_rebuild_retrospective_caches.py` |
+| `fut_evaluation_script.py` | `evaluate_future_scenarios.py` |
+| `fut_evaluation_script_elim.py` | `evaluate_future_scenario_subsets.py` |
+
+For an existing heads/tails dataset, the order is: `evaluate_heads_tails_ensemble.py` (normally through `run_histens_local.sh`), `plot_heads_tails_paper_probabilities.py` and `export_heads_tails_rate_summary.py`, then the dashboard exporter, figure renderer, and site assembler. Historical recalibration starts with `calibrate_method_uncertainty.py` and `calibrate_historical_combinations.py`; see the detailed workflows below. The optional retrospective-cache audit is not required for an ordinary refresh.
+
 ## Refresh the current heads/tails results and dashboard
 
 Use this workflow when the required inputs and calibration files already exist and you want to incorporate a method correction, refresh result pickles, or rebuild the dashboard for the existing 2025 dataset. An annual data update also needs the input and calibration work described below.
@@ -40,7 +61,7 @@ seq 0 5 95 | xargs -P 4 -n 1 bash ./run_histens_local.sh
 
 For example, `bash ./run_histens_local.sh 0` processes members 0–4, not the whole ensemble. The full set of batch starts is **0, 5, …, 95**. The comment in the existing shell script says `seq 0 5 100`; use **95** as the endpoint because batch 100 would attempt nonexistent members 100–104. This README does not change that shell script.
 
-The active setting is `regen = 1` in [hist_heads_tails_evaluation_script.py](hist_heads_tails_evaluation_script.py). It reruns the explicitly selected method lists and overwrites their result pickles. `regen = 0` reads cached results. `regen = 2` runs missing methods and can retain old results for methods already present; it does not refresh a correction to an existing method.
+The active setting is `regen = 1` in [evaluate_heads_tails_ensemble.py](evaluate_heads_tails_ensemble.py). It reruns the explicitly selected method lists and overwrites their result pickles. `regen = 0` reads cached results. `regen = 2` runs missing methods and can retain old results for methods already present; it does not refresh a correction to an existing method.
 
 Each experiment/member produces:
 
@@ -55,10 +76,10 @@ There should be 100 of each type per experiment: **400 pickles, 400 statistics C
 After the member jobs have finished, remain at the repository root:
 
 ```sh
-MPLBACKEND=Agg python3 plot_heads_tails_probs.py
+MPLBACKEND=Agg python3 plot_heads_tails_paper_probabilities.py
 
 for experiment in histens_rpi_real histens_rpi_anthro histens_satcal_real histens_satcal_anthro; do
-    MPLBACKEND=Agg python3 histens_rates.py "$experiment"
+    MPLBACKEND=Agg python3 export_heads_tails_rate_summary.py "$experiment"
 done
 ```
 
@@ -74,7 +95,7 @@ The rate script reads the refreshed pickles and writes `rates_histens/rates_hist
 ### 3. Export the dashboard data from the refreshed Results directory
 
 ```sh
-python3 climate-dashboard/source/histens_rates_dashboard.py all \
+python3 climate-dashboard/source/export_dashboard_climate_metrics.py all \
     --source-root "$PWD" \
     --outdir climate-dashboard/data
 ```
@@ -88,8 +109,8 @@ The earlier discrepancy between the original 0.335652°C/decade PIVW rate and th
 ### 4. Render the dashboard figure library and assemble the website
 
 ```sh
-python3 climate-dashboard/source/plot_heads_tails_probs_dashboard.py
-python3 climate-dashboard/source/prepare_website.py
+python3 climate-dashboard/source/render_dashboard_figures.py
+python3 climate-dashboard/source/assemble_dashboard_site.py
 ```
 
 The first command reads `climate-dashboard/data/` and writes the main figure in PNG/PDF/SVG plus 52 variant PNGs in `climate-dashboard/figures/`. The second copies the exported figures and data into `climate-dashboard/site/dist/assets/` and creates the selected-method CSV downloads. It checks that the complete 52-figure library exists. Both commands derive their default directories from their own script locations, so they can be called from the repository root.
@@ -129,7 +150,7 @@ Clone [jnickla1/Thorne_15](https://github.com/jnickla1/Thorne_15), enter that ch
 git submodule update --init --recursive
 ```
 
-The submodules include upstream implementations and exploratory methods. Being present as a submodule does not mean that a method is included in the current dashboard. The authoritative lists for the heads/tails runner are `sel_methods_list_real` and `sel_methods_list_anthro` in `hist_heads_tails_evaluation_script.py`; combination subsets are defined in `plot_fut_results.py` and the dashboard export script.
+The submodules include upstream implementations and exploratory methods. Being present as a submodule does not mean that a method is included in the current dashboard. The authoritative lists for the heads/tails runner are `sel_methods_list_real` and `sel_methods_list_anthro` in `evaluate_heads_tails_ensemble.py`; combination subsets are defined in `plot_fut_results.py` and the dashboard export script.
 
 ### Python, R, and optional MATLAB
 
@@ -247,12 +268,12 @@ The selected dashboard method **`CGWL10y_sfUKCP` uses UKCP samples**, rather tha
 
 Review the input readers first, then the analysis and display endpoints. Relevant examples include:
 
-- `hist_fitprob.py` and `hist_evaluation_script.py`: observation file version, selected folders, calibration choices, plotting endpoints, and dated comparison tables.
-- `hist_heads_tails_evaluation_script.py`: selected method lists, `regen`, evaluation windows, and the exclusive upper endpoints in `evalmaxs` (currently 2026 for the 2025 endpoint).
-- `histens_rates.py`: `last_year` is currently 2025.
+- `calibrate_method_uncertainty.py` and `evaluate_historical_observations.py`: observation file version, selected folders, calibration choices, plotting endpoints, and dated comparison tables.
+- `evaluate_heads_tails_ensemble.py`: selected method lists, `regen`, evaluation windows, and the exclusive upper endpoints in `evalmaxs` (currently 2026 for the 2025 endpoint).
+- `export_heads_tails_rate_summary.py`: `last_year` is currently 2025.
 - FaIR/GWI/Green's-function readers: 2025 filenames, array-length branches, bias corrections, member mapping, and time boundaries.
-- `climate-dashboard/source/histens_rates_dashboard.py`: probability windows, observations, method lists, and the seven non-crossing members' quartic treatment. A later year's set of non-crossing members can differ.
-- `climate-dashboard/source/plot_heads_tails_probs_dashboard.py` and `climate-dashboard/site/dist/app.js` / `index.html`: explicit 2025 headlines, line endpoints, threshold windows, and other display labels.
+- `climate-dashboard/source/export_dashboard_climate_metrics.py`: probability windows, observations, method lists, and the seven non-crossing members' quartic treatment. A later year's set of non-crossing members can differ.
+- `climate-dashboard/source/render_dashboard_figures.py` and `climate-dashboard/site/dist/app.js` / `index.html`: explicit 2025 headlines, line endpoints, threshold windows, and other display labels.
 
 Use a targeted search such as `rg -n '2025|2026|175|176|last_year|evalmaxs|cut2025|individual_members25'` on the relevant source files. Review matches individually: historical dates and fixed reference periods must not be replaced indiscriminately.
 
@@ -262,18 +283,18 @@ Useful recorded update checkpoints are [HadCRUT5.1 input/code changes, September
 
 Run this part after updating historical inputs or deliberately changing calibration. It is not required solely to adopt the tested retrospective-only FaIR correction while current outputs and calibration remain unchanged.
 
-1. Run `python3 hist_fitprob.py historical` from the root. `historical_regen=True` is required in that script. It runs the chosen methods and writes the `Results2/historical_*` calibration products, including `historical_names_var_scale.csv` used for method variance corrections and PIVW weights.
-2. Review `create_combination_method_HHonly.py`: for historical-to-historical calibration use `comparison_type='hh'`. Its current `nmethods_list=[7]` refreshes the realized combination only. To deliberately recalibrate both dashboard combinations, use `[7, 2]` (seven realized methods and two anthropogenic methods), then run `python3 create_combination_method_HHonly.py` and verify both `Results2/comb_real_scales.npy` and `Results2/comb_anthro_scales.npy`. This is a manual setting to review; it has not been changed by updating this README.
-3. Run `python3 hist_evaluation_script.py` to regenerate the historical-observation evaluation, `hist_results.pickle`, statistics, and paper figures. Review `historical_regen` and `running_subset`; the current historical evaluator has regeneration enabled and adjusted variances enabled, so calibration must exist first.
+1. Run `python3 calibrate_method_uncertainty.py historical` from the root. `historical_regen=True` is required in that script. It runs the chosen methods and writes the `Results2/historical_*` calibration products, including `historical_names_var_scale.csv` used for method variance corrections and PIVW weights.
+2. Review `calibrate_historical_combinations.py`: for historical-to-historical calibration use `comparison_type='hh'`. Its current `nmethods_list=[7]` refreshes the realized combination only. To deliberately recalibrate both dashboard combinations, use `[7, 2]` (seven realized methods and two anthropogenic methods), then run `python3 calibrate_historical_combinations.py` and verify both `Results2/comb_real_scales.npy` and `Results2/comb_anthro_scales.npy`. This is a manual setting to review; it has not been changed by updating this README.
+3. Run `python3 evaluate_historical_observations.py` to regenerate the historical-observation evaluation, `hist_results.pickle`, statistics, and paper figures. Review `historical_regen` and `running_subset`; the current historical evaluator has regeneration enabled and adjusted variances enabled, so calibration must exist first.
 4. Run the heads/tails and dashboard refresh above using the new inputs and calibration.
 
-`hist_evaluation_script_rates.py` can additionally be run for the separate historical-observation rate figures. Its own regeneration flag controls whether it reuses `hist_results.pickle`. It is not a substitute for either `histens_rates.py` or the dashboard exporter.
+`hist_evaluation_script_rates.py` can additionally be run for the separate historical-observation rate figures. Its own regeneration flag controls whether it reuses `hist_results.pickle`. It is not a substitute for either `export_heads_tails_rate_summary.py` or the dashboard exporter.
 
 ## Future simulations and combination experiments
 
 These are separate paper-validation workflows. They are not required for updating only the current dashboard exports. They need the external model data, their own experiment settings, and usually Oscar/Slurm.
 
-The existing future-method batch wrapper is `run_parBATCH_future.sh`. It evaluates MPI-ESM1-2-LR SSP126/245/370 and NorESM RCP45 volcanic variants using `fut_evaluation_script.py`. Review the cluster account, module loads, environment name, resources, and method-regeneration settings before submitting it:
+The existing future-method batch wrapper is `run_parBATCH_future.sh`. It evaluates MPI-ESM1-2-LR SSP126/245/370 and NorESM RCP45 volcanic variants using `evaluate_future_scenarios.py`. Review the cluster account, module loads, environment name, resources, and method-regeneration settings before submitting it:
 
 ```sh
 sbatch run_parBATCH_future.sh
@@ -283,8 +304,8 @@ python3 plot_fut_results.py
 Run plotting after the submitted jobs have finished. The combination-focused future figures use:
 
 ```sh
-python3 fut_evaluation_script_elim.py futplotcomb_ESM1-2-LR_SSP126_constVolc -11
-python3 fut_evaluation_script_elim.py futplotcomb_NorESM_RCP45_Volc -11
+python3 evaluate_future_scenario_subsets.py futplotcomb_ESM1-2-LR_SSP126_constVolc -11
+python3 evaluate_future_scenario_subsets.py futplotcomb_NorESM_RCP45_Volc -11
 ```
 
 The negative-member convention is script-specific; inspect each runner before assuming the same batch size everywhere. In the heads/tails runner, a negative value `-(member+1)` selects that single member and enables plotting. For `futplotcomb` experiments, the existing NorESM plotting branch overrides some supplied scenario/member choices; the MPI-ESM branch uses the supplied member for highlighting.
@@ -318,7 +339,7 @@ The definitive historical crossing benchmark uses the realized observational **c
 
 Current dashboard warming levels use **current method outputs**. The current-year rate is a quadratic endpoint derivative from the last **15 retrospective annual outputs**; the GWI readers temporarily use their current outputs as a retrospective proxy. The rate uncertainty combines within-fit variance, weighted between-method disagreement, and between-member spread; the displayed 95% range is rate ±1.96 times this combined 1σ uncertainty. `rate_sd` alone is only the member spread.
 
-In a `histens_rates.py` row whose `level` is 2025, the misleadingly named `year_cross` column now contains the **current warming level**, not a crossing year. The 12 October 2026 reporting correction separates this level from the retrospective series used to fit the rate. `year_cross_sd` uses the current member endpoints as well. Older saved CSVs used retrospective levels; the dashboard exporter accepts both formats and marks the source in `saved_summary.level_source`. The historical crossing rows still retain their existing calculation conventions; use the dashboard's final data exports for its definitive crossing benchmarks.
+In a `export_heads_tails_rate_summary.py` row whose `level` is 2025, the misleadingly named `year_cross` column now contains the **current warming level**, not a crossing year. The 12 October 2026 reporting correction separates this level from the retrospective series used to fit the rate. `year_cross_sd` uses the current member endpoints as well. Older saved CSVs used retrospective levels; the dashboard exporter accepts both formats and marks the source in `saved_summary.level_source`. The historical crossing rows still retain their existing calculation conventions; use the dashboard's final data exports for its definitive crossing benchmarks.
 
 The rate script also prints a separate per-method/current-combination endpoint comparison: current and retrospective means, paired differences, maximum differences, matching counts at absolute tolerance 1e-6°C, and missing endpoints. These are diagnostic checks, including expected CGWL window/FaIR sample-noise differences, not assertions that stop a run. They are **not added to the CSV**. Individual methods compare their raw retrospective endpoints; combination comparisons include the existing current-proxy fallback used by the rate fits.
 
@@ -328,7 +349,7 @@ Satellite-calibrated views use the source pipeline's 0.7°C reference shift. The
 
 Use `climate-dashboard/data/*_corrected_headlines.csv` and each dataset JSON's `headline_summary` for the final dashboard levels and rates. `*_legacy_saved_rates.csv`, `rates_fixed/`, and the original/fixed script copies retain intermediate or historical audit work; they are not additional production entry points. Use `*_crossings_rates.csv` and `*_member_crossings_rates.csv` for the definitive and method-comparison crossing calculations.
 
-`climate-dashboard/source/rebuild_corrected_retrospectives.py` is a one-time correction/regression helper, not a routine annual-update command. It compares the edited FaIR readers with retained backups, guards current outputs, and creates separate corrected pickle copies. Its 2025 assumptions and baselines need review before reuse with a later year. Once the root `Results/` has been fully regenerated, the regular dashboard exporter should read that root directly. `export_fair_same_cut_lag4.py` is a superseded diagnostic: the adopted lagged input is the full earlier-cutoff FaIR matrix from Oscar.
+`climate-dashboard/source/audit_and_rebuild_retrospective_caches.py` is a one-time correction/regression helper, not a routine annual-update command. It compares the edited FaIR readers with retained backups, guards current outputs, and creates separate corrected pickle copies. Its 2025 assumptions and baselines need review before reuse with a later year. Once the root `Results/` has been fully regenerated, the regular dashboard exporter should read that root directly. `export_fair_same_cut_lag4.py` is a superseded diagnostic: the adopted lagged input is the full earlier-cutoff FaIR matrix from Oscar.
 
 ### Common causes of mismatches
 
@@ -336,7 +357,7 @@ Use `climate-dashboard/data/*_corrected_headlines.csv` and each dataset JSON's `
 - **A method has its own stale intermediate files.** Check its reader/generator, including GAM, quartic/spline, and Bayesian change-point outputs, plus externally supplied FaIR/GWI data. The author cleared the first three cache families for the HadCRUT5.1 update.
 - **Only some members or scenarios finished.** Check logs and timestamps before regenerating aggregate CSVs or publishing.
 - **CSV and pickle vintages differ.** The dashboard exporter checks the saved levels against current outputs or retained legacy retrospective endpoints; regenerate the four rate CSVs after refreshing pickles.
-- **The site still has old exports.** Run `prepare_website.py`, copy the complete `site/dist/` into the Pages checkout, then commit and push that checkout. For JavaScript changes, update the script version query in `index.html` to refresh browser caches.
+- **The site still has old exports.** Run `assemble_dashboard_site.py`, copy the complete `site/dist/` into the Pages checkout, then commit and push that checkout. For JavaScript changes, update the script version query in `index.html` to refresh browser caches.
 - **New-year arrays or forecasts are too short.** Review external exports, explicit reader branches, probability-window endpoints, and method-specific intermediates before rerunning the full evaluation.
 
 ### Existing result and note links

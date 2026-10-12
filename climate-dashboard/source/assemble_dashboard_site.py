@@ -1,6 +1,6 @@
 """Copy validated figure/data exports into the portable website.
 
-Run after histens_rates_dashboard.py and plot_heads_tails_probs_dashboard.py.
+Run after export_dashboard_climate_metrics.py and render_dashboard_figures.py.
 No source-project writes, deployment, or credentials are involved.
 """
 import csv

@@ -1,7 +1,7 @@
 """Independent, read-only dashboard analysis of the saved heads/tails results.
 
 Original scripts and source data are never modified. Run in cleanPy, for example:
-python histens_rates_dashboard.py histens_rpi_real --source-root /path/to/Thorne_15_codefigurestats
+python export_dashboard_climate_metrics.py histens_rpi_real --source-root /path/to/Thorne_15_codefigurestats
 
 Crossings use the first upward crossing of adjacent finite annual values, with
 linear interpolation. Missing/unobserved crossings remain NaN, never a future
@@ -289,7 +289,7 @@ def analyze(source_root, experiment, outdir, results_dir=None):
         if method in methods:
             fits=recent_method_fits[method]
             return summarize(np.zeros(len(fits)),fits[:,0],fits[:,1])
-        # Match histens_rates.py's within-method fit variance plus the
+        # Match export_heads_tails_rate_summary.py's within-method fit variance plus the
         # between-method dispersion, then add between-member dispersion.
         w=iv/iv.sum() if method=='PIVW_comb' else np.ones(len(methods))/len(methods)
         slopes=np.array([recent_method_fits[m][:,0] for m in methods])

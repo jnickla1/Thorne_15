@@ -1,6 +1,6 @@
 # Climate state dashboard — 2025
 
-The original mockup has been updated, with 52 additional figures and a portable interactive website. The source project's `histens_rates.py` now reports current warming levels with retrospective rate fits and console-only endpoint checks, following the 12 October 2026 reporting correction. `plot_heads_tails_probs.py` remains unchanged; archived originals and dashboard working copies are retained in `source/`.
+The original mockup has been updated, with 52 additional figures and a portable interactive website. The source project's `export_heads_tails_rate_summary.py` now reports current warming levels with retrospective rate fits and console-only endpoint checks, following the 12 October 2026 reporting correction. `plot_heads_tails_paper_probabilities.py` remains unchanged; archived originals and dashboard working copies are retained in `source/`.
 
 ## Review the outputs
 
@@ -60,10 +60,10 @@ Use the existing `cleanPy` environment. From this dashboard directory:
 
 ```sh
 conda activate cleanPy
-python3 source/rebuild_corrected_retrospectives.py
-python3 source/histens_rates_dashboard.py all --results-dir data/corrected_results
-python3 source/plot_heads_tails_probs_dashboard.py
-python3 source/prepare_website.py
+python3 source/audit_and_rebuild_retrospective_caches.py
+python3 source/export_dashboard_climate_metrics.py all --results-dir data/corrected_results
+python3 source/render_dashboard_figures.py
+python3 source/assemble_dashboard_site.py
 ```
 
 The default source root is `/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats`; both analysis scripts accept `--source-root` if the project moves. Rebuilding caches compares the edited methods against the retained original backups and stops if current outputs change. Rebuilding figures alone uses portable JSON and does not need the source project. Keep backups outside the source `Methods/` folder, where additional filenames could be discovered as new methods.

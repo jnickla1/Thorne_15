@@ -3,7 +3,7 @@ from scipy import stats
 import pandas as pd
 import os
 import pdb
-from fut_evaluation_script import collect_data, gen_orig_number
+from evaluate_future_scenarios import collect_data, gen_orig_number
 import config
 from netCDF4 import Dataset
 

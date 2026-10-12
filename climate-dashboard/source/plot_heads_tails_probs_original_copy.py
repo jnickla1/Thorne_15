@@ -8,7 +8,7 @@ from matplotlib.legend_handler import HandlerTuple
 
 
 
-from hist_heads_tails_evaluation_script import evalmins, evalmaxs, relthresh, sel_methods_list_real, sel_methods_list_anthro
+from evaluate_heads_tails_ensemble import evalmins, evalmaxs, relthresh, sel_methods_list_real, sel_methods_list_anthro
 
 goals = ["real", "anthro"]
 
@@ -282,7 +282,7 @@ data_by_goal = {g: load_goal(g) for g in goals}
 csv_threshold_names = ['xyear0.5','xyear1.0','xyear1.5']
 fig, axes = plt.subplots(2, 3, figsize=(14, 7), sharex="col", sharey=False)
 
-from hist_evaluation_script import gen_color
+from evaluate_historical_observations import gen_color
 
 def build_method_colors_for_goal(goal: str, method_names: list[str], del_idx: list[int]) -> dict[str, str]:
     if goal == "real":

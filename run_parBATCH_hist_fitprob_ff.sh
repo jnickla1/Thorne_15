@@ -26,7 +26,7 @@ scenarios=(
 for scenario in "${scenarios[@]}"; do
     #for i in `seq 0 10 40`; do
     if [ "$i" -lt 50 ]; then
-        python3 hist_fitprob.py "$scenario" "$i" &
+        python3 calibrate_method_uncertainty.py "$scenario" "$i" &
     fi
 done
 
@@ -37,7 +37,7 @@ scenarios=(
 
 # Loop over scenarios and ranges in parallel
 for scenario in "${scenarios[@]}"; do
-        python3 hist_fitprob.py "$scenario" "$i" &
+        python3 calibrate_method_uncertainty.py "$scenario" "$i" &
 done
 
 

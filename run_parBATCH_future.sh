@@ -25,7 +25,7 @@ scenarios=(
 for scenario in "${scenarios[@]}"; do
     #for i in `seq 0 10 40`; do
     if [ "$i" -lt 50 ]; then
-        python3 fut_evaluation_script.py "$scenario" "$i" &
+        python3 evaluate_future_scenarios.py "$scenario" "$i" &
     fi
 done
 
@@ -36,7 +36,7 @@ scenarios=(
 
 # Loop over scenarios and ranges in parallel
 for scenario in "${scenarios[@]}"; do
-        python3 fut_evaluation_script.py "$scenario" "$i" &
+        python3 evaluate_future_scenarios.py "$scenario" "$i" &
 done
 
 

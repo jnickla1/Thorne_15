@@ -29,7 +29,7 @@ def closest(lst, yrs, K):
 
 last_year = 2025
 
-from hist_heads_tails_evaluation_script import collect_data, relthresh
+from evaluate_heads_tails_ensemble import collect_data, relthresh
 import scipy.stats as stats
 import statsmodels.stats.multitest as multi
 import matplotlib.pyplot as plt

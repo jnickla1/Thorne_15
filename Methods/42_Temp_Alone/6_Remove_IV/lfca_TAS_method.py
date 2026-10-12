@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import subprocess
 import sys
-from fut_evaluation_script import gen_orig_number
+from evaluate_future_scenarios import gen_orig_number
 
 def run_method(years, temperature, uncert, model_run0, experiment_type):
 
