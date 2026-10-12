@@ -12,7 +12,7 @@ def colorgen(c,step,const):
 fig, ax = plt.subplots(1,1, figsize=(7, 5))
 
 
-data = pd.read_csv("../Common_Data/HadCRUT5.csv")
+data = pd.read_csv("../Common_Data/HadCRUT.5.1.csv")
 temps_obs = data.loc[:,"Anomaly"].to_numpy()
 preind_base = np.mean(temps_obs[0:50]) #preindustrial baseline 1850-1899
 temps_obs = temps_obs - preind_base #remove this baseline
@@ -26,7 +26,8 @@ temperature = temps_obs
 ax.scatter(years, temperature, color='darkgrey', label='HadCRUT5 observations',s=10, zorder=3)
 ax.set_xlabel('Year')
 ax.set_ylabel('GMST Anomaly (°C)\nRelative to 1850-1900')
-ax.set_xlim([1990,2035])
+ax.set_xlim([1990,2036])
+ax.set_xticks(np.arange(1990,2040,step=5))
 ax.set_ylim([0.55,2.1])
 
 
@@ -81,7 +82,7 @@ for i in range(1990-1850, len(years) ):
     for r in range(1,4):
         color=colorgen(r*5,(40,20,40),(52,205,205)) 
         ax.plot(years[i]+.5, mmedian[r-1], '|', color=color, markersize=4)
-        if (i ) % ((avg_len_l+avg_len_u)*2) == 14:
+        if (i ) % ((avg_len_l+avg_len_u)*2) == 15:
             ax.plot([dates[i-avg_len_l], dates[i]+.3], [mmedian[r-1], mmedian[r-1]], color=kcolors[r-1])
             ax.plot([dates[i+1]-.3, dates[i+10]], [mmedian[r-1], mmedian[r-1]], color=color)
             ax.plot([dates[i+1]-.3, dates[i+10]], [mmedian[r-1], mmedian[r-1]],linestyle=(0,(2,5)), color=kcolors[r-1])
@@ -101,4 +102,7 @@ ax.plot(0,15, color=kcolors[1],linestyle=(0,(2,5)),label = "10-y mean of UKCP me
 ax.plot(0,15, color=kcolors[0],linestyle=(0,(2,5)),label = "10-y mean, median selected")
 ax.legend(prop={'size': 11})
 ax.set_title("Betts (2023) CGWL Method")
-plt.show()
+
+
+plt.savefig("betts_illustrating_fig_v2.pdf")
+plt.savefig("betts_illustrating_fig_v2.png",dpi=500)

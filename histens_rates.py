@@ -85,6 +85,41 @@ def local_linear_slope_and_se(y_segment, t_segment):
 
     return beta1, se_beta1
 
+this_atol = 1e-4
+def summarize_endpoint_checks(endpoint_checks, atol=this_atol):
+    """Compare final current/retrospective values member by member for printing.
+
+    Differences are diagnostic, not fatal: method definitions, sample noise,
+    missing outputs, or mixed cache vintages can produce unequal endpoints.
+    """
+    frame = pd.DataFrame(endpoint_checks)
+    rows = []
+    for name, group in frame.groupby("method", sort=False):
+        current = group["current"].to_numpy(dtype=float)
+        retrospective = group["retrospective"].to_numpy(dtype=float)
+        current_valid = np.isfinite(current)
+        retrospective_valid = np.isfinite(retrospective)
+        paired = current_valid & retrospective_valid
+        delta = retrospective[paired] - current[paired]
+        matches = int(np.isclose(current[paired], retrospective[paired],
+                                 rtol=0, atol=atol).sum())
+        n_paired = int(paired.sum())
+        status = "NO PAIRS" if not n_paired else "MATCH" if matches == n_paired else "DIFFER"
+        if n_paired < len(group):
+            status += " / MISSING"
+        rows.append({
+            "method": name,
+            "current_mean": float(current[current_valid].mean()) if current_valid.any() else np.nan,
+            "retrospective_mean": float(retrospective[retrospective_valid].mean()) if retrospective_valid.any() else np.nan,
+            "paired_ret_minus_cur": float(delta.mean()) if n_paired else np.nan,
+            "max_abs_difference": float(np.abs(delta).max()) if n_paired else np.nan,
+            "matches": f"{matches}/{n_paired}",
+            "missing_current": int((~current_valid).sum()),
+            "missing_retrospective": int((~retrospective_valid).sum()),
+            "status": status,
+        })
+    return pd.DataFrame(rows)
+
 
 if __name__ == '__main__':
 
@@ -93,6 +128,7 @@ if __name__ == '__main__':
     
     exp_attr = experiment_type.split("_")
     all_frontend = []
+    endpoint_checks = []  # Printed diagnostics only; never added to the CSV.
     for model_run in range(100):
         
         results_path = f'Results/results{experiment_type}{model_run}.pickle'
@@ -199,6 +235,11 @@ if __name__ == '__main__':
             labelcurr_or_retro="" #only set if the current method is not blank
             #print(method_name)
             if method_name in sel_methods2:
+                endpoint_checks.append({
+                    "member": model_run, "method": method_name,
+                    "current": results[method_name]['LT_trend'][0][-1],
+                    "retrospective": results[method_name]['LT_trend'][2][-1],
+                })
                 can_data = results[method_name]['LT_trend'][2]
                 
                 if(sum(~np.isnan(can_data))>0):
@@ -381,13 +422,17 @@ if __name__ == '__main__':
 
         method_rows = []
         sel3data=np.array(sel2data)
+        # Levels use current outputs; rate fits retain retrospective histories
+        # and the existing current-output fallback where retrospective data are absent.
+        current_levels = np.array([results[name]["LT_trend"][0][-1]
+                                   for name in sel2names])
         for mm, name in enumerate(sel2names):
             # Reported warming level in last year for this method
 
             row = {
                 "level": last_year,
                 "method": name,
-                "year_cross": sel3data[mm,-1],
+                "year_cross": current_levels[mm],
                 "rate": float(slopes[mm]*10),
                 "rate_uncert": np.sqrt(vars_[mm])*10*1,
                 "rate_window": -15
@@ -397,7 +442,7 @@ if __name__ == '__main__':
         # ------------------------------------------------------------------
         # Add equal-weight combined row for 2024
         # ------------------------------------------------------------------
-        warm_2024_comb = np.nanmean(sel3data[:,-1])
+        warm_2024_comb = np.nanmean(current_levels)
 
         comb_row = {
             "level": last_year,
@@ -436,7 +481,7 @@ if __name__ == '__main__':
         vars100 = err_vars100[mask.to_numpy()][np.argsort(ordered_idx[mask].to_numpy())]
 
         ivweights = 1/vars100
-        ivcenter = np.nansum(sel3data[:,-1] * ivweights[:],axis=0) / np.nansum( ~np.isnan(sel3data[:,-1]) * ivweights[:],axis=0)
+        ivcenter = np.nansum(current_levels * ivweights[:],axis=0) / np.nansum( ~np.isnan(current_levels) * ivweights[:],axis=0)
         ivslope_combined = np.nansum(slopes * ivweights[:],axis=0) / np.nansum( ~np.isnan(slopes) * ivweights[:],axis=0)*10
         # Uncertainty of the combined slope (standard error)
         ivslope_combined_std = np.sqrt( np.nansum(vars_ * ivweights[:],axis=0) / np.nansum( ~np.isnan(vars_) * ivweights[:],axis=0)
@@ -459,6 +504,19 @@ if __name__ == '__main__':
         }
 
         method_rows.append(ivcomb_row)
+
+        # Combination endpoint diagnostics use the same retrospective/proxy
+        # series as the rate fits. Individual checks above use raw retrospective outputs.
+        retrospective_levels = sel3data[:, -1]
+        endpoint_checks.extend([
+            {"member": model_run, "method": "equal_weight_comb",
+             "current": warm_2024_comb,
+             "retrospective": np.nanmean(retrospective_levels)},
+            {"member": model_run, "method": "PIVW_comb",
+             "current": ivcenter,
+             "retrospective": np.nansum(retrospective_levels * ivweights) /
+                              np.nansum(~np.isnan(retrospective_levels) * ivweights)},
+        ])
 
 
     #Implementing CSCM is more complex than what I have time for right now, since we need newsamples for each of the histens members
@@ -545,6 +603,15 @@ if __name__ == '__main__':
         ["level", "method", "year_cross", "year_cross_sd",
          "rate", "rate_sd", "rate_uncert_1sd", "rate_window"]
     ]
+
+    # Print endpoint comparisons separately, without changing the CSV schema.
+    print(f"\nFinal current/retrospective endpoint checks for {last_year}:")
+    print(f"Matching tolerance: {this_atol} deg C (absolute; no relative tolerance).")
+    print(summarize_endpoint_checks(endpoint_checks).to_string(
+        index=False, float_format=lambda value: f"{value:.6f}"))
+    print("Individual methods compare raw retrospective outputs; combinations include "
+          "the rate-fit current proxies where required. Differences are diagnostic, "
+          "including known method-window/sample-noise differences and incomplete reruns.")
 
     # Print and save
     print("\nCombined frontend dataframe across 100 ensemble members:")

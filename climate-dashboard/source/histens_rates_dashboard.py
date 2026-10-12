@@ -319,10 +319,19 @@ def analyze(source_root, experiment, outdir, results_dir=None):
         curr=summarize(c[:,-1],currentfits[:,0],currentfits[:,1])
         curr_summary=dict(level=float(np.mean(c[:,-1])),level_interval=mixture_interval(c[:,-1],se[:,-1]),
                           rate=curr['rate'],rate_se=curr['rate_se'])
-        saved_summary=dict(level=float(sr.year_cross),level_interval=mixture_interval(legacy_recent[m][:,-1],se[:,-1]),
-                           rate=float(sr.rate),rate_se=float(sr.rate_uncert_1sd))
-        # Regression guard: recreate original saved headline warming level.
-        np.testing.assert_allclose(legacy_recent[m][:,-1].mean(),sr.year_cross,atol=1e-10)
+        # Accept current-level rate CSVs and retained older retrospective-level CSVs.
+        saved_level = float(sr.year_cross)
+        if np.isclose(saved_level, curr_summary['level'], atol=1e-10, rtol=0):
+            saved_centers = c[:, -1]
+            saved_level_source = 'current'
+        else:
+            saved_centers = legacy_recent[m][:, -1]
+            np.testing.assert_allclose(saved_centers.mean(), saved_level, atol=1e-10, rtol=0,
+                err_msg=f'{m}: saved level matches neither current nor legacy retrospective outputs; refresh the rate CSV.')
+            saved_level_source = 'legacy_retrospective'
+        saved_summary=dict(level=saved_level,level_interval=mixture_interval(saved_centers,se[:,-1]),
+                           rate=float(sr.rate),rate_se=float(sr.rate_uncert_1sd),
+                           level_source=saved_level_source)
         corrected_rate=recent_headline_rate(m)
         headline_summary=dict(level=curr_summary['level'],level_interval=curr_summary['level_interval'],
                               rate=corrected_rate['rate'],rate_se=corrected_rate['rate_se'])

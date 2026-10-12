@@ -1,6 +1,6 @@
 # Climate state dashboard — 2025
 
-The original mockup has been updated, with 52 additional figures and a portable interactive website. The original `histens_rates.py` and `plot_heads_tails_probs.py` are untouched; their archived and corrected working copies are in `source/`.
+The original mockup has been updated, with 52 additional figures and a portable interactive website. The source project's `histens_rates.py` now reports current warming levels with retrospective rate fits and console-only endpoint checks, following the 12 October 2026 reporting correction. `plot_heads_tails_probs.py` remains unchanged; archived originals and dashboard working copies are retained in `source/`.
 
 ## Review the outputs
 
@@ -69,3 +69,6 @@ python3 source/prepare_website.py
 The default source root is `/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats`; both analysis scripts accept `--source-root` if the project moves. Rebuilding caches compares the edited methods against the retained original backups and stops if current outputs change. Rebuilding figures alone uses portable JSON and does not need the source project. Keep backups outside the source `Methods/` folder, where additional filenames could be discovered as new methods.
 
 Browser QA covered the desktop and narrow layouts, dataset/method/background controls, interactive zoom, figure switching, persisted option URLs, reference hyperlinks, and downloadable-file availability. Detailed scientific verification is in `review/corrections_regression_report.json` and its companion CSVs.
+
+
+The dashboard exporter accepts both the current-level rate CSVs and older retrospective-level CSVs. Its `saved_summary.level_source` records the matching convention; headline levels always use current outputs. Endpoint comparison diagnostics from the root rate script remain console-only.

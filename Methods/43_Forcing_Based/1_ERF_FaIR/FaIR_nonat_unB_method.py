@@ -104,9 +104,9 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     rng = np.random.default_rng(base_seed + int(model_run))
     reduce_uncert = 10 if (exp_attr[0]=="histens") else 1
     for i in range(len(years)):
-        samp_ret[i,:] =samp_ret[i,:]+ rng.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)/reduce_uncert), size=np.shape(samp_ret)[1])
-        samp_cur[i,:] =samp_cur[i,:]+ rng.normal(loc=0, scale=(temps_1std[i]/np.sqrt(20)/reduce_uncert), size=np.shape(samp_cur)[1])
-    #extremely small std error at some points in early 1850s, try to correct this
+        noise = rng.normal(loc=0, scale=temps_1std[i] / np.sqrt(20) / reduce_uncert, size=samp_cur.shape[1],)
+        samp_ret[i, :] += noise[:samp_ret.shape[1]]
+        samp_cur[i, :] += noise    #extremely small std error at some points in early 1850s, try to correct this
 
 
     def empirical_mean(year_idx,k):

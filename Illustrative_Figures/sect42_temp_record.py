@@ -1,13 +1,17 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import os
+import sys
+cur_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(cur_dir))
 import config
 # Create a figure and a set of subplots
 npanels2=5
 fig, axes = plt.subplots(nrows=2, ncols=npanels2, figsize=(14, 7))#expand wi
 # Generate fictitious temperature data (for demonstration)
 data = np.genfromtxt(open("../Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
-data2 = pd.read_csv("../Common_Data/HadCRUT.5.0.2.0.analysis.summary_series.global.annual.csv")
+data2 = pd.read_csv("../Common_Data/HadCRUT.5.1.0.0.analysis.summary_series.global.annual.csv")
 years= data2["Time"].to_numpy()
 #years[0]=1850
 nyrs = len(years)
@@ -454,26 +458,27 @@ import statsmodels.api as sm
 enso = pd.read_csv("../Common_Data/meiv2.csv")
 omega = 2 * np.pi / 1 
 cos_2yr = np.cos(0.5 * omega * years)
+
 X = pd.DataFrame({
-    'MEI': enso['Avg'][108:-1], #1971 start
+    'MEI': enso['Avg'][108:], #1971 start
     'AOD': data[129:, 3],
     'TSI': data[129:, 8],
-    'cos2': cos_2yr[129:-2],
-    'time': years[129:-2]-1971,
+    'cos2': cos_2yr[129:-1],
+    'time': years[129:-1]-1971,
 })
 # Add a constant term for the intercept
 X = sm.add_constant(X)
-y = temperature[129:-2]
+y = temperature[129:-1]
 
 model = sm.OLS(y, X).fit()
 print(model.params)
 
 X2 = pd.DataFrame({
-    'MEI': enso['Avg'][1:-1],
+    'MEI': enso['Avg'][1:],
     'AOD': data[22:, 3],
     'TSI': data[22:, 8],
-    'cos2': cos_2yr[22:-2],
-    'time': np.zeros(len(years)-22-2)
+    'cos2': cos_2yr[22:-1],
+    'time': np.zeros(len(years)-22-1)
 })
 X2 = sm.add_constant(X2)
 pred2=model.predict(X2)

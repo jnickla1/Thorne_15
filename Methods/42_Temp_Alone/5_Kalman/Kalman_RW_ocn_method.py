@@ -21,7 +21,7 @@ years0=data[:,0]
 years0[0]=1850
 temperature = data[:, 1]
 
-data_ocn = pd.read_csv(dir_path+'/../../../Common_Data/HadSST.4.0.1.0_annual_GLOBE.csv', sep=',')
+data_ocn = pd.read_csv(dir_path+'/../../../Common_Data/HadSST.4.2.0.0_annual_GLOBE.csv', sep=',')
 OceanRec = data_ocn['anomaly'].values
 OceanRec_sc =  OceanRec *0.9/0.7
 

@@ -42,7 +42,7 @@ cur_loc=this.dir()
 #dat=data.frame(read.table("~/data/jnickla1/Thorne_figures/HadCRUT5.csv",header=TRUE,sep=","))
 
 setwd(cur_loc)
-dat0=data.frame(read.table(paste0(cur_loc,"/../../../../Common_Data/HadCRUT.5.0.2.0.analysis.summary_series.global.annual.csv"),header=TRUE,sep=","))
+dat0=data.frame(read.table(paste0(cur_loc,"/../../../../Common_Data/HadCRUT.5.1.0.0.analysis.summary_series.global.annual.csv"),header=TRUE,sep=","))
 #colnames(dat0) <- c("Time","Anomaly","eCO2",	"opt_depth",	"R_Tvar",	"OHCA",	"ROC_tvar",	"anthro_clouds"	,"TSI")
 colnames(dat0) <- c("Time","Anomaly","Alow","Ahigh")
 par(mfrow=c(1,2))
