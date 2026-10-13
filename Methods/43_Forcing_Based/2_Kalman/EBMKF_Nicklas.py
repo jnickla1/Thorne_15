@@ -177,9 +177,10 @@ def compute_slope(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
     [x,oc]= x2
     inboundd=tsik*inbndf/(optdn+9.7279)*((dfaS+dfaA)+2*(dfaS*dfaA)*(x-T02)+dfaS*anthro_cloud/sw_in/0.9318/a_refl)
     outgoingd= outbndf*(4-powp1)*np.power(x, 3-powp1)*(1-B0*lCo2n) #0.0655
-#following jacobian matrix conventions
-    return np.array([[(1 + (inboundd-outgoingd - gad*(1-Cs/Cd))/heatCp ) , gad/Cd/heatCp], \
-                     [ (inboundd-outgoingd-gad*(1-Cs/Cd))*Cs/heatCp +gad*(1-Cs/Cd)+Cs  ,  ( 1 - (1-Cs/heatCp)*gad/Cd)]])
+# Jacobian of the complete next state: d(ocean temperature)/dT = -Cs/Cd.
+# Heat-content increment contains Cs*(T_next-T), so J_HT has no standalone +Cs.
+    return np.array([[(1 + (inboundd-outgoingd - gad*(1+Cs/Cd))/heatCp ) , gad/Cd/heatCp], \
+                     [ (inboundd-outgoingd-gad*(1+Cs/Cd))*Cs/heatCp +gad*(1+Cs/Cd)  ,  ( 1 - (1-Cs/heatCp)*gad/Cd)]])
 
 def compute_update(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101): 
     k=int(ki)
@@ -294,8 +295,8 @@ def ekf_run(z,n_iter,retPs=False):
         P[k] = np.matmul((np.eye(2)- K[k] ),Pminus[k])
         stdevS=np.sqrt(np.abs(np.diag(S[k])))
         qqy[k]=y[k]/stdevS
-        gmstpdf=stats.norm.pdf(xnorm,loc = qqy[k,0], scale = data[k,4]/stdevS[0])
-        ohcapdf=stats.norm.pdf(xnorm,loc = qqy[k,1], scale = data[k,6]/zJ_from_W/stdevS[1])
+        gmstpdf=stats.norm.pdf(xnorm,loc = qqy[k,0], scale = (data[k,4] if k < len(data) else np.sqrt(R_tvar[k]))/stdevS[0])
+        ohcapdf=stats.norm.pdf(xnorm,loc = qqy[k,1], scale = (data[k,6]/zJ_from_W if k < len(data) else np.sqrt(Roc_tvar[k]))/stdevS[1])
         qqykerall.append([gmstpdf,ohcapdf])
         if k>1:
             qqyker[0] += gmstpdf/(n_iters-1)

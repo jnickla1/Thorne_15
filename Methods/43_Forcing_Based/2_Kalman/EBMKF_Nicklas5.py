@@ -154,9 +154,10 @@ def compute_slope(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
     [x,oc]= x2
     inboundd=tsik*inbndf/(optdn+9.7279)*((dfaS+dfaA)+2*(dfaS*dfaA)*(x-T02)+dfaS*anthro_cloud/sw_in/0.9318/a_refl)
     outgoingd= outbndf*(4-powp1)*np.power(x, 3-powp1)*(1-B0*lCo2n) #0.0655
-#following jacobian matrix conventions
-    return np.array([[(1 + (inboundd-outgoingd - gad*(1-Cs/Cd))/heatCp ) , gad/Cd/heatCp], \
-                     [ (inboundd-outgoingd-gad*(1-Cs/Cd))*Cs/heatCp +gad*(1-Cs/Cd)+Cs  ,  ( 1 - (1-Cs/heatCp)*gad/Cd)]])
+# Jacobian of the complete next state: d(ocean temperature)/dT = -Cs/Cd.
+# Heat-content increment contains Cs*(T_next-T), so J_HT has no standalone +Cs.
+    return np.array([[(1 + (inboundd-outgoingd - gad*(1+Cs/Cd))/heatCp ) , gad/Cd/heatCp], \
+                     [ (inboundd-outgoingd-gad*(1+Cs/Cd))*Cs/heatCp +gad*(1+Cs/Cd)  ,  ( 1 - (1-Cs/heatCp)*gad/Cd)]])
 
 def compute_slope_hidden(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
     k=int(ki)
@@ -182,10 +183,11 @@ def compute_slope_hidden(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
     dB0_float = -dB1_float*B1B0/B1_float/B1_float
     doutbndf_float= sig*dB1_float
     outbound_ddfrA_float=doutbndf_float*np.power(x, 4-powp1 )*(1-B0_float*lCo2n) - sig*B1_float*np.power(x, 4-powp1 )*(dB0_float*lCo2n)
-#following jacobian matrix conventions
+# Jacobian of the complete next state: d(ocean temperature)/dT = -Cs/Cd.
+# Heat-content increment contains Cs*(T_next-T), so J_HT has no standalone +Cs.
 
-    return np.array([[(1 + (inboundd-outgoingd - gad_float*(1-Cs/Cd))/heatCp ) , gad_float/Cd/heatCp, 0, (inbound_ddfrA_float-outbound_ddfrA_float)/heatCp,-(x-Teq1850 - oc + oc1850) /heatCp], \
-                     [ (inboundd-outgoingd-gad_float*(1-Cs/Cd))*Cs/heatCp +gad_float*(1-Cs/Cd)+Cs  ,  ( 1 - (1-Cs/heatCp)*gad_float/Cd),0 , (inbound_ddfrA_float-outbound_ddfrA_float)*Cs/heatCp,(x-Teq1850 - oc + oc1850)],\
+    return np.array([[(1 + (inboundd-outgoingd - gad_float*(1+Cs/Cd))/heatCp ) , gad_float/Cd/heatCp, 0, (inbound_ddfrA_float-outbound_ddfrA_float)/heatCp,-(x-Teq1850 - oc + oc1850) /heatCp], \
+                     [ (inboundd-outgoingd-gad_float*(1+Cs/Cd))*Cs/heatCp +gad_float*(1+Cs/Cd)  ,  ( 1 - (1-Cs/heatCp)*gad_float/Cd),0 , (inbound_ddfrA_float-outbound_ddfrA_float)*Cs/heatCp,(x-Teq1850 - oc + oc1850)],\
                      [inboundd-outgoingd,0,0,inbound_ddfrA_float-outbound_ddfrA_float,0],\
                      [0,0,0,1,0], #dfrA_float just randomly walks
                      [0,0,0,0,1]]) #gad_float just randomly walks

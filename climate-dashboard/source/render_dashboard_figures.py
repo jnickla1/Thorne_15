@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FixedLocator
 from matplotlib.colors import ListedColormap, BoundaryNorm
 from matplotlib.patches import Rectangle
 from scipy.ndimage import gaussian_filter1d
@@ -26,6 +27,7 @@ def avg(x):
     return np.divide(np.nansum(a,axis=0),n,out=np.full(a.shape[1:],np.nan),where=n>0)
 def likelihood(p):
     if p<.01:return 'exceptionally unlikely'
+    if p<=.05:return 'extremely unlikely'
     if p<.1:return 'very unlikely'
     if p<.33:return 'unlikely'
     if p<.66:return 'about as likely as not'
@@ -65,7 +67,7 @@ def render(d,method,background,convention,out,expanded=True,primary=False):
     text(.045,.852,'Global warming levels and crossing times',size=18,color=INK)
     text(.48,.846,f"Current (2025) {d['definition']} global warming level",size=19,weight='bold')
     lo,hi=summary['level_interval']
-    text(.48,.809,f"{summary['level']:.3f} [{lo:.3f}, {hi:.3f}] °C",size=22,color=METHOD_RED,weight='bold')
+    text(.48,.809,f"{summary['level']:.2f} [{lo:.2f}, {hi:.2f}] °C",size=22,color=METHOD_RED,weight='bold')
     text(.48,.776,'95% uncertainty range',size=13)
     text(.48,.726,f"Estimated (2025) {d['definition']} warming rate",size=19,weight='bold')
     rate,se=summary['rate'],summary['rate_se']
@@ -77,7 +79,7 @@ def render(d,method,background,convention,out,expanded=True,primary=False):
     text(.48,.602,f"It is {qualifier} that warming exceeds {event}",size=16,color=INK)
     text(.48,.573,f"2025 probability: {100*p:.2f}% · relative to {d['baseline_label']}",size=11)
     ax=fig.add_axes([.075,Y(.192),.345,.49*scale])
-    bg=arr(d['raw'] if background=='raw' else md['current']); keep=years>=1960
+    bg=arr(d['raw'] if background=='raw' else d['centered20'] if background=='centered20' else md['current']); keep=years>=1965
     ax.plot(years[keep],bg[:,keep].T,color='black',alpha=.09,lw=.6,rasterized=True)
     for j in range(2):
         definite=d['definitive'][j]; compare=md['comparisons'][j]; th=ths[j]
@@ -88,34 +90,37 @@ def render(d,method,background,convention,out,expanded=True,primary=False):
             if compare['rate'] is not None and compare['year'] is not None:
                 pred,pr=compare['year'],compare['rate']; px=np.array([pred-15,pred])
                 ax.plot(px,th+(px-pred)*pr/10,color=METHOD_RED,lw=2.3,zorder=3)
+                ax.plot([pred,pred],[th,th-.10],color=METHOD_RED,lw=2.3,zorder=4)
                 ax.text(c,th-.37,f"Method:\n{pr:.3f} ± {1.96*compare['rate_se']:.3f}\n°C/decade",color=METHOD_RED,fontsize=8.2,ha='center',va='top',zorder=7,bbox=dict(facecolor='white',edgecolor='none',alpha=.9,pad=1.5))
             dx=np.array([c-5,c+5]); ax.plot(dx,th+(dx-c)*dr/10,color=DARK,lw=4,zorder=6)
+            ax.plot([c,c],[th,th+.10],color=DARK,lw=3,zorder=6)
             ax.text(c,th+.37,f"Benchmark:\n{dr:.3f} ± {1.96*definite['rate_se']:.3f}\n°C/decade",color=DARK,fontsize=8.8,ha='center',va='bottom',zorder=8,bbox=dict(facecolor='white',edgecolor='none',alpha=.9,pad=1.5))
         x=[.135,.315][j]
         text(x,.812,f'{th:.1f}°C',size=14,color=INK,ha='center')
         text(x,.78,f"{definite['year']:.0f}" if definite['year'] is not None else 'Pending',size=17,color=INK,weight='bold',ha='center')
         text(x,.751,f"[{definite['year_lo']:.0f}–{definite['year_hi']:.0f}]" if definite['year'] is not None else '',size=11,ha='center')
     x=np.array([2010,2025]); ax.plot(x,summary['level']+(x-2025)*rate/10,color=METHOD_RED,lw=3,zorder=9)
-    ax.text(2026,summary['level'], '2025',color=METHOD_RED,fontsize=8,va='center')
-    ax.set_xlim(1960,2032); ax.set_ylim(-.5+ths[0]-.5,1.85+ths[0]-.5)
+    ax.text(2025.2,summary['level'], '2025',color=METHOD_RED,fontsize=8,va='center')
+    ax.set_xlim(1964.5,2026); ax.set_ylim(-.5+ths[0]-.5,1.85+ths[0]-.5)
     ax.set_yticks(np.arange(-.5,2.01,.5)+ths[0]-.5); ax.grid(axis='y',alpha=.22)
     ax.set_ylabel('Temperature anomaly (°C)',fontsize=12)
-    ax.set_xticks([1960,1980,2000,2025]); ax.tick_params(axis='both',labelsize=11)
+    ax.set_xticks([1965,1975,1985,1995,2005,2015,2025]); ax.xaxis.set_minor_locator(FixedLocator([1970,1980,1990,2000,2010,2020])); ax.tick_params(axis='both',labelsize=11)
+    ax.tick_params(axis='x',pad=9)
     text(.075,.133,'Dark blue: definitive crossing + centered 10-year rate',size=10,color=DARK)
     text(.075,.105,'Red: 15 years before selected method’s predicted crossing',size=10,color=METHOD_RED)
     text(.075,.077,'Red 2025 line: selected-method level and fitted recent rate',size=9.5)
     text(.48,.521,'Global warming levels and exceedance probabilities',size=20,color=INK)
     heat=fig.add_axes([.555,Y(.263),.40,.205*scale])
-    yrsel=(years>=1975)&(years<=2025); z=probs[:,yrsel]
-    heat.pcolormesh(np.arange(1974.5,2026.5),np.arange(-.5,4.5),z,cmap=ListedColormap(COLORS),norm=BoundaryNorm(BOUNDS,len(COLORS)),shading='flat')
+    yrsel=(years>=1965)&(years<=2025); z=probs[:,yrsel]
+    heat.pcolormesh(np.arange(1964.5,2026.5),np.arange(-.5,4.5),z,cmap=ListedColormap(COLORS),norm=BoundaryNorm(BOUNDS,len(COLORS)),shading='flat')
     heat.hlines([.5,1.5,2.5],1974.5,2025.5,color='white',lw=9)
-    heat.set_yticks(range(4),[f'{t:.1f}°C' for t in ths]); heat.set_xticks([1980,1990,2000,2010,2020,2025]); heat.tick_params(labelsize=12)
+    heat.set_yticks(range(4),[f'{t:.1f}°C' for t in ths]); heat.set_xticks([1965,1975,1985,1995,2005,2015,2025]); heat.xaxis.set_minor_locator(FixedLocator([1970,1980,1990,2000,2010,2020])); heat.set_xlim(1964.5,2026); heat.tick_params(labelsize=12)
     heat.set_ylim(-.5,3.5)
     for j in range(2):
         df=d['definitive'][j]
         if df['year'] is not None:
             heat.plot([df['year'],df['year']],[j-.43,j+.43],color=INK,lw=1.5)
-            heat.text(df['year'],j+.46,f"{df['year']:.0f}",ha='center',fontsize=10,color=INK)
+            heat.text(df['year'],j+.5,f"{df['year']:.0f}",ha='center',va='center',fontsize=10,color=INK,bbox=dict(facecolor='white',edgecolor='none',pad=.3))
     legend=fig.add_axes([.555,Y(.158),.4,.037*scale]); legend.imshow(np.arange(9).reshape(1,-1),cmap=ListedColormap(COLORS),aspect='auto',extent=[0,9,0,1]); legend.set_yticks([])
     legend.set_xticks(np.arange(9)+.5,['<1%','1–10%','10–33%','33–50%','50–66%','66–90%','90–99%','99–100%','100%']); legend.tick_params(labelsize=8,length=0)
     text(.755,.211,'Probability from calibrated current-method outputs',size=10,ha='center')
@@ -145,7 +150,9 @@ def render(d,method,background,convention,out,expanded=True,primary=False):
     path=out/(('updated_mockup_2025' if primary else stem)+'.png')
     fig.savefig(path,dpi=155)
     if primary:
-        fig.savefig(out/'updated_mockup_2025.svg')
+        svg_path = out/'updated_mockup_2025.svg'
+        fig.savefig(svg_path)
+        svg_path.write_text('\n'.join(line.rstrip() for line in svg_path.read_text().splitlines()) + '\n')
         fig.savefig(out/'updated_mockup_2025.pdf')
     plt.close(fig)
     return path.name
@@ -158,7 +165,7 @@ def main():
             for g in ['real','anthro']:
                 d=json.loads((args.data/f'{b}_{g}.json').read_text())
                 for m in d['methods']:
-                    for bg in ['raw','smoothed']:
+                    for bg in ['raw','smoothed','centered20']:
                         fn=render(d,m,bg,'headline',args.outdir)
                         manifest.append(dict(baseline=b,goal=g,method=m,background=bg,file=fn))
                 print('Rendered',b,g,flush=True)

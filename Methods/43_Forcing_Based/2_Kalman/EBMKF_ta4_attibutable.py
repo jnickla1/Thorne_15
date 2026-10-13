@@ -86,8 +86,8 @@ def ext_timeser(timeseries, start_year=1850, end_year=2014,
 
 
 #temperature has 2024, dont have all forcings for this yet - must update ekf.n_iters
-data_orig = pd.read_csv("../../../Common_Data/HadCRUT5.csv")
-temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
+data_orig = pd.read_csv("../../../Common_Data/HadCRUT.5.1.csv")
+temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()[:174]
 preind_base = np.mean(temps_obs[0:50])
 
 
@@ -103,12 +103,18 @@ import EBMKF_Nicklas4 as ekf #only change cloud feedback, but dynamically
 
 
 ###FIRST RUN WITHOUT TA_SMOOTH is the total
-total_warming = ekf.xh1s.copy()
-total_warming_se  = ekf.stdP.copy()
+# Explicitly initialize the unfiltered 1850-2023 run; imports no longer run it.
+ekf.n_iters = 174
+for name in ['xhat', 'P', 'F', 'xhatminus', 'Pminus', 'K', 'xhathat', 'Phat',
+             'Khat', 'Shat', 'S', 'xblind', 'lml', 'y', 'qqy']:
+    setattr(ekf, name, getattr(ekf, name)[:ekf.n_iters].copy())
+total_warming, total_variance, _, _ = ekf.ekf_run(np.array([[ekf.temps[:ekf.n_iters], ekf.oc_meas[:ekf.n_iters], ekf.TOA_meas_artif[:ekf.n_iters]]]).T, ekf.n_iters, retPs=3,diagnostics=False)
+total_warming = total_warming.copy()  # retain this run when later calls reuse filter arrays
+total_warming_se = np.sqrt(np.abs(total_variance))
 
 #if experiment_type == "historical":
 ekf.n_iters = 174
-unf_new_opt_depth = ekf.data[:,3]*0.001
+unf_new_opt_depth = ekf.data[:ekf.n_iters,3]*0.001
 ekf.opt_depth=ta_smooth(unf_new_opt_depth,ekf.involcavg)
 given_preind_base = np.mean(temps_obs[0:50])
 temps = temps_obs-given_preind_base+preind_base + ekf.offset #ensure this matches expected starting temperature in 1850
@@ -117,18 +123,18 @@ erf_data_solar = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith
 solar_full = erf_data_solar[:ekf.n_iters]+ 340.4099428 - 0.108214
 tot_volc_erf = (- solar_full*frac_blocked + 151.22)
 erf_trapez=(1*tot_volc_erf[0:-2]+2*tot_volc_erf[1:-1]+0*tot_volc_erf[2:] )/4 #want to snap back as quickly as possible, no volc signal
-temps[2:-1] = temps[2:-1] - erf_trapez/(ekf.heatCp - ekf.Cs)
-ohca_meas = ekf.oc_meas*ekf.zJ_from_W
+temps[2:] = temps[2:] - erf_trapez/(ekf.heatCp - ekf.Cs)
+ohca_meas = ekf.oc_meas[:ekf.n_iters]*ekf.zJ_from_W
 #temps[7:] = temps[7:] + erf_trapez[:-5]/(ekf.heatCp - ekf.Cs)
 ohca_meas[2:] = ohca_meas[2:] - (erf_trapez/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*200 #not perfect but good for now, also unclear where the 200 comes from
-TOA_meas_artif1 =  ekf.TOA_meas_artif - (tot_volc_erf ) * .75 
+TOA_meas_artif1 =  ekf.TOA_meas_artif[:ekf.n_iters] - (tot_volc_erf ) * .75 
 new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
 ekf.dfrA_float_var = ekf.dfrA_float_var/40
 
 ###SECOND RUN WITH TA_SMOOTH is the anthro
-warming,warming_se,_,_ = ekf.ekf_run(new_observ,ekf.n_iters,retPs=3)
+warming,warming_se,_,_ = ekf.ekf_run(new_observ,ekf.n_iters,retPs=3,diagnostics=False)
 anthro_warming = warming.copy()
-anthro_warming_se = warming_se.copy()
+anthro_warming_se = np.sqrt(np.abs(warming_se))
 
 
 ###THRID RUN IS hist-aer
@@ -153,9 +159,9 @@ aer_ohca = aer_ohca - aer_ohca[0]
 aer_toa_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-aer/global_rt_Amon_MPI-ESM1-2-LR_hist-aer_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
 aer_toa = average_every_n(aer_toa_raw[:].__array__(), 12)
 new_observ_aer = np.array([[ext_timeser(aer_temps),ext_timeser(aer_ohca/ekf.zJ_from_W) ,ext_timeser(aer_toa)]]).T
-warming,warming_se,_,_ = ekf.ekf_run(new_observ_aer,ekf.n_iters,retPs=3)
+warming,warming_se,_,_ = ekf.ekf_run(new_observ_aer,ekf.n_iters,retPs=3,diagnostics=False)
 aer_warming = warming.copy()
-aer_warming_se = warming_se.copy()
+aer_warming_se = np.sqrt(np.abs(warming_se))
 
 ###FOURTH RUN is hist-totalO3
 #counts as a type of CO2
@@ -178,9 +184,9 @@ totalO3_ohca = totalO3_ohca - totalO3_ohca[0]
 totalO3_toa_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-totalO3/global_rt_Amon_MPI-ESM1-2-LR_hist-totalO3_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
 totalO3_toa = average_every_n(totalO3_toa_raw[:].__array__(), 12)
 new_observ_totalO3 = np.array([[ext_timeser(totalO3_temps),ext_timeser(totalO3_ohca/ekf.zJ_from_W) ,ext_timeser(totalO3_toa)]]).T
-warming,warming_se,_,_= ekf.ekf_run(new_observ_totalO3,ekf.n_iters,retPs=3)
+warming,warming_se,_,_= ekf.ekf_run(new_observ_totalO3,ekf.n_iters,retPs=3,diagnostics=False)
 totalO3_warming = warming.copy()
-totalO3_warming_se = warming_se.copy()
+totalO3_warming_se = np.sqrt(np.abs(warming_se))
 
 #averaging hist-aer and hist-totalO3 to write OHF
 
@@ -205,10 +211,9 @@ GHG_ohca = GHG_ohca - GHG_ohca[0]
 GHG_toa_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-GHG/global_rt_Amon_MPI-ESM1-2-LR_hist-GHG_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
 GHG_toa = average_every_n(GHG_toa_raw[:].__array__(), 12)
 new_observ_GHG = np.array([[ext_timeser(GHG_temps),ext_timeser(GHG_ohca/ekf.zJ_from_W) ,ext_timeser(GHG_toa)]]).T
-warming,warming_se,_,_ = ekf.ekf_run(new_observ_GHG,ekf.n_iters,retPs=3)
+warming,warming_se,_,_ = ekf.ekf_run(new_observ_GHG,ekf.n_iters,retPs=3,diagnostics=False)
 GHG_warming = warming.copy()
-GHG_warming_se = warming_se.copy()
-breakpoint()
+GHG_warming_se = np.sqrt(np.abs(warming_se))
 
 ###SIXTH RUN IS hist-nat
 #solar set to original
@@ -228,9 +233,9 @@ nat_ohca = nat_ohca - nat_ohca[0]
 nat_toa_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-nat/global_rt_Amon_MPI-ESM1-2-LR_hist-nat_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
 nat_toa = average_every_n(nat_toa_raw[:].__array__(), 12)
 new_observ_nat = np.array([[ext_timeser(nat_temps),ext_timeser(nat_ohca/ekf.zJ_from_W) ,ext_timeser(nat_toa)]]).T
-warming,warming_se,_,_ = ekf.ekf_run(new_observ_nat,ekf.n_iters,retPs=3)
+warming,warming_se,_,_ = ekf.ekf_run(new_observ_nat,ekf.n_iters,retPs=3,diagnostics=False)
 nat_warming = warming.copy()
-nat_warming_se = warming_se.copy()
+nat_warming_se = np.sqrt(np.abs(warming_se))
 
 ekf.plt.close()
 
@@ -274,3 +279,13 @@ data = {
 }
 
 save_analytic_percentiles_from_mean_se("Nicklas_GMST_timeseries.csv", years, data)
+
+# Publish the same values in the established multi-method assessment schema.
+from pathlib import Path
+flat = pd.read_csv("Nicklas_GMST_timeseries.csv")
+assessment = pd.DataFrame(index=pd.Index(flat["year"].to_numpy(), name="Year"))
+for key, label in {"aer":"OHF", "ghg":"GHG", "ohf":"OHFa", "ant":"Ant", "nat":"Nat", "tot":"Tot"}.items():
+    for percentile in [5, 17, 83, 95, 50]:
+        assessment[(label, str(percentile))] = flat[f"{key}_p{percentile}"].to_numpy()
+assessment.columns = pd.MultiIndex.from_tuples(assessment.columns, names=["variable", "percentile"])
+assessment.to_csv(Path(__file__).resolve().parents[1] / "3_Human_Induced/anthropogenic-warming-assessment/results/Nicklas_GMST_timeseries.csv")

@@ -270,7 +270,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
         if (exp_attr[1]=='ESM1-2-LR'):
             ekf.n_iters = 174 
             unf_new_opt_depth= np.full(new_iter, (1/ekf.involcavg-9.7279))
-            unf_new_opt_depth[0:ekf.n_iters]=ekf.data[:,3]*0.001 #infill old optical depths based on existing historical AOD record, later ta-smoothed
+            unf_new_opt_depth[0:ekf.n_iters]=ekf.data[:ekf.n_iters,3]*0.001 #infill old optical depths based on existing historical AOD record, later ta-smoothed
             
             ohca_later =Dataset(config.CLIMATE_DATA_PATH+"/ESM1-2-LR/opottempmint/"+exp_attr[2].lower()+"_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
             ohca_l = ohca_later[:].__array__()
@@ -294,14 +294,14 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
             # need to change thermal conductivity ??
             ekf.n_iters = 174 
             unf_new_opt_depth= np.full(new_iter, (1/ekf.involcavg-9.7279))
-            #unf_new_opt_depth[0:ekf.n_iters]=ekf.data[:,3]*0.001 #infill old optical depths based on existing historical AOD record, later ta-smoothed DONE - replace with NorESM simulation
+            #unf_new_opt_depth[0:ekf.n_iters]=ekf.data[:ekf.n_iters,3]*0.001 #infill old optical depths based on existing historical AOD record, later ta-smoothed DONE - replace with NorESM simulation
             aod_spinup = Dataset(config.CLIMATE_DATA_PATH+"/NorESM_volc/NorESM1-M-historical/hist_aod.nc", 'r').variables['__xarray_dataarray_variable__']
             aod_s = aod_spinup[:].__array__()
             long_past_index = ((gen_orig_number(model_run,60) -1 )// 20)
             unf_new_opt_depth[(1850-1850):(2006-1850)]= average_every_n(aod_s[long_past_index,:], 12)/1000
             
             ohca_meas=np.zeros(new_iter).astype(np.float64)
-            #ohca_meas[0:ekf.n_iters] = ekf.ocean_heat_measured/ekf.zJ_from_W   #DONE - replace with NorESM simulation
+            #ohca_meas[0:ekf.n_iters] = ekf.ocean_heat_measured[:ekf.n_iters]/ekf.zJ_from_W   #DONE - replace with NorESM simulation
             ohca_spinup = Dataset(config.CLIMATE_DATA_PATH+"/NorESM_volc/NorESM1-M-historical/hist_ohca_mon.nc", 'r').variables['__xarray_dataarray_variable__']
             ohca_s = ohca_spinup[:].__array__()
             ohca_s_yr = average_every_n(ohca_s[long_past_index,:], 12)
@@ -554,7 +554,8 @@ def run_method(years, temperature0, uncert, model_run, experiment_type):
         
         #breakpoint()
 
-        means , ses ,means2 ,ses2 = ekf.ekf_run(new_observ,new_iter,retPs=3)
+        ekf.n_iters = new_iter  # diagnostics and state arrays must use the same simulation window
+        means , ses ,means2 ,ses2 = ekf.ekf_run(new_observ,new_iter,retPs=3,diagnostics=False)
         import matplotlib.pyplot as plt
         fig , axVolc = plt.subplots(figsize=(8,3.5))  #5)) #
         plt.subplots_adjust(bottom=0.15) ############

@@ -6,16 +6,32 @@ No source-project writes, deployment, or credentials are involved.
 import csv
 import json
 import shutil
+from export_dashboard_rate_history import export_rates
 from pathlib import Path
+
+CSV_NOTES = """# Dashboard temperature series are displayed from 1965; earlier data rows are retained.
+# CAUTION: pre-1965 smoothed anthropogenic estimates are not directly comparable to later estimates.
+# FaIR applies a prescribed mean during 1930-1964 and contracts current samples; GWI is unavailable before 1950.
+# Treat those early anthropogenic method outputs separately; the pinch does not demonstrate low physical uncertainty.
+# This warning does not invalidate annual observational data or other realised methods.
+# These metadata lines are comments: use pandas.read_csv(path, comment="#") or skip leading # lines.
+"""
+
+def copy_public_csv(source, destination):
+    """Add download metadata without changing analysis CSVs or numeric rows."""
+    destination.write_bytes(CSV_NOTES.encode() + source.read_bytes())
 
 def main():
     base = Path(__file__).resolve().parents[1]
+    for baseline in ['rpi', 'satcal']:
+        for goal in ['real', 'anthro']:
+            export_rates(base / 'data' / f'{baseline}_{goal}.json', base / 'data')
     assets = base / 'site/dist/assets'
     for name in ['data', 'figures']:
         (assets / name).mkdir(parents=True, exist_ok=True)
     for path in (base / 'data').iterdir():
         if path.suffix in {'.json', '.csv'} and 'legacy' not in path.name:
-            shutil.copy2(path, assets / 'data' / path.name)
+            copy_public_csv(path, assets / 'data' / path.name) if path.suffix == '.csv' else shutil.copy2(path, assets / 'data' / path.name)
     for path in (base / 'figures').iterdir():
         if path.suffix in {'.json', '.png', '.pdf', '.svg'}:
             shutil.copy2(path, assets / 'figures' / path.name)
@@ -31,12 +47,12 @@ def main():
                     writer.writerow(['year'] + [f'member_{i}' for i in range(len(values['current']))])
                     for i, year in enumerate(data['years']):
                         writer.writerow([year] + [row[i] if row[i] is not None else '' for row in values['current']])
-                shutil.copy2(path, assets / 'data' / path.name)
+                copy_public_csv(path, assets / 'data' / path.name)
                 count += 1
     manifest = json.loads((base / 'figures/manifest.json').read_text())
-    if len(manifest) != 52 or not all((assets / 'figures' / item['file']).is_file() for item in manifest):
-        raise ValueError('The complete 52-figure library is required.')
-    print(f'Website ready: 52 variants, default PNG/PDF/SVG, {count} method CSVs.')
+    if len(manifest) != 78 or not all((assets / 'figures' / item['file']).is_file() for item in manifest):
+        raise ValueError('The complete 78-figure library (three temperature-series options) is required.')
+    print(f'Website ready: 78 variants, default PNG/PDF/SVG, {count} method CSVs.')
 
 if __name__ == '__main__':
     main()

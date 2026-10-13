@@ -193,8 +193,9 @@ def load_paper_probabilities(root, experiment, methods):
             nz=np.flatnonzero(pdf>0)
             if len(nz):pdf=pdf[:nz[-1]+1]
             fine=gaussian_filter1d(np.repeat(pdf/12,12),12,mode='nearest')*12
-            t=starts[j]+np.arange(len(fine))/12+1/24
-            panels.append(dict(years=y,probabilities=c,density_years=t[:-6],density=fine[:-6]))
+            # P(y)-P(y-1) belongs to (y-1, y], not (y, y+1].
+            t=starts[j]-1+np.arange(len(fine))/12+1/24
+            panels.append(dict(years=y,probabilities=c,density_years=t[:-6],density=fine[:-6],density_time_alignment_version=2))
         out[m]=panels
     return out
 
@@ -350,6 +351,9 @@ def analyze(source_root, experiment, outdir, results_dir=None):
                                   retrospective_is_current_proxy=m in proxy_methods,
                                   current_fit=fit_curve(c),saved_fit=fit_curve(legacy_recent[m]),recent_fit=fit_curve(r))
     prefix=experiment.removeprefix('histens_')
+    # Lazy-loaded, within-member ribbon data; never an ensemble envelope.
+    ribbon_data=dict(source_sha256=digest.hexdigest(),years=years,definition='Approximate 95% calibrated within-member Gaussian range: estimate +/- 1.96 SE; excludes spread across members.',methods={m:dict(current_se=stds[m]) for m in stds})
+    (out/f'{prefix}_member_uncertainty.json').write_text(json.dumps(clean_json(ribbon_data),separators=(',',':'),allow_nan=False))
     refs_path=Path(__file__).resolve().parents[1]/'data/method_references.json'
     if refs_path.exists():
         refs=json.loads(refs_path.read_text())

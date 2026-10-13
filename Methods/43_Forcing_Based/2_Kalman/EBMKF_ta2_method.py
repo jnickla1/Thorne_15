@@ -59,7 +59,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             from . import EBMKF_Nicklas2b as ekf #changed cloud feedback and thermal conductivity
             ekf.n_iters = 174 
             unf_new_opt_depth= np.full(new_iter, (1/ekf.involcavg-9.7279))
-            unf_new_opt_depth[0:ekf.n_iters]=ekf.data[:,3]*0.001 #infill old optical depths based on existing historical AOD record, later ta-smoothed
+            unf_new_opt_depth[0:ekf.n_iters]=ekf.data[:ekf.n_iters,3]*0.001 #infill old optical depths based on existing historical AOD record, later ta-smoothed
 
            # new_opt_depth[ekf.n_iters:]=0.03
            #dont' change it after what's already been written for this case
@@ -79,10 +79,10 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             from . import EBMKF_Nicklas2c as ekf #changed cloud feedback and thermal conductivity
             ekf.n_iters = 174 
             unf_new_opt_depth= np.full(new_iter, (1/ekf.involcavg-9.7279))
-            unf_new_opt_depth[0:ekf.n_iters]=ekf.data[:,3]*0.001 #infill old optical depths based on existing historical AOD record, later ta-smoothed
+            unf_new_opt_depth[0:ekf.n_iters]=ekf.data[:ekf.n_iters,3]*0.001 #infill old optical depths based on existing historical AOD record, later ta-smoothed
             ekf.n_iters = 174 
             ohca_meas=np.zeros(new_iter)
-            ohca_meas[0:ekf.n_iters] = ekf.ocean_heat_measured/ekf.zJ_from_W
+            ohca_meas[0:ekf.n_iters] = ekf.ocean_heat_measured[:ekf.n_iters]/ekf.zJ_from_W
             
             import xarray as xr
             #ohca_earlier = Dataset(config.CLIMATE_DATA_PATH+"/NorESM_volc/OHCA/historicalVolc_ohca.nc", 'r').variables['__xarray_dataarray_variable__']

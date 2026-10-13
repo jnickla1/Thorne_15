@@ -168,9 +168,10 @@ def compute_slope(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
     [x,oc]= x2
     inboundd=tsik*inbndf/(optdn+9.7279)*((dfaS+dfaA)+2*(dfaS*dfaA)*(x-T02)+dfaS*anthro_cloud/sw_in/0.9318/a_refl)
     outgoingd= outbndf*(4-powp1)*np.power(x, 3-powp1)*(1-B0*lCo2n) #0.0655
-#following jacobian matrix conventions
-    return np.array([[(1 + (inboundd-outgoingd - gad*(1-Cs/Cd))/heatCp ) , gad/Cd/heatCp], \
-                     [ (inboundd-outgoingd-gad*(1-Cs/Cd))*Cs/heatCp +gad*(1-Cs/Cd)+Cs  ,  ( 1 - (1-Cs/heatCp)*gad/Cd)]])
+# Jacobian of the complete next state: d(ocean temperature)/dT = -Cs/Cd.
+# Heat-content increment contains Cs*(T_next-T), so J_HT has no standalone +Cs.
+    return np.array([[(1 + (inboundd-outgoingd - gad*(1+Cs/Cd))/heatCp ) , gad/Cd/heatCp], \
+                     [ (inboundd-outgoingd-gad*(1+Cs/Cd))*Cs/heatCp +gad*(1+Cs/Cd)  ,  ( 1 - (1-Cs/heatCp)*gad/Cd)]])
 
 def compute_slope_hidden(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
     global gad
@@ -190,10 +191,11 @@ def compute_slope_hidden(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
 
     inbound_dinbndf_frac=tsik*inbndf*(1+dfaA*(x-T02)+anthro_cloud/sw_in/0.9318/a_refl)*(1+dfaS*(x-T02))/(optdn+9.7279)
     
-#following jacobian matrix conventions
+# Jacobian of the complete next state: d(ocean temperature)/dT = -Cs/Cd.
+# Heat-content increment contains Cs*(T_next-T), so J_HT has no standalone +Cs.
 
-    return np.array([[(1 + (inboundd-outgoingd - gad*(1-Cs/Cd))/heatCp ) , gad/Cd/heatCp, 0, (inbound_dinbndf_frac)/heatCp], \
-                     [ (inboundd-outgoingd-gad*(1-Cs/Cd))*Cs/heatCp +gad*(1-Cs/Cd)+Cs  ,  ( 1 - (1-Cs/heatCp)*gad/Cd),0 , (inbound_dinbndf_frac)*Cs/heatCp],\
+    return np.array([[(1 + (inboundd-outgoingd - gad*(1+Cs/Cd))/heatCp ) , gad/Cd/heatCp, 0, (inbound_dinbndf_frac)/heatCp], \
+                     [ (inboundd-outgoingd-gad*(1+Cs/Cd))*Cs/heatCp +gad*(1+Cs/Cd)  ,  ( 1 - (1-Cs/heatCp)*gad/Cd),0 , (inbound_dinbndf_frac)*Cs/heatCp],\
                      [inboundd-outgoingd,0,0,inbound_dinbndf_frac],\
                      [0,0,0,1]]) #inputf_float just randomly walks
                      #[0,0,0,0,1]]) #gad_float just randomly walks -(x-Teq1850 - oc + oc1850) /heatCp, ,(x-Teq1850 - oc + oc1850)
@@ -350,7 +352,7 @@ TOA_meas_artif_var[2001-1850:2023-1850] = TOA_crop_var/9
 #TOA_meas_artif[:75] = np.minimum(TOA_meas_artif[:75],0)
 #TOA_meas_artif[1:] = np.diff(temps)*(heatCp -Cs)+np.diff(oc_meas)
 
-def ekf_run(z,n_iter,retPs=False):
+def ekf_run(z,n_iter,retPs=False,diagnostics=True):
     global gad
     global moving_aves
     global ocean_aves
@@ -538,7 +540,8 @@ def ekf_run(z,n_iter,retPs=False):
             #plt.plot(dates, TOA_swout,'o',markersize=2,color='red')
             #plt.fill_between(dates, TOA_meas_artif-2*np.sqrt(TOA_meas_artif_var[30:]), TOA_meas_artif+2*np.sqrt(TOA_meas_artif_var[30:]), color="grey",zorder=5,alpha=0.2,lw=0)
         
-        plotting_stuff('ta4', z,xhat,True)
+        if diagnostics:
+            plotting_stuff('ta4', z,xhat,True)
         return xhat[0:n_iter,0,0], P[0:n_iter,0,0],xhathat[0:n_iter,0,0], Phat[0:n_iter,0,0]
     elif (retPs==4):
         return xhat[0:n_iter,0,0], P[0:n_iter,0,0],xblind[0:n_iter,0,0], Phat[0:n_iter,0,0]

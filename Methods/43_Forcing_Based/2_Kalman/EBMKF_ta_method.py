@@ -48,12 +48,14 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         return means - ekf.offset-preind_base, np.sqrt(np.abs(ses)),means2 -ekf.offset-preind_base,np.sqrt(np.abs(ses2))
 
     else:
+        # Preserve the existing simulation handoff in 2023, even with longer observations.
+        ekf.n_iters = min(174, len(ekf.data))
         exp_attr = experiment_type.split("_") #fut_ESM1-2-LR_SSP126_constVolc #
         new_iter=len(years)
         given_preind_base = np.mean(temperature[0:50])
 
         unf_new_opt_depth= np.full(new_iter, (1/ekf.involcavg-9.7279))
-        unf_new_opt_depth[0:ekf.n_iters]=ekf.data[:,3]*0.001 #infill old optical depths based on existing historical AOD record, later ta-smoothed
+        unf_new_opt_depth[0:ekf.n_iters]=ekf.data[:ekf.n_iters,3]*0.001 #infill old optical depths based on existing historical AOD record, later ta-smoothed
 
         if (exp_attr[1]=='ESM1-2-LR'):
            # new_opt_depth[ekf.n_iters:]=0.03
@@ -72,7 +74,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         
         elif (exp_attr[1]=='NorESM'):
             ohca_meas=np.zeros(new_iter)
-            ohca_meas[0:ekf.n_iters] = ekf.ocean_heat_measured/ekf.zJ_from_W
+            ohca_meas[0:ekf.n_iters] = ekf.ocean_heat_measured[:ekf.n_iters]/ekf.zJ_from_W
             
             import xarray as xr
             #ohca_earlier = Dataset(config.CLIMATE_DATA_PATH+"/NorESM_volc/OHCA/historicalVolc_ohca.nc", 'r').variables['__xarray_dataarray_variable__']

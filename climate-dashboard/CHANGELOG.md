@@ -159,3 +159,23 @@ Validated the actual reporting/aggregation code on 100 fixed member snapshots fo
 ## 2026-10-12 — Clarify workflow script names
 
 Renamed the 12 approved research/dashboard entry points and updated Python imports, active shell wrappers, and both READMEs. The root README includes an old-to-new migration table and updated workflow commands. This is a naming-only change: method identifiers, scientific calculations, data/result filenames, and website exports are unchanged. Archived scripts/review snapshots, README_old.md, and upstream submodules are preserved.
+
+## 2026-10-12 — Coauthor readability suggestions
+
+Updated both website copies with clearer control labels and grouped method choices, two-decimal headline temperatures, the 2011–2025 endpoint-rate explanation, more prominent year/definition-specific exceedance wording and IPCC category ranges, a key and subtle shading for benchmark crossing windows, and heatmap guidance/axis/legend labels. Scientific outputs and publication figures are unchanged. Larger ensemble/rate controls, early anthropogenic treatment, and the inherited density time-placement convention remain pending approval.
+
+## 2026-10-12 — Rate/level controls, display period and density alignment
+
+Added independent benchmark/method rate switches that flatten segments at their warming levels rather than hiding them. Kept individual ensemble lines and omitted ribbons following the author’s preference. Temperature plots and downloadable figures now start in 1965. Public CSV downloads preserve earlier rows and carry leading # comments explaining the early anthropogenic limitations; analysis CSV headers remain unchanged. Corrected the inherited annual-density time placement in the paper renderer and dashboard exporter: P(y)-P(y-1) belongs to (y-1,y], moving plotted curves one year left while preserving heights, histograms and exceedance probabilities. Regenerated both paper figures and the dashboard library. Static likelihood wording now also includes extremely unlikely.
+
+## 2026-10-12 — Crossing markers, range hover and label spacing
+
+Separated temperature-plot year tick labels from the bottom y-axis tick, moved heatmap benchmark years into the gaps above probability rows, and added hover explanations for grey benchmark 95% crossing windows. Added red downward method crossing ticks and blue upward benchmark crossing ticks at their respective crossing years, in both interactive and static plots. Rebuilt the figure library, also bringing static headline temperature precision to two decimals. Scientific estimates/data are unchanged. Kennedy’s original suggestions were checked individually; ribbons remain omitted by author preference, whole-percentage rounding is rejected, and a separate rates-over-time plot remains deferred.
+
+## 2026-10-12 — Selective member ribbon and matching time axes
+
+Added a dismissible default-view hint and a one-member pale-yellow approximate 95% calibrated uncertainty ribbon in selected-method smoothed mode. Hover is temporary; tap/member selection can retain the ribbon; Clear selection dismisses it. Uncertainty is exported separately, lazy-loaded and checked against the existing dataset’s source SHA/year grid. Added the observational retrospective centred 20-year background (ending in 2015), with static figures for all three backgrounds (78 variants). Matched the warming and exceedance panels to major ticks 1965, 1975, …, 2025 and minor ticks 1970, 1980, …, 2020, using the same horizontal range. Existing scientific outputs/headline probabilities are unchanged.
+
+## 2026-10-12 — Optional rates-over-time overlay
+
+Added an interactive-only overlay opened from the warming-rate card, with lazy-loaded code/data. Blue uses the existing centred-mean OLS benchmark (ending in 2015), solid red uses retrospective trailing 15-year quadratic endpoint rates matching the 2025 headline, and an optional faint dotted red series uses annual-current fits. The retrospective line cannot be toggled away. Added four small JSON exports and 26 explanatory CSV downloads, regenerated automatically during website assembly from the existing validated JSON. Existing scientific exports, headline estimates, probability calculations and static figures are unchanged. Numerical endpoint checks pass for all 26 options (maximum difference <7e-8°C/decade from JSON rounding).

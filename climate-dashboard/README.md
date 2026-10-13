@@ -1,17 +1,17 @@
 # Climate state dashboard — 2025
 
-The original mockup has been updated, with 52 additional figures and a portable interactive website. The source project's `export_heads_tails_rate_summary.py` now reports current warming levels with retrospective rate fits and console-only endpoint checks, following the 12 October 2026 reporting correction. `plot_heads_tails_paper_probabilities.py` remains unchanged; archived originals and dashboard working copies are retained in `source/`.
+The original mockup has been updated, with 78 additional figures and a portable interactive website. The source project's `export_heads_tails_rate_summary.py` now reports current warming levels with retrospective rate fits and console-only endpoint checks, following the 12 October 2026 reporting correction. `plot_heads_tails_paper_probabilities.py` uses the corrected annual-density time coordinates; archived originals and dashboard working copies are retained in `source/`.
 
 ## Review the outputs
 
 - `figures/updated_mockup_2025.png`: the main 16:9 figure, with matching PDF and SVG exports.
-- `figures/manifest.json`: all 52 combinations of warming definition, calibration, method, and raw/smoothed background.
+- `figures/manifest.json`: all 78 combinations of warming definition, calibration, method, and annual, method-smoothed, or centred 20-year background.
 - `site/dist/`: the complete static website, including local chart software and data. It supports zooming, hover values, image switching, downloads, and method-reference hyperlinks.
 - `data/`: complete JSON exports, current-method matrices, summary and member-level crossing/rate CSVs, and probability CSVs. Use `*_corrected_headlines.csv` and JSON `headline_summary` for the final headlines. The explicitly named legacy exports and `data/rates_fixed/` retain intermediate audit calculations, rather than final dashboard numbers.
 - `review/`: regression results, correction diffs, original method backups, and quartic-fit review material.
 - `CHANGELOG.md`: the scientific changes and whether they affect current outputs. It records validation with the transferred cut2021 trajectories and the subsequent display refinements.
 
-The nine realized options are PIVW, equal weighting, CGWL, EBM–Kalman, FaIR, GAM, GWI, flexible Kalman, and LOWESS. Anthropogenic views include PIVW, equal weighting, FaIR, and GWI. Both definitions have both calibrations and both background choices. The main mockup is additional to these 52 variants. The Background lines menu switches only the grey/black curves between raw observations and the selected method's smoothed ensemble; all other calculations remain unchanged.
+The nine realized options are PIVW, equal weighting, CGWL, EBM–Kalman, FaIR, GAM, GWI, flexible Kalman, and LOWESS. Anthropogenic views include PIVW, equal weighting, FaIR, and GWI. Both definitions have both calibrations and all three background choices. The main mockup is additional to these 78 variants. The Temperature series menu offers annual observations, selected-method smoothed outputs and centred 20-year observational means. The latter end in 2015 and remain realised observations even on anthropogenic views. The menu does not change headline estimates or probabilities.
 
 ## Scientific conventions
 
@@ -72,3 +72,25 @@ Browser QA covered the desktop and narrow layouts, dataset/method/background con
 
 
 The dashboard exporter accepts both the current-level rate CSVs and older retrospective-level CSVs. Its `saved_summary.level_source` records the matching convention; headline levels always use current outputs. Endpoint comparison diagnostics from the root rate script remain console-only.
+
+## Interactive display and CSV metadata (12 October 2026)
+
+The temperature plot starts in 1965 and keeps individual ensemble members as lines. Benchmark/method rate switches replace slopes with horizontal segments at the same warming levels; headline estimates are unaffected. Only one hovered/selected method-smoothed member can show a temporary pale-yellow ribbon (±1.96 calibrated standard errors); ensemble-spread ribbons are not used. Static figures retain the default sloped rate segments.
+
+`assemble_dashboard_site.py` adds leading `#` metadata comments to public CSV downloads in `site/dist/assets/data/`. Use `pandas.read_csv(path, comment="#")`. Earlier rows are retained. The caution concerns early smoothed anthropogenic estimates: FaIR applies a prescribed mean in 1930–1964 and contracts its current samples; GWI is unavailable before 1950. It does not invalidate annual observational data or other realised methods. Analysis CSVs remain plain CSVs.
+
+Both the dashboard exporter and paper probability renderer place annual probability increments `P(y)-P(y-1)` within `(y-1,y]`. The corrected plotting convention moves density time coordinates one year left without changing probability arrays, curve heights, histogram counts, or headline values.
+
+## Temporary member uncertainty and three backgrounds
+
+The default annual-observational view has a dismissible hint with a “Try smoothed lines” button. In the interactive smoothed view, hover a member to show its pale-yellow ribbon; leaving clears it. Tap or choose a member to retain it, and use Clear selection or tap elsewhere to dismiss. The member selector supports keyboard/touch use. Only one ribbon is shown, and only in selected-method smoothed mode. The approximate 95% bounds are current estimates ±1.96 calibrated standard errors, conditional on that member; they exclude between-member spread and do not claim exact quantiles of each method’s non-Gaussian distribution.
+
+`export_dashboard_climate_metrics.py` writes four `*_member_uncertainty.json` files alongside its normal exports. The browser loads these only when needed and verifies their source SHA and year array against the displayed dataset. This keeps the default annual view lightweight and prevents mixing uncertainty from a different cache snapshot. `assemble_dashboard_site.py` copies these JSON files into the site.
+
+The third Temperature series choice, “20-year running means (retrospective standard)”, uses the existing observational centred 20-year ensemble. It is available through 2015 with 2025 observations; it does not substitute retrospective method outputs into the current headlines. Static figures support all three backgrounds, making 78 variants plus the default figure. Both main charts share 1965–2025 decade labels and intervening five-year minor ticks.
+
+## Optional rate histories
+
+“Explore rates over time” below the interactive warming-rate estimate opens an overlay across the two main charts. It loads its controller and small dataset only when opened. The blue line applies the existing benchmark OLS slope through 11 centred 10-year observational means at year−5 through year+5; it ends in 2015 because this requires observations through year+10. On anthropogenic views it remains a realised observational comparison. The solid red line uses retrospective 15-year quadratic endpoint fits and matches the 2025 headline. GWI retains its documented current-output retrospective proxy. These are full-record revised histories, not forecasts available at each historical date. A checkbox adds annual-current fits as faint dotted red; the retrospective line stays visible. Close with ×, Escape, or the rate-card button. The panel is absent in Figure view.
+
+`source/export_dashboard_rate_history.py` reads the validated main JSON and writes four rate-history JSON files and 26 method CSVs, containing benchmark, retrospective, and annual-current rates in °C/decade. It requires complete fitting windows and leaves unavailable rates blank. `assemble_dashboard_site.py` invokes it automatically before copying exports, so the usual rebuild commands remain sufficient. No CPU-worker reruns are needed for this addition. Source SHA/year checks guard against mismatched data. The selected rate-history CSV is accessible in the panel and under Data & figures.

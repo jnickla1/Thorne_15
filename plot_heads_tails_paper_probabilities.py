@@ -45,7 +45,9 @@ def refine_pdf_repeat_gaussian(pdf_year, start_year, L=12, sigma_years=1.0):
     # Fine-grid time axis at bin centers
     dt = 1.0 / L
     
-    t_fine = np.arange(start_year, start_year + len(pdf_year), dt) + 0.5 * dt
+    # Annual PDF entry y is P(y)-P(y-1): place it within (y-1, y].
+    # Preserve density heights/smoothing; correct only the time coordinates.
+    t_fine = start_year - 1 + np.arange(len(pdf_fine)) * dt + 0.5 * dt
 
     pdf_fine = pdf_fine[:-int(L/2)]
     t_fine = t_fine[:-int(L/2)]

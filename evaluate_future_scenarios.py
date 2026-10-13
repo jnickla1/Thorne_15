@@ -25,6 +25,10 @@ def gen_orig_number(new_member_number,sz_ens):
         return recovered_order[new_member_number]
 
 regen = 1 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
+# An explicit refresh list reruns changed methods while retaining other cached outputs.
+refresh_methods = tuple(x.strip() for x in os.environ.get('THORNE_REFRESH_METHODS', '').split(',') if x.strip())
+if refresh_methods:
+    regen = 2
 
 
 data = pd.read_csv("./Common_Data/HadCRUT5.csv")
@@ -187,7 +191,8 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                    # existing_results.pop("FaIR_all_unB",None) #redo EMBKF_ta3
                    # existing_results.pop("FaIR_anthro_unB",None)
                    # existing_results.pop("FaIR_nonat_unB",None)
-                    existing_results.pop("FaIR_comb_unB",None)
+                    for refresh_method in (refresh_methods or ("FaIR_comb_unB",)):
+                        existing_results.pop(refresh_method, None)
                   #  existing_results.pop("GWI_anthro",None) 
                   #  existing_results.pop("GWI_anthro_AR6",None)
                   #  existing_results.pop("GWI_anthro_CGWL",None)
@@ -197,6 +202,10 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                   #  existing_results.pop("GWI_tot_CGWL",None)
                   #  existing_results.pop("GWI_tot_SR15",None)
                 completed_methods = set(existing_results.keys())
+                if refresh_methods:
+                    # Do not introduce unrelated, newly discovered methods in a correction-only refresh.
+                    for parent, _, files in os.walk('Methods'):
+                        completed_methods.update(f[:-10] for f in files if f.endswith('_method.py') and f[:-10] not in refresh_methods)
             else:
                 existing_results = {}
                 completed_methods = set()

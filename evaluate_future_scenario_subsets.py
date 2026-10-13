@@ -22,6 +22,7 @@ def gen_orig_number(new_member_number,sz_ens):
         return recovered_order[new_member_number]
     
 regen = 2 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
+regen = int(os.environ.get('THORNE_REGEN', regen))  # allow plot-only regeneration from refreshed caches
 
 
 data = pd.read_csv("./Common_Data/HadCRUT5.csv")

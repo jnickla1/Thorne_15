@@ -169,9 +169,10 @@ def compute_slope(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
     [x,oc]= x2
     inboundd=tsik*inbndf/(optdn+9.7279)*((dfaS+dfaA)+2*(dfaS*dfaA)*(x-T02)+dfaS*anthro_cloud/sw_in/0.9318/a_refl)
     outgoingd= outbndf*(4-powp1)*np.power(x, 3-powp1)*(1-B0*lCo2n) #0.0655
-#following jacobian matrix conventions
-    return np.array([[(1 + (inboundd-outgoingd - gad*(1-Cs/Cd))/heatCp ) , gad/Cd/heatCp], \
-                     [ (inboundd-outgoingd-gad*(1-Cs/Cd))*Cs/heatCp +gad*(1-Cs/Cd)+Cs  ,  ( 1 - (1-Cs/heatCp)*gad/Cd)]])
+# Jacobian of the complete next state: d(ocean temperature)/dT = -Cs/Cd.
+# Heat-content increment contains Cs*(T_next-T), so J_HT has no standalone +Cs.
+    return np.array([[(1 + (inboundd-outgoingd - gad*(1+Cs/Cd))/heatCp ) , gad/Cd/heatCp], \
+                     [ (inboundd-outgoingd-gad*(1+Cs/Cd))*Cs/heatCp +gad*(1+Cs/Cd)  ,  ( 1 - (1-Cs/heatCp)*gad/Cd)]])
 
 def compute_update(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101): 
     k=int(ki)

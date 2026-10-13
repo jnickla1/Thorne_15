@@ -15,6 +15,15 @@
 #seq 0 5 100 | xargs -P 16 -n 1 ./run_histens_local.sh
 
 i=$1
+# Temporary coordination for this correction's parallel dispatchers.
+if [[ -f logs_histens/.kalman_refresh_active ]]; then
+    refresh_root="logs_histens/.kalman_refresh"
+    mkdir -p "$refresh_root"
+    [[ -f "$refresh_root/$i.done" ]] && exit 0
+    mkdir "$refresh_root/$i.lock" 2>/dev/null || exit 0
+    trap 'status=$?; if [[ $status == 0 ]]; then touch "$refresh_root/$i.done"; fi; rmdir "$refresh_root/$i.lock"; exit "$status"' EXIT
+fi
+set -e
 mkdir -p logs_histens
 exec > "logs_histens/run_${i}.log" 2>&1   # one log per i so output doesn't interleave
 

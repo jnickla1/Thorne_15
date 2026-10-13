@@ -113,11 +113,17 @@ python3 climate-dashboard/source/render_dashboard_figures.py
 python3 climate-dashboard/source/assemble_dashboard_site.py
 ```
 
-The first command reads `climate-dashboard/data/` and writes the main figure in PNG/PDF/SVG plus 52 variant PNGs in `climate-dashboard/figures/`. The second copies the exported figures and data into `climate-dashboard/site/dist/assets/` and creates the selected-method CSV downloads. It checks that the complete 52-figure library exists. Both commands derive their default directories from their own script locations, so they can be called from the repository root.
+The first command reads `climate-dashboard/data/` and writes the main figure in PNG/PDF/SVG plus 78 variant PNGs in `climate-dashboard/figures/`. The second regenerates optional rate-history JSON/CSV exports from the validated dashboard data, then copies the exported figures and data into `climate-dashboard/site/dist/assets/` and creates the selected-method CSV downloads. It checks that the complete 78-figure library exists. Both commands derive their default directories from their own script locations, so they can be called from the repository root.
 
 ### 5. Review and publish the website exports
 
 The website is static HTML/JavaScript. Browser controls, zoom, hover values, and downloads use exported data; visitors do not run the research Python pipeline.
+
+Temperature plots start in **1965**, while downloads retain earlier rows. The individual ensemble lines are preserved; only a hovered/selected smoothed member can show a temporary pale-yellow approximate 95% calibrated uncertainty ribbon. The interactive benchmark/method rate switches turn sloping segments into horizontal warming-level segments without changing estimates. Static figure downloads show the default rate segments.
+
+Public website CSVs begin with `#` metadata lines describing the early anthropogenic method limitations (FaIR’s special 1930–1964 treatment and GWI’s absence before 1950). Read them using `pandas.read_csv(path, comment="#")`, or skip the leading comment lines in another reader. Analysis CSVs in `climate-dashboard/data/`, `Results/`, and `rates_histens/` retain their normal headers.
+
+The paper/dashboard density curves place annual increments `P(y) - P(y-1)` within `(y-1, y]`. The time-coordinate correction applied on 12 October 2026 moves the curves one year left relative to the earlier plotting convention; density heights, histogram counts, and current exceedance probabilities are unchanged.
 
 Preview the assembled site from the repository root:
 
@@ -125,7 +131,7 @@ Preview the assembled site from the repository root:
 python3 -m http.server 8787 --directory climate-dashboard/site/dist
 ```
 
-Open `http://localhost:8787`. Check the main PIVW headline, both calibrations, realized/anthropogenic views, raw/smoothed backgrounds, figure view, and a data download. Stop the preview with Control-C when finished.
+Open `http://localhost:8787`. Check the main PIVW headline, both calibrations, realized/anthropogenic views, annual, method-smoothed, or centred 20-year backgrounds, figure view, and a data download. Stop the preview with Control-C when finished.
 
 On the author's Mac the separate GitHub Pages checkout is `/Users/JohnMatthew/Downloads/climate-state-dashboard`. Copy the complete assembled website into that checkout:
 
@@ -133,7 +139,7 @@ On the author's Mac the separate GitHub Pages checkout is `/Users/JohnMatthew/Do
 cp -R climate-dashboard/site/dist/. /Users/JohnMatthew/Downloads/climate-state-dashboard/
 cd /Users/JohnMatthew/Downloads/climate-state-dashboard
 git status --short
-git add app.js index.html styles.css assets vendor .nojekyll
+git add app.js member-ribbon.js rate-history.js index.html styles.css assets vendor .nojekyll
 git commit -m "Update climate dashboard results"
 git push
 ```
@@ -343,7 +349,7 @@ In a `export_heads_tails_rate_summary.py` row whose `level` is 2025, the mislead
 
 The rate script also prints a separate per-method/current-combination endpoint comparison: current and retrospective means, paired differences, maximum differences, matching counts at absolute tolerance 1e-6°C, and missing endpoints. These are diagnostic checks, including expected CGWL window/FaIR sample-noise differences, not assertions that stop a run. They are **not added to the CSV**. Individual methods compare their raw retrospective endpoints; combination comparisons include the existing current-proxy fallback used by the rate fits.
 
-Satellite-calibrated views use the source pipeline's 0.7°C reference shift. The raw/smoothed background menu changes only the grey/black ensemble lines, not the calculations. Distribution panels retain missing mass from non-crossing members and share a 0–0.3 probability/year scale, with explicit right-panel magnification. Details are in [climate-dashboard/README.md](climate-dashboard/README.md).
+Satellite-calibrated views use the source pipeline's 0.7°C reference shift. The Temperature series menu changes only the grey/black ensemble lines, not the calculations. Distribution panels retain missing mass from non-crossing members and share a 0–0.3 probability/year scale, with explicit right-panel magnification. Details are in [climate-dashboard/README.md](climate-dashboard/README.md).
 
 ### Which dashboard files to use
 
@@ -363,3 +369,15 @@ Use `climate-dashboard/data/*_corrected_headlines.csv` and each dataset JSON's `
 ### Existing result and note links
 
 The working [historical comparison](https://docs.google.com/spreadsheets/d/10izz9VruI9L1pNT3pwKLlNPVhzrvGRdYk3VxvdQ1es8/edit), [MPI-ESM1-2-LR comparison](https://docs.google.com/spreadsheets/d/1eWAeL1HHHSqyL1YF2IYaQwgMQuh8Y1RJ/edit), [NorESM comparison](https://docs.google.com/spreadsheets/d/1gHNtpZ4MVIw_NYp62kjtuCHZ2kZcWYwo/edit), and [progress/citation notes](https://docs.google.com/spreadsheets/d/1iShljXO2rmPHpPjPkBGbPSwZc_7XVtCU32O3sn6sjTc/edit) are retained for context. They are author-maintained working documents; confirm their data vintage when comparing them with regenerated local outputs.
+
+### Optional rates-over-time panel
+
+The interactive warming-rate card opens a panel on demand. The blue series is the benchmark OLS slope through 11 centred 10-year observational means (year − 5 through year + 5), and requires observations through year + 10, so currently ends in 2015. It represents realised observations on both warming views. The red series uses trailing 15-year quadratic endpoint fits to the existing retrospective histories, with the same GWI current-output proxy as the headline; its 2025 endpoint matches the headline. These are revised historical estimates, not vintage predictions. A checkbox adds a faint dotted red comparison fitted to annual current outputs, while the retrospective series stays visible.
+
+`climate-dashboard/source/export_dashboard_rate_history.py` creates four small `*_rate_history.json` files and 26 selected-method `*__rate_history.csv` downloads, using the already exported main JSON rather than rerunning methods. CSVs include the blue benchmark and both red conventions, with units and explanatory comments. It is called automatically by `assemble_dashboard_site.py`, so the normal update sequence is unchanged. To regenerate only these analysis exports, run `python3 climate-dashboard/source/export_dashboard_rate_history.py`; run the assembler afterward to update the website. The browser imports `rate-history.js` and fetches rate data only when the panel opens. There is no static-figure counterpart.
+
+### 13 October 2026 Kalman Jacobian correction
+
+The nine active `Methods/43_Forcing_Based/2_Kalman/EBMKF_Nicklas*.py` modules now use `1+Cs/Cd` in their temperature/ocean Jacobians and omit the spurious standalone `+Cs` from J_HT. This changes covariance propagation and hence assimilation: current as well as retrospective means/uncertainties may change. Physical update formulas are unchanged. `evaluate_historical_observations.py` is temporarily configured for only `1_Run_Means` and `2_Kalman` as the first diagnostic. Its subset run overwrites `hist_results.pickle`; restore the full method list for final paper outputs. Existing variance scales remain provisional until recalibration.
+
+After checking those results: recalibrate historical method uncertainty and combinations, regenerate the full historical evaluation, regenerate heads/tails caches/probability arrays, refresh paper probability figures and rate CSVs, then export/render/assemble the dashboard using the root Results directory. Rebuild Kalman-containing future/leave-one-out evaluations used in the paper. Also regenerate the attribution `Nicklas_GMST_timeseries.csv` and `Methods/43_Forcing_Based/3_Human_Induced/anthropogenic-warming-assessment/multi_method_assessment_newStyle3.py` figure. Its separate attribution producer (`EBMKF_ta4_attibutable.py`) requires review of its legacy 2023 cuts, explicit Kalman initialization and conversion from its flat CSV to the figure reader's multi-index schema before rerunning. Historical pickles alone do not update that attribution input. No website publication or scientific rerun was performed as part of this patch.
