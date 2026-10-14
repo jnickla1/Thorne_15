@@ -25,7 +25,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         #call matlab function, which will save output 
     
         matlab_command = ( ###MIGHT NEED TO CHANGE YOUR VERSION OF MATLAB
-            "/Applications/MATLAB_R2019a.app/bin/matlab -nodisplay -nosplash -nodesktop "
+            os.environ.get("MATLAB_BIN", "/Applications/MATLAB_R2019a.app/bin/matlab") + " -nodisplay -nosplash -nodesktop "
             "-r \"cd "+dir_path+"/Bayes_Sequential_Change_Point/; "
             "Bayes_changepoint_seq_iter('"+loc_string+"'); exit;\""
         )

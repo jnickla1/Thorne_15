@@ -38,7 +38,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             enso_arr = enso_data[:].__array__()
             ensoA = average_every_n(enso_arr[model_run,6:(-12+6)], 12) #start in August
             start_yr=1
-            end_yr = len(ensoA)+start_yr #should be whole dataset
+            end_yr = min(len(years), len(ensoA)+start_yr) # exclusive stop
             
             
         elif (exp_attr[1]=='NorESM'):
@@ -46,7 +46,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             enso_arr = enso_data[:].__array__()
             ensoA = average_every_n(enso_arr[model_run,6:], 12) #start in August
             start_yr=(1980-1850)
-            end_yr = len(ensoA)+start_yr #should be whole dataset
+            end_yr = min(len(years), len(ensoA)+start_yr) # exclusive stop
             
         
 ##        exp_attr = experiment_type.split("_")

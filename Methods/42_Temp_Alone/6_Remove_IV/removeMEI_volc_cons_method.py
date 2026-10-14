@@ -51,11 +51,12 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             ensoA = average_every_n(enso_arr[model_run,6:(-12+6)], 12) #start in August
             start_yr=1 #everyone else starts in 1851
             start_shift = 0 #ensoA now starts in 1850
-            end_yr = len(ensoA)+start_yr #should be whole dataset
+            end_yr = min(len(years), len(ensoA)+start_yr) # exclusive stop
             AODdata0 = AODdata
             involcavg = np.mean(1/(AODdata0+9.7279))
             AODdata= np.full(len(years), (1/involcavg-9.7279))
-            AODdata[0:len(AODdata0)] =AODdata0 
+            aod_count = min(len(AODdata0), len(AODdata))
+            AODdata[:aod_count] = AODdata0[:aod_count] 
                                        
             
             
@@ -63,13 +64,16 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             enso_data =Dataset(config.CLIMATE_DATA_PATH+"/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_nino34_tas.nc", 'r').variables['__xarray_dataarray_variable__']
             enso_arr = enso_data[:].__array__()
             ensoNew =np.zeros(len(TSIdata))
-            ensoNew[22:(22+len(ensoA))]=ensoA
+            obs_count = max(0, min(len(ensoA), len(ensoNew)-22))
+            ensoNew[22:22+obs_count] = ensoA[:obs_count]
             ensofromNoresm = average_every_n(enso_arr[model_run,6:], 12) #start in August
-            ensoNew[(1980-1850) :(1980-1850 + len(ensofromNoresm))]  = ensofromNoresm
+            model_count = max(0, min(len(ensofromNoresm), len(ensoNew)-(1980-1850)))
+            ensoNew[(1980-1850):(1980-1850+model_count)] = ensofromNoresm[:model_count]
             ensoA = ensoNew #create new hybrid record to allow for fitting window
             start_yr=0
             start_shift = 0
-            end_yr = len(ensoA)+start_yr #should be whole dataset
+            # Do not interpret zero padding after the model record as ENSO data.
+            end_yr = min(len(years), (1980-1850)+len(ensofromNoresm))
             if exp_attr[3]=="Volc":
                 AOD_simD =Dataset(config.CLIMATE_DATA_PATH+"/NorESM_volc/BethkeEtAl2017/"+exp_attr[2].lower()+exp_attr[3]+"_aod.nc", 'r').variables['__xarray_dataarray_variable__']
                 AOD_simA = AOD_simD[:].__array__()
@@ -80,8 +84,13 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                 AOD_sim = average_every_n(aod_l[model_run%20,:], 12)               
             AODdata0 = AODdata
             AODdata= np.zeros(len(years))
-            AODdata[0:len(AODdata0)] =AODdata0
-            AODdata[(1980-1850):(1980-1850+len(AOD_sim))] = AOD_sim
+            aod_count = min(len(AODdata0), len(AODdata))
+            AODdata[:aod_count] = AODdata0[:aod_count]
+            aod_count = max(0, min(len(AOD_sim), len(AODdata)-(1980-1850)))
+            AODdata[(1980-1850):(1980-1850+aod_count)] = AOD_sim[:aod_count]
+
+        # One exclusive stop shared by all model predictors and temperature.
+        end_yr = min(end_yr, len(TSIdata), len(AODdata))
     
 #here we're just fitting a linear line
     st_idx0 = 1979- 1850-start_yr #107

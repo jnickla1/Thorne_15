@@ -8,10 +8,10 @@
 #SBATCH --array=0-269
 #SBATCH -o logs_kf_calibration/%A_%a.out
 set -euo pipefail
-module load matlab/R2019a-rjyk3ws
-module load r
-source "$(conda info --base)/etc/profile.d/conda.sh"
-conda activate cleanpy
+module load matlab/R2025a-bcih
+export MATLAB_BIN=matlab
+module load r/4.6.0-xnxx
+
 export MPLBACKEND=Agg OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 idx=$SLURM_ARRAY_TASK_ID
 if (( idx < 150 )); then
@@ -23,4 +23,6 @@ else
  scenario=${scenarios[$(((idx-150) / 60))]}
  member=$(((idx-150) % 60))
 fi
-python3 calibrate_method_uncertainty.py "$scenario" "$member"
+PY=/users/jnickla1/.conda/envs/cleanPy/bin/python
+echo "using $PY"; "$PY" -c "import numpy; print('numpy', numpy.__version__)"
+"$PY" calibrate_method_uncertainty.py "$scenario" "$member"
