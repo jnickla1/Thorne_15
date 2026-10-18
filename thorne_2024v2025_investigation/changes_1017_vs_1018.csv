@@ -1,0 +1,336 @@
+section,quantity,old (17 Oct),new (18 Oct),change,rounded text changes?,note
+Headline,Realised PIVW 2025 level (rates/dashboard),1.364,1.366,+0.0013,yes,17 Oct text 1.364; rounds to 1.37 (was 1.36) at 2 dp
+Headline,"Realised PIVW 2025, 2 dp as in table",1.36,1.37,+0.010,yes,1.36555 → 1.37: conflicts with manuscript 1.36
+Headline,Realised 2025 interval lower,1.230,1.229,-0.0014,yes,[1.23–1.53] at 2 dp unchanged
+Headline,Realised 2025 interval upper,1.528,1.532,+0.0037,yes,
+Headline,Realised change vs preprint (2 dp),-0.04,-0.03,+0.010,yes,1.37 − 1.40; unrounded 1.3655 − 1.406 = −0.041
+Headline,Anthropogenic PIVW 2025 level,1.337,1.337,-0.0004,no,bit-identical inputs except FaIR_nonat (<3e-4)
+Headline,Anthropogenic 2025 interval,"[1.209, 1.496]","[1.209, 1.496]",,no,
+Headline,Realised mean-member P(>1.5) 2025 (%),5.9,6.4,+0.52,yes,"likelihood wording unchanged (very unlikely <10 %, extremely unlikely <5 %)"
+Headline,"Realised P(>1.5) 2024, 2024 vintage (%)",7.5,7.5,+0.00,no,
+Headline,"Realised P(>1.5) 2024, new vintage (%)",2.5,2.9,+0.39,yes,
+Headline,Anthropogenic mean-member P(>1.5) 2025 (%),2.1,2.1,-0.00,no,"likelihood wording unchanged (very unlikely <10 %, extremely unlikely <5 %)"
+Headline,"Anthropogenic P(>1.5) 2024, 2024 vintage (%)",7.1,7.1,+0.00,no,
+Headline,"Anthropogenic P(>1.5) 2024, new vintage (%)",0.9,0.9,-0.00,no,
+Weights (PIVW %),lowess1dt36wnc,7.5,7.7,+0.17,yes,new = 1/err_var100 from Results2/historical_names_var_scale.csv (17 Oct 23:58)
+Weights (PIVW %),GAM_AR1,7.4,7.6,+0.25,yes,new = 1/err_var100 from Results2/historical_names_var_scale.csv (17 Oct 23:58)
+Weights (PIVW %),Kal_flexLin,7.9,8.1,+0.18,yes,new = 1/err_var100 from Results2/historical_names_var_scale.csv (17 Oct 23:58)
+Weights (PIVW %),FaIR_comb_unB,24.6,25.3,+0.67,yes,new = 1/err_var100 from Results2/historical_names_var_scale.csv (17 Oct 23:58)
+Weights (PIVW %),EBMKF_ta4,16.4,14.1,-2.28,yes,new = 1/err_var100 from Results2/historical_names_var_scale.csv (17 Oct 23:58)
+Weights (PIVW %),GWI_tot_CGWL,25.7,26.4,+0.72,yes,new = 1/err_var100 from Results2/historical_names_var_scale.csv (17 Oct 23:58)
+Weights (PIVW %),CGWL10y_sfUKCP,10.5,10.8,+0.29,yes,new = 1/err_var100 from Results2/historical_names_var_scale.csv (17 Oct 23:58)
+Weights (PIVW %),FaIR_nonat_unB,69.0,69.0,+0.02,no,new = 1/err_var100 from Results2/historical_names_var_scale.csv (17 Oct 23:58)
+Weights (PIVW %),GWI_anthro_CGWL,31.0,31.0,-0.02,no,new = 1/err_var100 from Results2/historical_names_var_scale.csv (17 Oct 23:58)
+Decomposition,"Realised: (i) 2024 vintage, current endpoints",1.361,1.361,+0.0003,no,18 Oct weights; paper weights give 1.3606 (realised)
+Decomposition,Realised: (i) step vs reported 1.406,-0.045,-0.045,+0.0003,no,
+Decomposition,"Realised: (ii) level, new vintage at 2024",1.336,1.337,+0.0015,yes,
+Decomposition,Realised: (ii) step,-0.025,-0.024,+0.0012,yes,
+Decomposition,Realised: (iii) 2025 level,1.364,1.366,+0.0014,yes,
+Decomposition,Realised: (iii) one-year step (mean),0.029,0.028,-0.0001,yes,
+Decomposition,Realised: (iii) min member step,0.021,0.020,-0.0007,yes,
+Decomposition,Realised: (i)+(ii) shortfall,-0.07,-0.07,+0.001,no,
+Decomposition,"Anthropogenic: (i) 2024 vintage, current endpoints",1.355,1.355,+0.0001,no,18 Oct weights; paper weights give 1.3606 (realised)
+Decomposition,Anthropogenic: (i) step vs reported 1.34,0.015,0.015,+0.0001,no,
+Decomposition,"Anthropogenic: (ii) level, new vintage at 2024",1.319,1.319,-0.0000,no,
+Decomposition,Anthropogenic: (ii) step,-0.036,-0.036,-0.0001,no,
+Decomposition,Anthropogenic: (iii) 2025 level,1.337,1.337,-0.0000,no,
+Decomposition,Anthropogenic: (iii) one-year step (mean),0.017,0.017,+0.0000,no,
+Decomposition,Anthropogenic: (iii) min member step,0.010,0.010,+0.0000,no,
+Decomposition,Anthropogenic: (i)+(ii) shortfall,-0.02,-0.02,-0.000,no,
+Per-method 2025 step (heads/tails mean),lowess1dt36wnc,0.041,0.041,+0.0000,no,min member +0.0300; frac<0 0.00
+Per-method 2025 step (heads/tails mean),GAM_AR1,0.027,0.027,+0.0000,no,min member +0.0049; frac<0 0.00
+Per-method 2025 step (heads/tails mean),Kal_flexLin,0.041,0.041,+0.0000,no,min member +0.0254; frac<0 0.00
+Per-method 2025 step (heads/tails mean),FaIR_comb_unB,0.013,0.013,+0.0000,no,min member +0.0038; frac<0 0.00
+Per-method 2025 step (heads/tails mean),EBMKF_ta4,0.038,0.040,+0.0014,yes,min member +0.0325; frac<0 0.00
+Per-method 2025 step (heads/tails mean),GWI_tot_CGWL,0.030,0.030,+0.0000,no,min member +0.0226; frac<0 0.00
+Per-method 2025 step (heads/tails mean),CGWL10y_sfUKCP,0.031,0.031,+0.0000,no,min member +0.0115; frac<0 0.00
+Per-method 2025 step (heads/tails mean),FaIR_nonat_unB,0.011,0.011,+0.0000,no,min member -0.0004; frac<0 0.01
+Per-method 2025 step (heads/tails mean),GWI_anthro_CGWL,0.032,0.032,+0.0000,no,min member +0.0255; frac<0 0.00
+"Per-method 2024 level, new vintage",lowess1dt36wnc,1.329,1.329,+0.0000,no,
+"Per-method 2024 level, new vintage",GAM_AR1,1.359,1.359,+0.0000,no,
+"Per-method 2024 level, new vintage",Kal_flexLin,1.352,1.352,+0.0000,no,
+"Per-method 2024 level, new vintage",FaIR_comb_unB,1.355,1.355,+0.0000,no,
+"Per-method 2024 level, new vintage",EBMKF_ta4,1.323,1.330,+0.0078,yes,
+"Per-method 2024 level, new vintage",GWI_tot_CGWL,1.303,1.303,+0.0000,no,
+"Per-method 2024 level, new vintage",CGWL10y_sfUKCP,1.367,1.367,+0.0000,no,
+"Per-method 2024 level, new vintage",FaIR_nonat_unB,1.327,1.327,-0.0000,no,
+"Per-method 2024 level, new vintage",GWI_anthro_CGWL,1.302,1.302,+0.0000,no,
+2025 step percentile (after annual drop ≤ thr),"lowess1dt36wnc, thr -0.08",99,99,+0.0,no,pct_all 84 → 84; median step +0.0071 → +0.0071
+2025 step percentile (after annual drop ≤ thr),"lowess1dt36wnc, thr -0.1",99,99,+0.0,no,pct_all 84 → 84; median step +0.0049 → +0.0049
+2025 step percentile (after annual drop ≤ thr),"GAM_AR1, thr -0.08",98,98,+0.0,no,pct_all 56 → 56; median step -0.0084 → -0.0084
+2025 step percentile (after annual drop ≤ thr),"GAM_AR1, thr -0.1",99,99,+0.0,no,pct_all 56 → 56; median step -0.0109 → -0.0109
+2025 step percentile (after annual drop ≤ thr),"Kal_flexLin, thr -0.08",98,98,+0.0,no,pct_all 75 → 75; median step +0.0007 → +0.0007
+2025 step percentile (after annual drop ≤ thr),"Kal_flexLin, thr -0.1",98,98,+0.0,no,pct_all 75 → 75; median step -0.0018 → -0.0018
+2025 step percentile (after annual drop ≤ thr),"FaIR_comb_unB, thr -0.08",30,30,+0.0,no,pct_all 25 → 25; median step +0.0238 → +0.0238
+2025 step percentile (after annual drop ≤ thr),"FaIR_comb_unB, thr -0.1",30,30,+0.0,no,pct_all 25 → 25; median step +0.0233 → +0.0233
+2025 step percentile (after annual drop ≤ thr),"EBMKF_ta4, thr -0.08",98,100,+1.3,yes,pct_all 88 → 84; median step +0.0126 → +0.0013
+2025 step percentile (after annual drop ≤ thr),"EBMKF_ta4, thr -0.1",99,100,+0.7,yes,pct_all 88 → 84; median step +0.0114 → -0.0005
+2025 step percentile (after annual drop ≤ thr),"GWI_tot_CGWL, thr -0.08",98,98,+0.0,no,pct_all 76 → 76; median step +0.0083 → +0.0083
+2025 step percentile (after annual drop ≤ thr),"GWI_tot_CGWL, thr -0.1",98,98,+0.0,no,pct_all 76 → 76; median step +0.0068 → +0.0068
+2025 step percentile (after annual drop ≤ thr),"CGWL10y_sfUKCP, thr -0.08",97,97,+0.0,no,pct_all 65 → 65; median step -0.0114 → -0.0114
+2025 step percentile (after annual drop ≤ thr),"CGWL10y_sfUKCP, thr -0.1",98,98,+0.0,no,pct_all 65 → 65; median step -0.0172 → -0.0172
+2025 step percentile (after annual drop ≤ thr),"FaIR_nonat_unB, thr -0.08",34,34,+0.1,no,pct_all 26 → 26; median step +0.0155 → +0.0155
+2025 step percentile (after annual drop ≤ thr),"FaIR_nonat_unB, thr -0.1",35,35,+0.1,no,pct_all 26 → 26; median step +0.0148 → +0.0148
+2025 step percentile (after annual drop ≤ thr),"GWI_anthro_CGWL, thr -0.08",99,99,+0.0,no,pct_all 82 → 82; median step +0.0075 → +0.0075
+2025 step percentile (after annual drop ≤ thr),"GWI_anthro_CGWL, thr -0.1",99,99,+0.0,no,pct_all 82 → 82; median step +0.0067 → +0.0067
+2025 step percentile (after annual drop ≤ thr),"PIVW_real, thr -0.08",95,96,+0.5,yes,pct_all 68 → 67; median step +0.0079 → +0.0063
+2025 step percentile (after annual drop ≤ thr),"PIVW_real, thr -0.1",97,97,+0.2,no,pct_all 68 → 67; median step +0.0061 → +0.0047
+2025 step percentile (after annual drop ≤ thr),"PIVW_anthro, thr -0.08",65,65,+0.0,no,pct_all 43 → 43; median step +0.0125 → +0.0125
+2025 step percentile (after annual drop ≤ thr),"PIVW_anthro, thr -0.1",71,71,+0.0,no,pct_all 43 → 43; median step +0.0118 → +0.0118
+Spread-adjusted equivalent shift,rpi_real lowess1dt36wnc,0.030,0.030,+0.0000,no,unadjusted +0.0420 → +0.0420
+Spread-adjusted equivalent shift,rpi_real GAM_AR1,0.026,0.026,+0.0000,no,unadjusted +0.0339 → +0.0339
+Spread-adjusted equivalent shift,rpi_real Kal_flexLin,0.035,0.035,+0.0000,no,unadjusted +0.0434 → +0.0434
+Spread-adjusted equivalent shift,rpi_real FaIR_comb_unB,0.047,0.047,+0.0000,no,unadjusted +0.0557 → +0.0557
+Spread-adjusted equivalent shift,rpi_real EBMKF_ta4,0.017,-0.006,-0.0231,yes,unadjusted +0.0307 → +0.0086
+Spread-adjusted equivalent shift,rpi_real GWI_tot_CGWL,0.024,0.024,+0.0000,no,unadjusted +0.0388 → +0.0388
+Spread-adjusted equivalent shift,rpi_real CGWL10y_sfUKCP,0.056,0.056,+0.0000,no,unadjusted +0.0612 → +0.0612
+Spread-adjusted equivalent shift,rpi_real PIVW_comb,0.026,0.022,-0.0038,yes,unadjusted +0.0384 → +0.0347
+Spread-adjusted equivalent shift,rpi_anthro FaIR_nonat_unB,0.064,0.064,+0.0000,no,unadjusted +0.0741 → +0.0741
+Spread-adjusted equivalent shift,rpi_anthro GWI_anthro_CGWL,0.021,0.021,+0.0000,no,unadjusted +0.0345 → +0.0345
+Spread-adjusted equivalent shift,rpi_anthro PIVW_comb,0.051,0.051,+0.0000,no,unadjusted +0.0620 → +0.0620
+Spread-adjusted equivalent shift,Realised PIVW implied 2024-vintage level (caveat),1.362,1.359,-0.0024,yes,
+Spread-adjusted equivalent shift,Anthro PIVW implied 2024-vintage level (caveat),1.370,1.370,-0.0000,yes,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",lowess1dt36wnc vintage_eff_2024,-0.002,-0.002,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",lowess1dt36wnc vintage_eff_2015,-0.005,-0.005,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",lowess1dt36wnc year_step_25,0.033,0.033,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",GAM_AR1 vintage_eff_2024,0.008,0.008,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",GAM_AR1 vintage_eff_2015,0.005,0.005,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",GAM_AR1 year_step_25,0.017,0.017,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",Kal_flexLin vintage_eff_2024,-0.001,-0.001,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",Kal_flexLin vintage_eff_2015,-0.005,-0.005,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",Kal_flexLin year_step_25,0.031,0.031,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",FaIR_comb_unB vintage_eff_2024,-0.013,-0.013,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",FaIR_comb_unB vintage_eff_2015,0.019,0.019,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",FaIR_comb_unB year_step_25,0.012,0.012,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",EBMKF_ta4 vintage_eff_2024,—,—,,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",EBMKF_ta4 vintage_eff_2015,-0.009,0.012,+0.0207,yes,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",EBMKF_ta4 year_step_25,0.033,0.032,-0.0012,yes,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",GWI_tot_CGWL vintage_eff_2024,0.001,0.001,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",GWI_tot_CGWL vintage_eff_2015,-0.003,-0.003,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",GWI_tot_CGWL year_step_25,0.023,0.023,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",CGWL10y_sfUKCP vintage_eff_2024,-0.001,-0.001,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",CGWL10y_sfUKCP vintage_eff_2015,-0.004,-0.004,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",CGWL10y_sfUKCP year_step_25,0.019,0.019,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",FaIR_nonat_unB vintage_eff_2024,-0.038,-0.038,-0.0002,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",FaIR_nonat_unB vintage_eff_2015,0.021,0.020,-0.0002,yes,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",FaIR_nonat_unB year_step_25,0.010,0.010,+0.0004,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",GWI_anthro_CGWL vintage_eff_2024,-0.005,-0.005,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",GWI_anthro_CGWL vintage_eff_2015,-0.007,-0.007,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",GWI_anthro_CGWL year_step_25,0.024,0.024,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",PIVW_real vintage_eff_2024,-0.003,-0.003,+0.0000,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",PIVW_real vintage_eff_2015,0.002,0.005,+0.0032,yes,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",PIVW_real year_step_25,0.022,0.022,-0.0005,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",PIVW_anthro vintage_eff_2024,-0.028,-0.028,-0.0001,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",PIVW_anthro vintage_eff_2015,0.012,0.012,-0.0001,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",PIVW_anthro year_step_25,0.014,0.014,+0.0002,no,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",EBMKF_ta4 vintage_eff_2023 (2024 run ends 2023),0.007,0.017,+0.0099,yes,"breaks ""all others within ±0.008"""
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)",EBMKF_ta4 vintage_eff_2020,0.006,0.033,+0.0275,yes,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)","PIVW_real level 2024, 2025-vintage run",1.360,1.361,+0.0015,yes,
+"HadCRUT single run (5.1 run − 5.0.2 run, same year)","PIVW_real level 2024, 2024 run (text 1.360)",1.360,1.360,+0.0000,no,
+(b) Weight sensitivity: 2025 PIVW level,Paper weights,1.364,1.366,+0.0013,yes,EBMKF_ta4 weight 14.1 %
+(b) Weight sensitivity: 2025 PIVW level,Paper weights (17 Oct) on new levels,1.364,1.366,+0.0015,yes,EBMKF_ta4 weight 16.4 %
+(b) Weight sensitivity: 2025 PIVW level,1/RMS² Dec 2025 HadCRUT5.0,1.364,1.365,+0.0013,yes,EBMKF_ta4 weight 19.5 %
+(b) Weight sensitivity: 2025 PIVW level,1/RMS² HadCRUT5.1 (Oct 10 False → Oct 18 var_adjusted True),1.364,1.365,+0.0013,yes,EBMKF_ta4 weight 17.6 %
+(b) Weight sensitivity: 2025 PIVW level,1/RMS² HadCRUT5.1 Oct 10 False,1.364,1.365,+0.0014,yes,EBMKF_ta4 weight 19.9 %
+(b) Weight sensitivity: 2025 PIVW level,Equal weights,1.373,1.374,+0.0008,yes,EBMKF_ta4 weight 14.3 %
+(b) Weight sensitivity: 2025 PIVW level,Range of 2025 PIVW across non-equal weight sets,0.000,0.000,+0.0004,no,"""≤0.005 °C"" claim holds"
+(d) % of non-volcanic years with Δ<0,CGWL10y_sfUKCP | HadCRUT5.1 ≥1960,26,26,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,CGWL10y_sfUKCP | HadCRUT5.1 ≥1960,21,21,+0.0,no,
+(d) mean size of decreases,CGWL10y_sfUKCP | HadCRUT5.1 ≥1960,-0.020,-0.020,+0.0000,no,p05 -0.0339 → -0.0339; spurious 89 → 89 %
+(d) % of non-volcanic years with Δ<0,EBMKF_ta4 | HadCRUT5.1 ≥1960,5,8,+2.6,yes,
+(d) % of non-volcanic years with Δ<−0.01,EBMKF_ta4 | HadCRUT5.1 ≥1960,0.0,0.0,+0.00,no,
+(d) mean size of decreases,EBMKF_ta4 | HadCRUT5.1 ≥1960,-0.003,-0.003,+0.0004,no,p05 +0.0031 → -0.0004; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,FaIR_comb_unB | HadCRUT5.1 ≥1960,8,8,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,FaIR_comb_unB | HadCRUT5.1 ≥1960,0.0,0.0,+0.00,no,
+(d) mean size of decreases,FaIR_comb_unB | HadCRUT5.1 ≥1960,-0.004,-0.004,+0.0000,no,p05 -0.0008 → -0.0008; spurious 67 → 67 %
+(d) % of non-volcanic years with Δ<0,FaIR_nonat_unB | HadCRUT5.1 ≥1960,11,11,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,FaIR_nonat_unB | HadCRUT5.1 ≥1960,0.0,0.0,+0.00,no,
+(d) mean size of decreases,FaIR_nonat_unB | HadCRUT5.1 ≥1960,-0.002,-0.002,-0.0001,no,p05 -0.0008 → -0.0009; spurious 75 → 75 %
+(d) % of non-volcanic years with Δ<0,GAM_AR1 | HadCRUT5.1 ≥1960,21,21,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GAM_AR1 | HadCRUT5.1 ≥1960,16,16,+0.0,no,
+(d) mean size of decreases,GAM_AR1 | HadCRUT5.1 ≥1960,-0.016,-0.016,+0.0000,no,p05 -0.0197 → -0.0197; spurious 86 → 86 %
+(d) % of non-volcanic years with Δ<0,GWI_anthro_CGWL | HadCRUT5.1 ≥1960,11,11,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GWI_anthro_CGWL | HadCRUT5.1 ≥1960,3,3,+0.0,no,
+(d) mean size of decreases,GWI_anthro_CGWL | HadCRUT5.1 ≥1960,-0.007,-0.007,+0.0000,no,p05 -0.0059 → -0.0059; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,GWI_tot_CGWL | HadCRUT5.1 ≥1960,16,16,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GWI_tot_CGWL | HadCRUT5.1 ≥1960,3,3,+0.0,no,
+(d) mean size of decreases,GWI_tot_CGWL | HadCRUT5.1 ≥1960,-0.006,-0.006,+0.0000,no,p05 -0.0077 → -0.0077; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,Kal_flexLin | HadCRUT5.1 ≥1960,16,16,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,Kal_flexLin | HadCRUT5.1 ≥1960,3,3,+0.0,no,
+(d) mean size of decreases,Kal_flexLin | HadCRUT5.1 ≥1960,-0.006,-0.006,+0.0000,no,p05 -0.0083 → -0.0083; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,PIVW_anthro | HadCRUT5.1 ≥1960,5,3,-2.6,yes,
+(d) % of non-volcanic years with Δ<−0.01,PIVW_anthro | HadCRUT5.1 ≥1960,0.0,0.0,+0.00,no,
+(d) mean size of decreases,PIVW_anthro | HadCRUT5.1 ≥1960,-0.001,-0.002,-0.0011,yes,p05 +0.0007 → +0.0003; spurious 50 → 100 %
+(d) % of non-volcanic years with Δ<0,PIVW_real | HadCRUT5.1 ≥1960,11,13,+2.6,yes,
+(d) % of non-volcanic years with Δ<−0.01,PIVW_real | HadCRUT5.1 ≥1960,0.0,0.0,+0.00,no,
+(d) mean size of decreases,PIVW_real | HadCRUT5.1 ≥1960,-0.005,-0.004,+0.0007,yes,p05 -0.0028 → -0.0030; spurious 75 → 80 %
+(d) % of non-volcanic years with Δ<0,lowess1dt36wnc | HadCRUT5.1 ≥1960,8,8,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,lowess1dt36wnc | HadCRUT5.1 ≥1960,3,3,+0.0,no,
+(d) mean size of decreases,lowess1dt36wnc | HadCRUT5.1 ≥1960,-0.007,-0.007,+0.0000,no,p05 -0.0021 → -0.0021; spurious 67 → 67 %
+(d) % of non-volcanic years with Δ<0,CGWL10y_sfUKCP | heads/tails ≥1960,23,23,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,CGWL10y_sfUKCP | heads/tails ≥1960,15,15,+0.0,no,
+(d) mean size of decreases,CGWL10y_sfUKCP | heads/tails ≥1960,-0.019,-0.019,+0.0000,no,p05 -0.0352 → -0.0352; spurious 93 → 93 %
+(d) % of non-volcanic years with Δ<0,EBMKF_ta4 | heads/tails ≥1960,4,12,+7.3,yes,
+(d) % of non-volcanic years with Δ<−0.01,EBMKF_ta4 | heads/tails ≥1960,0,1,+0.7,yes,
+(d) mean size of decreases,EBMKF_ta4 | heads/tails ≥1960,-0.004,-0.005,-0.0003,yes,p05 +0.0008 → -0.0049; spurious 94 → 99 %
+(d) % of non-volcanic years with Δ<0,FaIR_comb_unB | heads/tails ≥1960,7,7,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,FaIR_comb_unB | heads/tails ≥1960,0.1,0.1,+0.00,no,
+(d) mean size of decreases,FaIR_comb_unB | heads/tails ≥1960,-0.003,-0.003,+0.0000,no,p05 -0.0014 → -0.0014; spurious 61 → 61 %
+(d) % of non-volcanic years with Δ<0,FaIR_nonat_unB | heads/tails ≥1960,7,7,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,FaIR_nonat_unB | heads/tails ≥1960,0.1,0.1,+0.00,no,
+(d) mean size of decreases,FaIR_nonat_unB | heads/tails ≥1960,-0.002,-0.002,-0.0000,no,p05 -0.0009 → -0.0010; spurious 66 → 67 %
+(d) % of non-volcanic years with Δ<0,GAM_AR1 | heads/tails ≥1960,18,18,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GAM_AR1 | heads/tails ≥1960,10,10,+0.0,no,
+(d) mean size of decreases,GAM_AR1 | heads/tails ≥1960,-0.014,-0.014,+0.0000,no,p05 -0.0170 → -0.0170; spurious 93 → 93 %
+(d) % of non-volcanic years with Δ<0,GWI_anthro_CGWL | heads/tails ≥1960,7,7,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GWI_anthro_CGWL | heads/tails ≥1960,0.6,0.6,+0.00,no,
+(d) mean size of decreases,GWI_anthro_CGWL | heads/tails ≥1960,-0.005,-0.005,+0.0000,no,p05 -0.0021 → -0.0021; spurious 93 → 93 %
+(d) % of non-volcanic years with Δ<0,GWI_tot_CGWL | heads/tails ≥1960,9,9,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GWI_tot_CGWL | heads/tails ≥1960,0.7,0.7,+0.00,no,
+(d) mean size of decreases,GWI_tot_CGWL | heads/tails ≥1960,-0.005,-0.005,+0.0000,no,p05 -0.0037 → -0.0037; spurious 81 → 81 %
+(d) % of non-volcanic years with Δ<0,Kal_flexLin | heads/tails ≥1960,13,13,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,Kal_flexLin | heads/tails ≥1960,5,5,+0.0,no,
+(d) mean size of decreases,Kal_flexLin | heads/tails ≥1960,-0.008,-0.008,+0.0000,no,p05 -0.0091 → -0.0091; spurious 96 → 96 %
+(d) % of non-volcanic years with Δ<0,PIVW_anthro | heads/tails ≥1960,4,4,-0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,PIVW_anthro | heads/tails ≥1960,0.0,0.0,+0.00,no,
+(d) mean size of decreases,PIVW_anthro | heads/tails ≥1960,-0.002,-0.002,-0.0000,no,p05 +0.0004 → +0.0004; spurious 57 → 57 %
+(d) % of non-volcanic years with Δ<0,PIVW_real | heads/tails ≥1960,8,9,+0.9,yes,
+(d) % of non-volcanic years with Δ<−0.01,PIVW_real | heads/tails ≥1960,0.7,0.8,+0.08,yes,
+(d) mean size of decreases,PIVW_real | heads/tails ≥1960,-0.005,-0.005,-0.0001,no,p05 -0.0026 → -0.0033; spurious 83 → 85 %
+(d) % of non-volcanic years with Δ<0,lowess1dt36wnc | heads/tails ≥1960,8,8,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,lowess1dt36wnc | heads/tails ≥1960,2,2,+0.0,no,
+(d) mean size of decreases,lowess1dt36wnc | heads/tails ≥1960,-0.006,-0.006,+0.0000,no,p05 -0.0027 → -0.0027; spurious 85 → 85 %
+(d) % of non-volcanic years with Δ<0,CGWL10y_sfUKCP | MPI_SSP126,41,41,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,CGWL10y_sfUKCP | MPI_SSP126,29,29,+0.0,no,
+(d) mean size of decreases,CGWL10y_sfUKCP | MPI_SSP126,-0.023,-0.023,-0.0000,no,p05 -0.0458 → -0.0458; spurious 60 → 60 %
+(d) % of non-volcanic years with Δ<0,EBMKF_ta4 | MPI_SSP126,41,42,+1.9,yes,
+(d) % of non-volcanic years with Δ<−0.01,EBMKF_ta4 | MPI_SSP126,23,29,+5.3,yes,
+(d) mean size of decreases,EBMKF_ta4 | MPI_SSP126,-0.015,-0.019,-0.0044,yes,p05 -0.0281 → -0.0366; spurious 59 → 61 %
+(d) % of non-volcanic years with Δ<0,FaIR_comb_unB | MPI_SSP126,42,42,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,FaIR_comb_unB | MPI_SSP126,10,10,+0.0,no,
+(d) mean size of decreases,FaIR_comb_unB | MPI_SSP126,-0.007,-0.007,+0.0000,no,p05 -0.0136 → -0.0136; spurious 54 → 54 %
+(d) % of non-volcanic years with Δ<0,FaIR_nonat_unB | MPI_SSP126,42,42,-0.1,no,
+(d) % of non-volcanic years with Δ<−0.01,FaIR_nonat_unB | MPI_SSP126,13,13,+0.1,no,
+(d) mean size of decreases,FaIR_nonat_unB | MPI_SSP126,-0.008,-0.008,-0.0000,no,p05 -0.0152 → -0.0152; spurious 56 → 56 %
+(d) % of non-volcanic years with Δ<0,GAM_AR1 | MPI_SSP126,43,43,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GAM_AR1 | MPI_SSP126,31,31,+0.0,no,
+(d) mean size of decreases,GAM_AR1 | MPI_SSP126,-0.023,-0.023,+0.0000,no,p05 -0.0477 → -0.0477; spurious 62 → 62 %
+(d) % of non-volcanic years with Δ<0,GWI_anthro_CGWL | MPI_SSP126,32,32,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GWI_anthro_CGWL | MPI_SSP126,0.1,0.1,+0.00,no,
+(d) mean size of decreases,GWI_anthro_CGWL | MPI_SSP126,-0.003,-0.003,-0.0000,no,p05 -0.0051 → -0.0051; spurious 42 → 42 %
+(d) % of non-volcanic years with Δ<0,GWI_tot_CGWL | MPI_SSP126,33,33,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GWI_tot_CGWL | MPI_SSP126,0.1,0.1,+0.00,no,
+(d) mean size of decreases,GWI_tot_CGWL | MPI_SSP126,-0.003,-0.003,+0.0000,no,p05 -0.0054 → -0.0054; spurious 44 → 44 %
+(d) % of non-volcanic years with Δ<0,Kal_flexLin | MPI_SSP126,44,44,-0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,Kal_flexLin | MPI_SSP126,30,30,+0.0,no,
+(d) mean size of decreases,Kal_flexLin | MPI_SSP126,-0.020,-0.020,-0.0000,no,p05 -0.0402 → -0.0403; spurious 61 → 61 %
+(d) % of non-volcanic years with Δ<0,PIVW_anthro | MPI_SSP126,40,40,-0.1,no,
+(d) % of non-volcanic years with Δ<−0.01,PIVW_anthro | MPI_SSP126,9,9,+0.0,no,
+(d) mean size of decreases,PIVW_anthro | MPI_SSP126,-0.007,-0.007,-0.0000,no,p05 -0.0128 → -0.0127; spurious 52 → 52 %
+(d) % of non-volcanic years with Δ<0,PIVW_real | MPI_SSP126,40,40,+0.4,no,
+(d) % of non-volcanic years with Δ<−0.01,PIVW_real | MPI_SSP126,18,19,+1.2,yes,
+(d) mean size of decreases,PIVW_real | MPI_SSP126,-0.011,-0.012,-0.0005,yes,p05 -0.0221 → -0.0232; spurious 55 → 56 %
+(d) % of non-volcanic years with Δ<0,lowess1dt36wnc | MPI_SSP126,42,42,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,lowess1dt36wnc | MPI_SSP126,25,25,+0.0,no,
+(d) mean size of decreases,lowess1dt36wnc | MPI_SSP126,-0.015,-0.015,+0.0000,no,p05 -0.0291 → -0.0291; spurious 57 → 57 %
+(d) % of non-volcanic years with Δ<0,CGWL10y_sfUKCP | MPI_SSP245,28,28,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,CGWL10y_sfUKCP | MPI_SSP245,18,18,+0.0,no,
+(d) mean size of decreases,CGWL10y_sfUKCP | MPI_SSP245,-0.021,-0.021,-0.0000,no,p05 -0.0381 → -0.0381; spurious 97 → 97 %
+(d) % of non-volcanic years with Δ<0,EBMKF_ta4 | MPI_SSP245,18,25,+6.7,yes,
+(d) % of non-volcanic years with Δ<−0.01,EBMKF_ta4 | MPI_SSP245,7,14,+6.8,yes,
+(d) mean size of decreases,EBMKF_ta4 | MPI_SSP245,-0.010,-0.014,-0.0041,yes,p05 -0.0141 → -0.0232; spurious 98 → 98 %
+(d) % of non-volcanic years with Δ<0,FaIR_comb_unB | MPI_SSP245,6,6,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,FaIR_comb_unB | MPI_SSP245,0.7,0.7,+0.00,no,
+(d) mean size of decreases,FaIR_comb_unB | MPI_SSP245,-0.004,-0.004,+0.0000,no,p05 -0.0011 → -0.0011; spurious 99 → 99 %
+(d) % of non-volcanic years with Δ<0,FaIR_nonat_unB | MPI_SSP245,8,8,+0.1,no,
+(d) % of non-volcanic years with Δ<−0.01,FaIR_nonat_unB | MPI_SSP245,1,1,-0.0,no,
+(d) mean size of decreases,FaIR_nonat_unB | MPI_SSP245,-0.005,-0.005,-0.0000,no,p05 -0.0026 → -0.0025; spurious 98 → 98 %
+(d) % of non-volcanic years with Δ<0,GAM_AR1 | MPI_SSP245,27,27,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GAM_AR1 | MPI_SSP245,16,16,+0.0,no,
+(d) mean size of decreases,GAM_AR1 | MPI_SSP245,-0.017,-0.017,+0.0000,no,p05 -0.0285 → -0.0285; spurious 98 → 98 %
+(d) % of non-volcanic years with Δ<0,GWI_anthro_CGWL | MPI_SSP245,0,0,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GWI_anthro_CGWL | MPI_SSP245,0.0,0.0,+0.00,no,
+(d) mean size of decreases,GWI_anthro_CGWL | MPI_SSP245,-0.003,-0.003,+0.0000,no,p05 +0.0071 → +0.0071; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,GWI_tot_CGWL | MPI_SSP245,1,1,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GWI_tot_CGWL | MPI_SSP245,0.0,0.0,+0.00,no,
+(d) mean size of decreases,GWI_tot_CGWL | MPI_SSP245,-0.004,-0.004,+0.0000,no,p05 +0.0062 → +0.0062; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,Kal_flexLin | MPI_SSP245,26,26,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,Kal_flexLin | MPI_SSP245,16,16,+0.0,no,
+(d) mean size of decreases,Kal_flexLin | MPI_SSP245,-0.016,-0.016,-0.0000,no,p05 -0.0261 → -0.0261; spurious 98 → 98 %
+(d) % of non-volcanic years with Δ<0,PIVW_anthro | MPI_SSP245,6,6,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,PIVW_anthro | MPI_SSP245,0.8,0.8,-0.05,no,
+(d) mean size of decreases,PIVW_anthro | MPI_SSP245,-0.005,-0.005,-0.0000,no,p05 -0.0004 → -0.0004; spurious 99 → 99 %
+(d) % of non-volcanic years with Δ<0,PIVW_real | MPI_SSP245,13,15,+1.1,yes,
+(d) % of non-volcanic years with Δ<−0.01,PIVW_real | MPI_SSP245,4,5,+0.6,yes,
+(d) mean size of decreases,PIVW_real | MPI_SSP245,-0.008,-0.008,-0.0005,no,p05 -0.0084 → -0.0096; spurious 97 → 97 %
+(d) % of non-volcanic years with Δ<0,lowess1dt36wnc | MPI_SSP245,20,20,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,lowess1dt36wnc | MPI_SSP245,8,8,+0.0,no,
+(d) mean size of decreases,lowess1dt36wnc | MPI_SSP245,-0.010,-0.010,+0.0000,no,p05 -0.0144 → -0.0144; spurious 97 → 97 %
+(d) % of non-volcanic years with Δ<0,CGWL10y_sfUKCP | MPI_SSP370,17,17,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,CGWL10y_sfUKCP | MPI_SSP370,11,11,+0.0,no,
+(d) mean size of decreases,CGWL10y_sfUKCP | MPI_SSP370,-0.020,-0.020,+0.0000,no,p05 -0.0246 → -0.0246; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,EBMKF_ta4 | MPI_SSP370,5,10,+5.3,yes,
+(d) % of non-volcanic years with Δ<−0.01,EBMKF_ta4 | MPI_SSP370,1,4,+3.4,yes,
+(d) mean size of decreases,EBMKF_ta4 | MPI_SSP370,-0.006,-0.010,-0.0040,yes,p05 +0.0005 → -0.0084; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,FaIR_comb_unB | MPI_SSP370,1,1,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,FaIR_comb_unB | MPI_SSP370,0.2,0.2,+0.00,no,
+(d) mean size of decreases,FaIR_comb_unB | MPI_SSP370,-0.005,-0.005,-0.0000,no,p05 +0.0094 → +0.0094; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,FaIR_nonat_unB | MPI_SSP370,2,1,-0.0,yes,
+(d) % of non-volcanic years with Δ<−0.01,FaIR_nonat_unB | MPI_SSP370,0.3,0.3,-0.02,no,
+(d) mean size of decreases,FaIR_nonat_unB | MPI_SSP370,-0.006,-0.006,-0.0001,no,p05 +0.0084 → +0.0085; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,GAM_AR1 | MPI_SSP370,14,14,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GAM_AR1 | MPI_SSP370,8,8,+0.0,no,
+(d) mean size of decreases,GAM_AR1 | MPI_SSP370,-0.016,-0.016,+0.0000,no,p05 -0.0171 → -0.0171; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,GWI_anthro_CGWL | MPI_SSP370,0,0,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GWI_anthro_CGWL | MPI_SSP370,0.0,0.0,+0.00,no,
+(d) mean size of decreases,GWI_anthro_CGWL | MPI_SSP370,-0.003,-0.003,+0.0000,no,p05 +0.0122 → +0.0122; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,GWI_tot_CGWL | MPI_SSP370,0,0,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GWI_tot_CGWL | MPI_SSP370,0.0,0.0,+0.00,no,
+(d) mean size of decreases,GWI_tot_CGWL | MPI_SSP370,-0.004,-0.004,-0.0000,no,p05 +0.0109 → +0.0109; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,Kal_flexLin | MPI_SSP370,12,12,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,Kal_flexLin | MPI_SSP370,5,5,+0.0,no,
+(d) mean size of decreases,Kal_flexLin | MPI_SSP370,-0.012,-0.012,-0.0000,no,p05 -0.0110 → -0.0110; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,PIVW_anthro | MPI_SSP370,1,1,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,PIVW_anthro | MPI_SSP370,0.1,0.1,+0.00,no,
+(d) mean size of decreases,PIVW_anthro | MPI_SSP370,-0.004,-0.004,-0.0000,no,p05 +0.0112 → +0.0112; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,PIVW_real | MPI_SSP370,3,3,+0.4,no,
+(d) % of non-volcanic years with Δ<−0.01,PIVW_real | MPI_SSP370,0.5,0.7,+0.26,yes,
+(d) mean size of decreases,PIVW_real | MPI_SSP370,-0.006,-0.007,-0.0009,yes,p05 +0.0047 → +0.0036; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,lowess1dt36wnc | MPI_SSP370,6,6,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,lowess1dt36wnc | MPI_SSP370,2,2,+0.0,no,
+(d) mean size of decreases,lowess1dt36wnc | MPI_SSP370,-0.008,-0.008,+0.0000,no,p05 -0.0018 → -0.0018; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,CGWL10y_sfUKCP | NorESM_RCP45_VolcConst,23,23,-0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,CGWL10y_sfUKCP | NorESM_RCP45_VolcConst,14,14,+0.0,no,
+(d) mean size of decreases,CGWL10y_sfUKCP | NorESM_RCP45_VolcConst,-0.017,-0.017,-0.0000,no,p05 -0.0264 → -0.0264; spurious 98 → 98 %
+(d) % of non-volcanic years with Δ<0,EBMKF_ta4 | NorESM_RCP45_VolcConst,14,19,+5.6,yes,
+(d) % of non-volcanic years with Δ<−0.01,EBMKF_ta4 | NorESM_RCP45_VolcConst,4,8,+4.0,yes,
+(d) mean size of decreases,EBMKF_ta4 | NorESM_RCP45_VolcConst,-0.007,-0.010,-0.0027,yes,p05 -0.0073 → -0.0138; spurious 97 → 98 %
+(d) % of non-volcanic years with Δ<0,FaIR_comb_unB | NorESM_RCP45_VolcConst,7,7,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,FaIR_comb_unB | NorESM_RCP45_VolcConst,1.0,1.0,+0.00,no,
+(d) mean size of decreases,FaIR_comb_unB | NorESM_RCP45_VolcConst,-0.005,-0.005,-0.0000,no,p05 -0.0020 → -0.0020; spurious 95 → 95 %
+(d) % of non-volcanic years with Δ<0,FaIR_nonat_unB | NorESM_RCP45_VolcConst,7,8,+0.2,yes,
+(d) % of non-volcanic years with Δ<−0.01,FaIR_nonat_unB | NorESM_RCP45_VolcConst,1,2,+0.1,yes,
+(d) mean size of decreases,FaIR_nonat_unB | NorESM_RCP45_VolcConst,-0.006,-0.006,+0.0001,no,p05 -0.0027 → -0.0029; spurious 95 → 96 %
+(d) % of non-volcanic years with Δ<0,GAM_AR1 | NorESM_RCP45_VolcConst,23,23,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GAM_AR1 | NorESM_RCP45_VolcConst,12,12,+0.0,no,
+(d) mean size of decreases,GAM_AR1 | NorESM_RCP45_VolcConst,-0.013,-0.013,+0.0000,no,p05 -0.0193 → -0.0193; spurious 98 → 98 %
+(d) % of non-volcanic years with Δ<0,GWI_anthro_CGWL | NorESM_RCP45_VolcConst,0,0,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GWI_anthro_CGWL | NorESM_RCP45_VolcConst,0.0,0.0,+0.00,no,
+(d) mean size of decreases,GWI_anthro_CGWL | NorESM_RCP45_VolcConst,-0.004,-0.004,+0.0000,no,p05 +0.0073 → +0.0073; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,GWI_tot_CGWL | NorESM_RCP45_VolcConst,0,0,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,GWI_tot_CGWL | NorESM_RCP45_VolcConst,0.0,0.0,+0.00,no,
+(d) mean size of decreases,GWI_tot_CGWL | NorESM_RCP45_VolcConst,-0.002,-0.002,+0.0000,no,p05 +0.0071 → +0.0071; spurious 100 → 100 %
+(d) % of non-volcanic years with Δ<0,Kal_flexLin | NorESM_RCP45_VolcConst,21,22,+0.1,yes,
+(d) % of non-volcanic years with Δ<−0.01,Kal_flexLin | NorESM_RCP45_VolcConst,10,10,+0.0,no,
+(d) mean size of decreases,Kal_flexLin | NorESM_RCP45_VolcConst,-0.011,-0.011,+0.0000,no,p05 -0.0157 → -0.0158; spurious 98 → 98 %
+(d) % of non-volcanic years with Δ<0,PIVW_anthro | NorESM_RCP45_VolcConst,5,6,+0.2,yes,
+(d) % of non-volcanic years with Δ<−0.01,PIVW_anthro | NorESM_RCP45_VolcConst,0.9,0.9,+0.04,no,
+(d) mean size of decreases,PIVW_anthro | NorESM_RCP45_VolcConst,-0.005,-0.005,+0.0001,no,p05 -0.0004 → -0.0004; spurious 94 → 95 %
+(d) % of non-volcanic years with Δ<0,PIVW_real | NorESM_RCP45_VolcConst,10,10,+0.6,no,
+(d) % of non-volcanic years with Δ<−0.01,PIVW_real | NorESM_RCP45_VolcConst,2,2,+0.3,no,
+(d) mean size of decreases,PIVW_real | NorESM_RCP45_VolcConst,-0.006,-0.006,-0.0003,no,p05 -0.0042 → -0.0047; spurious 96 → 96 %
+(d) % of non-volcanic years with Δ<0,lowess1dt36wnc | NorESM_RCP45_VolcConst,15,15,+0.0,no,
+(d) % of non-volcanic years with Δ<−0.01,lowess1dt36wnc | NorESM_RCP45_VolcConst,4,4,+0.0,no,
+(d) mean size of decreases,lowess1dt36wnc | NorESM_RCP45_VolcConst,-0.008,-0.008,+0.0000,no,p05 -0.0087 → -0.0087; spurious 97 → 97 %
+(d) cent20y monotonicity,heads/tails member-years 1966–2015 decreasing (%),0.5,0.5,+0.00,no,from step2025_and_checks_1018.log; min step −0.0026 both
+(d) cent20y monotonicity,HadCRUT5.1 cent20y decreasing years 1966–2015,0,0,+0.0,no,

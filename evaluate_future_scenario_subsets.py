@@ -4,6 +4,7 @@ crossing_figs=False
 sel_methods = ["CGWL10y_sfUKCP","GWI_tot_CGWL","FaIR_comb_unB","EBMKF_ta4"] #"FaIR_nonat""CGWL10y_for_halfU","CGWL10y_sfUKCP","FaIR_anthroA2","EBMKF_ta2","removeGreensfx" ]
 from netCDF4 import Dataset
 import sys
+import argparse
 from fut_evaluation_gen_ensemble import eval_standard
 cdataprefix = config.CLIMATE_DATA_PATH+'/'
 
@@ -23,6 +24,7 @@ def gen_orig_number(new_member_number,sz_ens):
     
 regen = 2 #0 no regen #1 regen completely #2 overwrite regen to allow for computed methods to not need to be redone!
 regen = int(os.environ.get('THORNE_REGEN', regen))  # allow plot-only regeneration from refreshed caches
+plot_only = False
 
 
 data = pd.read_csv("./Common_Data/HadCRUT5.csv")
@@ -141,6 +143,8 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
 
 
     print("starting computation for "+experiment_type)
+    if plot_only and not os.path.isfile('Results/ensemble_mean_' + experiment_type + '.csv'):
+        raise FileNotFoundError('Plot-only mode requires the saved ensemble-mean file; no data will be regenerated.')
     ens_standard = eval_standard(experiment_type)
 
     (sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist) = collect_data(exp_attr)
@@ -614,8 +618,9 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
         df_res_show2['smooth_r'] = df_results['smooth_r'].round(3)
         df_res_cur2 = df_res_show2[df_results['c/r']=='c']
         dfres2 = df_res_cur2.sort_values('100log-l',ascending=False) #do not need to sort saved output results - we will have to read and reference anyway
-        dfres2.to_csv('Results/current_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
-        df_results.to_csv('Results/all_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
+        if not plot_only:
+            dfres2.to_csv('Results/current_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
+            df_results.to_csv('Results/all_fut_statistics_'+experiment_type+str(model_run)+'.csv', index=False,mode='w+' )
         if(ax1 != None):
             return closest_years, closest_yearsE #pass stuff back so we can draw more, thresholds at 1.1 1.2 ....
         
@@ -631,8 +636,20 @@ def colorcomb(col1,const):
 
 if __name__ == '__main__':
     plotting_figs=False
-    experiment_type = sys.argv[1] #'fut_ESM1-2-LR_SSP126_constVolc' #fut_NorESM_RCP45_Volc
-    start_run = int(sys.argv[2])
+    parser = argparse.ArgumentParser(description='Evaluate future methods or redraw figures from saved results.')
+    parser.add_argument('experiment_type')
+    parser.add_argument('start_run', type=int)
+    parser.add_argument('--plot-only', action='store_true',
+                        help='Read saved results and write figures only; never rewrite result pickles or statistics CSVs.')
+    parser.add_argument('--show', action='store_true', help='Open interactive Matplotlib windows after plotting.')
+    args = parser.parse_args()
+    experiment_type = args.experiment_type
+    start_run = args.start_run
+    # Combined paper-figure commands are always read-only with respect to Results.
+    plot_only = args.plot_only or experiment_type.startswith('futplotcomb_')
+    if plot_only:
+        regen = 0
+        print('Plot-only mode: saved results are read only; no evaluation data will be written.')
     exp_attr = experiment_type.split("_")
 
     e0list = ["11y_offset","KCC_all","quartic","OLS_refit","lag10y","remove_MEI_volc_refit","lfca_SST"] #can be eliminated by inspection alone
@@ -680,8 +697,8 @@ if __name__ == '__main__':
         axens.grid(color='silver',zorder=-1,which='both')
 
         nud = 0.5
-        closest_years126, closest_yearsE126 = run_one_single_ens_member(plotting_figs, exp1, start_run, ax1b, ax4b, col126, elim_list=e1list)
-        closest_years370, closest_yearsE370 = run_one_single_ens_member(plotting_figs, exp2, start_run, ax1a, ax4a, col370, elim_list=e1list)
+        closest_years126, closest_yearsE126 = run_one_single_ens_member(plotting_figs, exp1, start_run, ax1b, ax4b, col126, elim_list=e1list + ['EBMKF_ta'])
+        closest_years370, closest_yearsE370 = run_one_single_ens_member(plotting_figs, exp2, start_run, ax1a, ax4a, col370, elim_list=e1list + ['EBMKF_ta'])
         axens.plot([closest_yearsE126[4],closest_yearsE126[4]],[0.9,1.5],color = col126)
         axens.plot([closest_yearsE126[4]+nud,closest_yearsE126[4]+nud],[0.9,1.5],color = col126, lw=0.5)
         axens.plot([closest_yearsE126[4]-nud,closest_yearsE126[4]-nud],[0.9,1.5],color = col126, lw=0.5)
@@ -716,16 +733,28 @@ if __name__ == '__main__':
         #ax1b.get_legend().remove()
         #WORKS BEST WITH #11
         curcolor =  gen_color('43_Forcing_Based/2_Kalman')
-        ax1b.annotate('EBMKF_ta',
-            xy=(2020,1.35),
-            xytext=(2015,1.75), textcoords='data',
-            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
-            horizontalalignment='left', verticalalignment='bottom') #somthing very funky is happening - should be horizontalalignmnet = center
-        ax1a.annotate('EBMKF_ta',
-            xy=(2035,1.75), xycoords='data',
-            xytext=(2028.5,2.1), textcoords='data',
-            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
-            horizontalalignment='left', verticalalignment='bottom')
+        # (panel, arrow target year, label position): adjust these to move labels.
+        ebmkf_annotation_positions = [
+            (ax1b, 2026, (2030, 2.0)),
+            (ax1a, 2045, (2050, 2.65)),
+        ]
+        for panel, target_year, label_position in ebmkf_annotation_positions:
+            method_line = next(line for line in panel.lines
+                               if line.get_label() == 'EBMKF_ta2')
+            target_temp = np.interp(target_year, method_line.get_xdata(),
+                                    method_line.get_ydata())
+            arrow_properties = dict(facecolor=curcolor, shrink=0, width=1.5, headwidth=5)
+            if panel is ax1a:
+                # Text alignment does not control the arrow attachment point.
+                arrow_properties = dict(
+                    facecolor=curcolor, mutation_scale=10,
+                    arrowstyle='simple,tail_width=0.15,head_width=0.5,head_length=1.2',
+                    relpos=(0, 0), shrinkA=0, shrinkB=0)
+            panel.annotate('EBMKF_ta2',
+                xy=(target_year, target_temp), xycoords='data',
+                xytext=label_position, textcoords='data',
+                arrowprops=arrow_properties,
+                color=curcolor, horizontalalignment='left', verticalalignment='bottom')
         curcolor =  gen_color('44_EarthModel_CGWL')
         ax1b.annotate('CGWL10y_pUKCP',
             xy=(2088,1.7),
@@ -864,5 +893,7 @@ if __name__ == '__main__':
         axens.legend([(min_line,black_line),(max_line,black_line), (const_novolc_line,)], ["Volc. Sample Min","Volc. Sample Max", "Volc. Const."])
         ax1b.get_legend().remove()
         fig1.savefig("spaghettiVolc.png", dpi=500, bbox_inches='tight')
-        #plt.show()    
+        #plt.show()
 
+    if args.show:
+        plt.show()

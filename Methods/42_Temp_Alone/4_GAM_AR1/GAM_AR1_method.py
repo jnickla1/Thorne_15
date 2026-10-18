@@ -8,9 +8,11 @@ import subprocess
 
 def run_method(years, temperature, uncert, model_run, experiment_type):
 
-    preind_base =  0 #np.mean(temps_obs[0:50])
-    if(years[-1]>=2025):
-        preind_base =  -0.009
+    preind_base = 0
+    # The 2025 observational correction is not a climate-model datum shift.
+    observational_run = experiment_type == 'historical' or experiment_type.split('_')[0] == 'histens'
+    if observational_run and years[-1] >= 2025:
+        preind_base = -0.009
 
     cur_path = os.path.dirname(os.path.realpath(__file__))
     load_file = cur_path+"/GAM_AR_Stephenson/output/gamAR1_fits_"+experiment_type+str(model_run)+".csv"

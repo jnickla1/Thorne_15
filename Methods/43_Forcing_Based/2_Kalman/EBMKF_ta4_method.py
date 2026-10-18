@@ -194,8 +194,9 @@ def run_method(years, temperature0, uncert, model_run, experiment_type, diagnost
         
         #temps[2:-1] = temps[2:-1] - erf_trapez/(ekf.heatCp - ekf.Cs)
         #ohca_meas[2:] = ohca_meas[2:] - (erf_trapez/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*50 #not perfect but good for now, also unclear where the 50 comes from
-        
-        temps[9:ekf.n_iters] = temps[9:ekf.n_iters] + erf_trapez[:-7]/(ekf.heatCp - ekf.Cs)/6 #surface temp of 20 yr mean still depressed
+        pulse = erf_trapez / (ekf.heatCp - ekf.Cs) / 6
+        temps[2:] -= pulse          # Warming correction 1–2 years after eruption
+        temps[9:] += pulse[:-7]     # Cooling correction 8–9 years after eruption #surface temp of 20 yr mean still depressed
         ohca_meas[9:ekf.n_iters] = ohca_meas[9:ekf.n_iters] - (erf_trapez[:-7]/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*25  #25
         
         TOA_meas_artif1 =  ekf.TOA_meas_artif[:ekf.n_iters] - TOA_correction  #0.75
@@ -279,6 +280,8 @@ def run_method(years, temperature0, uncert, model_run, experiment_type, diagnost
             TOA_meas_artif_all = np.load(cur_path + "/heads_tails_forcing/all-headstails_current_TOA_ensemble_25.npy")
         TOA_meas_artif0 = TOA_meas_artif_all[model_run,0,0:ekf.n_iters] #.to_numpy() if pandas array
         TOA_meas_artif = TOA_meas_artif0 - np.mean(TOA_meas_artif0[0:70])/2 + (np.mean(ekf.TOA_meas_artif[2001-1850:2023-1850]) -np.mean( TOA_meas_artif0[2001-1850:2023-1850]))/2
+        # Balance the FaIR-derived TOA input before volcanic preprocessing.
+        # Historical uses its assembled observational/CERES TOA input directly.
         surf_heat = (temps[-1]-np.mean(temps[0:50]))*(ekf.heatCp-ekf.Cs)
         TOA_error = (np.sum(TOA_meas_artif)-ohca_meas[-1]/ekf.zJ_from_W - surf_heat)/np.sum(TOA_meas_artif)
         #this should be balanced at the start originally, and also match recent observations and match the ocean observations
@@ -298,8 +301,9 @@ def run_method(years, temperature0, uncert, model_run, experiment_type, diagnost
         #makes centered mean
         ekf.tsi[:18] = np.mean(ekf.tsi[34:68])
         ekf.tsi[16:] = 2*ekf.tsi[16:]-ekf.tsi[:-16]
-    
-        temps[9:ekf.n_iters] = temps[9:ekf.n_iters] + erf_trapez[:-7]/(ekf.heatCp - ekf.Cs)/6 #surface temp of 20 yr mean still depressed
+        pulse = erf_trapez / (ekf.heatCp - ekf.Cs) / 6
+        temps[2:] -= pulse          # Warming correction 1–2 years after eruption
+        temps[9:] += pulse[:-7]     # Cooling correction 8–9 years after eruption #surface temp of 20 yr mean still depressed
         ohca_meas[9:ekf.n_iters] = ohca_meas[9:ekf.n_iters] - (erf_trapez[:-7]/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*25
         new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
         ekf.dfrA_float_var = ekf.dfrA_float_var/40
@@ -432,7 +436,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type, diagnost
 
 
                 
-        new_opt_depth = ta_smooth(unf_new_opt_depth,(1/ekf.volcanic_denominator(unf_new_opt_depth[20]))) #ekf.involcavg)
+        new_opt_depth = ta_smooth(unf_new_opt_depth, (1/ekf.volcanic_denominator(unf_new_opt_depth[20])), N=40)*1.4  # same volcanic smoothing as historical/histens
         temps = temperature-given_preind_base+preind_base + ekf.offset #ensure this matches expected starting temperature in 1850
 
         erf_data_solar = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")['solar'].to_numpy()[(1850-1750):]
@@ -451,9 +455,9 @@ def run_method(years, temperature0, uncert, model_run, experiment_type, diagnost
         #erf_trapez-= np.mean(erf_trapez) #only going to surf temp and ohca
         #breakpoint()
 
-        #temps[2:] = temps[2:] - erf_trapez/(ekf.heatCp - ekf.Cs)
-        #ohca_meas[2:] = ohca_meas[2:] - (erf_trapez/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*50 #not perfect but good for now, also unclear where the 50 comes from
-        temps[9:] = temps[9:] + erf_trapez[:-7]/(ekf.heatCp - ekf.Cs)/6 #surface temp of 20 yr mean still depressed
+        pulse = erf_trapez / (ekf.heatCp - ekf.Cs) / 6
+        temps[2:] -= pulse          # Warming correction 1–2 years after eruption
+        temps[9:] += pulse[:-7]     # Cooling correction 8–9 years after eruption #surface temp of 20 yr mean still depressed
         ohca_meas[9:] = ohca_meas[9:] - (erf_trapez[:-7]/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*50/2
             
         if ekf.n_iters != new_iter:
@@ -596,7 +600,7 @@ def run_method(years, temperature0, uncert, model_run, experiment_type, diagnost
         ekf.TOA_meas_artif_var = np.full(new_iter,ekf.TOA_crop_var/4) #just put constant variance on this
         ndim =4
         if True: #(abs(TOA_error < 0.2)):
-            TOA_meas_artif1 =  TOA_meas_artif* (1-TOA_error)  - TOA_correction * .75 #TOA_meas_artif # already corrected
+            TOA_meas_artif1 = TOA_meas_artif * (1-TOA_error) - TOA_correction  # full volcanic correction, as in historical/histens
             #TOA_meas_artif1 =  TOA_meas_artif  - TOA_correction * .75
             #print("TOA correction")
            # print((TOA_correction))

@@ -144,7 +144,7 @@ precompute_coeffs(False)
 
 
 global gad
-gad = 0.6 #7
+gad = 0.5 #.55#.67
 #epd = 1   #1.3
 oc1850= 3.5 + 273.15 #absolute temperature of deep ocean
 oc_meas = ocean_heat_measured/zJ_from_W #/deepdepth/1.55 + oc1850 #convert into a deep ocean temp

@@ -59,7 +59,7 @@ def gen_color(ci, dark=False):
 
 #running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/42_Temp_Alone/3_ST_Fits') #Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL' )#still working on debugging lfca
 #running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/2_Kalman')
-running_subset = ('Methods/42_Temp_Alone/1_Run_Means','Methods/43_Forcing_Based/2_Kalman')
+running_subset = ('Methods/42_Temp_Alone','Methods/43_Forcing_Based','Methods/44_EarthModel_CGWL')
 
  #'Methods/42_Temp_Alone/2_LT_Fits','Methods/42_Temp_Alone/3_ST_Fits',
   #                'Methods/42_Temp_Alone/4_GAM_AR1','Methods/42_Temp_Alone/5_Kalman',
@@ -165,7 +165,7 @@ if select_hist:
     rmse_df = pd.read_csv("current_methods_statistics_251126True.csv")
     avail_methods_list_30 = list(rmse_df.loc[rmse_df['RMS'] <= 0.06, 'method_name'])
   
-hist_option='first'#'median'#'first'
+hist_option='median'#'first'
 
 
 if __name__ == '__main__':
@@ -314,7 +314,7 @@ if __name__ == '__main__':
                     se=se*best_alter_scale
                     deviances = standard - central_est #relative to this method's central estimate
                     resc_standard_samples = central_est + deviances/best_alter_scale
-                    pvals = result['log_likelihood'](years, resc_standard_samples ,k)
+                    pvals = result['pvalue'](years, resc_standard_samples ,k)
                     llikelihood = result['log_likelihood'](years, resc_standard_samples ,k) - np.log(best_alter_scale) #need to ensure dimensions work
 
                 else:
