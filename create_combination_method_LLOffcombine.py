@@ -37,18 +37,18 @@ for exp_index, exp in enumerate(scenarios):
         dated_files.append((fp, dt))
 
 # --- always report the oldest file ---
+    if not mtimes:
+        raise ValueError(f"No result files found for {exp}")
     oldest_dt = min(mtimes)
     print(f"Oldest file modification time: {oldest_dt:%Y-%m-%d %H:%M:%S}")
 
-# --- check for files outside Nov/Dec 2025 ---
-    bad = [(fp, dt) for fp, dt in dated_files
-           if not (dt.year == 2025 and dt.month==12)] # in (11, 12))]
-
-    if bad:
-        print("\nFound files NOT last modified in Nov/Dec 2025 (printing and exiting):")
-        for fp, dt in sorted(bad, key=lambda x: x[1]):
-            print(f"  {dt:%Y-%m-%d %H:%M:%S}  {fp}")
-        sys.exit(1)
+    expected_runs = 50 if exp.startswith("fut_ESM1") else 60
+    expected_files = {f"Results3/nmes{nnmethods}run_exp{exp_index}_r{r}.npz"
+                      for r in range(expected_runs)}
+    if set(files) != expected_files:
+        raise ValueError(f"Incomplete member set for {exp}: "
+                         f"missing={sorted(expected_files-set(files))}, "
+                         f"unexpected={sorted(set(files)-expected_files)}")
     for f in files:
         z = np.load(f)
         ncrosses_stack.append(z["ncrosses"])            # (2,)

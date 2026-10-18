@@ -1,3 +1,9 @@
+from pathlib import Path as _V11Path
+import sys as _V11Sys
+_V11Sys.path.insert(0,str(_V11Path(__file__).resolve().parent))
+from ebmkf_v11_support import (nonnegative_sqrt as _v11_sqrt,
+    prepare_observed_two_state as _v11_prepare_observed,
+    scenario_aerosols as _v11_scenario_aerosols)
 import numpy as np
 import pandas as pd
 import config
@@ -15,7 +21,7 @@ def ta_smooth(orig_opt_depths,fill_value):
     nwt_opt_depths=np.full(len(orig_opt_depths),fill_value)
     cN=int(np.ceil(N/2))
     fN=int(np.floor(N/2))
-    for i in range((fN),(len(nwt_opt_depths)-1)):
+    for i in range((fN),len(nwt_opt_depths)):
         lasta=i+cN;firsta=i-fN
         nwt_opt_depths[i] = (np.sum(wt_opt_depths[(firsta):i+1])+ fill_value*(cN-1))/N
     #computing half-average - future is assumed to be the average 
@@ -43,9 +49,10 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
     ekf.n_iters = len(years)
     if experiment_type == "historical":
+        _v11_prepare_observed(ekf, years, temperature, uncert)
         ekf.opt_depth=ta_smooth(ekf.data[:,3]*0.001,ekf.involcavg)
         means[0:ekf.n_iters], ses[0:ekf.n_iters],means2[0:ekf.n_iters],ses2[0:ekf.n_iters] = ekf.ekf_run(ekf.observ,ekf.n_iters,retPs=3)
-        return means - ekf.offset-preind_base, np.sqrt(np.abs(ses)),means2 -ekf.offset-preind_base,np.sqrt(np.abs(ses2))
+        return means +np.mean(temperature[:50])-ekf.offset-preind_base, _v11_sqrt(ses),means2 +np.mean(temperature[:50])-ekf.offset-preind_base,_v11_sqrt(ses2)
 
     else:
         # Preserve the existing simulation handoff in 2023, even with longer observations.
@@ -74,7 +81,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         
         elif (exp_attr[1]=='NorESM'):
             ohca_meas=np.zeros(new_iter)
-            ohca_meas[0:ekf.n_iters] = ekf.ocean_heat_measured[:ekf.n_iters]/ekf.zJ_from_W
+            ohca_meas[0:ekf.n_iters] = ekf.ocean_heat_measured[:ekf.n_iters]
             
             import xarray as xr
             #ohca_earlier = Dataset(config.CLIMATE_DATA_PATH+"/NorESM_volc/OHCA/historicalVolc_ohca.nc", 'r').variables['__xarray_dataarray_variable__']
@@ -116,7 +123,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         if ekf.n_iters != new_iter:
             new_tsi = np.full(new_iter, ekf.sw_in)
             #new_tsi[0:ekf.n_iters] = ekf.data[:,8]
-            new_tsi = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp119_1750-2500.csv")['solar'][100:(100+new_iter+1)].values
+            new_tsi = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp119_1750-2500.csv")['solar'][100:(100+new_iter)].values
             new_tsi = new_tsi + ekf.sw_in-np.mean(new_tsi)
             ekf.R_tvar=np.square(ekf.data[:,4])
             new_R_tvar =np.full(new_iter, np.mean(ekf.R_tvar[150:174])) #might have extra stuff appended to the end
@@ -140,16 +147,16 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             elif (exp_attr[1]=='NorESM'):
                 from . import gen_eCO2
                 if exp_attr[3]=='Volc':
-                    erf_data = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERF_NorESM_rcp45VolcConst.csv")
-                elif exp_attr[3]=='VolcConst':
                     erf_data = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFanthro_NorESM_rcp45Volc.csv")
-                model_outputlCo2 = gen_eCO2.calculate_equivalent_co2(erf_data['ERF_anthro'].values)
+                elif exp_attr[3]=='VolcConst':
+                    erf_data = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERF_NorESM_rcp45VolcConst.csv")
+                model_outputlCo2 = gen_eCO2.calculate_equivalent_co2(erf_data['ERF_anthro'].values - (_v11_scenario_aerosols(ekf, np.arange(1980,1980+len(erf_data)), experiment_type)+ekf.aerosol_reference))
                 new_lCo2 = np.concatenate((np.log10(ekf.data[:(1980-1850),2]), np.log10(ekf.data[(1981-1850),2] - model_outputlCo2[0]  + model_outputlCo2)))
                 
             #new_lCo2[-30:-1] = new_lCo2[-30]
             #print(new_lCo2)
             #new_lCo2  = np.concatenate((ekf.lCo2, np.log10(data3[handoffyr-2015: 1850+new_iter-2015,1+rcp])))
-            new_anthro_clouds = np.concatenate((ekf.anthro_clouds,data3[handoffyr-2015: 1850+new_iter-2015,6+rcp]+1))
+            new_anthro_clouds = np.concatenate((ekf.data[:ekf.n_iters,7]-ekf.aerosol_reference,_v11_scenario_aerosols(ekf, years[ekf.n_iters:], experiment_type)))
             #compute_update(xhatf[k-1],0,volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1]+1)
             #np.log10(data3[:,1+rcp]),data3[:,6+rcp]
             
@@ -185,8 +192,8 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         #breakpoint()
 
         means , ses ,means2 ,ses2 = ekf.ekf_run(new_observ,new_iter,retPs=4)
-        return means2 - ekf.offset-preind_base + given_preind_base , np.sqrt(np.abs(ses)),means -ekf.offset-preind_base + given_preind_base,np.sqrt(np.abs(ses2))
-        #return means - ekf.offset-preind_base + given_preind_base , np.sqrt(np.abs(ses)),means2 -ekf.offset-preind_base + given_preind_base,np.sqrt(np.abs(ses2))
+        return means2 - ekf.offset-preind_base + given_preind_base , _v11_sqrt(ses),means -ekf.offset-preind_base + given_preind_base,_v11_sqrt(ses2)
+        #return means - ekf.offset-preind_base + given_preind_base , _v11_sqrt(ses),means2 -ekf.offset-preind_base + given_preind_base,_v11_sqrt(ses2)
 
 
    

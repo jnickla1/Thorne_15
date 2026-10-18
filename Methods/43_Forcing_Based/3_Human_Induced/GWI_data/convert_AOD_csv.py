@@ -53,7 +53,7 @@ def combine_write(ssp0, cmip_model,volc=""):
         contrails = erf_data['contrails'][(1850-1750):(2006-1750)]
 
     
-    #df_solar = pd.read_csv(config.CODEBASE_PATH+"/Common_Data/toyKFmodelData8c.csv",header=None,index_col=0)
+    #df_solar = pd.read_csv(config.CODEBASE_PATH+"/Common_Data/toyKFmodelData9c.csv",header=None,index_col=0)
     #solar = df_solar[8]
 
     #aerosol_rad = erf_data['aerosol-radiation_interactions'][(1980-1750):(2100-1750)]

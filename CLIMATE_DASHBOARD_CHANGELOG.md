@@ -179,3 +179,45 @@ Added a dismissible default-view hint and a one-member pale-yellow approximate 9
 ## 2026-10-12 — Optional rates-over-time overlay
 
 Added an interactive-only overlay opened from the warming-rate card, with lazy-loaded code/data. Blue uses the existing centred-mean OLS benchmark (ending in 2015), solid red uses retrospective trailing 15-year quadratic endpoint rates matching the 2025 headline, and an optional faint dotted red series uses annual-current fits. The retrospective line cannot be toggled away. Added four small JSON exports and 26 explanatory CSV downloads, regenerated automatically during website assembly from the existing validated JSON. Existing scientific exports, headline estimates, probability calculations and static figures are unchanged. Numerical endpoint checks pass for all 26 options (maximum difference <7e-8°C/decade from JSON rounding).
+
+
+## 2026-10-14 — Future LOO correction and recalculation
+
+Validated the complete Oscar calibration download and applied approved future-only year alignment, held-out-member exclusion and KL-window corrections. Replaced the legacy December-2025 aggregation date check with exact expected member coverage. Full future combination recalculation is in progress; final numbers remain pending verification. Historical/heads-tails/dashboard outputs and website publication are unchanged by this stage.
+
+
+## 2026-10-17 — Extend author-tuned ta2 controls to ta4; future tuning diagnostics
+
+Ported aerosol/eCO2 percentile controls, the relative likelihood and 1D-equivalent-percentile report, reference-preserving 20 ± 5 volcanic adjustment and consistent raw-AOD inverse smoothing to EBMKF_Nicklas4/ta4. Copied the author's current 2a starting values (85, 17, fdbkA=0) to 2b/2c/4, preserving their distinct capacity/depth/exchange and augmented-state choices. Restored/reset observation innovation mixtures in 2b/2c and reset/normalized ta4's mixture. Full future forcing arrays are protected from observational helper replacement during ta4 recalibration. No changes to 2a or frozen input files.
+
+Added opt-in direct CLI to the existing ta2 wrapper for one future member, component and innovation plots, optional in-frame breakpoint and optional PNG saving. It reuses evaluator data selection without writing result caches/calibration products. README distinguishes diagnostic and production commands, the observational-prefix scope of percentiles, and model-to-core mapping. Numerical and historical checks passed; real MPI/NorESM ta2 and MPI ta4 single-case checks passed. Publication figures, tables, historical/headstails pickles and dashboard data were not regenerated in this stage. These parameter/physics changes can affect scientific outputs and require later recalculation after author review. No push/publication.
+
+
+## 2026-10-17 — Apply aerosol percentile to future SSP inputs
+
+Corrected shared `scenario_aerosols` to read SSP central/pc05/pc95 ARI+ACI curves and honour the active core's aerosol percentile with the historical 5/50/95 piecewise-linear rule. This removes the unintended switch from historical p85 to a central future curve. Each file's component sum is an approximate combined-percentile trajectory. Historical reference subtraction and scenario/year selection are retained. Core settings are preserved, including the author's MPI fdbkA=0.40 and eCO2 percentile=50 edits. Updated plot labels and README; no eCO2 model-construction change or forced join offset. At SSP245 p85 the 2024 centred input changes from −0.344306 to +0.340612 W/m²; the remaining jump from historical 2023 is +0.240663 W/m². This remaining dataset/uncertainty-construction mismatch is explicitly documented. Targeted curve checks and real MPI/NorESM diagnostic cases pass. No scientific result caches, calibration products, publication figures or website outputs regenerated; no push/publication.
+
+
+## 2026-10-17 — Ta4 single-case diagnostics and isolated inferred SW correction
+
+Added historical/MPI/NorESM diagnostic CLI and optional in-frame breakpoint to the existing ta4 wrapper. Four figures show active adjusted inputs/states/budget, innovations, TOA assimilation and the inferred additional SW correction separately. Correction is (previous multiplier−1) times unadjusted SW at the same previous state/current-year forcings; filtered and retrospective reconstructions are distinguished, and end-of-year multiplier departures are shown separately. CSV/JSON diagnostics accompany optional PNG exports. Original temperature input supplies the centered-20-year benchmark. Existing detailed historical and raw-core plotting remain available. Diagnostic runs avoid legacy extras writes and evaluation caches.
+
+Confirmed/matched ta4 defaults to live 2a (aerosol 85, eCO2 17, fdbkA=0, volcanic target20±5) while preserving 2b/2c author tuning. Existing ta4 wrapper smoothing/scaling and noise/state choices are retained. Targeted historical/MPI/NorESM outputs are exactly unchanged; extra correction agrees with direct same-state augmented-model counterfactuals, and plotting does not mutate state/forcing arrays. Actual four-case diagnostic runs and breakpoint checks pass. No manuscript numbers, publication figures, calibration products or website data refreshed; no push/publication.
+
+
+## 2026-10-17 — Ta4 TOA uncertainty overlay and state-update investigation
+
+Added active adjusted TOA observations and nominal/effective assigned 95% Gaussian noise windows to the component energy panel and separate TOA panel; exported sigma/range definitions. Investigated historical OHC mixture spike: first prediction1851 has broad64.1ZJ uncertainty but very broad forecast normalization, producing a narrow standardized component (weight1/175); retained full mixture. Traced 0.09574°C filtered increase1999–2001 to prediction and K×innovation terms. Temperature contributions dominate, substantially due to inherited 8–9-year-delayed volcanic preprocessing raising2000/2001 input temperatures by0.29044/0.23497°C. Updated non-ocean capacity nearly doubles the heuristic at fixed forcing. Full state/gain/source-year walkthrough and evidence saved in ta4-observation-audit output folder. No change to that scientific preprocessing or filter, parameters, caches or publication/dashboard outputs; no push/publication.
+
+
+## 2026-10-17 — Remove duplicate ta4 Net TOA window
+
+Removed the standalone Net TOA diagnostic figure and its export. Retained TOA inputs/intervals in the combined energy panel, innovations and the separate inferred correction. No scientific calculations changed.
+
+
+### 2026-10-17 — Ta4 future starts matched to author-tuned ta2 configurations
+
+- Replaced scattered ta4 future `gad`/`fdbkA` overrides with an explicit model-specific table in the existing ta4 method file: MPI1.1/0.40/aerosol85/eCO2 50; NorESM0.85/0.25/aerosol65/eCO2 35.
+- Apply the settings before building the forcing arrays. Restore both forcing percentiles for historical/heads-tails runs; preserve the author's historical core and its gad0.6 setting exactly. Keep the existing long-record 2020-OHC gad rescaling, future eCO2 construction/scaling, capacities and inferred-SW/noise settings.
+- Five actual future cases pass; historical and heads-tails member0 outputs and forcings remain exactly equal, including mixed-order restoration tests. The largest tested retrospective-temperature change is0.09566°C; single-member results are not an all-member guarantee or a ta4 refit.
+- Saved parameter starts and post-OHC gad in future diagnostic JSON. Backups, precise before/after arrays, numerical comparisons and review plot are in the author workspace's ta4-ensemble-settings review directory. Full recalculation remains stopped for author inspection; no published-site update.

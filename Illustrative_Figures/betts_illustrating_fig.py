@@ -11,7 +11,7 @@ def colorgen(c,step,const):
 fig, ax = plt.subplots(1,1, figsize=(7, 5))
 
 # Generate fictitious temperature data (for demonstration)
-data = np.genfromtxt(open("../Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
+data = np.genfromtxt(open("../Common_Data/toyKFmodelData9c.csv", "rb"),dtype=float, delimiter=',')
 years=data[:,0]
 years[0]=1850
 nyrs = len(years)

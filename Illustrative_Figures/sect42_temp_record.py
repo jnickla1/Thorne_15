@@ -10,7 +10,7 @@ import config
 npanels2=5
 fig, axes = plt.subplots(nrows=2, ncols=npanels2, figsize=(14, 7))#expand wi
 # Generate fictitious temperature data (for demonstration)
-data = np.genfromtxt(open("../Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
+data = np.genfromtxt(open("../Common_Data/toyKFmodelData9c.csv", "rb"),dtype=float, delimiter=',')
 data2 = pd.read_csv("../Common_Data/HadCRUT.5.1.0.0.analysis.summary_series.global.annual.csv")
 years= data2["Time"].to_numpy()
 #years[0]=1850

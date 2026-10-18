@@ -33,8 +33,8 @@ pcolor='deeppink'
 colorrts='goldenrod'
 nbins=24
 sdate=1850
-data = np.genfromtxt(open(common_dataprefix+"toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',') #run as main
-#data = np.genfromtxt(open("../Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',') #run from other file
+data = np.genfromtxt(open(common_dataprefix+"toyKFmodelData9c.csv", "rb"),dtype=float, delimiter=',') #run as main
+#data = np.genfromtxt(open("../Common_Data/toyKFmodelData9c.csv", "rb"),dtype=float, delimiter=',') #run from other file
 dates=data[:,0]
 dates[0]=sdate
 

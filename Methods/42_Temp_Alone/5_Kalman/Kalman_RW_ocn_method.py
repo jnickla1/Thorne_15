@@ -16,7 +16,7 @@ import pdb
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
     
-data = np.genfromtxt(open(dir_path+'/../../../Common_Data/toyKFmodelData8c.csv', "rb"),dtype=float, delimiter=',')
+data = np.genfromtxt(open(dir_path+'/../../../Common_Data/toyKFmodelData9c.csv', "rb"),dtype=float, delimiter=',')
 years0=data[:,0]
 years0[0]=1850
 temperature = data[:, 1]

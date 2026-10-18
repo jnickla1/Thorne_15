@@ -23,7 +23,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     (temps_CIl, temps_CIu) = uncert
     temps_1std = (temps_CIu - temps_CIl) / 4 #pm2 stdevs
     enso = pd.read_csv("./Common_Data/meiv_shift.csv")
-    data = np.genfromtxt(open("./Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
+    data = np.genfromtxt(open("./Common_Data/toyKFmodelData9c.csv", "rb"),dtype=float, delimiter=',')
     AODdata = data[:, 3]  #may be overwritten
     ensoA = enso['AVG']
     TSIdata = data[:, 8] #these two may get overwritten

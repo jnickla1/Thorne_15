@@ -18,7 +18,7 @@ if __name__ == '__main__':
 #this part specified as sys argument
     nsamples=1000
     nnodes = 100
-    rmse_df = pd.read_csv("current_methods_statistics_251126True.csv")
+    rmse_df = pd.read_csv("current_methods_statistics_261013True.csv")
     fut_methods_df = pd.read_csv('averaged_runs126.csv')
     if comparison_type[0]=='h':
         outputfilename = 'historical'
@@ -148,12 +148,13 @@ if __name__ == '__main__':
         for exp_index in [int(sys.argv[2])]:
             experiment_type = scenarios[exp_index]
             for model_run in [int(sys.argv[3])]:
-                if(experiment_type[0:8]=="fut_ESM1"):
-                    lhund=-101 #hopefully nothing breaks!
-                else:
-                    lhund=-100
+                # All loaded arrays use the same 1850–2099 calendar window.
+                lhund=-100
                 if(experiment_type[0:8]=="fut_ESM1" and model_run>=50):
                     continue
+                # Reproducible Monte Carlo draws for this held-out case.
+                base_seed = 20261014 + nnmethods*100000 + exp_index*1000 + model_run*10
+                np.random.seed(base_seed)
                 err_vars100a=err_vars100[:,:,mask_a].copy()
                 err_vars100a[exp_index,model_run,:]=np.nan #masking out this run's err_vars
                 vars100 = np.nanmean(err_vars100a,axis=(0,1))
@@ -196,14 +197,13 @@ if __name__ == '__main__':
                     standards_se_trial = np.full((10,-10-lhund), np.nan)
                     for exp_indext, experiment_typet in enumerate(scenarios):
                         for model_runt in range(2):
-                            model_runt2 = model_runt*2
-                            if (exp_index == exp_indext and model_run==model_runt2):
-                                model_runt2 = model_runt+1
-                            else:
-                                model_runt2 = model_runt
+                            trial_members = [r for r in range(3)
+                                             if not (exp_indext == exp_index and r == model_run)]
+                            model_runt2 = trial_members[model_runt]
                             outputfilenamet = f'{experiment_typet}{model_runt2}' 
-                            tempsamplesf = np.load(f'Results2/{outputfilenamet}_newsamples.npy',mmap_mode="r")[:,lhund:-10,:] #newsamplesfut[exp_index,model_run,:,:,:] =
-                            blended_trial[(exp_indext*2 + model_runt),:,:] = predict_non_nan(stack_weights, tempsamplesf[mask_a,:,:])
+                            tempsamplesf = np.load(f'Results2/{outputfilenamet}_newsamples.npy',mmap_mode="r")[:,:250,:][:,lhund:-10,:] #newsamplesfut[exp_index,model_run,:,:,:] =
+                            blended_trial[(exp_indext*2 + model_runt),:,:] = predict_non_nan(stack_weights, tempsamplesf[mask_a,:,:],
+                                seed=base_seed+exp_indext*2+model_runt)
                             standards_trial[(exp_indext*2 + model_runt),:] = standardsf[exp_indext,model_runt2,lhund:-10]
                             standards_se_trial[(exp_indext*2 + model_runt),:] = standards_sef[exp_indext,model_runt2,lhund:-10]
 
@@ -216,8 +216,12 @@ if __name__ == '__main__':
                         yearKL = np.log(scale/standard_sei) + (standard_sei**2 + (standardi-ivcentersi[sshift:])**2 )/2/(scale)**2 - 0.5
                         return np.nansum(yearKL,axis=None)
                     
-                    def rescale_KL(scale): #now this is a passthrough function
-                        return rescale_KL_anystd(scale,standardsf[:,:,lhund:-10],standards_sef[:,:,lhund:-10])
+                    training_standards = standardsf[:,:,lhund:-10].copy()
+                    training_standard_se = standards_sef[:,:,lhund:-10].copy()
+                    training_standards[exp_index,model_run,:] = np.nan
+                    training_standard_se[exp_index,model_run,:] = np.nan
+                    def rescale_KL(scale):
+                        return rescale_KL_anystd(scale,training_standards,training_standard_se)
                     best_scale_iv = minimize(rescale_KL, x0=0.04, bounds=[(0.001, 1)]).x[0] #gets a constant uncertainty
 
                     def sharpen_samples(blended_in: np.ndarray, nsharp: float, seed: int ) -> np.ndarray:
@@ -240,13 +244,13 @@ if __name__ == '__main__':
                             out[y] = num / den
                         return out
 
-                    def kl_total_true_vs_empirical_gh(sharp, stand, stand_se,lstart=lhund, eps=1e-300,eeoffset=0):
+                    def kl_total_true_vs_empirical_gh(sharp, stand, stand_se,lstart=0, eps=1e-300,eeoffset=0):
                         """
                         Sum_y KL( P_y || Q_y ),  P_y = N(standard[y], standard_se[y]^2),
                         Q_y = empirical via scipy.stats.gaussian_kde on sharp[y, :], using Gauss–Hermite quadrature.
                         """
                         total = 0.0
-                        for y in range(len(stand)+lstart,len(stand)-10-eeoffset):
+                        for y in range(lstart,len(stand)-eeoffset):
                             if np.isnan(stand[y]):
                                 continue
                             mu, sd = float(stand[y]), float(max(stand_se[y], 1e-12))
@@ -283,10 +287,10 @@ if __name__ == '__main__':
                 best_iv_KL = rescale_KL_anystd(best_scale_iv,standard,standard_se,eeoffset=0,ivcentersi=ivcenters_test)
                 best_iv_KL75 = rescale_KL_anystd(best_scale_iv,standard[25:],standard_se[25:],ivcentersi=ivcenters_test,sshift=25)
                 tempsamplesf = np.load(f'Results2/{outputfilename}_newsamples.npy',mmap_mode="r")[:,estartyr:250,:] #newsamplesfut[exp_index,model_run,:,:,:] =
-                blended = predict_non_nan(stack_weights, tempsamplesf[mask_a,:,:])
+                blended = predict_non_nan(stack_weights, tempsamplesf[mask_a,:,:], seed=base_seed+100)
                 sharpened_blended = sharpen_samples(blended, best_nsharp, seed = 6)
                 best_stack_KL = kl_total_true_vs_empirical_gh(sharpened_blended, standard, standard_se,eeoffset=0)
-                best_stack_KL75 = kl_total_true_vs_empirical_gh(sharpened_blended, standard, standard_se,lstart=lhund+25)                    
+                best_stack_KL75 = kl_total_true_vs_empirical_gh(sharpened_blended, standard, standard_se,lstart=25)                    
         
                 inum=12 #internal interpolation within years
                 fineyrs_all = np.arange(years[estartyr],years[250-1]+1/inum,1/inum)

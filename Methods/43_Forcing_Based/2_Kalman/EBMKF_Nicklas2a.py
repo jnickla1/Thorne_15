@@ -1,3 +1,15 @@
+from pathlib import Path as _V11Path
+import sys as _V11Sys
+_V11Sys.path.insert(0, str(_V11Path(__file__).resolve().parent))
+from ebmkf_v11_support import (load_inputs as _v11_load_inputs,
+    precompute as _v11_precompute, complete_hidden_jacobian as _v11_hidden_jacobian,
+    nonnegative_sqrt as _v11_sqrt, check_covariances as _v11_check_covariances,
+    covariance_inverse as _v11_covariance_inverse,
+    _apply_historical_aerosol_percentile as _v11_apply_aerosol,
+    _apply_historical_eco2_percentile as _v11_apply_eco2,
+    parameter_choice_density as _v11_choice_density,
+    reference_preserving_volcanic_denominator as _v11_volcanic_denominator,
+    inverse_volcanic_denominator as _v11_inverse_volcanic)
 import numpy as np
 # import pykalman
 import matplotlib.pyplot as plt
@@ -10,6 +22,17 @@ from sklearn.metrics import r2_score
 import matplotlib.transforms as mtransforms
 import pdb
 
+# Historical ARI+ACI sensitivity: 5–95; 50 retains the supplied best estimate.
+# Higher values generally select less-negative forcing / weaker aerosol cooling.
+# This is the single setting used by standalone plots AND EBMKF-ta2 historical.
+AEROSOL_FORCING_PERCENTILE = 85.0
+# Non-aerosol anthropogenic forcing percentile, using Gaussian component widths.
+# 50 preserves the frozen best eCO2; larger values mean stronger warming ERF.
+eCO2_FORCING_PERCENTILE = 17.0
+#other key parameter to adjust here:
+fdbkA = 0.00
+
+
 colorekf=(26./255, 44./255, 105./255)
 colorstate=(62./255, 207./255, 117./255)
 coloruncert=(52./255, 235./255, 235./255)
@@ -18,25 +41,27 @@ colorgrey=(0.5,0.5,0.5)
 
 
 
-n_iters = 174 
+n_iters = len(_v11_load_inputs(__file__))
 sz = (n_iters,2) # size of array
 sz2d=(n_iters,2,2)
 
-zJ_from_W = 5.1006447*3.154
+zJ_from_W = 5.1006447*3.154 # global-Earth flux conversion; no extra ocean-area factor
 zJtomm=0.121
 pcolor='deeppink'
 colorrts='goldenrod'
 nbins=24
 sdate=1850
-data = np.genfromtxt(open("./Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',')
+data = _v11_load_inputs(__file__)
 dates=data[:,0]
+n_iters = len(data)
 dates[0]=sdate
 
 
 #temps=data[:, 1]+287
 lCo2=np.log10(data[:,2])
 opt_depth=data[:,3]*0.001 #*0.053) #/1000?0.000100025
-anthro_clouds=(data[:,7]+1)
+aerosol_reference = float(np.mean(data[(1999-1850):(2006-1850),7]))
+anthro_clouds = data[:,7] - aerosol_reference
 
 Roc_tvar=np.square(data[:,6])/zJ_from_W/zJ_from_W
 tsi=data[:,8]
@@ -55,7 +80,8 @@ offset= -np.mean(temps[(1960-sdate):(1990-sdate)]) +JonesOffset + 273.15 #Jones2
 temps=temps+offset
 #pindavg= np.mean(temps[(1850-sdate):(1930-sdate)])
 
-heatCp=17
+# heatCp is derived by precompute_coeffs below (Cs + non-ocean capacity).
+# EBMKF_Nicklas2b explicitly retains its separate fitted-capacity override.
 
 sig=5.6704e-8
 
@@ -75,31 +101,27 @@ pindavg=Teq1850 #286.7 #preindustrial avg
 shaldepth=86
 deepdepth = 1141
 
-fdbkS = 0.35 #23 # from 35
-fdbkA = 0.42 + 0.03
+fdbkS = 0.35 # from 35
+#fdbkA = 0.42 #
 fdbkW = 1.3
 
+# AR6-reference volcanic sensitivity (magnitude): 20 +/- 5 W/m² per raw AOD.
+# The +/-5 documents the supplied uncertainty; this deterministic run uses 20.
+volcanic_target_efficiency = 20.0
+volcanic_target_efficiency_uncertainty = 5.0
+
+def volcanic_denominator(raw_aod):
+    return _v11_volcanic_denominator(globals(), raw_aod)
+
+def raw_aod_from_inverse_denominator(inverse_denominator):
+    return _v11_inverse_volcanic(globals(), inverse_denominator)
+
 def precompute_coeffs(printThem):
-    global dfaS, dfaA, powp1, inbndf, rad1850, B1, B0, outbndf, Cs, Cd
-    dfaS=fdbkS/(sw_in*a_refl*g_refl)
-    dfaA=fdbkA/(sw_in*a_refl*g_refl)
-    powp1 = fdbkW*4/3.22 #1.3
-    B1B0 = 12.74/sig/np.power( T02, 4-powp1 ) #15.45 #19.45
-    inbndf= a_refl*g_refl*9.068 #sw_in* 137.49
-    rad1850 = (sw_in*0.9318*a_refl*(1+dfaA*(Teq1850-T02))+anthro_clouds[0])*g_refl*(1+dfaS*(Teq1850-T02))
-    B1 = (rad1850 / 5.670e-8 / np.power( Teq1850, 4-powp1 ))+B1B0 *2.444 #594
-    B0 = B1B0/B1
-    outbndf= sig*B1
-    Cs= 136.5*shaldepth/1000 #<17 like maybe 14
-    Cd= 136.5*deepdepth/1000
-    if(printThem):
-        print(np.mean(temps[-31:-1])-pindavg)
-        print("inbndf = " + str(inbndf*tsi[0]))
-        print("B1B0 = " + str(B1B0))
-        print("rad1850 = " + str(rad1850))
-        print("B1 = " + str(B1))
-        print("B0 = " + str(B0))
-        print("outbndf = " + str(outbndf))
+    _v11_apply_aerosol(globals())
+    _v11_apply_eco2(globals())
+    _v11_precompute(globals(), printThem)
+    if printThem:
+        _v11_choice_density(globals())
 
         
 precompute_coeffs(False)
@@ -150,7 +172,7 @@ def compute_slope(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
         lCo2n= lCo2[k]
         tsik=tsi[k]
     [x,oc]= x2
-    inboundd=tsik*inbndf/(optdn+9.7279)*((dfaS+dfaA)+2*(dfaS*dfaA)*(x-T02)+dfaS*anthro_cloud/sw_in/0.9318/a_refl)
+    inboundd=tsik*inbndf/volcanic_denominator(optdn)*((dfaS+dfaA)+2*(dfaS*dfaA)*(x-T02)+dfaS*anthro_cloud/reference_absorbed_sw)
     outgoingd= outbndf*(4-powp1)*np.power(x, 3-powp1)*(1-B0*lCo2n) #0.0655
 # Jacobian of the complete next state: d(ocean temperature)/dT = -Cs/Cd.
 # Heat-content increment contains Cs*(T_next-T), so J_HT has no standalone +Cs.
@@ -169,7 +191,7 @@ def compute_update(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
         lCo2n= lCo2[k]
         tsik=tsi[k]
     #print(anthro_cloud);
-    inbound=tsik*inbndf*(1+dfaA*(x-T02)+anthro_cloud/sw_in/0.9318/a_refl)*(1+dfaS*(x-T02))/(optdn+9.7279)
+    inbound=tsik*inbndf*(1+dfaA*(x-T02)+anthro_cloud/reference_absorbed_sw)*(1+dfaS*(x-T02))/volcanic_denominator(optdn)
     outgoing= outbndf*np.power(x, 4-powp1 )*(1-B0*lCo2n)
     oc=(H - Cs*(x-Teq1850))/Cd+oc1850
     if (x)<280:
@@ -208,7 +230,7 @@ xnorm = np.linspace(-5.5, 5.5, 200)
 qqyker=np.zeros((2,200))
 qqykerall=[]
 ynorm  = stats.norm.pdf(xnorm)
-involcavg = np.mean(1/(opt_depth+9.7279))
+involcavg = np.mean(1/volcanic_denominator(opt_depth))
 
 def ekf_future(startyr,Pstart,xhatstart,endyr,case,caseA,noVolcs=True,trail_avg_volcs=False): #pass VolcanoFit module as last parameter
     nfiter=endyr-startyr
@@ -220,14 +242,14 @@ def ekf_future(startyr,Pstart,xhatstart,endyr,case,caseA,noVolcs=True,trail_avg_
     #
     past_opt_depth=data[:,3]*0.001 #reload past data in case we lost it
     if(noVolcs==True):
-        volcs = np.ones(nfiter)*(1/involcavg-9.7279) #np.mean(opt_depth) #barely makes a difference
+        volcs = np.ones(nfiter)*raw_aod_from_inverse_denominator(involcavg) #np.mean(opt_depth) #barely makes a difference
         
     else:
         volcs = noVolcs.genEruptions(nfiter+30)*0.001
         if(trail_avg_volcs):
             allvolcsrec=np.concatenate((past_opt_depth,volcs))
             
-            wt_opt_depths = 1/(allvolcsrec+9.7279)
+            wt_opt_depths = 1/volcanic_denominator(allvolcsrec)
             N = 30 ; cN=int(np.ceil(N/2)) ; fN=int(np.floor(N/2))
             nwt_opt_depths=np.empty(nfiter+30); nwt_opt_depths[:]=involcavg
             for i in range(n_iters,n_iters+nfiter+30-1):
@@ -235,14 +257,14 @@ def ekf_future(startyr,Pstart,xhatstart,endyr,case,caseA,noVolcs=True,trail_avg_
                 nwt_opt_depths[i-n_iters] = (np.sum(wt_opt_depths[(firsta):i+1])+ involcavg*(cN-1))/N
                 
                 #computing half-average - future is assumed to be the average 
-            volcs=(1/nwt_opt_depths-9.7279)
+            volcs=raw_aod_from_inverse_denominator(nwt_opt_depths)
                
             
     #print(2*np.sqrt(Phatf[0][0,0]))
     for k in range(1,nfiter):
-        xhatf[k]= xhatf[k-1] + compute_update(xhatf[k-1],0,volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1]+1)
+        xhatf[k]= xhatf[k-1] + compute_update(xhatf[k-1],0,volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1]-aerosol_reference)
         #print(xhatf[k], volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1])
-        Fnow=compute_slope(xhatf[k-1],0,volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1]+1)         
+        Fnow=compute_slope(xhatf[k-1],0,volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1]-aerosol_reference)         
         Phatf[k]= np.matmul(np.matmul(Fnow ,Phatf[k-1]), np.transpose(Fnow)) +Q
         #if(k==nfiter-1):
         #    print(Fnow)
@@ -252,6 +274,9 @@ def ekf_future(startyr,Pstart,xhatstart,endyr,case,caseA,noVolcs=True,trail_avg_
 
 def ekf_run(z,n_iter,retPs=False):
     # intial guesses
+    process_cov_history = np.zeros_like(Pminus[:n_iter])
+    qqyker.fill(0)
+    qqykerall.clear()
     xhat[0] = [Teq1850,oc_meas[0]]
     xblind[0]= xhat[0]
     P[0,:,:] = 1.0
@@ -269,24 +294,24 @@ def ekf_run(z,n_iter,retPs=False):
         xhatminus[k] = xhat[k-1] + compute_update(xhat[k-1],k)
         xblind[k]= xblind[k-1] + compute_update(xblind[k-1],k)
         
-        Pminus[k] = np.matmul(np.matmul(F[k] ,P[k-1]), np.transpose(F[k])) +Q #*10
+        process_cov_history[k] = Q
+        Pminus[k] = F[k] @ P[k-1] @ F[k].T + process_cov_history[k]
 
         # measurement update if(Rvary):
 
         S[k]= Pminus[k] + Q*30 + np.matrix([[R_tvar[k],0],[0,Roc_tvar[k]]])
 
-        K[k] = np.matmul(Pminus[k],np.linalg.inv(S[k]))
+        K[k] = np.matmul(Pminus[k],_v11_covariance_inverse(S[k]))
         y[k]=z[k]-(xhatminus[k])
         xhat[k] = xhatminus[k]+np.matmul(K[k],y[k])
         P[k] = np.matmul((np.eye(2)- K[k] ),Pminus[k])
-        stdevS=np.sqrt(np.abs(np.diag(S[k])))
+        stdevS=_v11_sqrt(np.diag(S[k]))
         qqy[k]=y[k]/stdevS
-        #gmstpdf=stats.norm.pdf(xnorm,loc = qqy[k,0], scale = data[k,4]/stdevS[0])
-        #ohcapdf=stats.norm.pdf(xnorm,loc = qqy[k,1], scale = data[k,6]/zJ_from_W/stdevS[1])
-        #qqykerall.append([gmstpdf,ohcapdf])
-        #if k>1:
-        #    qqyker[0] += gmstpdf/(n_iters-1)
-        #    qqyker[1] += ohcapdf/(n_iters-1)
+        gmstpdf=stats.norm.pdf(xnorm,loc=qqy[k,0],scale=np.sqrt(R_tvar[k])/stdevS[0])
+        ohcapdf=stats.norm.pdf(xnorm,loc=qqy[k,1],scale=np.sqrt(Roc_tvar[k])/stdevS[1])
+        qqykerall.append([gmstpdf,ohcapdf])
+        qqyker[0] += gmstpdf/(n_iter-1)
+        qqyker[1] += ohcapdf/(n_iter-1)
         #lml[k]= -0.5* (np.transpose(y[k])/S[k]*y[k] + np.log(S[k]) + np.log(2*np.pi)) #need to sort this out later
         
 
@@ -316,12 +341,15 @@ def ekf_run(z,n_iter,retPs=False):
         # RTS Smoother
             k=n_iter-ik
         # measurement update
-            try:
-                Khat[k] = np.matmul(np.matmul(P[k],np.transpose(F[k+1])),np.linalg.inv(Pminus[k+1])) #compute inverse for higher dimensions
-            except:
-                Khat[k] =Khat[k+1]
-            xhathat[k] = xhat[k]+np.matmul(Khat[k],(xhathat[k+1]- xhat[k] - compute_update(xhat[k],k)))
-            Phat[k] = P[k] + np.matmul(np.matmul(Khat[k],(Phat[k+1]- Pminus[k])),np.transpose(Khat[k]))
+            # Symmetric eigensolver; do not reuse a neighbouring year's gain.
+            Khat[k] = (P[k] @ F[k+1].T) @ _v11_covariance_inverse(Pminus[k+1])
+            xhathat[k] = xhat[k] + np.matmul(Khat[k], xhathat[k+1]-xhatminus[k+1])
+            # Stable Joseph form of the RTS conditional covariance.
+            conditional_map = np.eye(P.shape[-1]) - Khat[k] @ F[k+1]
+            Phat[k] = (conditional_map @ P[k] @ conditional_map.T
+                       + Khat[k] @ process_cov_history[k+1] @ Khat[k].T
+                       + Khat[k] @ Phat[k+1] @ Khat[k].T)
+            Phat[k] = (Phat[k] + Phat[k].T) / 2
             yrts=z[k]-H *xhathat[k]
 #        qqyh.append(float(yrts/np.sqrt(H*Phat[k]*np.transpose(H) +np.matrix([[R_tvar[k],0],[0,Roc_tvar[k]]]))))
             Shat[k]= Phat[k]+ Q*30  +np.matrix([[R_tvar[k],0],[0,Roc_tvar[k]]])
@@ -331,17 +359,18 @@ def ekf_run(z,n_iter,retPs=False):
 ####            qqyh2.append(float(ybark/np.sqrt(np.abs(Phat[k]))))
 ##    print(sum(lml))
 ##    print(lsml)
+    _v11_check_covariances(globals(), n_iter)
     if (retPs==True):
-        return xhat[0:n_iter], P[0:n_iter]
+        return (xhat[0:n_iter]).copy(), (P[0:n_iter]).copy()
     elif (retPs==2):
-        return xhat[0:n_iter], P[0:n_iter], S[0:n_iter], xhatminus[0:n_iter,0]
+        return (xhat[0:n_iter]).copy(), (P[0:n_iter]).copy(), (S[0:n_iter]).copy(), (xhatminus[0:n_iter,0]).copy()
     elif (retPs==3):
         #breakpoint()
-        return xhat[0:n_iter,0], P[0:n_iter,0,0],xhathat[0:n_iter,0], Phat[0:n_iter,0,0]
+        return (xhat[0:n_iter,0]).copy(), (P[0:n_iter,0,0]).copy(), (xhathat[0:n_iter,0]).copy(), (Phat[0:n_iter,0,0]).copy()
     elif (retPs==4):
-        return xhat[0:n_iter,0], P[0:n_iter,0,0],xblind[0:n_iter,0], Phat[0:n_iter,0,0]
+        return (xhat[0:n_iter,0]).copy(), (P[0:n_iter,0,0]).copy(), (xblind[0:n_iter,0]).copy(), (Phat[0:n_iter,0,0]).copy()
     else:
-        return xhat[0:n_iter]
+        return (xhat[0:n_iter]).copy()
 
 
 observ = np.transpose(np.array([temps,oc_meas]))
@@ -379,6 +408,7 @@ def plot_boilerplate(ax=plt.gca()):
     ax.tick_params( direction = 'in',bottom=True, top=True, left=True, right=True )
 
 if (__name__ == "__main__") and True:
+    parameter_choice_density_report = _v11_choice_density(globals())
     r2 = r2_score(observ[:,0], xblind[:,0])
     print('r2 score for GMST to blind is', r2)
     r2 = r2_score(observ[:,1], xblind[:,1])
@@ -454,10 +484,10 @@ if (__name__ == "__main__") and True:
 
     fig = plt.figure(figsize=(8.25,6))
     #(H - Cs*(x-Teq1850))/Cd+oc1850
-    plt.plot(dates,(oc_meas - heatCp*(temps-Teq1850))/Cd+oc1850,'o',markersize=2,label='inferred from both Zanna and HADCRUT5 measurements',color=colorgrey)
-    plt.plot(dates,(this_xhat[:,1]- heatCp*(this_xhat[:,0]-Teq1850))/Cd+oc1850,'-', label="posterior ocean cons. temp. EBM-KF state estimate $ \^{\\theta }_{t} $",color=colorekf)
+    plt.plot(dates,(oc_meas - Cs*(temps-Teq1850))/Cd+oc1850,'o',markersize=2,label='inferred from both Zanna and HADCRUT5 measurements',color=colorgrey)
+    plt.plot(dates,(this_xhat[:,1]- Cs*(this_xhat[:,0]-Teq1850))/Cd+oc1850,'-', label="posterior ocean cons. temp. EBM-KF state estimate $ \^{\\theta }_{t} $",color=colorekf)
                                                                                                                 
-    plt.plot(dates,(xblind[:,1]- heatCp*(xblind[:,0]-Teq1850))/Cd+oc1850,'--',label='blind model prediction $\~{\\theta }_{t}$',color='darkgoldenrod')
+    plt.plot(dates,(xblind[:,1]- Cs*(xblind[:,0]-Teq1850))/Cd+oc1850,'--',label='blind model prediction $\~{\\theta }_{t}$',color='darkgoldenrod')
     plt.legend()
     ax=plt.gca()
     ax.set_ylabel('Temperature (K)')

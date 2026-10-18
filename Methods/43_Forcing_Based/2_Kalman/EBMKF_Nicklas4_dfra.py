@@ -1,3 +1,10 @@
+from pathlib import Path as _V11Path
+import sys as _V11Sys
+_V11Sys.path.insert(0, str(_V11Path(__file__).resolve().parent))
+from ebmkf_v11_support import (load_inputs as _v11_load_inputs,
+    precompute as _v11_precompute, complete_hidden_jacobian as _v11_hidden_jacobian,
+    nonnegative_sqrt as _v11_sqrt, check_covariances as _v11_check_covariances,
+    covariance_inverse as _v11_covariance_inverse)
 import numpy as np
 # import pykalman
 import matplotlib.pyplot as plt
@@ -22,25 +29,27 @@ colorgrey=(0.5,0.5,0.5)
 
 
 
-n_iters = 174 
+n_iters = len(_v11_load_inputs(__file__))
 
 
-zJ_from_W = 5.1006447*3.154*0.71
+zJ_from_W = 5.1006447*3.154 # global-Earth flux conversion; no extra ocean-area factor
 zJtomm=0.121
 pcolor='deeppink'
 colorrts='goldenrod'
 nbins=24
 sdate=1850
-data = np.genfromtxt(open(common_dataprefix+"toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',') #run as main
-#data = np.genfromtxt(open("../Common_Data/toyKFmodelData8c.csv", "rb"),dtype=float, delimiter=',') #run from other file
+data = _v11_load_inputs(__file__)
+#data = np.genfromtxt(open("../Common_Data/toyKFmodelData9c.csv", "rb"),dtype=float, delimiter=',') #run from other file
 dates=data[:,0]
+n_iters = len(data)
 dates[0]=sdate
 
 
 #temps=data[:, 1]+287
 lCo2=np.log10(data[:,2])
 opt_depth=data[:,3]*0.001 #*0.053) #/1000?0.000100025
-anthro_clouds=(data[:,7]+1)
+aerosol_reference = float(np.mean(data[(1999-1850):(2006-1850),7]))
+anthro_clouds = data[:,7] - aerosol_reference
 
 Roc_tvar=np.square(data[:,6])/zJ_from_W/zJ_from_W
 tsi=data[:,8]
@@ -59,7 +68,8 @@ offset= -np.mean(temps[(1960-sdate):(1990-sdate)]) +JonesOffset + 273.15 #Jones2
 temps=temps+offset
 #pindavg= np.mean(temps[(1850-sdate):(1930-sdate)])
 
-heatCp=17
+# heatCp is derived by precompute_coeffs below (Cs + non-ocean capacity).
+# EBMKF_Nicklas2b explicitly retains its separate fitted-capacity override.
 
 sig=5.6704e-8
 
@@ -81,30 +91,11 @@ deepdepth = 1141
 
 fdbkS = 0.35 
 fdbkA = 0.42 #- 0.12
-fdbkA_sigma = 0.316 #dfaA=fdbkA/(sw_in*a_refl*g_refl)
+fdbkA_sigma = 0.316 #dfaA=fdbkA/(reference_absorbed_sw)
 fdbkW = 1.3
 
 def precompute_coeffs(printThem):
-    global dfaS, dfaA, powp1, inbndf, rad1850, B1, B0, outbndf, Cs, Cd
-    dfaS=fdbkS/(sw_in*a_refl*g_refl)
-    dfaA=fdbkA/(sw_in*a_refl*g_refl)
-    powp1 = fdbkW*4/3.22 #1.3
-    B1B0 = 12.74/sig/np.power( T02, 4-powp1 ) #15.45 #19.45
-    inbndf= a_refl*g_refl*9.068 #sw_in* 137.49
-    rad1850 = (sw_in*0.9318*a_refl*(1+dfaA*(Teq1850-T02))+anthro_clouds[0])*g_refl*(1+dfaS*(Teq1850-T02))
-    B1 = (rad1850 / 5.670e-8 / np.power( Teq1850, 4-powp1 ))+B1B0 *2.444 #594
-    B0 = B1B0/B1
-    outbndf= sig*B1
-    Cs= 136.5*shaldepth/1000 #<17 like maybe 14
-    Cd= 136.5*deepdepth/1000
-    if(printThem):
-        print(np.mean(temps[-31:-1])-pindavg)
-        print("inbndf = " + str(inbndf*tsi[0]))
-        print("B1B0 = " + str(B1B0))
-        print("rad1850 = " + str(rad1850))
-        print("B1 = " + str(B1))
-        print("B0 = " + str(B0))
-        print("outbndf = " + str(outbndf))
+    _v11_precompute(globals(), printThem)
 
         
 precompute_coeffs(False)
@@ -155,35 +146,15 @@ def compute_slope(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
         lCo2n= lCo2[k]
         tsik=tsi[k]
     [x,oc]= x2
-    inboundd=tsik*inbndf/(optdn+9.7279)*((dfaS+dfaA)+2*(dfaS*dfaA)*(x-T02)+dfaS*anthro_cloud/sw_in/0.9318/a_refl)
+    inboundd=tsik*inbndf/(optdn+9.7279)*((dfaS+dfaA)+2*(dfaS*dfaA)*(x-T02)+dfaS*anthro_cloud/reference_absorbed_sw)
     outgoingd= outbndf*(4-powp1)*np.power(x, 3-powp1)*(1-B0*lCo2n) #0.0655
 # Jacobian of the complete next state: d(ocean temperature)/dT = -Cs/Cd.
 # Heat-content increment contains Cs*(T_next-T), so J_HT has no standalone +Cs.
     return np.array([[(1 + (inboundd-outgoingd - gad*(1+Cs/Cd))/heatCp ) , gad/Cd/heatCp], \
                      [ (inboundd-outgoingd-gad*(1+Cs/Cd))*Cs/heatCp +gad*(1+Cs/Cd)  ,  ( 1 - (1-Cs/heatCp)*gad/Cd)]])
 
-def compute_slope_hidden(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
-    k=int(ki)
-    tsik=sw_in
-    if (anthro_cloud<-100):
-        anthro_cloud = anthro_clouds[k]
-    if (optdn<0):
-        optdn = opt_depth[k]
-    if (lCo2n<=0):
-        lCo2n= lCo2[k]
-        tsik=tsi[k]
-    [x,H,eng_bal,dfrA_float]= x2.T[0] #unpack completely
-    inboundd=tsik*inbndf/(optdn+9.7279)*((dfaS+dfaA)+2*(dfaS*dfaA)*(x-T02)+dfaS*anthro_cloud/sw_in/0.9318/a_refl)
-    outgoingd= outbndf*(4-powp1)*np.power(x, 3-powp1)*(1-B0*lCo2n) #0.0655
-
-    inbound_ddfrA_float=tsik*inbndf*((x-T02))*(1+dfaS*(x-T02))/(optdn+9.7279)
-# Jacobian of the complete next state: d(ocean temperature)/dT = -Cs/Cd.
-# Heat-content increment contains Cs*(T_next-T), so J_HT has no standalone +Cs.
-
-    return np.array([[(1 + (inboundd-outgoingd - gad*(1+Cs/Cd))/heatCp ) , gad/Cd/heatCp, 0, inbound_ddfrA_float], \
-                     [ (inboundd-outgoingd-gad*(1+Cs/Cd))*Cs/heatCp +gad*(1+Cs/Cd)  ,  ( 1 - (1-Cs/heatCp)*gad/Cd),0 , inbound_ddfrA_float*Cs],\
-                     [inboundd-outgoingd,0,0,inbound_ddfrA_float],\
-                     [0,0,0,1]]) #dfrA_float just randomly walks
+def compute_slope_hidden(x2,ki,optdn=-1,lCo2n=-1,anthro_cloud=-101):
+    return _v11_hidden_jacobian(compute_update_hidden,x2,ki,optdn,lCo2n,anthro_cloud)
 
 def compute_update(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101): 
     k=int(ki)
@@ -197,7 +168,7 @@ def compute_update(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
         lCo2n= lCo2[k]
         tsik=tsi[k]
     #print(anthro_cloud);
-    inbound=tsik*inbndf*(1+dfaA*(x-T02)+anthro_cloud/sw_in/0.9318/a_refl)*(1+dfaS*(x-T02))/(optdn+9.7279)
+    inbound=tsik*inbndf*(1+dfaA*(x-T02)+anthro_cloud/reference_absorbed_sw)*(1+dfaS*(x-T02))/(optdn+9.7279)
     outgoing= outbndf*np.power(x, 4-powp1 )*(1-B0*lCo2n)
     oc=(H - Cs*(x-Teq1850))/Cd+oc1850
     if (x)<280:
@@ -220,7 +191,7 @@ def compute_update_hidden(x2,ki, optdn=-1, lCo2n=-1,anthro_cloud=-101):
         lCo2n= lCo2[k]
         tsik=tsi[k]
     #print(anthro_cloud);
-    inbound=tsik*inbndf*(1+dfrA_float*(x-T02)+anthro_cloud/sw_in/0.9318/a_refl)*(1+dfaS*(x-T02))/(optdn+9.7279)
+    inbound=tsik*inbndf*(1+dfrA_float*(x-T02)+anthro_cloud/reference_absorbed_sw)*(1+dfaS*(x-T02))/(optdn+9.7279)
     outgoing= outbndf*np.power(x, 4-powp1 )*(1-B0*lCo2n)
     oc=(H - Cs*(x-Teq1850))/Cd+oc1850
     if (x)<280:
@@ -265,9 +236,9 @@ def ekf_future(startyr,Pstart,xhatstart,endyr,case,caseA,noVolcs=True,trail_avg_
             
     #print(2*np.sqrt(Phatf[0][0,0]))
     for k in range(1,nfiter):
-        xhatf[k]= xhatf[k-1] + compute_update(xhatf[k-1],0,volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1]+1)
+        xhatf[k]= xhatf[k-1] + compute_update(xhatf[k-1],0,volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1]-aerosol_reference)
         #print(xhatf[k], volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1])
-        Fnow=compute_slope(xhatf[k-1],0,volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1]+1)         
+        Fnow=compute_slope(xhatf[k-1],0,volcs[k-1],case[startyr-2015+k-1],caseA[startyr-2015+k-1]-aerosol_reference)         
         Phatf[k]= np.matmul(np.matmul(Fnow ,Phatf[k-1]), np.transpose(Fnow)) +Q
         #if(k==nfiter-1):
         #    print(Fnow)
@@ -347,7 +318,7 @@ residuals_oceanl = oc_meas[2001 - 1850: 2023 - 1850] - y_pred
 
 
 cM2= np.cov(np.array([residuals_templ,residuals_oceanl, residuals_TOA]))/30;
-dfrA_float_var = (fdbkA_sigma/(sw_in*a_refl*g_refl))**2
+dfrA_float_var = (fdbkA_sigma/(reference_absorbed_sw))**2
 
 
 xblind[0,0:2,0]= np.array([Teq1850,oc_meas[0]])
@@ -357,9 +328,9 @@ for k in range(1,n_iters):
     xblind[k]=temp_update[0:2]
     TOA_swout[k] = temp_update[2,0]
     TOA_swout_high[k] = compute_update_hidden(
-        np.array([[xblind[k-1,0,0],xblind[k-1,1,0],0,dfaA + fdbkA_sigma/(sw_in*a_refl*g_refl)]]).T,k)[2,0]
+        np.array([[xblind[k-1,0,0],xblind[k-1,1,0],0,dfaA + fdbkA_sigma/(reference_absorbed_sw)]]).T,k)[2,0]
     TOA_swout_low[k] = compute_update_hidden(
-        np.array([[xblind[k-1,0,0],xblind[k-1,1,0],0,dfaA - fdbkA_sigma/(sw_in*a_refl*g_refl)]]).T,k)[2,0]
+        np.array([[xblind[k-1,0,0],xblind[k-1,1,0],0,dfaA - fdbkA_sigma/(reference_absorbed_sw)]]).T,k)[2,0]
 
 #recombining
 TOA_meas_artif = np.copy(TOA_swout)
@@ -374,6 +345,7 @@ TOA_meas_artif_var[2001-1850:2023-1850] = TOA_crop_var
 
 def ekf_run(z,n_iter,retPs=False):
     
+    process_cov_history = np.zeros_like(Pminus[:n_iter])
     xblind2=np.zeros((n_iter,2,1))
     xblind2[0,0:2,0]= np.array([Teq1850,oc_meas[0]])
     for k in range(1,n_iter):
@@ -402,10 +374,11 @@ def ekf_run(z,n_iter,retPs=False):
         
         #TOA_swout[k]=  xhatminus[k][2,0]
         sc_old=1
-        Pminus[k] = np.matmul(np.matmul(F[k] ,P[k-1]), np.transpose(F[k])) +  np.array([[Q[0,0]   ,Q[0,1]   ,cM2[0,2] , 0],
+        process_cov_history[k] = np.array([[Q[0,0]   ,Q[0,1]   ,cM2[0,2] , 0],
                                                                                         [Q[1,0]  ,Q[1,1]    ,cM2[1,2] , 0],
                                                                                         [cM2[2,0]  ,cM2[2,1] ,cM2[2,2] , 0],
-                                                                                        [0       ,0       ,0       ,dfrA_float_var/200]])  #4x4 stuff  dfrA_float_var
+                                                                                        [0       ,0       ,0       ,dfrA_float_var/200]])
+        Pminus[k] = F[k] @ P[k-1] @ F[k].T + process_cov_history[k]
 
         # change 30 -> 10 to reduce additional measurement noise
         # change dfrA_float_var/60 due to overdispersion of CMIP
@@ -417,11 +390,11 @@ def ekf_run(z,n_iter,retPs=False):
                                              [0   ,   Roc_tvar[k]/2,0],
                                              [0   ,     0 ,       TOA_meas_artif_var[k]]]) #3x3 stuff, time-varying
 
-        K[k] = np.matmul(Pminus[k],np.matmul(np.transpose(A),np.linalg.inv(S[k])))
+        K[k] = np.matmul(Pminus[k],np.matmul(np.transpose(A),_v11_covariance_inverse(S[k])))
         y[k]=z[k]-np.matmul(A,(xhatminus[k]))
         xhat[k] = xhatminus[k]+np.matmul(K[k],y[k])
         P[k] = np.matmul((np.eye(4)- np.matmul(K[k],A) ),Pminus[k])
-        stdevS=np.sqrt(np.abs(np.diag(S[k])))
+        stdevS=_v11_sqrt(np.diag(S[k]))
         qqy[k]=(y[k].T/stdevS[0:3])
         gmstpdf=stats.norm.pdf(xnorm,loc = qqy[k,0], scale = np.sqrt(R_tvar[k])/stdevS[0])
         ohcapdf=stats.norm.pdf(xnorm,loc = qqy[k,1], scale = np.sqrt(Roc_tvar[k])/stdevS[1])
@@ -446,13 +419,16 @@ def ekf_run(z,n_iter,retPs=False):
         # RTS Smoother
             k=n_iter-ik
         # measurement update
-            try:
-                Khat[k] = np.matmul(np.matmul(P[k],np.transpose(F[k+1])),np.linalg.inv(Pminus[k+1])) #compute inverse for higher dimensions
-            except:
-                Khat[k] =Khat[k+1]
+            # Symmetric eigensolver; do not reuse a neighbouring year's gain.
+            Khat[k] = (P[k] @ F[k+1].T) @ _v11_covariance_inverse(Pminus[k+1])
             #breakpoint()
-            xhathat[k] = xhat[k]+np.matmul(Khat[k],(xhathat[k+1]- compute_update_hidden(xhat[k],k)))
-            Phat[k] = P[k] + np.matmul(np.matmul(Khat[k],(Phat[k+1]- Pminus[k])),np.transpose(Khat[k]))
+            xhathat[k] = xhat[k] + np.matmul(Khat[k], xhathat[k+1]-xhatminus[k+1])
+            # Stable Joseph form of the RTS conditional covariance.
+            conditional_map = np.eye(P.shape[-1]) - Khat[k] @ F[k+1]
+            Phat[k] = (conditional_map @ P[k] @ conditional_map.T
+                       + Khat[k] @ process_cov_history[k+1] @ Khat[k].T
+                       + Khat[k] @ Phat[k+1] @ Khat[k].T)
+            Phat[k] = (Phat[k] + Phat[k].T) / 2
             yrts=z[k]-np.matmul(A,(xhathat[k])) #z[k]-H *xhathat[k]
             Shat[k]= np.matmul(np.matmul(A ,Phat[k]), np.transpose(A)) + 30* np.array([[Q[0,0]  ,Q[0,1]  ,cM2[0,2]],
                                                                                  [Q[1,0]  ,Q[1,1]  ,cM2[1,2]],
@@ -461,18 +437,19 @@ def ekf_run(z,n_iter,retPs=False):
                                              [0   ,   Roc_tvar[k],0],
                                              [0   ,     0 ,       TOA_meas_artif_var[k]]]) #3x3 stuff, time-varying
 
+    _v11_check_covariances(globals(), n_iter)
     if (retPs==True):
-        return xhat[0:n_iter], P[0:n_iter]
+        return (xhat[0:n_iter]).copy(), (P[0:n_iter]).copy()
     elif (retPs==2):
-        return xhat[0:n_iter], P[0:n_iter], S[0:n_iter], xhatminus[0:n_iter,0]
+        return (xhat[0:n_iter]).copy(), (P[0:n_iter]).copy(), (S[0:n_iter]).copy(), (xhatminus[0:n_iter,0]).copy()
     elif (retPs==3):
         #breakpoint()
         if False:
             dates = np.arange(1850+30,1850+n_iter)
             fig = plt.figure()
-            xh1fdbk=xhat[:,3].T[0] *  (sw_in*a_refl*g_refl)
+            xh1fdbk=xhat[:,3].T[0] *  (reference_absorbed_sw)
             plt.plot(dates,xh1fdbk[30:])
-            stdPfdbk=np.sqrt(np.abs(P))[:,3,3] *(sw_in*a_refl*g_refl)
+            stdPfdbk=np.sqrt(np.abs(P))[:,3,3] *(reference_absorbed_sw)
             plt.fill_between(dates,xh1fdbk[30:] + 2*stdPfdbk[30:], xh1fdbk[30:] - 2*stdPfdbk[30:], color = 'red')
             plt.axhline(y=fdbkA,color='k')
             
@@ -500,11 +477,11 @@ def ekf_run(z,n_iter,retPs=False):
             plt.plot(dates, ohca_xblind,'o',markersize=2,color='red')
             #plt.plot(dates, TOA_swout,'o',markersize=2,color='red')
             #plt.fill_between(dates, TOA_meas_artif-2*np.sqrt(TOA_meas_artif_var[30:]), TOA_meas_artif+2*np.sqrt(TOA_meas_artif_var[30:]), color="grey",zorder=5,alpha=0.2,lw=0)
-        return xhat[0:n_iter,0,0], P[0:n_iter,0,0],xhathat[0:n_iter,0,0], Phat[0:n_iter,0,0]
+        return (xhat[0:n_iter,0,0]).copy(), (P[0:n_iter,0,0]).copy(), (xhathat[0:n_iter,0,0]).copy(), (Phat[0:n_iter,0,0]).copy()
     elif (retPs==4):
-        return xhat[0:n_iter,0,0], P[0:n_iter,0,0],xblind[0:n_iter,0,0], Phat[0:n_iter,0,0]
+        return (xhat[0:n_iter,0,0]).copy(), (P[0:n_iter,0,0]).copy(), (xblind[0:n_iter,0,0]).copy(), (Phat[0:n_iter,0,0]).copy()
     else:
-        return xhat[0:n_iter]
+        return (xhat[0:n_iter]).copy()
 
 
 observ = np.array([[temps,oc_meas,TOA_meas_artif]]).T
@@ -618,10 +595,10 @@ if (__name__ == "__main__") and True:
 
     fig = plt.figure(figsize=(8.25,6))
     #(H - Cs*(x-Teq1850))/Cd+oc1850
-    plt.plot(dates,(oc_meas - heatCp*(temps-Teq1850))/Cd+oc1850,'o',markersize=2,label='inferred from both Zanna and HADCRUT5 measurements',color=colorgrey)
-    plt.plot(dates,(this_xhat[:,1]- heatCp*(this_xhat[:,0]-Teq1850))/Cd+oc1850,'-', label="posterior ocean cons. temp. EBM-KF state estimate $ \^{\\theta }_{t} $",color=colorekf)
+    plt.plot(dates,(oc_meas - Cs*(temps-Teq1850))/Cd+oc1850,'o',markersize=2,label='inferred from both Zanna and HADCRUT5 measurements',color=colorgrey)
+    plt.plot(dates,(this_xhat[:,1]- Cs*(this_xhat[:,0]-Teq1850))/Cd+oc1850,'-', label="posterior ocean cons. temp. EBM-KF state estimate $ \^{\\theta }_{t} $",color=colorekf)
                                                                                                                 
-    plt.plot(dates,(xblind[:,1]- heatCp*(xblind[:,0]-Teq1850))/Cd+oc1850,'--',label='blind model prediction $\~{\\theta }_{t}$',color='darkgoldenrod')
+    plt.plot(dates,(xblind[:,1]- Cs*(xblind[:,0]-Teq1850))/Cd+oc1850,'--',label='blind model prediction $\~{\\theta }_{t}$',color='darkgoldenrod')
     plt.legend()
     ax=plt.gca()
     ax.set_ylabel('Temperature (K)')
@@ -831,9 +808,9 @@ if (__name__ == "__main__") and True:
         
 
     fig = plt.figure()
-    xh1fdbk=this_xhat[:,3].T[0] *  (sw_in*a_refl*g_refl)
+    xh1fdbk=this_xhat[:,3].T[0] *  (reference_absorbed_sw)
     plt.plot(dates[30:],xh1fdbk[30:])
-    stdPfdbk=np.sqrt(np.abs(P))[:,3,3] *(sw_in*a_refl*g_refl)
+    stdPfdbk=np.sqrt(np.abs(P))[:,3,3] *(reference_absorbed_sw)
     plt.fill_between(dates[30:],xh1fdbk[30:] + 2*stdPfdbk[30:], xh1fdbk[30:] - 2*stdPfdbk[30:], color = 'red')
     plt.axhline(y=fdbkA,color='k')
     fdbkA2 = 0.42 - 0.12

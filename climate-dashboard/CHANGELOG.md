@@ -179,3 +179,8 @@ Added a dismissible default-view hint and a one-member pale-yellow approximate 9
 ## 2026-10-12 — Optional rates-over-time overlay
 
 Added an interactive-only overlay opened from the warming-rate card, with lazy-loaded code/data. Blue uses the existing centred-mean OLS benchmark (ending in 2015), solid red uses retrospective trailing 15-year quadratic endpoint rates matching the 2025 headline, and an optional faint dotted red series uses annual-current fits. The retrospective line cannot be toggled away. Added four small JSON exports and 26 explanatory CSV downloads, regenerated automatically during website assembly from the existing validated JSON. Existing scientific exports, headline estimates, probability calculations and static figures are unchanged. Numerical endpoint checks pass for all 26 options (maximum difference <7e-8°C/decade from JSON rounding).
+
+
+## 2026-10-14 — Future LOO correction and recalculation
+
+Validated the complete Oscar calibration download and applied approved future-only year alignment, held-out-member exclusion and KL-window corrections. Replaced the legacy December-2025 aggregation date check with exact expected member coverage. Full future combination recalculation is in progress; final numbers remain pending verification. Historical/heads-tails/dashboard outputs and website publication are unchanged by this stage.
