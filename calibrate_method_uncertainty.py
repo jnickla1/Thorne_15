@@ -379,7 +379,7 @@ if __name__ == '__main__':
                     deviances = standard_samples - central_est[:, np.newaxis] #relative to this method's central estimate
                     resc_standard_samples = central_est[:, np.newaxis] + deviances/best_alter_scale
                     sampled_lls = result['log_likelihood'](years, resc_standard_samples ,k) - np.log(best_alter_scale) #need to ensure dimensions work
-                    newsamples = (result['resample'](years, nsamples,k) - central_est[:, np.newaxis])/best_alter_scale + central_est[:, np.newaxis]
+                    newsamples = (result['resample'](years, nsamples,k) - central_est[:, np.newaxis])*best_alter_scale + central_est[:, np.newaxis]
 
                 df_results.loc[i]= [ method_name,short_method_class,err_var, err_var100,err_var75, best_alter_scale]
                 all_central_est.append(central_est)

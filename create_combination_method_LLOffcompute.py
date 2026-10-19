@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy.stats import norm, gaussian_kde
-from scipy.optimize import minimize
+from scipy.optimize import minimize, minimize_scalar
 from numpy.polynomial.hermite import hermgauss
 from custom_stack_utils import predict_non_nan, infill_log_likelihoods, fit_stacking_weights_logp
 import pdb;
@@ -266,7 +266,7 @@ if __name__ == '__main__':
                         sharpened = sharpen_samples(blended_trial.reshape(-1, nsamples), scale[0], seed = 42)
                         return kl_total_true_vs_empirical_gh(sharpened, standards_trial.reshape(-1), standards_se_trial.reshape(-1))
 
-                    best_nsharp = minimize(rescale_KL_stack, x0=2, bounds=[(1, 10)], tol=0.005).x[0]
+                    best_nsharp = minimize_scalar(lambda v: rescale_KL_stack([v]), bounds=(1, 10), method='bounded', options={'xatol': 0.01}).x #bounded scalar search: KL is discontinuous at integer nsharp, so gradient-based minimize stayed at x0
                     sharpened_blended = sharpen_samples(blended_trial.reshape(-1, nsamples), best_nsharp, seed = 2)
                         
                 print("finished fitting weights and variances")

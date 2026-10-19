@@ -360,6 +360,108 @@
       "notes": [
         "This is the project\u2019s comparison option, not a separately named published estimator."
       ]
+    },
+    "CSCM_comb": {
+      "label": "CSCM combination",
+      "full_name": "Compressed, stacked, calibrated mixture of the 7 top-tier realised methods",
+      "warming_type": "realized",
+      "primary_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "references": [
+        {
+          "label": "Thorne et al., 2026",
+          "title": "How well can we quantify when 1.5 \u00b0C of global warming has been exceeded?",
+          "url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+          "doi": "10.5194/essd-2025-825",
+          "verified_url": "https://essd.copernicus.org/preprints/essd-2025-825/"
+        },
+        {
+          "label": "Yao et al., 2018",
+          "title": "Using Stacking to Average Bayesian Predictive Distributions",
+          "url": "https://doi.org/10.1214/17-BA1091",
+          "doi": "10.1214/17-BA1091",
+          "verified_url": "https://projecteuclid.org/journals/bayesian-analysis/volume-13/issue-3/Using-Stacking-to-Average-Bayesian-Predictive-Distributions-with-Discussion/10.1214/17-BA1091.full"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "4.6.3; Supplement Table S4",
+      "evidence": "The preprint defines CSCM; stacking weights and compression factor here are refitted on the HadCRUT5.1 historical calibration (hh) inputs.",
+      "notes": [
+        "Supplementary dashboard option. Member distributions are approximated as Gaussian mixtures; see the dashboard notes."
+      ]
+    },
+    "CGWL10y_for_halfU": {
+      "label": "CGWL-WMOLC-ADCP",
+      "full_name": "Current Global Warming Level using WMO Lead Centre for Annual-to-Decadal Climate Prediction forecasts",
+      "warming_type": "realized",
+      "primary_url": "https://doi.org/10.1038/d41586-023-03775-z",
+      "references": [
+        {
+          "label": "Betts et al., 2023",
+          "title": "Approaching 1.5 \u00b0C: how will we know we\u2019ve reached this crucial warming mark?",
+          "url": "https://doi.org/10.1038/d41586-023-03775-z",
+          "doi": "10.1038/d41586-023-03775-z",
+          "verified_url": "https://www.nature.com/articles/d41586-023-03775-z"
+        },
+        {
+          "label": "Hermanson et al., 2022",
+          "title": "WMO Global Annual to Decadal Climate Update: A Prediction for 2021\u201325",
+          "url": "https://doi.org/10.1175/BAMS-D-20-0311.1",
+          "doi": "10.1175/BAMS-D-20-0311.1",
+          "verified_url": "https://journals.ametsoc.org/view/journals/bams/103/4/BAMS-D-20-0311.1.xml"
+        },
+        {
+          "label": "Thorne et al., 2026",
+          "title": "How well can we quantify when 1.5 \u00b0C of global warming has been exceeded?",
+          "url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+          "doi": "10.5194/essd-2025-825",
+          "verified_url": "https://essd.copernicus.org/preprints/essd-2025-825/"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "local_implementation_path": "/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/Methods/44_EarthModel_CGWL/CGWL10y_for_halfU_method.py",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "4.5",
+      "evidence": "Averages the previous 10 observed years with the WMO LC-ADCP decadal forecast for the next 10 years; available only for the real-world record, so it was not evaluated on the future scenarios.",
+      "notes": [
+        "Supplementary dashboard option; not part of the paper\u2019s 7-method combinations."
+      ]
+    },
+    "PIVW8_comb": {
+      "label": "PIVW-8 combination",
+      "full_name": "Pointwise inverse-variance weighting of the 7 top-tier methods plus CGWL-WMOLC-ADCP",
+      "warming_type": "realized",
+      "primary_url": "https://doi.org/10.5808/GI.2016.14.4.173",
+      "references": [
+        {
+          "label": "Cochran, 1954",
+          "title": "The Combination of Estimates from Different Experiments",
+          "url": "https://doi.org/10.2307/3001666",
+          "doi": "10.2307/3001666",
+          "verified_url": "https://www.jstor.org/stable/3001666"
+        },
+        {
+          "label": "Lee et al., 2016",
+          "title": "Comparison of Two Meta-Analysis Methods: Inverse-Variance-Weighted Average and Weighted Sum of Z-Scores",
+          "url": "https://doi.org/10.5808/GI.2016.14.4.173",
+          "doi": "10.5808/GI.2016.14.4.173",
+          "verified_url": "https://genominfo.org/journal/view.php?doi=10.5808/GI.2016.14.4.173"
+        },
+        {
+          "label": "Thorne et al., 2026",
+          "title": "How well can we quantify when 1.5 \u00b0C of global warming has been exceeded?",
+          "url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+          "doi": "10.5194/essd-2025-825",
+          "verified_url": "https://essd.copernicus.org/preprints/essd-2025-825/"
+        }
+      ],
+      "implementation_repository_url": "https://github.com/jnickla1/Thorne_15",
+      "preprint_url": "https://essd.copernicus.org/preprints/essd-2025-825/",
+      "preprint_section": "4.6.3",
+      "evidence": "Same weighting as the PIVW combination, with CGWL-WMOLC-ADCP added as an eighth method.",
+      "notes": [
+        "Supplementary dashboard option; the main PIVW combination uses 7 methods."
+      ]
     }
   },
   "verification_notes": [

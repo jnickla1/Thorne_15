@@ -62,7 +62,9 @@ def render(d,method,background,convention,out,expanded=True,primary=False):
     def Y(y):return base+scale*y
     def text(x,y,s,size=16,**kwargs):return fig.text(x,Y(y),s,fontsize=size,color=kwargs.pop('color',GREY),**kwargs)
     text(.045,.951,d['definition'].capitalize()+' Climate System Warming',size=26,weight='bold',color=INK)
-    text(.957,.951,short_label(method,md['label']),size=20,weight='bold',ha='right',color=INK,url=md['link'])
+    star='*' if md.get('supplementary') else ''
+    text(.957,.951,short_label(method,md['label'])+star,size=20,weight='bold',ha='right',color=INK,url=md['link'])
+    if star:text(.957,.921,'* Supplementary option, tangential to the paper’s main conclusions',size=11,ha='right')
     text(.045,.901,f"Based on {md['label']} · calibration / anomaly reference: {d['baseline_label']}",size=18)
     text(.045,.852,'Global warming levels and crossing times',size=18,color=INK)
     text(.48,.846,f"Current (2025) {d['definition']} global warming level",size=19,weight='bold')
@@ -128,10 +130,10 @@ def render(d,method,background,convention,out,expanded=True,primary=False):
     text(.48,.089,f"{benchmark_label} ends in {d['reference_last_year']}",size=9.5)
     if d['baseline']=='rpi':text(.48,.063,'1.0°C benchmark: 93 observed + 7 quartic estimates; model uncertainty excluded',size=9)
     text(.045,.026,'Data and methods: essd.copernicus.org/preprints/essd-2025-825/',size=10,url='https://essd.copernicus.org/preprints/essd-2025-825/')
-    text(.957,.026,'Rate labels show ±1.96 SE · 100 heads/tails members',size=10,ha='right')
+    text(.957,.026,'Rate labels show ±1.96 SE · 100 observational ensemble members',size=10,ha='right')
     if expanded:
         fig.text(.045,.257,'Crossing-time distributions for the selected method',fontsize=17,color=INK,weight='bold')
-        fig.text(.957,.257,md['label']+' only',fontsize=12,color=GREY,ha='right')
+        fig.text(.957,.257,md['label']+('*' if md.get('supplementary') else '')+' only',fontsize=12,color=GREY,ha='right')
         for j in range(3):
             bx=fig.add_axes([.075+j*.308,.067,.265,.144])
             cr=arr(md['comparisons'][j]['crossings']); valid=cr[np.isfinite(cr)]

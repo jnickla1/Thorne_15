@@ -1,291 +1,178 @@
+"""Figure 16 attribution experiment, using the finalized ta4 historical model.
+
+The comparison ends in 2023 to match the supplied multi-method assessments.
+Single-forcing MPI experiments end in 2014; 2015--2023 retain the original
+1980--2014 linear-trend plus seeded-residual-noise extension. These component
+experiments are illustrative attribution runs, not the heads/tails ensemble.
+Run from any directory; --output-dir permits an isolated review run.
+"""
+from pathlib import Path
+import argparse, importlib, json, os, sys
 import numpy as np
 import pandas as pd
-import config
-#EBMKF_Nicklas as ekf
-from netCDF4 import Dataset
-import pdb
-import xarray as xr
-from sklearn.linear_model import LinearRegression
-from gen_eCO2 import calculate_equivalent_co2
-
-def average_every_n(lst, n):
-    """Calculates the average of every n elements in a list."""
-    return np.array([np.mean(lst[i:i + n]) for i in range(0, len(lst), n)])
-
-
-def ta_smooth(orig_opt_depths,fill_value,optical=True):
-    if(optical):
-        wt_opt_depths = 1/(orig_opt_depths+9.7279)
-    else:
-        wt_opt_depths =orig_opt_depths
-    N = 30
-    nwt_opt_depths=np.full(len(orig_opt_depths),fill_value)
-    cN=int(np.ceil(N/2))
-    fN=int(np.floor(N/2))
-    for i in range((fN),(len(nwt_opt_depths)-1)):
-        lasta=i+cN;firsta=i-fN
-        nwt_opt_depths[i] = (np.sum(wt_opt_depths[(firsta):i+1])+ fill_value*(cN-1))/N
-    #computing half-average - future is assumed to be the average
-    if(optical):
-        return(1/nwt_opt_depths-9.7279)
-    else:
-        return(nwt_opt_depths)
-
-
-def ext_timeser(timeseries, start_year=1850, end_year=2014, 
-                                       fit_start=1980, project_end=2023, random_seed=320):
-    """
-    Extend a historical timeseries to project 10 more years using a linear trend + Gaussian noise.
-
-    Parameters:
-        timeseries (array-like or pd.Series): Timeseries data from start_year to end_year.
-        start_year (int): First year of the input timeseries (default 1850).
-        end_year (int): Last year of the input timeseries (default 2014).
-        fit_start (int): Start year of the trend fit (default 1980).
-        project_end (int): Final year of the projection (default 2024).
-        random_seed (int or None): Seed for reproducibility.
-
-    Returns:
-        pd.Series: Extended timeseries from start_year to project_end.
-    """
-    if random_seed is not None:
-        np.random.seed(random_seed)
-
-    # Ensure Series with year index
-    if not isinstance(timeseries, pd.Series):
-        years = np.arange(start_year, end_year + 1)
-        timeseries = pd.Series(timeseries, index=years)
-
-    # Subset for regression
-    fit_years = np.arange(fit_start, end_year + 1).reshape(-1, 1)
-    fit_values = timeseries.loc[fit_start:end_year].values
-
-    # Fit linear regression
-    model = LinearRegression()
-    model.fit(fit_years, fit_values)
-    trend = model.predict(fit_years)
-
-    # Compute RMSE
-    rmse = np.sqrt(np.mean((fit_values - trend) ** 2))
-
-    # Project future values
-    future_years = np.arange(end_year + 1, project_end + 1)
-    future_X = future_years.reshape(-1, 1)
-    future_trend = model.predict(future_X)
-    future_noise = np.random.normal(loc=0, scale=rmse, size=len(future_years))
-    future_values = future_trend + future_noise
-
-    # Combine original and projected data
-    extended_series = pd.concat([
-        timeseries,
-        pd.Series(future_values, index=future_years)
-    ])
-    return extended_series
-
-
-
-
-#temperature has 2024, dont have all forcings for this yet - must update ekf.n_iters
-data_orig = pd.read_csv("../../../Common_Data/HadCRUT.5.1.csv")
-temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()[:174]
-preind_base = np.mean(temps_obs[0:50])
-
-
-#ekf.R_tvar=np.square(temps_1std[0:ekf.n_iters])
-#ekf.fdbkA = 0.35 #original paper value for this estimate
-#ekf.precompute_coeffs(False)
-##empser  = np.full(np.shape(years),np.nan)
-##means = empser.copy()
-##ses = empser.copy()
-##means2 = empser.copy()
-##ses2 = empser.copy()
-import EBMKF_Nicklas4 as ekf #only change cloud feedback, but dynamically
-
-
-###FIRST RUN WITHOUT TA_SMOOTH is the total
-# Explicitly initialize the unfiltered 1850-2023 run; imports no longer run it.
-ekf.n_iters = 174
-for name in ['xhat', 'P', 'F', 'xhatminus', 'Pminus', 'K', 'xhathat', 'Phat',
-             'Khat', 'Shat', 'S', 'xblind', 'lml', 'y', 'qqy']:
-    setattr(ekf, name, getattr(ekf, name)[:ekf.n_iters].copy())
-total_warming, total_variance, _, _ = ekf.ekf_run(np.array([[ekf.temps[:ekf.n_iters], ekf.oc_meas[:ekf.n_iters], ekf.TOA_meas_artif[:ekf.n_iters]]]).T, ekf.n_iters, retPs=3,diagnostics=False)
-total_warming = total_warming.copy()  # retain this run when later calls reuse filter arrays
-total_warming_se = np.sqrt(np.abs(total_variance))
-
-#if experiment_type == "historical":
-ekf.n_iters = 174
-unf_new_opt_depth = ekf.data[:ekf.n_iters,3]*0.001
-ekf.opt_depth=ta_smooth(unf_new_opt_depth,ekf.involcavg)
-given_preind_base = np.mean(temps_obs[0:50])
-temps = temps_obs-given_preind_base+preind_base + ekf.offset #ensure this matches expected starting temperature in 1850
-frac_blocked = 1-(5.5518/(unf_new_opt_depth+9.9735)) #(9.068/(comb_recAOD_cleaned+9.7279))
-erf_data_solar = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")['solar'].to_numpy()[(1850-1750):]
-solar_full = erf_data_solar[:ekf.n_iters]+ 340.4099428 - 0.108214
-tot_volc_erf = (- solar_full*frac_blocked + 151.22)
-erf_trapez=(1*tot_volc_erf[0:-2]+2*tot_volc_erf[1:-1]+0*tot_volc_erf[2:] )/4 #want to snap back as quickly as possible, no volc signal
-temps[2:] = temps[2:] - erf_trapez/(ekf.heatCp - ekf.Cs)
-ohca_meas = ekf.oc_meas[:ekf.n_iters]*ekf.zJ_from_W
-#temps[7:] = temps[7:] + erf_trapez[:-5]/(ekf.heatCp - ekf.Cs)
-ohca_meas[2:] = ohca_meas[2:] - (erf_trapez/(ekf.Cs + ekf.Cd))*ekf.zJ_from_W*200 #not perfect but good for now, also unclear where the 200 comes from
-TOA_meas_artif1 =  ekf.TOA_meas_artif[:ekf.n_iters] - (tot_volc_erf ) * .75 
-new_observ = np.array([[temps[:ekf.n_iters],ohca_meas/ekf.zJ_from_W ,TOA_meas_artif1]]).T
-ekf.dfrA_float_var = ekf.dfrA_float_var/40
-
-###SECOND RUN WITH TA_SMOOTH is the anthro
-warming,warming_se,_,_ = ekf.ekf_run(new_observ,ekf.n_iters,retPs=3,diagnostics=False)
-anthro_warming = warming.copy()
-anthro_warming_se = np.sqrt(np.abs(warming_se))
-
-
-###THRID RUN IS hist-aer
-#remember to extend to future linearly with huge uncertainty to cover 2014-2024
-#solar set to const
-orig_tsi = ekf.tsi.copy()
-ekf.tsi = np.full(ekf.n_iters, ekf.sw_in)
-#volc set to const
-ekf.opt_depth=np.full(ekf.n_iters,(1/ekf.involcavg-9.7279))
-#aer varies - can keep the same
-#co2 set to const preind
-orig_lCo2 = ekf.lCo2.copy()
-ekf.lCo2= np.full(ekf.n_iters,np.log10(ekf.data[0,2]))
-#new_obs - be sure to extend to 2024. Uncertanties unchanged
-aer_temps_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ts/aave_ts_Amon_MPI-ESM1-2-LR_hist-aer_r4i1p1f1_gn_185001-201412.nc", 'r').variables['ts']
-aer_temps = average_every_n(aer_temps_raw[:].__array__(), 12)
-given_preind_base = np.mean(aer_temps[0:50])
-aer_temps = aer_temps - given_preind_base + preind_base + ekf.offset
-aer_ohca_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ohca_aave/ohca_thetaot_Emon_MPI-ESM1-2-LR_hist-aer_r4i1p1f1_gn_185001-201412.nc", 'r').variables['__xarray_dataarray_variable__']
-aer_ohca = average_every_n(aer_ohca_raw[:].__array__(), 12)
-aer_ohca = aer_ohca - aer_ohca[0]
-aer_toa_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-aer/global_rt_Amon_MPI-ESM1-2-LR_hist-aer_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
-aer_toa = average_every_n(aer_toa_raw[:].__array__(), 12)
-new_observ_aer = np.array([[ext_timeser(aer_temps),ext_timeser(aer_ohca/ekf.zJ_from_W) ,ext_timeser(aer_toa)]]).T
-warming,warming_se,_,_ = ekf.ekf_run(new_observ_aer,ekf.n_iters,retPs=3,diagnostics=False)
-aer_warming = warming.copy()
-aer_warming_se = np.sqrt(np.abs(warming_se))
-
-###FOURTH RUN is hist-totalO3
-#counts as a type of CO2
-#recalculate CO2
-forcingsdf = pd.read_csv(config.CLIMATE_DATA_PATH+"/SSP_inputdata/ERFs-Smith-ar6/ERF_ssp245_1750-2500.csv")
-forcing_O3= forcingsdf['solar'].to_numpy()[(1850-1750):(2024-1750)]
-ekf.lCo2= np.log10(calculate_equivalent_co2(forcing_O3))
-#aer set to 0
-orig_anthro_clouds = (ekf.data[:,7]+1)
-ekf.anthro_clouds = np.full(ekf.n_iters, orig_anthro_clouds[0])
-#solar set to const - don't change
-#volc set to const - don't change
-totalO3_temps_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ts/aave_ts_Amon_MPI-ESM1-2-LR_hist-totalO3_r4i1p1f1_gn_185001-201412.nc", 'r').variables['ts']
-totalO3_temps = average_every_n(totalO3_temps_raw[:].__array__(), 12)
-given_preind_base = np.mean(totalO3_temps[0:50])
-totalO3_temps = totalO3_temps - given_preind_base + preind_base + ekf.offset
-totalO3_ohca_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ohca_aave/ohca_thetaot_Emon_MPI-ESM1-2-LR_hist-totalO3_r4i1p1f1_gn_185001-201412.nc", 'r').variables['__xarray_dataarray_variable__']
-totalO3_ohca = average_every_n(totalO3_ohca_raw[:].__array__(), 12)
-totalO3_ohca = totalO3_ohca - totalO3_ohca[0]
-totalO3_toa_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-totalO3/global_rt_Amon_MPI-ESM1-2-LR_hist-totalO3_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
-totalO3_toa = average_every_n(totalO3_toa_raw[:].__array__(), 12)
-new_observ_totalO3 = np.array([[ext_timeser(totalO3_temps),ext_timeser(totalO3_ohca/ekf.zJ_from_W) ,ext_timeser(totalO3_toa)]]).T
-warming,warming_se,_,_= ekf.ekf_run(new_observ_totalO3,ekf.n_iters,retPs=3,diagnostics=False)
-totalO3_warming = warming.copy()
-totalO3_warming_se = np.sqrt(np.abs(warming_se))
-
-#averaging hist-aer and hist-totalO3 to write OHF
-
-ohf_warming = np.mean(np.array([totalO3_warming, aer_warming]),axis=0) #check axis
-ohf_warming_se = np.sqrt( np.mean(np.array([totalO3_warming_se**2, aer_warming_se**2]),axis=0))
-
-###FIFTH RUN IS hist-GHG
-#recalculate CO2 with only GHGs
-forcing_GHG_allyrs= forcingsdf['co2'].to_numpy() + forcingsdf['ch4'].to_numpy() + forcingsdf['n2o'].to_numpy() + forcingsdf['other_wmghg'].to_numpy()
-ekf.lCo2= np.log10(calculate_equivalent_co2(forcing_GHG_allyrs[(1850-1750):(2024-1750)]))
-#solar set to const - don't change
-#volc set to const - don't change
-#aer set to 0 - dont change
-GHG_temps_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ts/aave_ts_Amon_MPI-ESM1-2-LR_hist-GHG_r4i1p1f1_gn_185001-201412.nc", 'r').variables['ts']
-GHG_temps = average_every_n(GHG_temps_raw[:].__array__(), 12)
-given_preind_base = np.mean(GHG_temps[0:50])
-GHG_temps = GHG_temps - given_preind_base + preind_base+ ekf.offset
-#GHG_temps - ekf.Teq1850 only about 1.1 for run 4, close to 0.95 of HadCrut
-GHG_ohca_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ohca_aave/ohca_thetaot_Emon_MPI-ESM1-2-LR_hist-GHG_r4i1p1f1_gn_185001-201412.nc", 'r').variables['__xarray_dataarray_variable__']
-GHG_ohca = average_every_n(GHG_ohca_raw[:].__array__(), 12)
-GHG_ohca = GHG_ohca - GHG_ohca[0]
-GHG_toa_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-GHG/global_rt_Amon_MPI-ESM1-2-LR_hist-GHG_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
-GHG_toa = average_every_n(GHG_toa_raw[:].__array__(), 12)
-new_observ_GHG = np.array([[ext_timeser(GHG_temps),ext_timeser(GHG_ohca/ekf.zJ_from_W) ,ext_timeser(GHG_toa)]]).T
-warming,warming_se,_,_ = ekf.ekf_run(new_observ_GHG,ekf.n_iters,retPs=3,diagnostics=False)
-GHG_warming = warming.copy()
-GHG_warming_se = np.sqrt(np.abs(warming_se))
-
-###SIXTH RUN IS hist-nat
-#solar set to original
-ekf.tsi  = orig_tsi 
-#volc set to original
-ekf.opt_depth = unf_new_opt_depth
-#co2 set to const preind
-ekf.lCo2= np.full(ekf.n_iters,np.log10(ekf.data[0,2]))
-#aer set to 0 - dont change
-nat_temps_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ts/aave_ts_Amon_MPI-ESM1-2-LR_hist-nat_r4i1p1f1_gn_185001-201412.nc", 'r').variables['ts']
-nat_temps = average_every_n(nat_temps_raw[:].__array__(), 12)
-given_preind_base = np.mean(nat_temps[0:50])
-nat_temps = nat_temps - given_preind_base + preind_base + ekf.offset
-nat_ohca_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/ohca_aave/ohca_thetaot_Emon_MPI-ESM1-2-LR_hist-nat_r4i1p1f1_gn_185001-201412.nc", 'r').variables['__xarray_dataarray_variable__']
-nat_ohca = average_every_n(nat_ohca_raw[:].__array__(), 12)
-nat_ohca = nat_ohca - nat_ohca[0]
-nat_toa_raw = Dataset(config.CLIMATE_DATA_PATH+"/attributable-warming_ESM1-2-LR/rt/combined_global_rt/hist-nat/global_rt_Amon_MPI-ESM1-2-LR_hist-nat_r4i1p1f1_gn_185001-186912.nc-201412.nc", 'r').variables['rt']
-nat_toa = average_every_n(nat_toa_raw[:].__array__(), 12)
-new_observ_nat = np.array([[ext_timeser(nat_temps),ext_timeser(nat_ohca/ekf.zJ_from_W) ,ext_timeser(nat_toa)]]).T
-warming,warming_se,_,_ = ekf.ekf_run(new_observ_nat,ekf.n_iters,retPs=3,diagnostics=False)
-nat_warming = warming.copy()
-nat_warming_se = np.sqrt(np.abs(warming_se))
-
-ekf.plt.close()
-
-
-
 from scipy.stats import norm
+from netCDF4 import Dataset
+ROOT = Path(__file__).resolve().parents[3]
+# A review copy can explicitly point at the research repository.
+ROOT = Path(os.environ.get('THORNE_ROOT', str(ROOT)))
+sys.path.insert(0, str(ROOT))
+import config
+wrapper = importlib.import_module('Methods.43_Forcing_Based.2_Kalman.EBMKF_ta4_method')
+ekf = wrapper.ekf
+from ebmkf_v11_support import nonnegative_sqrt, ECO2_ERF_SLOPE
 
-def save_analytic_percentiles_from_mean_se(output_csv, year_range, data_dict, percentiles=[5, 17, 83, 95, 50]):
+
+def annual(values):
+    values = np.asarray(values).squeeze()
+    if values.ndim != 1 or len(values) % 12:
+        raise ValueError('Expected complete monthly global-mean input')
+    return values.reshape(-1, 12).mean(axis=1)
+
+
+def extend(values, end_year):
+    """Preserve the legacy component-extension recipe and seed, locally."""
+    values = np.asarray(values)
+    years = np.arange(1850, 1850 + len(values))
+    fit = years >= 1980
+    coeff = np.polyfit(years[fit], values[fit], 1)
+    sigma = np.sqrt(np.mean((values[fit] - np.polyval(coeff, years[fit]))**2))
+    future = np.arange(years[-1] + 1, end_year + 1)
+    rng = np.random.RandomState(320)
+    return np.r_[values, np.polyval(coeff, future) + rng.normal(0, sigma, len(future))]
+
+
+def component_observations(experiment, n, preind_base):
+    base = Path(config.CLIMATE_DATA_PATH) / 'attributable-warming_ESM1-2-LR'
+    ts = base / f'ts/aave_ts_Amon_MPI-ESM1-2-LR_hist-{experiment}_r4i1p1f1_gn_185001-201412.nc'
+    ohc = base / f'ohca_aave/ohca_thetaot_Emon_MPI-ESM1-2-LR_hist-{experiment}_r4i1p1f1_gn_185001-201412.nc'
+    toa = base / f'rt/combined_global_rt/hist-{experiment}/global_rt_Amon_MPI-ESM1-2-LR_hist-{experiment}_r4i1p1f1_gn_185001-186912.nc-201412.nc'
+    arrays = []
+    for path, variable in [(ts, 'ts'), (ohc, '__xarray_dataarray_variable__'), (toa, 'rt')]:
+        with Dataset(path) as ds:
+            arrays.append(annual(ds.variables[variable][:]))
+    temperature, ocean, flux = arrays
+    temperature = temperature - np.mean(temperature[:50]) + preind_base + ekf.offset
+    ocean = (ocean - ocean[0]) / ekf.zJ_from_W
+    return np.stack([extend(x, 1849+n) for x in [temperature, ocean, flux]], axis=1)[:, :, None]
+
+
+def solve(observations):
+    mean, variance, _, _ = ekf.ekf_run(observations, len(observations), retPs=3, diagnostics=False)
+    return mean.copy() - ekf.Teq1850, nonnegative_sqrt(variance).copy()
+
+
+def selected_component_erf(years, columns, percentile):
+    """Same Gaussian/independent-component approximation as historical eCO2.
+
+    A subset percentile is evaluated for that subset; marginal subset percentiles
+    are not additive quantiles of the joint full non-aerosol forcing sum.
     """
-    For each variable in data_dict, compute specified percentiles from N(mean, se) using z-scores.
-    
-    Parameters:
-        output_csv (str): Filename to write output CSV.
-        year_range (array-like): List of years, e.g., np.arange(1850, 2025).
-        data_dict (dict): Keys are variable names, values are tuples (mean_vector, se_vector).
-        percentiles (list): List of percentiles to compute (default: [5, 17, 50, 83, 95]).
-    """
-    df = pd.DataFrame({'year': year_range})
-    
-    z_scores = {p: norm.ppf(p / 100) for p in percentiles}
-
-    for varname, (mean_vec, se_vec) in data_dict.items():
-        for p in percentiles:
-            z = z_scores[p]
-            df[f'{varname}_p{p}'] = mean_vec + z * se_vec - ekf.Teq1850
-
-    df.to_csv(output_csv, index=False)
+    frames=[]
+    for tag in ['p05','best','p95']:
+        frame=pd.read_csv(Path(ekf.__file__).with_name(f'ERF_{tag}_aggregates_1750-2024.csv'),index_col=0)
+        frame.index=np.floor(frame.index.astype(float)).astype(int)
+        frames.append(frame[columns])
+    low,best,high=frames
+    mean=best.sum(axis=1)
+    sigma=pd.Series(np.sqrt(np.sum(((high-low)/(2*norm.ppf(.95))).to_numpy()**2,axis=1)),index=mean.index)
+    for series in [mean,sigma]:series.loc[2025]=np.polyval(np.polyfit(np.arange(2015,2025),series.loc[2015:2024],1),2025)
+    return (mean+norm.ppf(percentile/100)*sigma).loc[years].to_numpy()
 
 
-years = np.arange(1850, 2024)
-n = len(years)
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--output-dir', type=Path, default=None, help='Optional isolated output folder; default updates the established assessment CSV')
+    ap.add_argument('--end-year', type=int, default=2023, choices=[2023, 2024, 2025])
+    ap.add_argument('--component-end-year', type=int, choices=[2014], default=None, help='Stop model-only components at available 2014 data; preserve ANT/total through end-year')
+    ap.add_argument('--ohf', choices=['aerosol-proxy', 'ant-minus-ghg'], default='aerosol-proxy')
+    args = ap.parse_args()
+    os.chdir(ROOT)
+    out = args.output_dir.resolve() if args.output_dir else ROOT/'Methods/43_Forcing_Based/3_Human_Induced/anthropogenic-warming-assessment/results'
+    out.mkdir(parents=True, exist_ok=True)
+    flat_path = out/'Nicklas_GMST_timeseries_flat.csv' if args.output_dir else Path(__file__).resolve().parent/'Nicklas_GMST_timeseries.csv'
+    metadata_path = out/'attribution-metadata.json' if args.output_dir else Path(__file__).resolve().parent/'attribution-metadata.json'
+    obs = pd.read_csv(ROOT/'Common_Data/HadCRUT.5.1.csv').query('Time <= @args.end_year')
+    years = obs.Time.to_numpy(dtype=int); n = len(years)
+    temperature = obs.Anomaly.to_numpy(); preind_base = float(np.mean(temperature[:50]))
+    inputs = (obs.Lower.to_numpy(), obs.Upper.to_numpy())
+    # This call is authoritative for ANT: it includes the finalized AOD/solar,
+    # early-warming and delayed-cooling preprocessing, OHC/TOA corrections,
+    # covariance tuning, forcing percentiles and current-output SE factor.
+    ant_mean, ant_se, _, _ = wrapper.run_method(years, temperature, inputs, '', 'historical')
+    data = {'ant': (ant_mean-preind_base, ant_se)}
+    settings = {k:float(getattr(ekf,k)) for k in ['gad','fdbkA','AEROSOL_FORCING_PERCENTILE','eCO2_FORCING_PERCENTILE','volcanic_target_efficiency','heatCp']}
+    # Total retains the original unfiltered-forcing interpretation.
+    wrapper.restore_baselines(); ekf.n_iters = n
+    raw = np.stack([temperature+ekf.offset, ekf.oc_meas[:n], ekf.TOA_meas_artif[:n]], axis=1)[:, :, None]
+    data['tot'] = solve(raw)
+    component_settings = {}
+    component_n=min(n,args.component_end_year-1849) if args.component_end_year else n
+    for label, experiment in [('aer','aer'), ('ozone','totalO3'), ('ghg','GHG'), ('nat','nat')]:
+        wrapper.restore_baselines(); ekf.n_iters = component_n
+        # These are simulated inputs, not CERES observations. Retain the
+        # pre-CERES model TOA variance after 2000; ANT/total are unchanged.
+        ekf.TOA_meas_artif_var[2001-1850:] = ekf._orig_TOA_meas_artif_var[1999-1850]
+        # Components use the finalized anthropogenic ta4 noise settings.
+        ekf.Q *= .2; ekf.cM2 *= .6; ekf.dfrA_float_var *= .35/40
+        nf = len(ekf.data)
+        raw_aod = ekf.data[:,3]*.001
+        ekf.tsi = np.full(nf, ekf.sw_in)
+        ekf.opt_depth = np.full(nf, ekf.raw_aod_from_inverse_denominator(ekf.involcavg))
+        ekf.lCo2 = np.full(nf, ekf._orig_lCo2[0])
+        ekf.anthro_clouds = np.full(nf, ekf._orig_anthro_clouds[0])
+        if label == 'aer':ekf.anthro_clouds = ekf._orig_anthro_clouds.copy()
+        elif label in ['ozone','ghg']:
+            columns = ['O3'] if label=='ozone' else ['CO2','CH4','N2O','halogen']
+            erf = selected_component_erf(ekf.data[:,0].astype(int),columns,ekf.eCO2_FORCING_PERCENTILE)
+            # Apply the forcing anomaly to the same preindustrial carbon level.
+            ekf.lCo2 = ekf._orig_lCo2[0] + (erf-erf[0])/ECO2_ERF_SLOPE
+        elif label=='nat':
+            ekf.tsi = ekf._orig_tsi.copy(); ekf.opt_depth = raw_aod
+        # Recompute beta/radiative reference for the selected forcing, without
+        # reapplying observational percentile helpers over this experiment.
+        ekf.use_observational_forcing_percentiles = False
+        ekf.precompute_coeffs(False)
+        component_settings[label] = {key:float(getattr(ekf,key)) for key in settings}
+        for key in settings:assert component_settings[label][key]==settings[key],(label,key)
+        mean,se=solve(component_observations(experiment,component_n,preind_base))
+        data[label]=(np.pad(mean,(0,n-component_n),constant_values=np.nan),np.pad(se,(0,n-component_n),constant_values=np.nan))
+    # Keep the legacy, unused aerosol/ozone average as OHFa for schema parity.
+    data['ohfa'] = ((data['aer'][0]+data['ozone'][0])/2, np.sqrt((data['aer'][1]**2+data['ozone'][1]**2)/2))
+    if args.ohf=='ant-minus-ghg':
+        # Covariance is unavailable: the quadrature width is explicitly approximate.
+        data['ohf'] = (data['ant'][0]-data['ghg'][0],np.sqrt(data['ant'][1]**2+data['ghg'][1]**2))
+    else:data['ohf'] = data['aer']
+    flat = pd.DataFrame({'year':years}); assessment = pd.DataFrame(index=pd.Index(years,name='Year'))
+    for key,label in [('ohf','OHF'),('ghg','GHG'),('ohfa','OHFa'),('ant','Ant'),('nat','Nat'),('tot','Tot')]:
+        mean,se = data[key]
+        assert mean.shape==(n,) and se.shape==(n,)
+        valid_n=n if key in ['ant','tot'] else component_n
+        assert np.isfinite(mean[:valid_n]).all() and np.isfinite(se[:valid_n]).all() and (se[:valid_n]>=0).all()
+        assert np.isnan(mean[valid_n:]).all() and np.isnan(se[valid_n:]).all()
+        for p in [5,17,83,95,50]:
+            values=mean+norm.ppf(p/100)*se
+            flat[f'{key}_p{p}']=values; assessment[(label,str(p))]=values
+    assessment.columns=pd.MultiIndex.from_tuples(assessment.columns,names=['variable','percentile'])
+    flat.to_csv(flat_path,index=False)
+    assessment.to_csv(out/'Nicklas_GMST_timeseries.csv')
+    # Explicit alternatives do not match the plotter's canonical filename.
+    variants = {
+        'aerosol_proxy': data['aer'],
+        'ant_minus_GHG': (data['ant'][0]-data['ghg'][0], np.sqrt(data['ant'][1]**2+data['ghg'][1]**2)),
+        'aerosols_plus_ozone': (data['aer'][0]+data['ozone'][0], np.sqrt(data['aer'][1]**2+data['ozone'][1]**2)),
+    }
+    for name,(mean,se) in variants.items():
+        alternative=assessment.copy()
+        for p in [5,17,83,95,50]:alternative[('OHF',str(p))]=mean+norm.ppf(p/100)*se
+        alternative.to_csv(out/f'Nicklas_GMST_{name}.csv')
+    components=pd.DataFrame({'Year':years})
+    for name,(mean,se) in data.items():components[name+'_mean']=mean;components[name+'_se']=se
+    component_path=out/'Nicklas_components.csv'
+    components.to_csv(component_path,index=False)
 
+    metadata={'end_year':args.end_year,'component_end_year':1849+component_n,'model_TOA_uncertainty':'Pre-CERES 1999 variance held fixed from 2001 onward in model-only components; historical ANT/total unchanged','years':n,'historical_settings':settings,'component_settings':component_settings,'component_percentile_convention':'Aerosol uses historical aggregate percentile 85; GHG/ozone use the historical Gaussian-subset convention at percentile 17 with the same updated ERF release. Marginal subset percentiles are not additive joint quantiles.','OHF':args.ohf,'component_extension':'1980-2014 linear fit plus seeded residual noise through selected end year; retained from original script','ozone_correction':'o3 forcing replaces erroneous solar-column read','component_SE':'Native filter SE; historical ANT includes production 1.2 current-output multiplier','uncertainty':'Gaussian analytic marginal percentiles; not heads/tails ensemble uncertainty','OHF_alternatives':'aerosol_proxy; ant_minus_GHG; aerosols_plus_ozone (partial non-GHG forcing). Combined widths assume independent components; covariance is unavailable.', 'legacy_OHFa':'Unused legacy mean of aerosol/ozone runs; not a sum of forcing contributions'}
+    metadata_path.write_text(json.dumps(metadata,indent=2))
+    wrapper.restore_baselines()
+    print('Wrote',out/'Nicklas_GMST_timeseries.csv')
 
-data = {
-    'aer': (aer_warming, aer_warming_se),
-    'ghg': (GHG_warming, GHG_warming_se),
-    'ohf': (ohf_warming, ohf_warming_se),
-    'ant': (anthro_warming, anthro_warming_se),
-    'nat': (nat_warming, nat_warming_se),
-    'tot': (total_warming, total_warming_se)
-}
-
-save_analytic_percentiles_from_mean_se("Nicklas_GMST_timeseries.csv", years, data)
-
-# Publish the same values in the established multi-method assessment schema.
-from pathlib import Path
-flat = pd.read_csv("Nicklas_GMST_timeseries.csv")
-assessment = pd.DataFrame(index=pd.Index(flat["year"].to_numpy(), name="Year"))
-for key, label in {"aer":"OHF", "ghg":"GHG", "ohf":"OHFa", "ant":"Ant", "nat":"Nat", "tot":"Tot"}.items():
-    for percentile in [5, 17, 83, 95, 50]:
-        assessment[(label, str(percentile))] = flat[f"{key}_p{percentile}"].to_numpy()
-assessment.columns = pd.MultiIndex.from_tuples(assessment.columns, names=["variable", "percentile"])
-assessment.to_csv(Path(__file__).resolve().parents[1] / "3_Human_Induced/anthropogenic-warming-assessment/results/Nicklas_GMST_timeseries.csv")
+if __name__=='__main__':main()

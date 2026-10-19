@@ -413,7 +413,7 @@ def plot_baseline_row(ax_row, goal: str, baseline_row_key: int, suprow_label: st
                 density=True,
                 stacked=True,
                 color=colors,
-                alpha=0.5,
+                alpha=0.7,
                 edgecolor="none",
                 zorder=1
             )
@@ -489,7 +489,7 @@ def make_figure_for_baseline(baseline_row_key: int, suptitle: str, outpath: str)
             line = Line2D([0], [0], color="k", lw=3.0)
         else:
             col = color_maps["real"].get(name, "#333333")
-            patch = mpatches.Patch(facecolor=col, alpha=0.5, edgecolor="none")
+            patch = mpatches.Patch(facecolor=col, alpha=0.7, edgecolor="none")
             line = Line2D([0], [0], color=col, lw=1.5)
         handles.append((patch, line))
 
@@ -517,7 +517,7 @@ def make_figure_for_baseline(baseline_row_key: int, suptitle: str, outpath: str)
             line = Line2D([0], [0], color="k", lw=3.0)
         else:
             col = color_maps["anthro"].get(name, "#333333")
-            patch = mpatches.Patch(facecolor=col, alpha=0.5, edgecolor="none")
+            patch = mpatches.Patch(facecolor=col, alpha=0.7, edgecolor="none")
             line = Line2D([0], [0], color=col, lw=1.5)
         handles.append((patch, line))
 

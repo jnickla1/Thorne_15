@@ -310,11 +310,19 @@ python3 plot_fut_results.py
 Run plotting after the submitted jobs have finished. The combination-focused future figures use:
 
 ```sh
-python3 evaluate_future_scenario_subsets.py futplotcomb_ESM1-2-LR_SSP126_constVolc -11
-python3 evaluate_future_scenario_subsets.py futplotcomb_NorESM_RCP45_Volc -11
+python3 evaluate_future_scenario_subsets.py futplotcomb_ESM1-2-LR_SSP126_constVolc -11 --plot-only
+python3 evaluate_future_scenario_subsets.py futplotcomb_NorESM_RCP45_Volc -56 --plot-only
 ```
 
 The negative-member convention is script-specific; inspect each runner before assuming the same batch size everywhere. In the heads/tails runner, a negative value `-(member+1)` selects that single member and enables plotting. For `futplotcomb` experiments, the existing NorESM plotting branch overrides some supplied scenario/member choices; the MPI-ESM branch uses the supplied member for highlighting.
+
+### Local post-transfer refresh (18 October 2026)
+
+Transfer matching evaluation and calibration products from the same completed source configuration: 270 primary cases (50 each for MPI SSP126/245/370, 60 each for NorESM Volc/VolcConst). Each case requires its Results pickle, current/all statistics CSVs, and all six Results2 calibration files. Validate complete NumPy payloads, consistent method ordering, and stable files before processing. Do not mix the earlier GAM_AR1-offset or ta4-preprocessing results with the corrected run.
+
+`plot_fut_results.py` regenerates all five `averaged_runs*.csv` summaries and `combined7histogramTrue.png`. The `--plot-only` commands above regenerate Figures 22/23 from saved results without replacing downloaded evaluation statistics or calibration products; add `--show` for interactive inspection. MPI index 11 corresponds to original member #20. The NorESM figure retains its internal earliest/latest crossing-member selection. Method colors come from the updated October 18 Okabe–Ito/Tol palette in `evaluate_historical_observations.py` and the corresponding arrays in `plot_fut_results.py`.
+
+The current full combination rerun is managed outside this research repository, at `/Users/JohnMatthew/Documents/Codex/2026-10-11/hi-chat-this-is-a-more/work/future_final_refresh_2026_10_18/controller.py`. Its status and review products are in the corresponding `outputs/future-final-refresh-2026-10-18/` directory. Inspect `progress.json` before attempting another launch. This controller freezes the corrected combination kernels, verifies cached/direct calculation equivalence, and runs 1,350 cases with two workers. It uses the latest full historical RMS table for method selection and exports Table S4 after exact member-coverage and finite-output checks. Selection modes 7/8/16/32 currently contain 7/8/18/33 methods; mode 2 contains individual reference methods, not a two-method combination. New combination products remain isolated from older Results3 outputs. These paths describe this local managed run, not portable repository entry points.
 
 For the simulation-based leave-one-out combination experiments, the existing entry points include:
 

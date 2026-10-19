@@ -1,0 +1,136 @@
+/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/thorne_2024v2025_investigation/compare_probs_1019.py:12: RuntimeWarning: Mean of empty slice
+  rows.append(dict(exp=exp,vintage=last,year=yr,method=n,P15=np.nanmean(P[:,i,idx,2])))
+/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/thorne_2024v2025_investigation/compare_probs_1019.py:12: RuntimeWarning: Mean of empty slice
+  rows.append(dict(exp=exp,vintage=last,year=yr,method=n,P15=np.nanmean(P[:,i,idx,2])))
+/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/thorne_2024v2025_investigation/compare_probs_1019.py:12: RuntimeWarning: Mean of empty slice
+  rows.append(dict(exp=exp,vintage=last,year=yr,method=n,P15=np.nanmean(P[:,i,idx,2])))
+/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/thorne_2024v2025_investigation/compare_probs_1019.py:12: RuntimeWarning: Mean of empty slice
+  rows.append(dict(exp=exp,vintage=last,year=yr,method=n,P15=np.nanmean(P[:,i,idx,2])))
+vintage                              2024  2025      
+year                                 2024  2024  2025
+exp           method                                 
+rpi_anthro    FaIR_anthro_unB         9.0   1.6   3.3
+              FaIR_anthro_unB_retro  15.0   9.9  13.6
+              FaIR_nonat_unB         10.8   1.3   2.4
+              GWI_anthro              2.1   0.6   2.2
+              GWI_anthro_CGWL         1.5   0.3   1.3
+              GWI_anthro_SR15         2.2   0.6   2.4
+              PIVW_comb               7.1   0.9   2.1
+              equal_weight_comb       4.8   0.8   2.0
+rpi_real      PIVW_comb               7.5   2.9   6.4
+              equal_weight_comb       9.6   4.7   8.8
+              CGWL10y_sfUKCP         21.8  13.6  15.7
+              EBMKF_ta4               3.4   2.5   7.3
+              FaIR_comb_unB          12.9   4.3   6.8
+              GAM_AR1                14.3   8.3  12.8
+              GWI_tot_CGWL            1.3   0.1   0.7
+              GWI_tot_SR15            5.1   1.9   4.6
+              Kal_flexLin            14.9   8.1  14.0
+              lowess1dt36wnc         10.8   5.3  10.3
+satcal_anthro FaIR_anthro_unB         0.3   0.1   0.2
+              FaIR_anthro_unB_retro  10.0   8.3  12.0
+              FaIR_nonat_unB          0.0   0.0   0.1
+              GWI_anthro              0.0   0.1   0.8
+              GWI_anthro_CGWL         0.0   0.1   0.3
+              GWI_anthro_SR15         0.0   0.1   0.5
+              PIVW_comb               0.0   0.0   0.0
+              equal_weight_comb       0.0   0.0   0.1
+satcal_real   PIVW_comb               0.0   0.0   0.3
+              equal_weight_comb       0.0   0.1   0.9
+              CGWL10y_sfUKCP          6.2   5.2   7.1
+              EBMKF_ta4               0.0   0.0   0.2
+              FaIR_comb_unB           0.1   0.3   0.5
+              GAM_AR1                 2.6   2.5   5.5
+              GWI_tot_CGWL            0.0   0.0   0.1
+              GWI_tot_SR15            0.2   0.6   2.3
+              Kal_flexLin             0.9   1.2   5.4
+              lowess1dt36wnc          0.2   0.4   2.3
+                    v24_cur2024  v25_cur2024  ...     net  vintage_eff_2015
+method                                        ...                          
+lowess1dt36wnc           1.3476       1.3456  ...  0.0308           -0.0052
+GAM_AR1                  1.3718       1.3794  ...  0.0248            0.0054
+Kal_flexLin              1.3675       1.3662  ...  0.0295           -0.0053
+FaIR_comb_unB            1.3927       1.3796  ... -0.0009            0.0188
+EBMKF_ta4                   NaN       1.3888  ...     NaN            0.0145
+GWI_tot_CGWL             1.3193       1.3201  ...  0.0235           -0.0027
+CGWL10y_sfUKCP           1.3815       1.3804  ...  0.0178           -0.0039
+FaIR_nonat_unB           1.3885       1.3507  ... -0.0276            0.0205
+GWI_anthro_CGWL          1.3178       1.3125  ...  0.0183           -0.0068
+cent20y                     NaN          NaN  ...     NaN               NaN
+PIVW_real                1.3604       1.3623  ...  0.0169            0.0055
+PIVW_anthro              1.3666       1.3388  ... -0.0134            0.0120
+PIVW_real_paperW         1.3604       1.3623  ...  0.0169            0.0055
+PIVW_anthro_paperW       1.3666       1.3388  ... -0.0134            0.0120
+
+[14 rows x 10 columns]
+       exp          method  mean2024_v25  P_gauss_d0  P_saved_v25  P_saved_v24  equiv_shift_v24_minus_v25
+  rpi_real  lowess1dt36wnc        1.3292      5.3116       5.3116      10.7815                     0.0420
+  rpi_real         GAM_AR1        1.3592      8.2618       8.2618      14.2755                     0.0339
+  rpi_real     Kal_flexLin        1.3517      8.0638       8.0638      14.8517                     0.0434
+  rpi_real   FaIR_comb_unB        1.3549      4.0803       4.3087      12.8570                     0.0557
+  rpi_real       EBMKF_ta4        1.3320      2.4786       2.4786       3.4015                     0.0087
+  rpi_real    GWI_tot_CGWL        1.3027      0.0500       0.0728       1.3173                     0.0388
+  rpi_real  CGWL10y_sfUKCP        1.3669     10.9592      13.6408      21.8076                     0.0612
+  rpi_real       PIVW_comb        1.3371      2.8586       2.8586       7.4568                     0.0347
+rpi_anthro  FaIR_nonat_unB        1.3272      1.1862       1.3091      10.7764                     0.0741
+rpi_anthro GWI_anthro_CGWL        1.3020      0.2556       0.2896       1.4662                     0.0345
+rpi_anthro       PIVW_comb        1.3194      0.9360       0.9360       7.0797                     0.0620
+SD ratio 2024 (old/new): 1.1008
+       exp          method  mean2024_v25  shift_spread_adjusted  implied_v24_level  shift_unadjusted
+  rpi_real  lowess1dt36wnc        1.3292                 0.0301             1.3593            0.0420
+  rpi_real         GAM_AR1        1.3592                 0.0257             1.3849            0.0339
+  rpi_real     Kal_flexLin        1.3517                 0.0349             1.3866            0.0434
+  rpi_real   FaIR_comb_unB        1.3549                 0.0472             1.4021            0.0557
+  rpi_real       EBMKF_ta4        1.3320                -0.0059             1.3261            0.0087
+  rpi_real    GWI_tot_CGWL        1.3027                 0.0240             1.3267            0.0388
+  rpi_real  CGWL10y_sfUKCP        1.3669                 0.0564             1.4233            0.0612
+  rpi_real       PIVW_comb        1.3371                 0.0221             1.3593            0.0347
+rpi_anthro  FaIR_nonat_unB        1.3272                 0.0642             1.3914            0.0741
+rpi_anthro GWI_anthro_CGWL        1.3020                 0.0205             1.3225            0.0345
+rpi_anthro       PIVW_comb        1.3194                 0.0511             1.3705            0.0620
+paper (17 Oct)     PIVW realised 2024 vintage: reported(retro) 1.4047  direct current 1.3606 | anthro reported 1.3396  direct current 1.3550
+19 Oct var_scale   PIVW realised 2024 vintage: reported(retro) 1.4046  direct current 1.3606 | anthro reported 1.3396  direct current 1.3551
+                Oct17 before-rerun var_scale Results2 var_scale 17Oct23:58 (19 Oct vintage) Dec2025 (HadCRUT5.0)        Oct10 2026 (HadCRUT5.1)        Oct18 2026 var_adjusted       
+                                          w%                                             w%           w%[1/RMS2]    RMS              w%[1/RMS2]    RMS              w%[1/RMS2]    RMS
+lowess1dt36wnc                         7.959                                          7.462                6.848  0.051                   6.551  0.053                   6.551  0.053
+GAM_AR1                                7.935                                          7.440                5.285  0.058                   5.239  0.060                   5.239  0.060
+Kal_flexLin                            8.385                                          7.861                7.700  0.048                   7.607  0.049                   7.607  0.049
+FaIR_comb_unB                         26.217                                         24.580               24.359  0.027                  24.404  0.028                  24.403  0.028
+EBMKF_ta4                             10.904                                         16.467               19.507  0.030                  19.926  0.031                  19.930  0.031
+GWI_tot_CGWL                          27.405                                         25.694               25.757  0.026                  25.510  0.027                  25.509  0.027
+CGWL10y_sfUKCP                        11.196                                         10.497               10.543  0.041                  10.762  0.042                  10.762  0.042
+FaIR_nonat_unB                        69.025                                         69.025               72.427  0.025                  69.002  0.028                  69.025  0.028
+GWI_anthro_CGWL                       30.975                                         30.975               27.573  0.040                  30.998  0.042                  30.975  0.042
+/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/thorne_2024v2025_investigation/decrease_analysis_1019.py:106: DeprecationWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  return df.groupby(['source', 'method']).apply(f)
+/Users/JohnMatthew/Downloads/Thorne_15_codefigurestats/thorne_2024v2025_investigation/decrease_analysis_1019.py:106: DeprecationWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  return df.groupby(['source', 'method']).apply(f)
+336 rows; 27 flagged
+                                                 section                                          quantity old (18 Oct) new (19 Oct)
+2                                               Headline                      Realised 2025 interval lower        1.229        1.230
+14                                      Weights (PIVW %)                                    lowess1dt36wnc          7.7          7.5
+15                                      Weights (PIVW %)                                           GAM_AR1          7.6          7.4
+16                                      Weights (PIVW %)                                       Kal_flexLin          8.1          7.9
+17                                      Weights (PIVW %)                                     FaIR_comb_unB         25.3         24.6
+18                                      Weights (PIVW %)                                         EBMKF_ta4         14.1         16.5
+19                                      Weights (PIVW %)                                      GWI_tot_CGWL         26.4         25.7
+20                                      Weights (PIVW %)                                    CGWL10y_sfUKCP         10.8         10.5
+26                                         Decomposition                               Realised: (ii) step       -0.024       -0.023
+28                                         Decomposition              Realised: (iii) one-year step (mean)        0.028        0.029
+29                                         Decomposition                   Realised: (iii) min member step        0.020        0.021
+43               Per-method 2025 step (heads/tails mean)                                         EBMKF_ta4        0.040        0.039
+52                    Per-method 2024 level, new vintage                                         EBMKF_ta4        1.330        1.332
+105  HadCRUT single run (5.1 run − 5.0.2 run, same year)                        EBMKF_ta4 vintage_eff_2015        0.012        0.015
+120  HadCRUT single run (5.1 run − 5.0.2 run, same year)                        PIVW_real vintage_eff_2015        0.005        0.006
+125  HadCRUT single run (5.1 run − 5.0.2 run, same year)   EBMKF_ta4 vintage_eff_2023 (2024 run ends 2023)        0.017        0.018
+126  HadCRUT single run (5.1 run − 5.0.2 run, same year)                        EBMKF_ta4 vintage_eff_2020        0.033        0.035
+127  HadCRUT single run (5.1 run − 5.0.2 run, same year)            PIVW_real level 2024, 2025-vintage run        1.361        1.362
+131              (b) Weight sensitivity: 2025 PIVW level                        1/RMS² Dec 2025 HadCRUT5.0        1.365        1.366
+132              (b) Weight sensitivity: 2025 PIVW level  1/RMS² HadCRUT5.1 var_adjusted (261018 → 261019)        1.365        1.366
+133              (b) Weight sensitivity: 2025 PIVW level                    1/RMS² HadCRUT5.1 Oct 10 False        1.365        1.366
+141                           (d) mean size of decreases                      EBMKF_ta4 | HadCRUT5.1 ≥1960       -0.003       -0.004
+172                 (d) % of non-volcanic years with Δ<0                     EBMKF_ta4 | heads/tails ≥1960           12           13
+229                 (d) % of non-volcanic years with Δ<0                            PIVW_real | MPI_SSP126           40           41
+230             (d) % of non-volcanic years with Δ<−0.01                            PIVW_real | MPI_SSP126           19           20
+296             (d) % of non-volcanic years with Δ<−0.01                            PIVW_real | MPI_SSP370          0.7          0.8
+328                 (d) % of non-volcanic years with Δ<0                PIVW_real | NorESM_RCP45_VolcConst           10           11

@@ -25,13 +25,24 @@ from scipy.optimize import brentq
 REAL = ['CGWL10y_sfUKCP', 'EBMKF_ta4', 'FaIR_comb_unB', 'GAM_AR1',
         'GWI_tot_CGWL', 'Kal_flexLin', 'lowess1dt36wnc']
 ANTHRO = ['FaIR_nonat_unB', 'GWI_anthro_CGWL']
+# Supplementary realised options, listed last and starred on the dashboard. They are
+# tangential to the paper's conclusions: CSCM refitted for this ensemble, the WMO-forecast
+# CGWL (not evaluable on the future scenarios), and an 8-method PIVW that includes it.
+SUPPLEMENTARY = ['CSCM_comb', 'CGWL10y_for_halfU', 'PIVW8_comb']
+SUPP_DIR = Path(__file__).resolve().parents[1]/'data/supplementary'
 METHOD_LABELS = {
     'PIVW_comb': 'PIVW combination', 'equal_weight_comb': 'Equal weighting',
     'CGWL10y_sfUKCP': 'CGWL (UKCP)', 'EBMKF_ta4': 'Energy balance Kalman filter',
     'FaIR_comb_unB': 'FaIR realized', 'GAM_AR1': 'GAM with AR(1)',
     'GWI_tot_CGWL': 'Global Warming Index (total)', 'Kal_flexLin': 'Flexible Kalman filter',
     'lowess1dt36wnc': 'LOWESS (linear)', 'FaIR_nonat_unB': 'FaIR anthropogenic',
-    'GWI_anthro_CGWL': 'Global Warming Index (anthropogenic)'}
+    'GWI_anthro_CGWL': 'Global Warming Index (anthropogenic)',
+    'CSCM_comb': 'CSCM combination', 'CGWL10y_for_halfU': 'CGWL-WMOLC-ADCP',
+    'PIVW8_comb': 'PIVW-8 combination'}
+SUPP_NOTES = {
+    'CSCM_comb': 'Compressed, stacked, calibrated mixture of the 7 methods. Stacking weights and the compression factor are refitted on the HadCRUT5.1 historical calibration; each member is treated as a Gaussian mixture of the calibrated method estimates, compressed by that factor.',
+    'CGWL10y_for_halfU': 'Averages the previous 10 observed years with the WMO LC-ADCP decadal forecast. It could not be evaluated on the future scenarios. It has no retrospective output, so its current output stands in for the rate history.',
+    'PIVW8_comb': 'PIVW of the 7 methods plus CGWL-WMOLC-ADCP, with its own calibrated spread. CGWL-WMOLC-ADCP contributes its current output to the rate history.'}
 PAPER = 'https://essd.copernicus.org/preprints/essd-2025-825/'
 METHOD_LINKS = {
     'PIVW_comb': 'https://doi.org/10.2307/3001666',
@@ -42,7 +53,8 @@ METHOD_LINKS = {
     'GWI_tot_CGWL': 'https://doi.org/10.5194/essd-16-2625-2024',
     'GWI_anthro_CGWL': 'https://doi.org/10.5194/essd-16-2625-2024',
     'CGWL10y_sfUKCP': PAPER, 'GAM_AR1': PAPER, 'Kal_flexLin': PAPER,
-    'lowess1dt36wnc': PAPER}
+    'lowess1dt36wnc': PAPER, 'CSCM_comb': PAPER, 'PIVW8_comb': PAPER,
+    'CGWL10y_for_halfU': 'https://doi.org/10.1038/d41586-023-03775-z'}
 
 def centered_mean(x, length):
     """Same symmetric convention as cent10y_method and cent20y_method.
@@ -170,21 +182,35 @@ def clean_json(x):
     return x
 
 
-def load_paper_probabilities(root, experiment, methods):
+def gaussian_paper_probabilities(years, centers, ses, thresholds):
+    """Member-mean Gaussian exceedance CDFs in the paper's three windows, for options
+    that the paper pipeline never saved. The same density processing then applies."""
+    starts = [1970, 1990, 2005]; ends = [2006, 2026, 2026]
+    cdf = np.full((ends[1]-starts[0], 3), np.nan)
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore', RuntimeWarning)
+        for j in range(3):
+            y = np.arange(starts[j], ends[j]); idx = np.searchsorted(years, y)
+            cdf[:len(y), j] = np.nanmean(norm.cdf(centers[:, idx], loc=thresholds[j], scale=ses[:, idx]), axis=0)
+    return cdf
+
+
+def load_paper_probabilities(root, experiment, methods, gaussian_cdfs=None):
     """Reuse the paper's calibrated current probabilities, unchanged by the fixes."""
-    sums = {m: [] for m in methods}
+    gaussian_cdfs = gaussian_cdfs or {}
+    sums = {m: [] for m in methods if m not in gaussian_cdfs}
     starts = [1970, 1990, 2005]
     ends = [2006, 2026, 2026]
     for member in range(100):
         names = pd.read_csv(root/'Results'/f'headstails_statistics_{experiment}{member}.csv').method_name.tolist()
         a = np.load(root/'Results'/f'headstails_method_fineprobs_{experiment}{member}.npy')
-        for m in methods:
+        for m in sums:
             sums[m].append(a[names.index(m)])
     out = {}
-    for m, samples in sums.items():
+    for m in methods:
         with warnings.catch_warnings():
             warnings.simplefilter('ignore',RuntimeWarning)
-            cdf = np.nanmean(samples, axis=0)
+            cdf = gaussian_cdfs[m] if m in gaussian_cdfs else np.nanmean(sums[m], axis=0)
         panels=[]
         for j in range(3):
             y=np.arange(starts[j],ends[j]); c=cdf[:len(y),j]
@@ -244,7 +270,38 @@ def analyze(source_root, experiment, outdir, results_dir=None):
             with np.errstate(invalid='ignore',divide='ignore'):
                 dest[m]=np.nansum(stack*weights,axis=0)/denom
         stds[m]=np.full_like(curves[m],scale)
-    paper_probs=load_paper_probabilities(root,experiment,list(curves))
+    supplementary=SUPPLEMENTARY if goal=='real' else []
+    supp_calibration=None; supp_weights={}
+    if supplementary:
+        supp_calibration=json.loads((SUPP_DIR/'dashboard_combination_calibration.json').read_text())
+        wmo=np.load(SUPP_DIR/f'CGWL10y_for_halfU_histens_{baseline}.npz')
+        np.testing.assert_array_equal(wmo['years'],years)
+        h='CGWL10y_for_halfU'
+        curves[h]=wmo['current']; stds[h]=wmo['current_se']*histvar.loc[h,'best_alter_scale']
+        # No retrospective output: the current output stands in, as for GWI.
+        recent[h]=curves[h].copy(); legacy_recent[h]=curves[h].copy(); proxy_methods.add(h)
+        def weighted(dest,names,w):
+            stack=np.array([dest[k] for k in names]); weights=np.asarray(w)[:,None,None]
+            with np.errstate(invalid='ignore',divide='ignore'):
+                return np.nansum(stack*weights,axis=0)/np.sum(np.isfinite(stack)*weights,axis=0)
+        cal7,cal8=supp_calibration['real7'],supp_calibration['real8']
+        np.testing.assert_allclose([cal7['pivw_weights'][k] for k in methods],iv/iv.sum(),rtol=1e-10)
+        names8=methods+[h]
+        supp_weights['PIVW8_comb']=np.array([cal8['pivw_weights'][k] for k in names8])
+        supp_weights['CSCM_comb']=np.array([cal7['cscm_stack_weights'][k] for k in methods])
+        for dest in [curves,recent,legacy_recent]:
+            dest['PIVW8_comb']=weighted(dest,names8,supp_weights['PIVW8_comb'])
+            dest['CSCM_comb']=weighted(dest,methods,supp_weights['CSCM_comb'])
+        stds['PIVW8_comb']=np.full_like(curves['PIVW8_comb'],cal8['pivw_scale'])
+        # Gaussian approximation of the stacked mixture, compressed by averaging nsharp draws.
+        w=supp_weights['CSCM_comb'][:,None,None]; c=np.array([curves[k] for k in methods]); s=np.array([stds[k] for k in methods])
+        ok=np.isfinite(c)&np.isfinite(s)
+        with np.errstate(invalid='ignore',divide='ignore'):
+            mix=np.where(ok,w*(s**2+(c-curves['CSCM_comb'])**2),0).sum(axis=0)/np.sum(ok*w,axis=0)
+        stds['CSCM_comb']=np.sqrt(mix/cal7['cscm_nsharp'])
+        proxy_methods.add('PIVW8_comb')
+    gaussian_cdfs={m:gaussian_paper_probabilities(years,curves[m],stds[m],thresholds) for m in supplementary}
+    paper_probs=load_paper_probabilities(root,experiment,list(curves),gaussian_cdfs)
     definition='realized' if goal=='real' else 'anthropogenic'
     result=dict(experiment=experiment,baseline=baseline,goal=goal,definition=definition,years=years,
                 baseline_label='1850–1900' if baseline=='rpi' else '1981–2010',thresholds=thresholds,
@@ -285,20 +342,23 @@ def analyze(source_root, experiment, outdir, results_dir=None):
                               crossing_status='quartic_estimate' if estimated[i] else 'observed' if np.isfinite(c) else 'pending'))
     result['definitive']=definitive
     saved=pd.read_csv(root/'rates_histens'/f'rates_histens_{experiment}.csv')
-    recent_method_fits={m:np.array([quadratic_fit(years[-15:],y[-15:],years[-1])[:2] for y in recent[m]]) for m in methods}
+    fit_methods=methods+(['CGWL10y_for_halfU'] if supplementary else [])
+    recent_method_fits={m:np.array([quadratic_fit(years[-15:],y[-15:],years[-1])[:2] for y in recent[m]]) for m in fit_methods}
     def recent_headline_rate(method):
-        if method in methods:
+        if method in recent_method_fits:
             fits=recent_method_fits[method]
             return summarize(np.zeros(len(fits)),fits[:,0],fits[:,1])
         # Match export_heads_tails_rate_summary.py's within-method fit variance plus the
         # between-method dispersion, then add between-member dispersion.
-        w=iv/iv.sum() if method=='PIVW_comb' else np.ones(len(methods))/len(methods)
-        slopes=np.array([recent_method_fits[m][:,0] for m in methods])
-        ses=np.array([recent_method_fits[m][:,1] for m in methods])
+        names=methods+['CGWL10y_for_halfU'] if method=='PIVW8_comb' else methods
+        w=iv/iv.sum() if method=='PIVW_comb' else supp_weights[method] if method in supp_weights else np.ones(len(methods))/len(methods)
+        slopes=np.array([recent_method_fits[m][:,0] for m in names])
+        ses=np.array([recent_method_fits[m][:,1] for m in names])
         rate=np.sum(w[:,None]*slopes,axis=0)
         variance=np.sum(w[:,None]*(ses**2+(slopes-rate)**2),axis=0)
+        if method=='CSCM_comb': variance=variance/supp_calibration['real7']['cscm_nsharp']
         return summarize(np.zeros(len(rate)),rate,np.sqrt(variance))
-    for m in ['PIVW_comb','equal_weight_comb']+methods:
+    for m in ['PIVW_comb','equal_weight_comb']+methods+supplementary:
         c=curves[m]; se=stds[m]; r=recent[m]
         comparisons=[]
         for th in thresholds[:3]:
@@ -315,14 +375,16 @@ def analyze(source_root, experiment, outdir, results_dir=None):
             probabilities[j,idx]=panel['probabilities']
         # Preserve CSV numbers for the requested default. Explicit alternative
         # recomputes the recent rate solely from current outputs.
-        sr=saved[(saved.method==m)&(saved.level.astype(str)==str(int(years[-1])))].iloc[0]
+        sr=saved[(saved.method==m)&(saved.level.astype(str)==str(int(years[-1])))]
         currentfits=np.array([quadratic_fit(years[-15:],y[-15:],years[-1])[:2] for y in c])
         curr=summarize(c[:,-1],currentfits[:,0],currentfits[:,1])
         curr_summary=dict(level=float(np.mean(c[:,-1])),level_interval=mixture_interval(c[:,-1],se[:,-1]),
                           rate=curr['rate'],rate_se=curr['rate_se'])
         # Accept current-level rate CSVs and retained older retrospective-level CSVs.
-        saved_level = float(sr.year_cross)
-        if np.isclose(saved_level, curr_summary['level'], atol=1e-10, rtol=0):
+        # Supplementary options are absent from the saved rate CSV.
+        saved_summary=None
+        if m in supplementary: pass
+        elif np.isclose(saved_level:=float(sr.iloc[0].year_cross), curr_summary['level'], atol=1e-10, rtol=0):
             saved_centers = c[:, -1]
             saved_level_source = 'current'
         else:
@@ -330,9 +392,11 @@ def analyze(source_root, experiment, outdir, results_dir=None):
             np.testing.assert_allclose(saved_centers.mean(), saved_level, atol=1e-10, rtol=0,
                 err_msg=f'{m}: saved level matches neither current nor legacy retrospective outputs; refresh the rate CSV.')
             saved_level_source = 'legacy_retrospective'
-        saved_summary=dict(level=saved_level,level_interval=mixture_interval(saved_centers,se[:,-1]),
-                           rate=float(sr.rate),rate_se=float(sr.rate_uncert_1sd),
-                           level_source=saved_level_source)
+        if m not in supplementary:
+            sr=sr.iloc[0]
+            saved_summary=dict(level=saved_level,level_interval=mixture_interval(saved_centers,se[:,-1]),
+                               rate=float(sr.rate),rate_se=float(sr.rate_uncert_1sd),
+                               level_source=saved_level_source)
         corrected_rate=recent_headline_rate(m)
         headline_summary=dict(level=curr_summary['level'],level_interval=curr_summary['level_interval'],
                               rate=corrected_rate['rate'],rate_se=corrected_rate['rate_se'])
@@ -350,6 +414,12 @@ def analyze(source_root, experiment, outdir, results_dir=None):
                                   retrospective_endpoint=float(r[:,-1].mean()),
                                   retrospective_is_current_proxy=m in proxy_methods,
                                   current_fit=fit_curve(c),saved_fit=fit_curve(legacy_recent[m]),recent_fit=fit_curve(r))
+        if m in supplementary:
+            result['methods'][m].update(supplementary=True,note=SUPP_NOTES[m])
+    if supplementary:
+        result['supplementary_calibration']=dict(source='data/supplementary/dashboard_combination_calibration.json',
+            cscm_stack_weights=supp_calibration['real7']['cscm_stack_weights'],cscm_nsharp=supp_calibration['real7']['cscm_nsharp'],
+            pivw8_weights=supp_calibration['real8']['pivw_weights'],pivw8_scale=supp_calibration['real8']['pivw_scale'])
     prefix=experiment.removeprefix('histens_')
     # Lazy-loaded, within-member ribbon data; never an ensemble envelope.
     ribbon_data=dict(source_sha256=digest.hexdigest(),years=years,definition='Approximate 95% calibrated within-member Gaussian range: estimate +/- 1.96 SE; excludes spread across members.',methods={m:dict(current_se=stds[m]) for m in stds})

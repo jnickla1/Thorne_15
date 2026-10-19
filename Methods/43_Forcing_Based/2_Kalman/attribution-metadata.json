@@ -1,0 +1,56 @@
+{
+  "end_year": 2023,
+  "component_end_year": 2023,
+  "model_TOA_uncertainty": "Pre-CERES 1999 variance held fixed from 2001 onward in model-only components; historical ANT/total unchanged",
+  "years": 174,
+  "historical_settings": {
+    "gad": 0.5,
+    "fdbkA": 0.0,
+    "AEROSOL_FORCING_PERCENTILE": 85.0,
+    "eCO2_FORCING_PERCENTILE": 17.0,
+    "volcanic_target_efficiency": 20.0,
+    "heatCp": 10.866106281423571
+  },
+  "component_settings": {
+    "aer": {
+      "gad": 0.5,
+      "fdbkA": 0.0,
+      "AEROSOL_FORCING_PERCENTILE": 85.0,
+      "eCO2_FORCING_PERCENTILE": 17.0,
+      "volcanic_target_efficiency": 20.0,
+      "heatCp": 10.866106281423571
+    },
+    "ozone": {
+      "gad": 0.5,
+      "fdbkA": 0.0,
+      "AEROSOL_FORCING_PERCENTILE": 85.0,
+      "eCO2_FORCING_PERCENTILE": 17.0,
+      "volcanic_target_efficiency": 20.0,
+      "heatCp": 10.866106281423571
+    },
+    "ghg": {
+      "gad": 0.5,
+      "fdbkA": 0.0,
+      "AEROSOL_FORCING_PERCENTILE": 85.0,
+      "eCO2_FORCING_PERCENTILE": 17.0,
+      "volcanic_target_efficiency": 20.0,
+      "heatCp": 10.866106281423571
+    },
+    "nat": {
+      "gad": 0.5,
+      "fdbkA": 0.0,
+      "AEROSOL_FORCING_PERCENTILE": 85.0,
+      "eCO2_FORCING_PERCENTILE": 17.0,
+      "volcanic_target_efficiency": 20.0,
+      "heatCp": 10.866106281423571
+    }
+  },
+  "component_percentile_convention": "Aerosol uses historical aggregate percentile 85; GHG/ozone use the historical Gaussian-subset convention at percentile 17 with the same updated ERF release. Marginal subset percentiles are not additive joint quantiles.",
+  "OHF": "aerosol-proxy",
+  "component_extension": "1980-2014 linear fit plus seeded residual noise through selected end year; retained from original script",
+  "ozone_correction": "o3 forcing replaces erroneous solar-column read",
+  "component_SE": "Native filter SE; historical ANT includes production 1.2 current-output multiplier",
+  "uncertainty": "Gaussian analytic marginal percentiles; not heads/tails ensemble uncertainty",
+  "OHF_alternatives": "aerosol_proxy; ant_minus_GHG; aerosols_plus_ozone (partial non-GHG forcing). Combined widths assume independent components; covariance is unavailable.",
+  "legacy_OHFa": "Unused legacy mean of aerosol/ozone runs; not a sum of forcing contributions"
+}

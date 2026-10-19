@@ -42,17 +42,20 @@ methods_names = [
 def gen_color(ci, dark=False):
     # used to have implemented a version that would allow a dark version of each of these, now too many colors and gets confusing
     colors = {
-    '42_Temp_Alone/1_Run_Means': "#CC6677",  # pink
-    '42_Temp_Alone/2_LT_Fits': "#332288",  # blueberry
-    '42_Temp_Alone/3_ST_Fits': "#DDCC77",  # Green
-    '42_Temp_Alone/4_GAM_AR1': "#117733",  # yellow
-    '42_Temp_Alone/5_Kalman': "#88CCEE",  # light blue
-    '42_Temp_Alone/6_Remove_IV': "#882255",  # maroon
-    '43_Forcing_Based/1_ERF_FaIR':"#44AA99",  # teal
-    '43_Forcing_Based/2_Kalman': "#999933",  # mustard
-    '43_Forcing_Based/3_Human_Induced': "#AA4499",  #pink
-    '43_Forcing_Based/0_Linear': "#9494CE",  #greyblue
-    '44_EarthModel_CGWL': "#CC3311"   # firetruck
+    # Colour-blind-safe palette (Okabe & Ito 2008, plus three Tol/custom colours), 18 Oct 2026.
+    # Chosen as the least change from the previous Tol-muted scheme that stays separable
+    # under simulated deuteranopia, protanopia and tritanopia (worst CIEDE2000 ~10.9).
+    '42_Temp_Alone/1_Run_Means': "#CC79A7",  # reddish pink (was rose #CC6677)
+    '42_Temp_Alone/2_LT_Fits': "#332288",  # indigo (unchanged)
+    '42_Temp_Alone/3_ST_Fits': "#F0E442",  # yellow (was sand #DDCC77)
+    '42_Temp_Alone/4_GAM_AR1': "#009E73",  # bluish green (was green #117733)
+    '42_Temp_Alone/5_Kalman': "#56B4E9",  # sky blue (was light blue #88CCEE)
+    '42_Temp_Alone/6_Remove_IV': "#663333",  # dark maroon (was wine #882255)
+    '43_Forcing_Based/1_ERF_FaIR':"#0072B2",  # blue (was teal #44AA99)
+    '43_Forcing_Based/2_Kalman': "#E69F00",  # orange (was olive #999933)
+    '43_Forcing_Based/3_Human_Induced': "#AA3377",  # magenta-purple (was purple #AA4499)
+    '43_Forcing_Based/0_Linear': "#BBBBBB",  # light grey (was grey-blue #9494CE)
+    '44_EarthModel_CGWL': "#D55E00"   # vermillion (was red #CC3311)
     }
     
     return colors[ci]

@@ -558,7 +558,7 @@ def run_one_single_ens_member(plotting_figs, experiment_type, start_run, ax1, ax
                 ax.spines['right'].set_visible(False)
                 for m in methods_names:
                     classcolor = gen_color(m[0])
-                    ax.text(hai[i],m[2],m[1],fontsize=12,horizontalalignment='center',color=classcolor,fontweight='bold')
+                    ax.text(hai[i],m[2],m[1],fontsize=12,horizontalalignment='center',fontweight='bold',**text_style(classcolor))
 
 
 
@@ -672,8 +672,9 @@ if __name__ == '__main__':
         fig4, (ax4a,ax4b)= plt.subplots(2, 1, figsize=(10,10), gridspec_kw={  "hspace": 0.3})
         exp1 = "fut_ESM1-2-LR_SSP126_constVolc"
         exp2 = "fut_ESM1-2-LR_SSP370_constVolc"
-        col370 = (194./255, 52./255, 109./255)
-        col126 = (52./255,120./255, 130./255)
+        #colour-blind-safe SSP pair (Tol vibrant orange / blue), 18 Oct 2026; was magenta (194,52,109) / teal (52,120,130)
+        col370 = (238./255, 119./255, 51./255)
+        col126 = (0./255, 119./255, 187./255)
         (sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist) = collect_data(exp2.split("_"))
         for model_run in range(0,50):
             (simall,start_sim,years, sim_corrected, simh_corrected)= select_data(2024,model_run,sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist)
@@ -681,7 +682,7 @@ if __name__ == '__main__':
                 axens.plot(years,simall,'-', color = col370, linewidth=2.5,zorder=3)
                 axens.plot(years,simall,'-', color = 'k', linewidth=.5,zorder=3)
             else:
-                axens.plot(years,simall,'-', color=colorgen(model_run,(30,70,30),(194, 52, 109)), linewidth=0.5,zorder=1) #(52./255, 235./255, 235./255)
+                axens.plot(years,simall,'-', color=colorgen(model_run,(15,40,30),(238, 119, 51)), linewidth=0.5,zorder=1) #(52./255, 235./255, 235./255)
             
         (sims_tas, stime_mon, sims_tas_hist,  stime_mon_hist) = collect_data(exp1.split("_"))
         for model_run in range(0,50):
@@ -690,7 +691,7 @@ if __name__ == '__main__':
                 axens.plot(years,simall,'-', color = col126, linewidth=2.5,zorder=3)
                 axens.plot(years,simall,'-', color = 'k', linewidth=.5,zorder=3)
             else:
-                axens.plot(years,simall,'-', color=colorgen(model_run,(70,30,30),(52,120,130)), linewidth=0.5,zorder=1) #(52./255, 235./255, 235./255)
+                axens.plot(years,simall,'-', color=colorgen(model_run,(20,30,40),(0,119,187)), linewidth=0.5,zorder=1) #(52./255, 235./255, 235./255)
             
         axens.set_yticks(np.arange(0, 4, step=.5), minor=True)
         axens.set_xticks(np.arange(2000,2105,25))
@@ -754,48 +755,48 @@ if __name__ == '__main__':
                 xy=(target_year, target_temp), xycoords='data',
                 xytext=label_position, textcoords='data',
                 arrowprops=arrow_properties,
-                color=curcolor, horizontalalignment='left', verticalalignment='bottom')
+                **text_style(curcolor), horizontalalignment='left', verticalalignment='bottom')
         curcolor =  gen_color('44_EarthModel_CGWL')
         ax1b.annotate('CGWL10y_pUKCP',
             xy=(2088,1.7),
             xytext=(2080,2.2), textcoords='data',
-            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
+            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),**text_style(curcolor),
             horizontalalignment='left', verticalalignment='bottom') #somthing very funky is happening - should be horizontalalignmnet = center
         ax1a.annotate('CGWL10y_pUKCP',
             xy=(2069,2.643), xycoords='data',
             xytext=(2048,3.2), textcoords='data',
-            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
+            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),**text_style(curcolor),
             horizontalalignment='left', verticalalignment='bottom')
 
         curcolor =  gen_color('42_Temp_Alone/2_LT_Fits')
         ax1b.annotate(' OLS_hinge75\n TheilSen_h7075\n hinge75meet',
             xy=(2072,1.8),
             xytext=(2072,1.15), textcoords='data',
-            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
+            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),**text_style(curcolor),
             horizontalalignment='center', verticalalignment='top') #somthing very funky is happening - should be horizontalalignmnet = center
         ax1a.annotate(' OLS_hinge75\n TheilSen_h7075\n hinge75meet',
             xy=(2085,2.6), xycoords='data',
             xytext=(2090,1.8), textcoords='data',
-            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
+            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),**text_style(curcolor),
             horizontalalignment='right', verticalalignment='top')
         
         curcolor = gen_color('43_Forcing_Based/1_ERF_FaIR')
         ax1a.annotate(' FaIR_all\n FaIR_nonat\n FaIR_anthro',
             xy=(2050,1.75), xycoords='data',
             xytext=(2048,1.25), textcoords='data',
-            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
+            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),**text_style(curcolor),
             horizontalalignment='center', verticalalignment='top')
 
         curcolor =  gen_color('42_Temp_Alone/6_Remove_IV')
         ax1b.annotate('removeMEI\nvolc_cons',
             xy=(2082,1.2),
             xytext=(2085,1), textcoords='data',
-            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
+            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),**text_style(curcolor),
             horizontalalignment='left', verticalalignment='top') #somthing very funky is happening - should be horizontalalignmnet = center
         ax1a.annotate('removeMEI\nvolc_cons',
             xy=(2069,2.25), xycoords='data',
             xytext=(2067,1.8), textcoords='data',
-            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),color=curcolor,
+            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),**text_style(curcolor),
             horizontalalignment='center', verticalalignment='top')
 
         ax1b.set_title(f"Evaluated Methods to find Current MPI-ESM-1-2-LR SSP1-2.6 (memb. #{gen_orig_number(-start_run,50)})")

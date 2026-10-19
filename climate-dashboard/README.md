@@ -11,7 +11,9 @@ The original mockup has been updated, with 78 additional figures and a portable 
 - `review/`: regression results, correction diffs, original method backups, and quartic-fit review material.
 - `CHANGELOG.md`: the scientific changes and whether they affect current outputs. It records validation with the transferred cut2021 trajectories and the subsequent display refinements.
 
-The nine realized options are PIVW, equal weighting, CGWL, EBM–Kalman, FaIR, GAM, GWI, flexible Kalman, and LOWESS. Anthropogenic views include PIVW, equal weighting, FaIR, and GWI. Both definitions have both calibrations and all three background choices. The main mockup is additional to these 78 variants. The Temperature series menu offers annual observations, selected-method smoothed outputs and centred 20-year observational means. The latter end in 2015 and remain realised observations even on anthropogenic views. The menu does not change headline estimates or probabilities.
+The nine realized options are PIVW, equal weighting, CGWL, EBM–Kalman, FaIR, GAM, GWI, flexible Kalman, and LOWESS. Anthropogenic views include PIVW, equal weighting, FaIR, and GWI. Both definitions have both calibrations and all three background choices. The main mockup is additional to these 78 variants.
+
+Three supplementary realised options, starred and listed last (19 October 2026), bring the library to 96 variants: a CSCM combination of the 7 methods, CGWL-WMOLC-ADCP (`CGWL10y_for_halfU`), and an 8-method PIVW including it. Build their inputs before the exporter with `python source/run_cgwl_wmo_histens.py` (runs the unchanged method file on the 100 members) and `python source/calibrate_dashboard_combinations.py` (a read-only copy of the `hh` calibration; it asserts that the 7-method scales reproduce `Results2/comb_real_scales.npy`). Outputs go to `data/supplementary/`. Existing options are unchanged. The current export reads `Results/` directly (no `--results-dir`), because `data/corrected_results/` predates the 18 October reruns. The Temperature series menu offers annual observations, selected-method smoothed outputs and centred 20-year observational means. The latter end in 2015 and remain realised observations even on anthropogenic views. The menu does not change headline estimates or probabilities.
 
 ## Scientific conventions
 
@@ -61,7 +63,9 @@ Use the existing `cleanPy` environment. From this dashboard directory:
 ```sh
 conda activate cleanPy
 python3 source/audit_and_rebuild_retrospective_caches.py
-python3 source/export_dashboard_climate_metrics.py all --results-dir data/corrected_results
+python3 source/run_cgwl_wmo_histens.py
+python3 source/calibrate_dashboard_combinations.py
+python3 source/export_dashboard_climate_metrics.py all
 python3 source/render_dashboard_figures.py
 python3 source/assemble_dashboard_site.py
 ```

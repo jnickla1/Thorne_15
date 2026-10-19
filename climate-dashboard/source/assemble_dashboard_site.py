@@ -50,9 +50,12 @@ def main():
                 copy_public_csv(path, assets / 'data' / path.name)
                 count += 1
     manifest = json.loads((base / 'figures/manifest.json').read_text())
-    if len(manifest) != 78 or not all((assets / 'figures' / item['file']).is_file() for item in manifest):
-        raise ValueError('The complete 78-figure library (three temperature-series options) is required.')
-    print(f'Website ready: 78 variants, default PNG/PDF/SVG, {count} method CSVs.')
+    # Three temperature-series options for every method in every dataset
+    # (78 for the main options, 96 with the three supplementary realised options).
+    expected = 3 * count
+    if len(manifest) != expected or not all((assets / 'figures' / item['file']).is_file() for item in manifest):
+        raise ValueError(f'The complete {expected}-figure library (three temperature-series options) is required.')
+    print(f'Website ready: {expected} variants, default PNG/PDF/SVG, {count} method CSVs.')
 
 if __name__ == '__main__':
     main()

@@ -41,17 +41,20 @@ methods_names = [
 def gen_color(ci, dark=False):
     # used to have implemented a version that would allow a dark version of each of these, now too many colors and gets confusing
     colors = {
-    '42_Temp_Alone/1_Run_Means': "#CC6677",  # pink
-    '42_Temp_Alone/2_LT_Fits': "#332288",  # blueberry
-    '42_Temp_Alone/3_ST_Fits': "#DDCC77",  # Green
-    '42_Temp_Alone/4_GAM_AR1': "#117733",  # yellow
-    '42_Temp_Alone/5_Kalman': "#88CCEE",  # light blue
-    '42_Temp_Alone/6_Remove_IV': "#882255",  # maroon
-    '43_Forcing_Based/1_ERF_FaIR':"#44AA99",  # teal
-    '43_Forcing_Based/2_Kalman': "#999933",  # mustard
-    '43_Forcing_Based/3_Human_Induced': "#AA4499",  #pink
-    '43_Forcing_Based/0_Linear': "#9494CE",  #greyblue
-    '44_EarthModel_CGWL': "#CC3311"   # firetruck
+    # Colour-blind-safe palette (Okabe & Ito 2008, plus three Tol/custom colours), 18 Oct 2026.
+    # Chosen as the least change from the previous Tol-muted scheme that stays separable
+    # under simulated deuteranopia, protanopia and tritanopia (worst CIEDE2000 ~10.9).
+    '42_Temp_Alone/1_Run_Means': "#CC79A7",  # reddish pink (was rose #CC6677)
+    '42_Temp_Alone/2_LT_Fits': "#332288",  # indigo (unchanged)
+    '42_Temp_Alone/3_ST_Fits': "#F0E442",  # yellow (was sand #DDCC77)
+    '42_Temp_Alone/4_GAM_AR1': "#009E73",  # bluish green (was green #117733)
+    '42_Temp_Alone/5_Kalman': "#56B4E9",  # sky blue (was light blue #88CCEE)
+    '42_Temp_Alone/6_Remove_IV': "#663333",  # dark maroon (was wine #882255)
+    '43_Forcing_Based/1_ERF_FaIR':"#0072B2",  # blue (was teal #44AA99)
+    '43_Forcing_Based/2_Kalman': "#E69F00",  # orange (was olive #999933)
+    '43_Forcing_Based/3_Human_Induced': "#AA3377",  # magenta-purple (was purple #AA4499)
+    '43_Forcing_Based/0_Linear': "#BBBBBB",  # light grey (was grey-blue #9494CE)
+    '44_EarthModel_CGWL': "#D55E00"   # vermillion (was red #CC3311)
     }
     
     return colors[ci]
@@ -78,6 +81,38 @@ def get_brightness(hex_color):
 
     # Calculate brightness using the relative luminance formula
     return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+TEXT_STYLE_MODE = 'darken'  # 'darken' (same hue, darker shade) or 'outline' (same colour, thin dark outline)
+TEXT_STYLE_KEEP = {'#E69F00'}  # colours left as-is for text: EBM-Kalman orange is legible and darkening it approaches the CGWL vermillion
+
+
+def _wcag_contrast_on_white(hex_color):
+    rgb = [int(hex_color[i:i+2], 16) / 255 for i in (1, 3, 5)]
+    lin = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in rgb]
+    return 1.05 / (0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2] + 0.05)
+
+
+def text_style(hex_color, min_contrast=3.0, mode=None):
+    """Text keyword arguments for a class-coloured label on a white background (18 Oct 2026).
+    Colours that already reach WCAG contrast `min_contrast` against white are returned unchanged.
+    Lighter ones (the yellow, sky-blue, orange and grey classes) are made legible either by
+    'darken': lowering HLS lightness at fixed hue/saturation until the contrast is reached, or
+    'outline': keeping the colour and adding a thin dark outline. Lines/fills keep gen_color."""
+    mode = mode or TEXT_STYLE_MODE
+    if hex_color.upper() in TEXT_STYLE_KEEP or _wcag_contrast_on_white(hex_color) >= min_contrast:
+        return {'color': hex_color}
+    if mode == 'outline':
+        import matplotlib.patheffects as pe
+        return {'color': hex_color, 'path_effects': [pe.withStroke(linewidth=2.2, foreground='#222222')]}
+    r, g, b = [int(hex_color[i:i+2], 16) / 255 for i in (1, 3, 5)]
+    h, l, s = colorsys.rgb_to_hls(r, g, b)
+    while l > 0:
+        l -= 0.01
+        dark = '#%02X%02X%02X' % tuple(round(v * 255) for v in colorsys.hls_to_rgb(h, max(l, 0), s))
+        if _wcag_contrast_on_white(dark) >= min_contrast:
+            return {'color': dark}
+    return {'color': '#000000'}
 
 
 # ================================
@@ -689,7 +724,7 @@ if __name__ == '__main__':
         ax.spines['right'].set_visible(False)
         for m in methods_names:
             classcolor = gen_color(m[0])
-            ax.text(hai[i],m[2],m[1],fontsize=12,horizontalalignment='center',color=classcolor,fontweight='bold',linespacing = 0.8)
+            ax.text(hai[i],m[2],m[1],fontsize=12,horizontalalignment='center',fontweight='bold',linespacing = 0.8,**text_style(classcolor))
 
 
 
@@ -705,12 +740,12 @@ if __name__ == '__main__':
     curcolor =  gen_color('42_Temp_Alone/2_LT_Fits')
     ax1.annotate('OLS_refit',
             xy=(2002,0.65), xycoords='data',
-            xytext=(2014, .78-.35), textcoords='data', color =curcolor,
+            xytext=(2014, .78-.35), textcoords='data', **text_style(curcolor),
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     ax1.annotate('quartic',
             xy=(1976,.115), xycoords='data',
-            xytext=(1985, -.15), textcoords='data',color=curcolor,
+            xytext=(1985, -.15), textcoords='data',**text_style(curcolor),
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     
@@ -722,52 +757,52 @@ if __name__ == '__main__':
             horizontalalignment='center', verticalalignment='bottom')
     ax1.annotate('lag10y',
             xy=(2002,0.72), xycoords='data',
-            xytext=(2018, .7), textcoords='data',color=curcolor,
+            xytext=(2018, .7), textcoords='data',**text_style(curcolor),
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     ax1.annotate('11y_offset',
             xy=(1887,0.17), xycoords='data',
-            xytext=(1890, .35), textcoords='data',color=curcolor,
+            xytext=(1890, .35), textcoords='data',**text_style(curcolor),
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('42_Temp_Alone/3_ST_Fits')
     ax1.annotate('min_month_proj',
             xy=(1878,0.35), xycoords='data',
-            xytext=(1878, .55), textcoords='data',color=curcolor,
+            xytext=(1878, .55), textcoords='data',**text_style(curcolor),
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     ax1.annotate('opt_clim_norm',
             xy=(2000,0.41), xycoords='data',
-            xytext=(2005, .15), textcoords='data',color=curcolor,
+            xytext=(2005, .15), textcoords='data',**text_style(curcolor),
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('43_Forcing_Based/3_Human_Induced')
     ax1.annotate('KCC_all',
             xy=(1911,.16), xycoords='data',
-            xytext=(1912, .35), textcoords='data',color=curcolor,
+            xytext=(1912, .35), textcoords='data',**text_style(curcolor),
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('43_Forcing_Based/0_Linear')
     ax1.annotate('cons_cArrh_CO2forc',
             xy=(1924,.21), xycoords='data',
-            xytext=(1927, .52), textcoords='data',color=curcolor,
+            xytext=(1927, .52), textcoords='data',**text_style(curcolor),
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('43_Forcing_Based/1_ERF_FaIR')
 ##    ax1.annotate('FaIR_anthro',
 ##            xy=(1946,.1), xycoords='data',
-##            xytext=(1960, -.175), textcoords='data',color=curcolor,
+##            xytext=(1960, -.175), textcoords='data',**text_style(curcolor),
 ##            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
 ##            horizontalalignment='center', verticalalignment='bottom')
 ##    ax1.annotate('FaIR_all',
 ##            xy=(1994,.338), xycoords='data',
-##            xytext=(2004, .128), textcoords='data',color=curcolor,
+##            xytext=(2004, .128), textcoords='data',**text_style(curcolor),
 ##            arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
 ##            horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('42_Temp_Alone/6_Remove_IV')
     ax1.annotate('remove_MEI\nvolc_refit',
             xy=(1990,.755), xycoords='data',
-            xytext=(1990,1.13), textcoords='data',color=curcolor,
+            xytext=(1990,1.13), textcoords='data',**text_style(curcolor),
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
 

@@ -45,3 +45,14 @@ The 2025 vintage was swapped for the outputs regenerated on 18 Oct 2026: the ret
 - `step_context_post1960.py`: rebuilds `step2025_in_context*.csv` and `decrease_summary_hist_post1960_n*.csv`. These were produced inline on 17 Oct. Run with `''` to verify against the 17 Oct files (exact match), or with `_1018` for the new vintage.
 
 Run order: `freeze_inputs_1018`, `compare_probs_1018`, `compare_hist_run_1018`, `equiv_shift_1018`, `equiv_shift_spread_1018`, `compare_weights_1018`, `step2025_and_checks_1018`, `decrease_analysis_1018`, `step_context_post1960 _1018`, `build_changes_1018`. Run them all from this folder.
+
+## 19 Oct 2026 final refresh
+
+This refresh uses the outputs regenerated on 18–19 Oct. Table S4 (CSCM) and Figure 17 were still being worked on, but neither feeds these numbers.
+
+- `supplement_note_2024v2025_1019.md`: the final note and Thorne reply.
+- `changes_1018_vs_1019.md` / `.csv`: 18 Oct vs 19 Oct, written by `build_changes_1019.py` (header in `changes_header_1019.md`).
+- `cfg_1019.py` reads the weights and comb scales live from `../Results2/` (the most current files). `results2_1019/` keeps a copy of the 19 Oct versions, and the config prints a NOTE if the live files differ from it. The other inputs are frozen in `snap25_1019/` and `hist_results_1019.pickle`; the manifest is `inputs_1019_manifest.csv`.
+- `cfg_1018.py` now hard-codes the 18 Oct weights, because `Results2` was overwritten on 18 Oct at 22:37.
+- `diff_1018_vs_1019.py` → `diff_1018_vs_1019.txt`. Only EBMKF_ta4 changed (+0.0015 °C), and the weights returned to the paper weights.
+- Pipeline: the same scripts with the `_1019` suffix. The log is in `pipeline_1019.log`; to rebuild the context tables, run `step_context_post1960.py _1019`.

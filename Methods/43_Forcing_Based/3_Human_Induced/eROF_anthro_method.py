@@ -151,6 +151,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         return np.log(empirical_l )  
 
     def ppf_resample(year_idx, n_samples,k):
+        k=1 #reasign no current estimate (cdists is rdists, indexed from 1850)
         year_idx = np.atleast_1d(year_idx)
         resamps = np.full((len(year_idx),n_samples), np.nan)
         for i, yr in enumerate(year_idx):

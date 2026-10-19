@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy.stats import norm, gaussian_kde
-from scipy.optimize import minimize
+from scipy.optimize import minimize, minimize_scalar
 from numpy.polynomial.hermite import hermgauss
 from custom_stack_utils import predict_non_nan, infill_log_likelihoods, fit_stacking_weights_logp
 import pdb;
@@ -150,6 +150,7 @@ if __name__ == '__main__':
         x, w = hermgauss(100)
         z = np.sqrt(2.0) * x
         alpha = w / np.sqrt(np.pi)
+        np.random.seed(20261019 + nmethods) #infill_log_likelihoods draws random years; seed so stacking weights are reproducible
         infilled_lls = infill_log_likelihoods(lls[:,10:-10,:],penalty=0)
         stack_weights = fit_stacking_weights_logp(infilled_lls,alpha)
         
@@ -242,7 +243,7 @@ if __name__ == '__main__':
                 sharpened = sharpen_samples(blended, scale[0], seed = 42)
                 return kl_total_true_vs_empirical_gh(sharpened, standard, standard_se)
 
-            best_nsharp = minimize(rescale_KL_stack, x0=2, bounds=[(1, 10)], tol=0.005).x[0]
+            best_nsharp = minimize_scalar(lambda v: rescale_KL_stack([v]), bounds=(1, 10), method='bounded', options={'xatol': 0.01}).x #bounded scalar search: KL is discontinuous at integer nsharp, so gradient-based minimize stayed at x0
             sharpened_blended = sharpen_samples(blended, best_nsharp, seed = 2)
             best_stack_KL = kl_total_true_vs_empirical_gh(sharpened_blended, standard, standard_se)
                 

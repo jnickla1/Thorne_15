@@ -20,9 +20,10 @@ ssp_370e = []
 #already sorted
 #sel_methods_colors = [ "#CC3311", "#999933","#44AA99" ,"#44AA99","#117733","#AA4499","#88CCEE","#DDCC77"]
 sel_methods = ['CGWL10y_sfUKCP', 'EBMKF_ta4','FaIR_comb_unB', 'GAM_AR1','GWI_tot_CGWL','Kal_flexLin','lowess1dt36wnc']
-sel_methods_colors = [ "#CC3311", "#999933","#44AA99" ,"#117733","#AA4499","#88CCEE","#DDCC77"]
+#colour-blind-safe class colours, matching gen_color in evaluate_historical_observations.py (18 Oct 2026)
+sel_methods_colors = [ "#D55E00", "#E69F00","#0072B2" ,"#009E73","#AA3377","#56B4E9","#F0E442"]
 sel_methodsA = ['FaIR_nonat_unB','GWI_anthro_CGWL']
-sel_methods_colorsA = ["#44AA99","#AA4499"]
+sel_methods_colorsA = ["#0072B2","#AA3377"]
 # Define the file pattern and loop through all matching files
 file_pattern = "/Results/current_fut_statistics_fut_ESM1-2-LR_SSP{ssp_id}_constVolc{run}.csv"
 rmse_cols = ['RMS', '100RMS','75RMS', 'e100RMS','e75RMS']
@@ -172,10 +173,10 @@ if __name__ == '__main__':
             bins = np.arange(int(np.min(data0)-1.5), int(np.max(data0)+1.5), 1)
             if (not anthro):
                 ax.hist(data0,bins=bins,density=True,stacked=True,
-                    color=sel_methods_colors,alpha=0.5,edgecolor="none",label=sel_methods)
+                    color=sel_methods_colors,alpha=0.7,edgecolor="none",label=sel_methods)
             else:
                 ax.hist(data0,bins=bins,density=True,stacked=True,
-                    color=sel_methods_colorsA,alpha=0.5,edgecolor="none",label=sel_methodsA)
+                    color=sel_methods_colorsA,alpha=0.7,edgecolor="none",label=sel_methodsA)
         
         ax.set_title(title, fontsize=14)
         ax.grid(True)
