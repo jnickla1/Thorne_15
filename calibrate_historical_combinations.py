@@ -157,7 +157,7 @@ if __name__ == '__main__':
 #new center and dist generation function called once or many times for LOO
         if comparison_type[0]=='h':
             ivcenters = np.nansum(centralsh * ivweights[:,None],axis=0) / np.nansum( ~np.isnan(centralsh) * ivweights[:,None],axis=0)
-            blended = predict_non_nan(stack_weights, samplesh)
+            blended = predict_non_nan(stack_weights, samplesh, seed=20261019) #seeded mixture draw, as calibrate_dashboard_combinations.py
             cwcenters = np.nansum(centralsh,axis=0) / np.nansum( ~np.isnan(centralsh) ,axis=0)
 
         if comparison_type[0]=='f':
@@ -168,7 +168,7 @@ if __name__ == '__main__':
                     if(experiment_type[0:8]=="fut_ESM1" and model_run>=50):
                         continue
                     #TODO: also continue if we hit the LOO one that 
-                    blended[exp_index,model_run,:,:] = predict_non_nan(stack_weights, samplesf[exp_index,model_run,:,:,:])
+                    blended[exp_index,model_run,:,:] = predict_non_nan(stack_weights, samplesf[exp_index,model_run,:,:,:], seed=20261019+exp_index*1000+model_run) #seeded mixture draw
 
 
 #training standard to fix variances

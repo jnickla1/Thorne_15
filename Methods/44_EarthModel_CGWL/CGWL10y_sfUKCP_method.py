@@ -8,6 +8,7 @@ import netCDF4
 np.random.seed(402)
 
 def run_method(years, temperature, uncert, model_run, experiment_type):
+    rng = np.random.default_rng([402, int(model_run) if str(model_run).isdigit() else 0]) #seeded per method/member for reproducible draws (seed only; distributions unchanged)
 
     avg_len_l=9
     avg_len_u=1 #actually 4 yrs below, that year, 0 yrs after
@@ -94,7 +95,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             meansR[i] = np.mean(chunk)
             tot_uncert = np.var(chunk) + np.mean(chunk_uncert**2)
             sesR[i] = np.sqrt(tot_uncert)
-            samp_ret[i,:] = ( np.random.normal(np.sum(chunk), np.sqrt((np.var(chunk) + np.mean(chunk_uncert**2))), size=np.shape(forec_samps)) )/21 
+            samp_ret[i,:] = ( rng.normal(np.sum(chunk), np.sqrt((np.var(chunk) + np.mean(chunk_uncert**2))), size=np.shape(forec_samps)) )/21 
         taper_i = len(years) - avg_len_u+1
         for i in range(taper_i, last_i):
             chunk=temperature[i-avg_len_l:len(years)]
@@ -104,7 +105,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             meansR[i] = (np.sum(chunk)+ np.nanmean(forec_samps))/21
             tot_uncert = (np.var(chunk) + np.mean(chunk_uncert**2))+ np.nanvar(forec_samps)
             sesR[i] = np.sqrt(tot_uncert)/21
-            samp_ret[i,:] = ( np.random.normal(np.sum(chunk), np.sqrt((np.var(chunk) + np.mean(chunk_uncert**2))), size=np.shape(forec_samps)) + forec_samps )/21 #vector added to vector
+            samp_ret[i,:] = ( rng.normal(np.sum(chunk), np.sqrt((np.var(chunk) + np.mean(chunk_uncert**2))), size=np.shape(forec_samps)) + forec_samps )/21 #vector added to vector
 
     def empirical_mean(year_idx,k):
         if (k==0):

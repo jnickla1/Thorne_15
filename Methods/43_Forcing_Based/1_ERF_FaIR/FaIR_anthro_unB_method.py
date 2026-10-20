@@ -96,7 +96,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         samp_cur = samp_mean[:, np.newaxis] + np.sqrt( dev_orig**2)*sfactor *np.sign(dev_orig)- newcorrecton[:, np.newaxis]                    
         samp_ret = retro_array[100:(np.shape(temperature)[0]+100),:] - newcorrecton[:, np.newaxis]   #starts in 1750 so crop to 100th index
     
-    model_run = model_run if isinstance(model_run, np.number) else 0 
+    model_run = model_run if isinstance(model_run, (int, np.integer)) else 0 #Python ints (range() members) now keep their own seed; '' (historical) -> 0 as before 
     base_seed = 12345
     rng = np.random.default_rng(base_seed + int(model_run))
     reduce_uncert = 10 if (exp_attr[0]=="histens") else 1

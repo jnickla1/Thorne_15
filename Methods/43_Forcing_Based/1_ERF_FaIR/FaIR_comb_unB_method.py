@@ -201,7 +201,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
     samp_cur[4:] = 2.45/4*samp_cur[4:] + 1/4*(samp_cur_all[4:]) + .55/4 *samp_cur_all[:-4]
                         #shrinks their distribution dow
     
-    model_run = model_run if isinstance(model_run, np.number) else 0 
+    model_run = model_run if isinstance(model_run, (int, np.integer)) else 0 #Python ints (range() members) now keep their own seed; '' (historical) -> 0 as before 
     base_seed = 12345
     rng = np.random.default_rng(base_seed + int(model_run))
     reduce_uncert = 10 if (exp_attr[0]=="histens") else 1

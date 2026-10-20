@@ -760,7 +760,7 @@ if __name__ == '__main__':
             xytext=(2018, .7), textcoords='data',**text_style(curcolor),
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
-    ax1.annotate('11y_offset',
+    ax1.annotate('offset11y',
             xy=(1887,0.17), xycoords='data',
             xytext=(1890, .35), textcoords='data',**text_style(curcolor),
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
@@ -783,7 +783,7 @@ if __name__ == '__main__':
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),
             horizontalalignment='center', verticalalignment='bottom')
     curcolor =  gen_color('43_Forcing_Based/0_Linear')
-    ax1.annotate('cons_cArrh_CO2forc',
+    ax1.annotate('cons_hArrh_CO2forc',
             xy=(1924,.21), xycoords='data',
             xytext=(1927, .52), textcoords='data',**text_style(curcolor),
             arrowprops=dict(facecolor=curcolor,shrink=0,width=1.5,headwidth=5),

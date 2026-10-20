@@ -2,6 +2,7 @@ import numpy as np
 from numpy.polynomial import Polynomial
 import os
 def run_method(years, temperature, uncert, model_run, experiment_type):
+    rng = np.random.default_rng([1101, int(model_run) if str(model_run).isdigit() else 0]) #seeded per method/member for reproducible draws (seed only; distributions unchanged)
 
 
     (temps_CIl, temps_CIu) = uncert
@@ -53,9 +54,9 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             print(np.shape(boot_fits))        
             for i in range(n_bootstrap):
                 # Resample with replacement
-                indices = np.random.choice(n, size=n, replace=True)
+                indices = rng.choice(n, size=n, replace=True)
                 x_resample = regX[indices]
-                y_resample = np.random.normal(regY[indices],uregY[indices]) #accounts for HadCRUT5 uncertainty when resampling
+                y_resample = rng.normal(regY[indices],uregY[indices]) #accounts for HadCRUT5 uncertainty when resampling
                                 # Fit a quartic polynomial to the resampled data
                 p_boots = Polynomial.fit(x_resample, y_resample, degree)
                 boot_fits[i, :] = p_boots(regX)

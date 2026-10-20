@@ -13,6 +13,7 @@ start = time.process_time()
 import collections
 from scipy.optimize import minimize
 import sys
+import zlib
 from netCDF4 import Dataset
 from fut_evaluation_gen_ensemble import eval_standard
 from evaluate_future_scenarios import gen_orig_number
@@ -372,6 +373,7 @@ if __name__ == '__main__':
                 # Precompute y nodes for the target distribution
                 standard_samples = standard[:, None] + standard_se[:, None] * np.sqrt(2.0) * x[None, :] #size=(nyrs,nnodes)
 
+                np.random.seed(zlib.crc32(f'{method_name}|{experiment_type}|{model_run}'.encode())) #seed newsamples per method/experiment/member for reproducibility (seed only)
                 if(isgauss):
                     sampled_lls = stats.norm.logpdf(standard_samples,loc=central_est[:, np.newaxis],scale=se[:, np.newaxis]*best_alter_scale)
                     newsamples = np.random.normal(loc=central_est[:, np.newaxis], scale=se[:, np.newaxis]*best_alter_scale, size=(nyrs,nsamples))

@@ -8,16 +8,17 @@ from scipy import linalg
 phi = 0.28  # AR(1) coefficient
 
 # Function to simulate AR(1) process
-def simulate_ar1_residuals(n, phi, residuals_std):
+def simulate_ar1_residuals(n, phi, residuals_std, rng=np.random):
     residuals = np.zeros(n)
-    residuals[0] = np.random.normal(0, residuals_std)
+    residuals[0] = rng.normal(0, residuals_std)
     for t in range(1, n):
-        residuals[t] = phi * residuals[t-1] + np.random.normal(0, residuals_std)
+        residuals[t] = phi * residuals[t-1] + rng.normal(0, residuals_std)
     return residuals
 
 
 import os
 def run_method(years, temperature, uncert, model_run, experiment_type):
+    rng = np.random.default_rng([1102, int(model_run) if str(model_run).isdigit() else 0]) #seeded per method/member for reproducible draws (seed only; distributions unchanged)
 
 
     (temps_CIl, temps_CIu) = uncert
@@ -82,7 +83,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             print(np.shape(boot_fits))        
             for sim in range(n_bootstrap):
                  # Simulate AR(1) residuals
-                simulated_residuals = simulate_ar1_residuals(n, phi, residuals_std)
+                simulated_residuals = simulate_ar1_residuals(n, phi, residuals_std, rng=rng)
         
                 # Step 4: Generate new surrogate series by adding simulated residuals to original spline fit
                 surrogate_Y = y_pred + simulated_residuals
