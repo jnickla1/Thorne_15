@@ -21,7 +21,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
         tagnum="25"
 
     temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
-    preind_base = np.mean(temps_obs[0:50])
+    preind_base = np.mean(temps_obs[0:51]) # 1850–1900 inclusive
 
     
     cur_path = os.path.dirname(os.path.realpath(__file__))

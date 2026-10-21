@@ -57,7 +57,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             current_array = np.load(cur_path+"/resliced_headstails25/combined_all-headstails25r"+str(model_run+1)+"_all.npy") #starts in 1750
             curbias=0.020
         if (exp_attr[1]=="satcal"):
-            offset = -np.mean(temperature[0:50])
+            offset = -np.mean(temperature[0:51]) # 1850–1900 inclusive datum
             current_array = current_array - offset
             retro_array = retro_array - offset
     else:

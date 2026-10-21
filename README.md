@@ -322,26 +322,18 @@ Transfer matching evaluation and calibration products from the same completed so
 
 `plot_fut_results.py` regenerates all five `averaged_runs*.csv` summaries and `combined7histogramTrue.png`. The `--plot-only` commands above regenerate Figures 22/23 from saved results without replacing downloaded evaluation statistics or calibration products; add `--show` for interactive inspection. MPI index 11 corresponds to original member #20. The NorESM figure retains its internal earliest/latest crossing-member selection. Method colors come from the updated October 18 Okabe–Ito/Tol palette in `evaluate_historical_observations.py` and the corresponding arrays in `plot_fut_results.py`.
 
-The current full combination rerun is managed outside this research repository, at `/Users/JohnMatthew/Documents/Codex/2026-10-11/hi-chat-this-is-a-more/work/future_final_refresh_2026_10_18/controller.py`. Its status and review products are in the corresponding `outputs/future-final-refresh-2026-10-18/` directory. Inspect `progress.json` before attempting another launch. This controller freezes the corrected combination kernels, verifies cached/direct calculation equivalence, and runs 1,350 cases with two workers. It uses the latest full historical RMS table for method selection and exports Table S4 after exact member-coverage and finite-output checks. Selection modes 7/8/16/32 currently contain 7/8/18/33 methods; mode 2 contains individual reference methods, not a two-method combination. New combination products remain isolated from older Results3 outputs. These paths describe this local managed run, not portable repository entry points.
+### Future leave-one-out combinations and Table S4 (`fut_LOO/`)
 
-For the simulation-based leave-one-out combination experiments, the existing entry points include:
-
-```sh
-sbatch run_parBATCH_hist_fitprob_ff.sh
-sbatch run_LOO2.sh
-sbatch run_LOO16.sh
-sbatch run_LOO8.sh
-```
-
-After their outputs are complete, the aggregation script is spelled **`create_combination_method_LLOffcombine.py`**:
+Everything needed to regenerate Supplement Table S4 lives in **`fut_LOO/`** (see `fut_LOO/README.md`). The current table was produced on Oscar on 20 October 2026, after the newsamples scale fix, the bounded nsharp search and the 2000–2089 PIVW window. In short, from the repository root:
 
 ```sh
-python3 create_combination_method_LLOffcombine.py -2
-python3 create_combination_method_LLOffcombine.py -16
-python3 create_combination_method_LLOffcombine.py -8
+sbatch fut_LOO/run_LOO_fix.sh          # Oscar: 1,080 tasks (selection modes 7, 16, 32, 8 x 270 held-out members) -> Results3_fix/
+python fut_LOO/check_and_aggregate.py fut_LOO/results/Results3_fix_oscar fut_LOO/output   # coverage checks + Table S4
 ```
 
-The wrappers retain their existing research-specific meanings: `run_LOO2.sh` currently calls `fut_2_script.py`, whereas the 8/16 wrappers call `create_combination_method_LLOffcompute.py`. Inspect these settings before extending an experiment. The commands above preserve the existing entry points rather than implying a new uniform API.
+The finished outputs are in `fut_LOO/output/`. `table-S4-for-docs.xlsx` is ready to copy into Google Docs. The Dec 2025 values are compared in `comparison_old_vs_new.csv`.
+
+The earlier entry points (`run_LOO*.sh`, `create_comb_method_LLOffcompute_percase.py`, `create_combination_method_LLOffcombine.py`, `fut_2_script.py`) and the Dec 2025 `final_combined_*` outputs are kept in `fut_LOO/legacy/`. Their paths have been updated, so they still run from the repository root, e.g. `sbatch fut_LOO/legacy/run_LOO7.sh`.
 
 Additional figure scripts include `Illustrative_Figures/betts_illustrating_figv2.py` and `Illustrative_Figures/sect42_temp_record.py`. Their paths and assumptions should be reviewed separately when the paper's data year changes.
 
@@ -576,3 +568,38 @@ The redundant standalone Net TOA figure has been removed from active ta4 diagnos
 Historical and heads/tails calls keep the author's core defaults (`gad=0.6`, `fdbkA=0`, aerosol85, eCO2 17). Baseline restoration now restores both percentiles as well as feedback and exchange, preventing a preceding future call from contaminating those historical settings. No historical preprocessing, ensemble OHC/TOA design, model capacities, inferred-SW correction or noise tuning was changed in this update. The aerosol choice affects the observational prefix and matching SSP curve; eCO2 retains the existing observational-reference/model-derived future construction, including its normalization and NorESM's0.93 factor.
 
 Five member-0 future checks (MPI SSP126/245/370 and NorESM Volc/VolcConst) pass. Historical and heads/tails member-0 means, standard errors and forcing arrays are exactly unchanged before/after the patch and after interleaved future runs. These targeted checks are not a complete ensemble recalibration: review the author workspace `outputs/kalman-v11-migration-2026-10-17/ta4-ensemble-settings/` comparison plot/CSV and then freeze the configuration before restarting the full scientific rebuild. The preceding historical calibration and future pilot are provisional because they predate the final configuration; dependent bulk controllers are stopped. No website publication was performed.
+
+## Figure 16 attribution inputs and review versions — 20 October 2026
+
+The attribution producer is `Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_attibutable.py` (existing spelling retained). Its default component source now reads compact native-grid reductions for CanESM5 r1i1p1f1, IPSL-CM6A-LR r4i1p1f1 and MIROC6 r1i1p1f1 from `config.CLIMATE_DATA_PATH/attributable-warming_<model>/processed/`. It does not modify normal historical/future evaluations or Results/Results2. Observed ANT and total retain the historical ta4 calculations. Model GHG/NAT/ALL/AER experiments restore the same historical tuning between calls and retain model-appropriate TOA uncertainty rather than the CERES-era reduction.
+
+The new component inputs use actual historical/scenario output through 2025, rather than the old MPI temperature/OHC/TOA extrapolation after 2014. IPSL aerosol-only remains available through 2020; it is retained until then rather than extrapolated or excluded from all components. The comparison figure still ends in 2023. Native 3-D raw fields stay external; compact monthly/annual CSV/NetCDF products, checksums and provenance stay internal under `~/climate_data`. The portable reduction entry points there are `reduce_attribution_ghg_inputs.py` and `reduce_attribution_experiments.py`.
+
+For a review, set an **absolute** output directory and use the explicit CSV when plotting:
+
+```sh
+FIG16_REVIEW_DIR="/absolute/path/to/figure16_review"
+python3 Methods/43_Forcing_Based/2_Kalman/EBMKF_ta4_attibutable.py --component-source processed --ohf model-residual --output-dir "$FIG16_REVIEW_DIR"
+python3 Methods/43_Forcing_Based/3_Human_Induced/anthropogenic-warming-assessment/multi_method_assessment_newStyle3.py --nicklas-file "$FIG16_REVIEW_DIR/Nicklas_GMST_timeseries.csv" --output "$FIG16_REVIEW_DIR/Figure16.png" --main-ymax 2.5
+```
+
+OHF choices are `aerosol-proxy` (the compatibility default), `ant-minus-ghg`, and `model-residual` (ALL−NAT−GHG within each model). All three CSV alternatives are exported. They are review alternatives with different meanings, not interchangeable labels. No ozone-only run is supplied for the new pool; unused OHFa compatibility columns are missing. The legacy MPI/extension route is still available explicitly with `--component-source legacy-mpi`.
+
+New component intervals retain conditional filter variance and between-model dispersion using Gaussian mixture moments. They are not the standard error of the model mean or a joint attribution posterior. Residual conditional uncertainties use quadrature because cross-experiment covariance is unavailable. The plot's displayed error bars are 5th–95th percentiles. Raw model TOA is the compatibility convention; `--model-toa first50-anomaly` supplies a separately labeled offset sensitivity, not a piControl drift correction. Review the changed component/uncertainty interpretation before adopting a new paper CSV/caption.
+
+The 20 October review artifacts are in the author workspace at `outputs/figure16-multimodel-2026-10-20/`, with per-model curves, coverage, input-join diagnostics, OHF alternatives and a report. The canonical paper CSV/PNG were preserved during this review; reproduce a chosen version with explicit paths, or deliberately omit `--output-dir` to replace the established assessment CSV after selecting the OHF definition. The plotting helper uses the canonical results CSV only when `--nicklas-file` is omitted. Optional `--ohf-ymin` and `--ohf-ymax` limits can show wide alternative OHF intervals without clipping; the 20 October aerosol and observed-ANT-minus-GHG review figures use expanded OHF axes.
+
+
+## Inclusive historical anomaly reference — 20 October 2026
+
+Historical temperature anomalies now use **1850–1900 inclusive (51 years)**. The change is in the historical calibration/evaluation entry points and readers that convert external temperature datums, including satellite-calibrated FaIR/GWI readers. The raw heads/tails input ensembles are unchanged; do not remove each member's own preindustrial mean, which would erase the uncertainty represented by the ensemble.
+
+This is distinct from EBMKF's **internal physical equilibrium reference**. Its physical cores, equilibrium temperature, radiative calibration and tuned parameters remain fixed by author decision. Internal centering followed by restoration of the caller's temperature datum is retained. Figure 16 now normalizes model input anomalies over 51 years while mapping them into the unchanged physical gauge; its observation-based total is explicitly reported relative to the inclusive observed mean. Its separate first-50-year TOA sensitivity is a flux-offset experiment, not a temperature baseline.
+
+The old full historical GAM and Bayesian change-point temperature-fit caches were archived with verified backups so the next ordinary historical run recomputes them from the inclusive inputs. The obsolete October-13 `.kalman_refresh_active` skip flag was archived too. No future/headstails GAM fits or Results/Results2 products were removed. Source changes alone do not refresh scientific outputs.
+
+Rerun order: historical method calibration → historical combinations (both realised and anthropogenic) → full historical evaluation → all 400 heads/tails member/scenario evaluations → paper probability plots and four rate summaries → dashboard export/render/assembly. Re-export the historical illustrations and Figure 16 separately. Compare **Table 2 as well as Table S3**, and refresh Section 5 weights/headlines; a fixed external method estimate need not shift with a rebased observational benchmark, so exact RMSE invariance cannot be assumed for every method. The current historical settings select the full method classes, adjusted variances and median crossing-pile figure.
+
+The existing **future synthetic evaluation protocol remains unchanged** in this scoped migration, including its earlier model/splice reference convention. Future model evaluations, Table 3 and future LOO/Table S4 do not need automatic reruns for this patch. Review historical selection-dependent labels/sets if a method crosses a selection cutoff. Archived/legacy scripts retain their original experiment conventions. No physical-model retuning or future-baseline migration was performed.
+
+The author workspace contains the exact source backups/diff, one-time cache archive, targeted checks and per-figure plan in `outputs/baseline-1850-1900-2026-10-20/RERUN_PLAN_AND_CHANGELOG.md`. The new Figure 16 review is `outputs/figure16-multimodel-2026-10-20/inclusive-1850-1900/`; canonical attribution CSV/PNG files and the live website have not been replaced or published.

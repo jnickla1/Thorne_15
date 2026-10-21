@@ -288,3 +288,74 @@ rpi_real CSCM:
 - Measured times, wall clock with 2 workers: mode 7 about 25 s per job, mode 16 (18 methods) about 131 s per job.
 - Estimate: about 8 h for the rest of mode 16, plus about 15–25 h for mode 32 (33 methods, extrapolated), plus about 2–3 h for modes 8 and 2. That makes roughly 25–35 h in total, finishing late on Tue 20 Oct to midday Wed 21 Oct.
 - To get Table S4 earlier, run `aggregate --modes 7 16 32` once mode 32 finishes.
+
+---
+
+## Update 2026-10-19 (evening): PIVW window made consistent (approved)
+
+- **The issue:** `calibrate_method_uncertainty.py:363` computes `err_var100` over `[lhund:]` with `lhund=-101` on the 251-year MPI series. That gives 2000–2090 (91 finite years), while the predictive SD and KL use 2000–2089. NorESM already used 2000–2089 for both.
+- **The fix:** `create_combination_method_LLOffcompute.py` now recomputes the PIVW error variances inside the leave-one-out over `[lhund:-10]`, i.e. 2000–2089, from `central_estfut` and `standardsf`. The Oscar worker was regenerated from it.
+- **Checks:**
+  - The NorESM recomputed variances equal the stored ones to 1e-13; the MPI ones change by up to 6%.
+  - The effect on pooled PIVW weights is at most 0.0006.
+  - On two test cases, the CSCM outputs are bit-identical and PIVW moves by about 0.03 in KL.
+- **Still to do:** the Oscar array is to be cancelled and resubmitted with the new worker, and `check_and_aggregate.py` now expects exact CSCM agreement and small PIVW differences.
+
+---
+
+## Update 2026-10-20: Oscar Table S4 run complete
+
+### Run
+
+- Oscar array 7637718: 1080/1080 cases present and finite. Results are in `Results3_fix_oscar/`.
+- Inputs were hash-identical to the Mac. The window fix (2000–2089) was in.
+- Task 749 (mode 32, NorESM Volc member 59) hit the SLSQP 100-iteration limit, but its weights had been stable since about iteration 50.
+
+### Cross-check against the 321 local cases
+
+- Differences are cross-platform floating point only.
+- CSCM KL: median difference 7e-5, max 0.14 (0.34%).
+- RMSE agrees to about 1e-9 (max 6e-5).
+- Crossing counts are identical. Only 2 of 321 cases moved the first-crossing time, by one month.
+
+### Outputs
+
+`oscar_loo_fix/table_S4_out/` holds `table-S4.md`, the numeric and formatted CSVs, `final_combined_{7,16,32,8}methods_wide_ff.csv` and `comparison_old_vs_new.csv` (against the Dec 2025 `final_combined_*`).
+
+### Headline
+
+- **Old:** CSCM KL was worse than PIVW in all 15 mode × ensemble cells.
+- **New:** CSCM is better in 9/15 (SSP1-2.6, NorESM Volc and VolcConst, at every method count), essentially tied for SSP2-4.5, and still slightly worse for SSP3-7.0 (by +0.02 to +0.05).
+- CSCM KL fell by 10–31%; RMSE barely changed.
+- The old values also predate the EBMKF and other corrections, so not all of the change is due to the CSCM fixes.
+
+---
+
+## Update 2026-10-20: reorganized into fut_LOO/
+
+The scripts, the newsamples patch, the 1,080 Oscar results and the Table S4 outputs were moved to the top-level `fut_LOO/` folder. Legacy entry points were moved to `fut_LOO/legacy/`, with their paths updated. The root README points to the new folder.
+
+---
+
+## Update 2026-10-20: held-out scoring limited to 2000–2089 (approved)
+
+- MPI held-out KL and RMSE had included 2090: 91/66 valid years against the 90/65 normalization.
+- The kernel now scores KL and RMSE over 2000–2089 using `standard_eval`; crossing metrics are unchanged.
+- Tested locally: NorESM results are bit-identical; for MPI, KL and RMSE shift slightly and crossings are unchanged.
+- Next: rerun the 600 MPI tasks on Oscar.
+
+---
+
+## Update 2026-10-20 (late): Table S4 rebuilt with 2000–2089 held-out scoring
+
+### Run
+
+- On Oscar (array 7668784), 593 of the 600 MPI tasks finished.
+- Seven 33-method MPI cases hit the 6 h limit: SSP1-2.6 members 14 and 33, SSP2-4.5 members 25, 26 and 47, SSP3-7.0 members 11 and 22. They were computed on the Mac (`fut_LOO/results/mac_reruns_2089eval/`) and copied into `Results3_fix_oscar/`.
+- All 1,080 cases now use 90/65 valid years.
+
+### Table
+
+- `fut_LOO/output/` was regenerated, with headers KL/RMSE 2000–2089 and 2025–2089.
+- MPI KL fell by about 1–2%; NorESM is unchanged.
+- CSCM still beats PIVW in 9/15 cells, ties for SSP2-4.5, and is worse for SSP3-7.0.

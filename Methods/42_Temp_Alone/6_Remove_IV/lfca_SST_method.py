@@ -23,7 +23,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
     data_monthly = pd.read_csv(dir_path+"/../../../Common_Data/HadCRUT.5.1.0.0.analysis.summary_series.global.monthly.csv")
     temps_obs_monthly = data_monthly.loc[:,"Anomaly (deg C)"].to_numpy()
-    preind_base = np.mean(temps_obs_monthly[0:50*12])
+    preind_base = np.mean(temps_obs_monthly[0:51*12]) # January 1850–December 1900
     
     st_idx =1940 - 1850
     lfcs = np.real(np.load(lfcs_path))

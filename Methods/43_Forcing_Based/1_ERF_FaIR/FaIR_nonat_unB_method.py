@@ -58,7 +58,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
             curbias= -0.0043
 
         if (exp_attr[1]=="satcal"):
-            offset = -np.mean(temperature[0:50])
+            offset = -np.mean(temperature[0:51]) # 1850–1900 inclusive datum
             current_array = current_array - offset
             retro_array = retro_array - offset
 

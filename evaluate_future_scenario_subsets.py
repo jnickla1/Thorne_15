@@ -29,7 +29,7 @@ plot_only = False
 
 data = pd.read_csv("./Common_Data/HadCRUT5.csv")
 temps_obs = data.loc[:,"Anomaly"].to_numpy()
-preind_base = np.mean(temps_obs[0:50]) #preindustrial baseline 1850-1899
+preind_base = np.mean(temps_obs[0:51]) # preindustrial baseline: 1850–1900 inclusive (51 years)
 temps_obs_past = temps_obs - preind_base #remove this baseline
 temps_CIu_past =data.loc[:,"Upper"].to_numpy() #Lower confidence limit (2.5%)	Upper confidence limit (97.5%)
 temps_CIl_past =data.loc[:,"Lower"].to_numpy()
@@ -86,7 +86,7 @@ def select_data(styr, model_run,sims_tas, stime_mon, sims_tas_hist,  stime_mon_h
     #must decide how to offset the simulation - can do it so the first 50 yrs are 0 as we did for obs
 
     if (exp_attr[1]=='ESM1-2-LR'):
-        offset_sim = np.mean(this_hsim_yr[0:50]) #preindustrial baseline 1850-1899
+        offset_sim = np.mean(this_hsim_yr[0:51]) # preindustrial baseline: 1850–1900 inclusive
         sim_corrected = this_sim_yr -offset_sim
         simh_corrected = this_hsim_yr -offset_sim
         simall = np.concatenate((simh_corrected,sim_corrected))

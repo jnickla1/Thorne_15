@@ -50,7 +50,7 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
                     "_ENSEMBLE-MEMBER--GMT-"+str(model_run+1)+"_ERF-all_VARIABLES--GHG-Nat-OHF_REGRESSED-YEARS--1850-1950_to_1850-2025.csv", header=[0, 1])
             
         if (exp_attr[1]=="satcal"):
-            offset = -np.mean(temperature[0:50])
+            offset = -np.mean(temperature[0:51]) # 1850–1900 inclusive datum
             curbias = curbias + offset
             
     else:

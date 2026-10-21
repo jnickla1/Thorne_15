@@ -78,7 +78,8 @@ z1 = np.array([-0.01385267 , 4.53644205,  0.37530708  ,0.14695088 , 0.2838732 ])
 def run_method(yrs, temps, uncert, model_run, experiment_type):
     data_orig = pd.read_csv("./Common_Data/HadCRUT5.csv")
     temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
-    preind_base = np.mean(temps_obs[0:50])
+    reference_stop = 51 # 1850–1900 inclusive for every experiment
+    preind_base = np.mean(temps_obs[0:reference_stop])
     # Both ocean records are module-level inputs used by the filter.
     global OceanRec, OceanRec_sc
     if experiment_type == "historical" and yrs[-1]!=2024:

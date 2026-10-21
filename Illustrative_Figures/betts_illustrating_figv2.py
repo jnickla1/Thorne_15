@@ -14,7 +14,7 @@ fig, ax = plt.subplots(1,1, figsize=(7, 5))
 
 data = pd.read_csv("../Common_Data/HadCRUT.5.1.csv")
 temps_obs = data.loc[:,"Anomaly"].to_numpy()
-preind_base = np.mean(temps_obs[0:50]) #preindustrial baseline 1850-1899
+preind_base = np.mean(temps_obs[0:51]) # preindustrial baseline: 1850–1900 inclusive
 temps_obs = temps_obs - preind_base #remove this baseline
 years=data.loc[:,"Time"].to_numpy()
 #years[0]=1850

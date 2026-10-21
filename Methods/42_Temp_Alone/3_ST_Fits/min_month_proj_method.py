@@ -40,7 +40,9 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
     
     temperature_mon = monthly["Anomaly (deg C)"].to_numpy()
-    offset50 = np.mean(temperature[0:50]) - np.mean(temperature_mon[0:(50*12)])
+    reference_stop = 51 # 1850–1900 inclusive for every experiment
+    baseline_offset = (np.mean(temperature[0:reference_stop])
+                       - np.mean(temperature_mon[0:reference_stop*12]))
     temperature_mon_uncert = (monthly["Upper confidence limit (97.5%)"] - monthly["Lower confidence limit (2.5%)"]).to_numpy()
 
     
@@ -95,4 +97,4 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
         monthly_var[i] = (sstdrr * nmon_offset)**2 + (nmon_min_max/3.6 * slope)**2 + (temperature_mon_uncert[min(i,len(temperature_mon_uncert)-1)])**2 /12
 
-    return max_every_ny( monthly_mean, 12,4) + offset50, 2*np.sqrt( average_every_n( monthly_var, 12)), empser.copy(), empser.copy()
+    return max_every_ny( monthly_mean, 12,4) + baseline_offset, 2*np.sqrt( average_every_n( monthly_var, 12)), empser.copy(), empser.copy()

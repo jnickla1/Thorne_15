@@ -23,7 +23,7 @@ def run_method(years, temperature, uncert, model_run0, experiment_type):
         #run /lfca/Python/run_lfca_hadcrut5.py if doesn't exist
         data_monthly = pd.read_csv(dir_path + "/../../../Common_Data/HadCRUT.5.1.0.0.analysis.summary_series.global.monthly.csv")
         temps_obs_monthly = data_monthly.loc[:, "Anomaly (deg C)"].to_numpy()
-        preind_base = np.mean(temps_obs_monthly[0:50*12])
+        preind_base = np.mean(temps_obs_monthly[0:51*12]) # January 1850–December 1900
         
         st_idx = 1970 - 1850
         lfcs = np.real(np.load(lfcs_path))
@@ -87,7 +87,7 @@ def run_method(years, temperature, uncert, model_run0, experiment_type):
         if exp_attr[1] == 'ESM1-2-LR':
             # Use 1850-1900 as preindustrial baseline for ESM1-2-LR
             preind_start_idx = 0
-            preind_end_idx = 50
+            preind_end_idx = 51 # 1850–1900 inclusive
             analysis_start_year = 1970  # Start analysis from 1970
         elif exp_attr[1] == 'NorESM':
             # Use 1980-2000 baseline for NorESM (matching original offset approach)

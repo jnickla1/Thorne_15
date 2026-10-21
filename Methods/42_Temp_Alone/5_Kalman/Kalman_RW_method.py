@@ -72,7 +72,8 @@ z1 = np.array([1.00140626, 0.01912582, 0.19844366]) #precomputed
 def run_method(yrs, temps, uncert, model_run, experiment_type):
     data_orig = pd.read_csv("./Common_Data/HadCRUT5.csv")
     temps_obs = data_orig.loc[:,"Anomaly"].to_numpy()
-    preind_base = np.mean(temps_obs[0:50])
+    reference_stop = 51 # 1850–1900 inclusive for every experiment
+    preind_base = np.mean(temps_obs[0:reference_stop])
     
     xhat, P, xhathat, Phathat, thisllike = KF_compute(yrs, temps+preind_base,np.zeros(np.shape(temps)), z1)
     return xhat-preind_base, P, xhathat-preind_base, Phathat
