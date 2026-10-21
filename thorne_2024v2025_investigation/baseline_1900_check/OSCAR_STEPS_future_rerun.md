@@ -46,44 +46,34 @@ git stash push -m "Oscar local edits before the 1850-1900 rerun" ; git pull --ff
 
 The last command should print `acf2df22 Datum correction for anchored methods under the 1850-1900 baseline`, or a later commit. `git stash list` keeps the set-aside local edits.
 
-## 2. On Oscar: move the stale future caches aside and create the log folder
-
-The Bayes change-point and GAM caches store fitted temperature levels on the old datum. The quartic, cubic-spline, Butterworth and LFCA caches don't depend on the datum, so they stay.
+## 2. On Oscar: start the whole overnight chain with one command
 
 ```bash
-cd ~/data/jnickla1/Thorne_15_codefigurestats && BK=cache_backup_baseline1850-1899 && mkdir -p $BK/BSC $BK/GAM Results2/rerun_b1900/logs
+bash fut_LOO/submit_overnight_b1900.sh
 ```
+
+The command does the following:
+1. Moves the stale future Bayes change-point and GAM caches into `cache_backup_baseline1850-1899/`. Those caches hold fitted levels on the old datum.
+2. Submits the 420-task future ensemble (`run_future_ensemble_1850-1900.sh`).
+3. Queues `fut_LOO/overnight_gate.sh` to run once the ensemble finishes, whether or not every task succeeded. The gate then:
+   - checks all 420 completion records and resubmits any missing members once, with a 16 h limit;
+   - once all 420 are present, regenerates `averaged_runs*.csv`, which the leave-one-out uses for method selection;
+   - moves the earlier `Results3_fix/*.npz` aside;
+   - submits the 1,350-task leave-one-out array, covering modes 7, 16, 32, 8 and 2 (the individual-method rows);
+   - checks those results the same way, resubmitting any missing cases once with a 24 h limit.
+
+Progress goes to `Results2/rerun_b1900/overnight_status.txt`. When everything has succeeded, `Results2/rerun_b1900/OVERNIGHT_COMPLETE.txt` appears.
+
+## 3. In the morning
 
 ```bash
-mv Methods/42_Temp_Alone/2_LT_Fits/Bayes_Sequential_Change_Point/output/fut_* $BK/BSC/ ; mv Methods/42_Temp_Alone/4_GAM_AR1/GAM_AR_Stephenson/output/gamAR*_fut_* $BK/GAM/ ; ls $BK/BSC | wc -l ; ls $BK/GAM | wc -l
+cat Results2/rerun_b1900/overnight_status.txt
 ```
 
-## 3. On Oscar: submit
+Then copy the results back to the Mac for aggregation and comparison:
 
 ```bash
-sbatch run_future_ensemble_1850-1900.sh
+rsync -av --include='*.npz' --exclude='*' "jnickla1@ssh.ccv.brown.edu:/users/jnickla1/data/jnickla1/Thorne_15_codefigurestats/Results3_fix/" fut_LOO/results/Results3_fix_b1900/
 ```
 
-The script stops before writing anything unless the 1850–1900 datum and the five new ensemble-mean target files are present.
-
-## 4. When it finishes, on Oscar
-
-The first command should print 420.
-
-```bash
-ls Results2/rerun_b1900/*.json | wc -l
-```
-
-```bash
-sacct -j <jobid> -X --format=JobID%18,State,Elapsed | grep -v COMPLETED
-```
-
-Resubmit any failed tasks with `sbatch --array=<ids> run_future_ensemble_1850-1900.sh`.
-
-## 5. Next, decided after step 4
-
-1. Regenerate `averaged_runs*.csv` and the figures.
-2. Choose the historical statistics table for method selection. The new `current_methods_statistics_261020True.csv` moves GWI_tot_AR6 just across the RMS 0.06 cut (0.05998 → 0.06004), which drops it from the 18- and 33-method sets.
-3. Move `Results3_fix/*.npz` aside.
-4. Run `fut_LOO/run_LOO_fix.sh`: 1,350 tasks, including the individual-method rows.
-5. Compare Figure 24, Table 3 and Table S4 with the current numbers.
+Also copy the small future outputs (`Results/*fut*` CSVs, the `averaged_runs*.csv` files and `combined7histogramTrue.png`). These rebuild Figure 24, Table 3 and Table S4.
