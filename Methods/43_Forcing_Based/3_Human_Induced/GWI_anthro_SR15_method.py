@@ -178,3 +178,12 @@ def run_method(years, temperature, uncert, model_run, experiment_type):
 
     #return means, ses, empser.copy(), empser.copy()
 
+
+# --- 1850–1900 datum correction (2026-10-21), see datum_shift.py ---
+# The input series is now 1850–1900-relative; this method's output is anchored by fixed constants, so lower it by the datum shift.
+import datum_shift as _datum_shift
+_run_method_unshifted = run_method
+def run_method(*args, **kwargs):
+    experiment_type = args[4] if len(args) > 4 else kwargs['experiment_type']
+    dc = _datum_shift.correction(experiment_type, splits_futures=True)
+    return _datum_shift.shift(_run_method_unshifted(*args, **kwargs), dc)
