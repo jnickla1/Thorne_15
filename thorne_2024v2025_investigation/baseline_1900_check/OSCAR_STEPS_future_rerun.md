@@ -28,7 +28,7 @@
 
 The full rerun supersedes it. If `run_loo_shift_oscar.sh` was submitted, `scancel` it.
 
-## 1. On Oscar: pull commit 216d3fde ("Consistent 1850-1900 baseline") from GitHub
+## 1. On Oscar: pull from GitHub (needs commit acf2df22, "Datum correction for anchored methods", or later)
 
 Earlier rsyncs left untracked copies of the same files on Oscar (fut_LOO/, baseline_1900_check/ and so on). Move them aside, set any local edits to tracked files aside, then fast-forward.
 
@@ -41,10 +41,10 @@ mkdir -p pre_pull_backup && for f in $(git diff --name-only HEAD origin/main); d
 ```
 
 ```bash
-git stash push -m "Oscar local edits before 216d3fde" ; git pull --ff-only origin main && git log --oneline -1
+git stash push -m "Oscar local edits before the 1850-1900 rerun" ; git pull --ff-only origin main && git log --oneline -1
 ```
 
-The last command should print `216d3fde Consistent 1850-1900 baseline`. `git stash list` keeps the set-aside local edits.
+The last command should print `acf2df22 Datum correction for anchored methods under the 1850-1900 baseline`, or a later commit. `git stash list` keeps the set-aside local edits.
 
 ## 2. On Oscar: move the stale future caches aside and create the log folder
 
