@@ -217,7 +217,7 @@ if __name__ == '__main__':
         ax.text(cai[i]+2.2*wid_txt, caiht[i]*.75,"Too Late", fontsize=12,horizontalalignment='center',color='black')
 
 
-    enscross_time = [2033.125, 2035.458333,  2042.125, 2033.791666, 2034.208333 ]
+    enscross_time = [2033.125, 2035.541667, 2042.208333, 2033.875, 2034.375] # ensemble-mean 1.5 °C crossings on the 1850–1900 datum (Results/ensemble_mean_fut_*.csv, 2026-10-21)
     for i in range(5):
         ax = axs[i,1]
         ax.text(0, 0.3,'{0:.1f}'.format(enscross_time[i]), fontsize=12,horizontalalignment='center',color='black',fontweight='bold')
