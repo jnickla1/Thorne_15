@@ -18,6 +18,8 @@ module load r/4.6.0-xnxx
 export MPLBACKEND=Agg OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 export PYTHONDONTWRITEBYTECODE=1 PYTHONBREAKPOINT=0
 unset THORNE_REFRESH_METHODS
+# GAM_AR0/AR1 refit in R (their future caches were moved aside): fail fast if a required R package is missing.
+Rscript --vanilla -e 'library(mgcv); library(this.path)' > /dev/null
 PY=/users/jnickla1/.conda/envs/cleanPy/bin/python
 # Fail before any writes unless the 1850-1900 future datum and the regenerated ensemble-mean targets are present.
 grep -q "this_hsim_yr\[0:51\]" evaluate_future_scenarios.py
