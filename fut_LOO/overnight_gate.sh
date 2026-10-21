@@ -10,7 +10,9 @@
 #   overnight_gate.sh ensemble RETRY  -- runs after the 420-task future ensemble finishes (success or not):
 #       missing members -> resubmit them once with a 16 h limit and re-queue this gate;
 #       all 420 complete -> regenerate averaged_runs*.csv (LOO method selection), move old Results3_fix outputs aside,
-#                           submit fut_LOO/run_LOO_fix.sh and queue the LOO gate.
+#                           submit the first half of fut_LOO/run_LOO_fix.sh and queue the loo_half2 stage.
+#   overnight_gate.sh loo_half2 0     -- runs after LOO tasks 0-674: submits tasks 675-1349 and queues the LOO gate.
+#       (Oscar's QOSMaxSubmitJobPerUserLimit rejects all 1,350 array tasks pending at once.)
 #   overnight_gate.sh loo RETRY       -- runs after the 1,350-task LOO array: missing cases -> resubmit once with 24 h;
 #                                        all present -> write Results2/rerun_b1900/OVERNIGHT_COMPLETE.txt.
 # Status lines are appended to Results2/rerun_b1900/overnight_status.txt.
@@ -54,9 +56,16 @@ EOF
     shopt -s nullglob; prev=(Results3_fix/nmes*.npz); shopt -u nullglob
     if (( ${#prev[@]} )); then mv "${prev[@]}" "$old/"; fi
     log "moved ${#prev[@]} earlier LOO outputs to $old"
-    jid=$(sbatch --parsable fut_LOO/run_LOO_fix.sh)
+    jid=$(sbatch --parsable --array=0-674%150 fut_LOO/run_LOO_fix.sh)
+    gid=$(sbatch --parsable --dependency=afterany:"$jid" fut_LOO/overnight_gate.sh loo_half2 0)
+    log "submitted LOO tasks 0-674 as $jid; second-half submitter queued as $gid"
+    exit 0
+fi
+
+if [[ "$STAGE" == loo_half2 ]]; then
+    jid=$(sbatch --parsable --array=675-1349%150 fut_LOO/run_LOO_fix.sh)
     gid=$(sbatch --parsable --dependency=afterany:"$jid" fut_LOO/overnight_gate.sh loo 0)
-    log "submitted LOO array $jid (1,350 tasks); LOO gate queued as $gid"
+    log "submitted LOO tasks 675-1349 as $jid; LOO gate queued as $gid"
     exit 0
 fi
 
