@@ -10,6 +10,7 @@ Run every command from the **repository root**. The scripts import `custom_stack
 | `make_oscar_worker.py` | Regenerates `LLOffcompute_fix_worker.py` from the kernel, and `fut2_fix_worker.py` from `fut_2_script.py`. |
 | `fut_2_script.py` | The individual reference methods (mode 2: EBMKF_ta4, GWI_tot_CGWL), scored over 2000–2089. |
 | `fut2_fix_worker.py` | Generated; don't edit. One member per call, writes `Results3_fix/nmes2run_*.npz`. |
+| `fut_fair_worker.py` | Generated from `fut2_fix_worker.py`; don't edit. FaIR_comb_unB as an individual reference (largest CSCM stacking weight), same protocol; writes `Results3_fix/nmesFaIRrun_*.npz`. |
 | `LLOffcompute_fix_worker.py` | Generated file; don't edit it. It is the kernel with routing-only changes: 261018 selection statistics, `Results3_fix/` output, and saved `n_valid_kl`. |
 | `run_LOO_fix.sh` | Oscar array: 1,350 tasks (modes 7, 16, 32, 8 × 270 members, then mode 2 × 270), 24 GB and 6 h each. Finished cases are skipped. |
 | `check_and_aggregate.py` | Coverage and finite checks, optional cross-check against the 2026-10-19 Mac run, Table S4 and the comparison with Dec 2025. |
@@ -47,4 +48,5 @@ The CSV version is UTF-8 and opens in Excel.
 - **KL** in the main table uses the legacy 90/65-year normalization. `combination-summary-per-valid-year.csv` normalizes by the actual number of finite benchmark years instead.
 - **Reproducibility:** Mac and Oscar results agree to floating-point precision (CSCM KL within 0.34 % per case). The per-case seeds are fixed in the kernel.
 - **Provenance:** the seven 33-method MPI cases listed in `results/mac_reruns_2089eval/` were computed on the Mac, because their Oscar tasks hit the 6 h limit. They are identical to Oscar runs to floating-point precision.
+- **FaIR_comb_unB block (1850–1900):** from `results/FaIR_comb_unB_individual_b1900/` (270 members), passed as the fourth argument: `python fut_LOO/check_and_aggregate.py fut_LOO/results/Results3_fix_b1900 fut_LOO/output_b1900 fut_LOO/results/Results3_fix_b1900 fut_LOO/results/FaIR_comb_unB_individual_b1900`.
 - **Individual reference blocks:** `check_and_aggregate.py` appends EBMKF_ta4 and GWI_tot_CGWL blocks to `table-S4-for-docs` when mode-2 results are found (optional third argument). The current blocks come from `results/mode2_individual_2026-10-18/`, which scored MPI over 2000–2090; a note row in the xlsx says so until mode 2 is rerun.

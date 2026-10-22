@@ -1,9 +1,10 @@
 """Check the Oscar leave-one-out outputs and build Table S4 (Mac side).
 
 usage (from the repo root):
-  python fut_LOO/check_and_aggregate.py fut_LOO/results/Results3_fix_oscar fut_LOO/output [MODE2_DIR]
+  python fut_LOO/check_and_aggregate.py fut_LOO/results/Results3_fix_oscar fut_LOO/output [MODE2_DIR [FAIR_DIR]]
 MODE2_DIR holds the individual-reference results (nmes2run_*.npz: EBMKF_ta4, GWI_tot_CGWL); default = the first
-directory. If found, two extra blocks are appended to table-S4-for-docs and table-S4-individual-references.csv is written.
+directory. FAIR_DIR holds nmesFaIRrun_*.npz (FaIR_comb_unB, from fut_LOO/fut_fair_worker.py); default = MODE2_DIR.
+Each complete set adds one block per method to table-S4-for-docs and to table-S4-individual-references.csv.
 
 1. Coverage: every (mode in 7,16,32,8) x 270 member file exists and all fields are finite.
 2. Cross-check: cases already computed by the stopped local pipeline run must agree.
@@ -32,6 +33,7 @@ LABELS = {'fut_ESM1-2-LR_SSP126_constVolc': 'MPI-ESM1-2-LR SSP1-2.6', 'fut_ESM1-
 
 src, out = Path(sys.argv[1]), Path(sys.argv[2]); out.mkdir(parents=True, exist_ok=True)
 mode2_src = Path(sys.argv[3]) if len(sys.argv) > 3 else src
+fair_src = Path(sys.argv[4]) if len(sys.argv) > 4 else mode2_src
 selections = json.loads((HERE/'selection.json').read_text())
 
 # 1. coverage
@@ -114,12 +116,12 @@ docs = docs.sort_values(['_c', 'method_count', '_e']).drop(columns=['_c', '_e', 
 docs['experiment'] = docs['experiment'].map(LABELS)
 blocks = [g for _, g in docs.groupby(['combination', 'method_count'], sort=False)]
 blank = pd.DataFrame([[''] * docs.shape[1]], columns=docs.columns)
-# Individual reference methods (mode 2), one block per method, same ensemble order.
-ind_rows, ind_note = [], None
-m2 = [[mode2_src/f'nmes2run_exp{s}_r{i}.npz' for i in range(n)] for s, n in enumerate(COUNTS)]
-if all(p.exists() for files in m2 for p in files):
-    nvalid = set()
-    for method, name in enumerate(['EBMKF_ta4', 'GWI_tot_CGWL']):
+# Individual reference methods, one block per method, same ensemble order.
+ind_rows, ind_note, nvalid = [], None, set()
+for prefix, names, folder in [('nmes2run', ['EBMKF_ta4', 'GWI_tot_CGWL'], mode2_src), ('nmesFaIRrun', ['FaIR_comb_unB'], fair_src)]:
+    m2 = [[folder/f'{prefix}_exp{s}_r{i}.npz' for i in range(n)] for s, n in enumerate(COUNTS)]
+    if not all(p.exists() for files in m2 for p in files): continue
+    for method, name in enumerate(names):
         for s in [FIG24.index(e) for e in FIG24]:
             sidx = SCENARIOS.index(FIG24[s])
             arrays = []
@@ -136,6 +138,7 @@ if all(p.exists() for files in m2 for p in files):
             r['rmse'] = f"{np.sqrt(np.mean([a['rmse'][method]**2 for a in arrays])):.4f}"
             r['rmse75'] = f"{np.sqrt(np.mean([a['rmse75'][method]**2 for a in arrays])):.4f}"
             ind_rows.append(r)
+if ind_rows:
     if any(mpi and n != 90 for mpi, n in nvalid):
         ind_note = ('Note: the EBMKF_ta4 / GWI_tot_CGWL rows come from a run that scored MPI-ESM1-2-LR over 2000–2090 '
                     '(91 years); they will be regenerated with the 2000–2089 window.')
