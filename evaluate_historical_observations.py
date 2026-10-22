@@ -200,7 +200,7 @@ if select_hist:
     rmse_df = pd.read_csv("current_methods_statistics_251126True.csv")
     avail_methods_list_30 = list(rmse_df.loc[rmse_df['RMS'] <= 0.06, 'method_name'])
   
-hist_option='first'#'median'#'first'
+hist_option='median'#'first'  (both are run for the supplement: median and first crossing)
 
 
 if __name__ == '__main__':

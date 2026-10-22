@@ -5,9 +5,9 @@ python export_dashboard_climate_metrics.py histens_rpi_real --source-root /path/
 
 Crossings use the first upward crossing of adjacent finite annual values, with
 linear interpolation. Missing/unobserved crossings remain NaN, never a future
-sentinel or the nearest endpoint. The observed centered 20-year mean provides
+sentinel or the nearest endpoint. The observed centred 20-year mean provides
 the definitive benchmark for both warming definitions. Anthropogenic panels
-explicitly call this the realized observational benchmark, not attributed truth.
+explicitly call this the realised observational benchmark, not attributed truth.
 """
 from __future__ import annotations
 import argparse
@@ -26,14 +26,14 @@ REAL = ['CGWL10y_sfUKCP', 'EBMKF_ta4', 'FaIR_comb_unB', 'GAM_AR1',
         'GWI_tot_CGWL', 'Kal_flexLin', 'lowess1dt36wnc']
 ANTHRO = ['FaIR_nonat_unB', 'GWI_anthro_CGWL']
 # Supplementary realised options, listed last and starred on the dashboard. They are
-# tangential to the paper's conclusions: CSCM refitted for this ensemble, the WMO-forecast
+# not used in the paper's headline estimates: CSCM refitted for this ensemble, the WMO-forecast
 # CGWL (not evaluable on the future scenarios), and an 8-method PIVW that includes it.
 SUPPLEMENTARY = ['CSCM_comb', 'CGWL10y_for_halfU', 'PIVW8_comb']
 SUPP_DIR = Path(__file__).resolve().parents[1]/'data/supplementary'
 METHOD_LABELS = {
     'PIVW_comb': 'PIVW combination', 'equal_weight_comb': 'Equal weighting',
     'CGWL10y_sfUKCP': 'CGWL (UKCP)', 'EBMKF_ta4': 'Energy balance Kalman filter',
-    'FaIR_comb_unB': 'FaIR realized', 'GAM_AR1': 'GAM with AR(1)',
+    'FaIR_comb_unB': 'FaIR realised', 'GAM_AR1': 'GAM with AR(1)',
     'GWI_tot_CGWL': 'Global Warming Index (total)', 'Kal_flexLin': 'Flexible Kalman filter',
     'lowess1dt36wnc': 'LOWESS (linear)', 'FaIR_nonat_unB': 'FaIR anthropogenic',
     'GWI_anthro_CGWL': 'Global Warming Index (anthropogenic)',
@@ -302,7 +302,7 @@ def analyze(source_root, experiment, outdir, results_dir=None):
         proxy_methods.add('PIVW8_comb')
     gaussian_cdfs={m:gaussian_paper_probabilities(years,curves[m],stds[m],thresholds) for m in supplementary}
     paper_probs=load_paper_probabilities(root,experiment,list(curves),gaussian_cdfs)
-    definition='realized' if goal=='real' else 'anthropogenic'
+    definition='realised' if goal=='real' else 'anthropogenic'
     result=dict(experiment=experiment,baseline=baseline,goal=goal,definition=definition,years=years,
                 baseline_label='1850–1900' if baseline=='rpi' else '1981–2010',thresholds=thresholds,
                 raw=raw,centered20=mean20,centered10=mean10,methods={},
@@ -311,13 +311,13 @@ def analyze(source_root, experiment, outdir, results_dir=None):
                 metadata=dict(source_sha256=digest.hexdigest(),raw_sha256=hashlib.sha256(rawfile.read_bytes()).hexdigest(),
                               probability_definition='Calibrated current probabilities saved by the paper pipeline in its three assessment windows. Outside those windows and for the fourth threshold, Gaussian approximations use the same calibrated means/SE. These are pointwise exceedances, not a first-passage CDF.',
                               crossing_definition='First upward crossing, linearly interpolated between adjacent finite annual values.',
-                              benchmark='Realized observational centered 20-year mean, including on anthropogenic panels.',
+                              benchmark='Realised observational centred 20-year mean, including on anthropogenic panels.',
                               comparison_fit='Endpoint derivative of a quadratic fitted to 15 past annual current-method outputs.',
                               recent_saved_fit='Saved rate CSV: 15 annual retrospective outputs when available, otherwise current outputs.',
                               headline_definition='Current-method warming level; rate from the corrected retrospective 2011–2025 histories, with current proxies where explicitly identified.',
                               retrospective_current_proxies=sorted(proxy_methods),
                               results_directory=str(Path(results_dir).resolve()) if results_dir else str(root/'Results'),
-                              definitive_fit='OLS through centered 10-year means at crossing-5 through crossing+5 inclusive.',
+                              definitive_fit='OLS through centred 10-year means at crossing-5 through crossing+5 inclusive.',
                               uncertainty='95% level range: equal-member Gaussian mixture with calibrated method SE. Rates: 1.96 times sqrt(mean(within-fit SE squared)+sample variance of member rates).',
                               censoring='Comparison crossing-year ranges condition on members that cross. Definitive preindustrial 1.0 C includes the seven requested quartic estimates; their model uncertainty is not included.'))
     definitive=[]; rows=[]; memberrows=[]

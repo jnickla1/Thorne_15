@@ -56,6 +56,15 @@ def main():
     if len(manifest) != expected or not all((assets / 'figures' / item['file']).is_file() for item in manifest):
         raise ValueError(f'The complete {expected}-figure library (three temperature-series options) is required.')
     print(f'Website ready: {expected} variants, default PNG/PDF/SVG, {count} method CSVs.')
+    # Refresh the translation bundle (English page strings and data-derived method text).
+    import sys
+    from build_i18n import main as build_i18n
+    argv, sys.argv = sys.argv, [sys.argv[0]]
+    try:
+        if build_i18n():
+            raise ValueError('Translation check failed; see build_i18n.py output above.')
+    finally:
+        sys.argv = argv
 
 if __name__ == '__main__':
     main()

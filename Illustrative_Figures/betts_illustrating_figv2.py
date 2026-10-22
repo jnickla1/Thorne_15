@@ -49,7 +49,7 @@ comput_temps = np.array(filein.variables['tasAnom'])
     #(240, 3000), 1860 is first year
 nsamps = np.shape(comput_temps)[1]
 cutoff_n = int(nsamps/30)
-comput_temps_baselines = np.mean(comput_temps[0:50,:],axis=0)
+comput_temps_baselines = np.mean(comput_temps[0:51,:],axis=0)
 comput_temps_align = comput_temps - np.tile(comput_temps_baselines, (np.shape(comput_temps)[0], 1))  
 samp_cur = np.full((np.shape(years)[0],cutoff_n) ,np.nan)
 kcolors=['firebrick','k','k']

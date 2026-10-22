@@ -56,3 +56,13 @@ This refresh uses the outputs regenerated on 18–19 Oct. Table S4 (CSCM) and Fi
 - `cfg_1018.py` now hard-codes the 18 Oct weights, because `Results2` was overwritten on 18 Oct at 22:37.
 - `diff_1018_vs_1019.py` → `diff_1018_vs_1019.txt`. Only EBMKF_ta4 changed (+0.0015 °C), and the weights returned to the paper weights.
 - Pipeline: the same scripts with the `_1019` suffix. The log is in `pipeline_1019.log`; to rebuild the context tables, run `step_context_post1960.py _1019`.
+
+## 21 Oct 2026 refresh: the 1850–1900 datum, hypothesis (e)
+
+This refresh uses the outputs regenerated on 21 Oct, after the pre-industrial datum moved from 1850–1899 to 1850–1900 and the anchored methods received a datum correction (commits `216d3fde`, `acf2df22`, `2d95aaec`). The futures are still the 18 Oct runs, because the 1850–1900 rerun is on Oscar.
+
+- `supplement_note_2024v2025_1021.md`: the note, with a new section (e) and an updated Thorne reply.
+- `changes_1019_vs_1021.md` / `.csv`: every changed number, written by `build_changes_1021.py` (header in `changes_header_1021.md`).
+- `baseline_hypothesis_1021.py` → `.log`, `.csv`, `baseline_hypothesis_hist_1021.csv`: splits the change into the seeds, datum-switch and anchored-correction steps, using the rate files saved in `rates_states/` (`c5d9051e`, `0671536e`, 21 Oct 01:12).
+- `cfg_1021.py`: weights read live from `../Results2/`, with a record copy in `results2_1021/`. Frozen inputs are in `snap25_1021/` and `hist_results_1021.pickle`; the manifest is `inputs_1021_manifest.csv`.
+- Pipeline: the same scripts with the `_1021` suffix. The log is `pipeline_1021.log`; also run `step_context_post1960.py _1021`.

@@ -34,7 +34,7 @@ def export_rates(source, output):
     benchmark = fitted_rates(d['centered10'], 11, 1, 5)
     result = dict(source_sha256=d['metadata']['source_sha256'], years=years,
                   benchmark=clean(benchmark), methods={},
-                  definitions=dict(benchmark='OLS slope through 11 centered 10-year observational means, year-5 to year+5; realized observations also on anthropogenic views. Requires observations through year+10.',
+                  definitions=dict(benchmark='OLS slope through 11 centred 10-year observational means, year-5 to year+5; realised observations also on anthropogenic views. Requires observations through year+10.',
                       retrospective='Endpoint derivative of a trailing 15-year quadratic fit to retrospective method estimates from the full observation record; GWI current outputs are the existing explicit retrospective proxy. These are revised estimates, not vintage forecasts.',
                       current='Endpoint derivative of a trailing 15-year quadratic fit to annual current method outputs. This alternative may differ from the retrospective headline rate.',
                       units='degrees Celsius per decade; ensemble mean; missing where a complete fitting window is unavailable.'))
