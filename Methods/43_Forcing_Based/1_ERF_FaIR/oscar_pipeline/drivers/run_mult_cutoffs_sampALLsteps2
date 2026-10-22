@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+#SBATCH -J FAIR_calsampc
+#SBATCH -t 6:00:00
+#SBATCH -N 1
+#SBATCH -n 16
+#SBATCH --mem=120gb
+####SBATCH --account=epscor-condo
+#SBATCH -o logs_HT3/aa-%A_%a.out
+
+
+module load r
+export R_LIBS_USER="/oscar/home/jnickla1/R/x86_64-pc-linux-gnu-library/4.6"
+Rscript -e '.libPaths(); library(EBM); cat("EBM loaded OK\n")' || { echo "EBM library not found"; exit 1; }
+
+#eval "$(conda shell.bash hook)"
+#conda activate fair2
+# Don't forget to set your environment variables in .env
+PYTHON_BIN="/users/jnickla1/.conda/envs/fair2/bin/python3"
+
+if [ -f .env222 ]
+then
+  export $(cat .env222 | xargs)
+fi
+
+# Base path to your fair-calibrate input tree
+script_dir=$PWD
+base_dir="${script_dir}/input/fair-${FAIR_VERSION}/v${CALIBRATION_VERSION}/${CONSTRAINT_SET}"
+
+##########
+# 1) Calibration & Sampling (no cutoff)
+##########
+
+# Ensure no cutoff is set
+unset CUTOFF_YEAR
+start=$SECONDS
+
+unset ENSEMBLE_RUN
+export ENSEMBLE_RUN=1
+
+echo "python: $PYTHON_BIN"
+"$PYTHON_BIN" -c "import pandas; print('pandas', pandas.__version__)" || { echo "wrong env active"; exit 1; }
+
+
+
+##for pipeline in calibration sampling; do
+for pipeline in sampling; do
+echo ">>> Running ${pipeline}"
+  cd "${base_dir}/${pipeline}"
+  file_array=( $(\ls [0-9][0-9]_*.*) )
+  for file in "${file_array[@]}"; do
+    echo "  • ${pipeline}/${file}"
+    chmod +x "$file"
+    case "$file" in
+      *.py)
+        "$PYTHON_BIN" "$file" || { echo "ERROR in ${file}"; exit 1; }
+        ;;
+      *.r|*.R)
+        Rscript "$file" || { echo "ERROR in ${file}"; exit 1; }
+        ;;
+      *)
+        echo "SKIPPING unknown file type: ${file}"
+        ;;
+    esac  
+
+done
+done
+
+echo "##### CALIBRATION and SAMPLING COMPLETE #####"
+echo $(( SECONDS - start ))
+

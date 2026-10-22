@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python++++
 # coding: utf-8
 """
 16_TOA-forcing.py  (per-member version)
@@ -25,7 +25,7 @@ cal_v      = os.getenv("CALIBRATION_VERSION")
 fair_v     = os.getenv("FAIR_VERSION")
 orig_const = os.getenv("CONSTRAINT_SET")
 #ensemble_run = os.getenv("ENSEMBLE_RUN")
-cutoff_year  = 2023 #os.getenv("CUTOFF_YEAR")
+cutoff_year  = 2025 #os.getenv("CUTOFF_YEAR")
 
 for ensemble_run in range(1,101):
 
@@ -83,7 +83,7 @@ for ensemble_run in range(1,101):
     from fair.interface import fill, initialise
     from fair.io import read_properties
 
-    t0, t1 = 1750, 2024
+    t0, t1 = 1750, 2026
     export_start = 1850
 
     # Full-species to construct total forcing
@@ -99,9 +99,17 @@ for ensemble_run in range(1,101):
     f.allocate()
 
     # Fill historical emissions and volcanic/solar forcing
-    f.fill_from_csv(
-        emissions_file='../../../../../data2/emissions/v1.4.1/historical_1750-2023.csv',
-        forcing_file='../../../../../data2/forcing/v1.4.1/volcanic_solar.csv',
+    f.fill_from_csv(forcing_file="../../../../../data2/forcing/volcanic_solar_2025.csv")
+    fill(
+        f.forcing,
+        f.forcing.sel(specie="Volcanic") * df_configs["forcing_scale[Volcanic]"].values.squeeze(),
+        specie="Volcanic",
+    )
+    fill(
+        f.forcing,
+        f.forcing.sel(specie="Solar") * df_configs["forcing_scale[Solar]"].values.squeeze()
+        + trend_shape[:, None, None] * solar_trend_values,
+        specie="Solar",
     )
 
     # Apply per-config forcing scale overrides if present
@@ -198,8 +206,8 @@ for ensemble_run in range(1,101):
     toa_series = N_all.sel(config=0).values.squeeze()[mask]
     surf_series = surf.sel(config=0).values.squeeze()[mask]
 
-    if toa_series.shape[0] != 175 or surf_series.shape[0] != 175:
-        raise RuntimeError(f"Expected 175 years (1850–2024). Got N={toa_series.shape[0]}, T={surf_series.shape[0]}")
+    if toa_series.shape[0] != 176 or surf_series.shape[0] != 176:
+        raise RuntimeError(f"Expected 175 years (1850–2025). Got N={toa_series.shape[0]}, T={surf_series.shape[0]}")
 
     # Stack into 2x175 array
     out = np.vstack([toa_series, surf_series])
@@ -208,5 +216,3 @@ for ensemble_run in range(1,101):
     np.save(outfile, out)
 
     print(f"Saved {outfile}")
-#    print("Shape:", out.shape, "(rows: 0=TOA W m^-2, 1=Surf Temp K)")
-#    print("Years: 1850–2024 (inclusive), N=", out.shape[1])
